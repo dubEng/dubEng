@@ -7,3 +7,6 @@
 
 ### 230412
 [쿠버네티스 공부](https://scarlet-biplane-82e.notion.site/230415-SAT-4815989e80764d4e9143b07c1595ca67)
+
+### 230413
+[RDS 공부](https://scarlet-biplane-82e.notion.site/rds-916d667cb4ec4261b76fdaf5898c5afa)
