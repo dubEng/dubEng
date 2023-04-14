@@ -10,3 +10,6 @@
 
 ### 230413
 [RDS 공부](https://scarlet-biplane-82e.notion.site/rds-916d667cb4ec4261b76fdaf5898c5afa)
+
+### 230414
+[DB 배치](https://hello-jay-study.notion.site/DB-Batch-2c9ad806d580421fa8239f51cfce8255)
