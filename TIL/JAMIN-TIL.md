@@ -13,3 +13,6 @@
 
 ### 230414
 [DB 배치](https://hello-jay-study.notion.site/DB-Batch-2c9ad806d580421fa8239f51cfce8255)
+
+### 230417
+[ERD 작성](https://subsequent-coelurus-2e0.notion.site/ERD-c7b8d3a237f244539e3a67aef6e2c443)
