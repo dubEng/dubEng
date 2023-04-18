@@ -16,3 +16,6 @@
 
 ### 230417
 [ERD 작성](https://subsequent-coelurus-2e0.notion.site/ERD-c7b8d3a237f244539e3a67aef6e2c443)
+
+### 230418
+[기능명세 작성](https://subsequent-coelurus-2e0.notion.site/93900bcdf7b644829b23d4ef011e01e9)
