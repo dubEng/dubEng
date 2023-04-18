@@ -181,3 +181,72 @@ export default function Home() {
 ```
 
 - 23.04.18
+
+<h1>
+오디오 녹음 테스트
+</h1>
+
+```
+import { useEffect, useRef } from 'react';
+
+function AudioRecorder() {
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          audioChunksRef.current.push(e.data);
+        }
+      };
+    })();
+  }, []);
+
+  function startRecording() {
+    mediaRecorderRef.current?.start();
+  }
+
+  function stopRecording() {
+    mediaRecorderRef.current?.stop();
+  }
+
+  function downloadAudio() {
+    const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = 'recording.webm';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 100);
+  }
+
+  function playAudio() {
+    const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio();
+    audio.src = url;
+    audio.play();
+  }
+
+  return (
+    <div>
+      <button onClick={startRecording}>Start Recording</button>
+      <button onClick={stopRecording}>Stop Recording</button>
+      <button onClick={downloadAudio}>Download Audio</button>
+      <button onClick={playAudio}>Play Audio</button>
+    </div>
+  );
+}
+
+export default AudioRecorder;
+```
