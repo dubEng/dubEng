@@ -42,3 +42,23 @@
     nginx        NodePort    10.108.172.218   <none>        80:30486/TCP   7m44s
     ```
 
+## 23-04-18
+- 쿠버네티스 Deployment 배포 실습
+    
+    기존의 버전
+
+    kubectl run 으로 pod, deploy 배포 가능
+
+    현재의 버전
+    - kubectl create
+    - kubectl apply
+        - yaml 파일로 배포
+    ```
+    [root@m-k8s ~]# kubectl create deployment deploy-nginx --image=nginx
+    deployment.apps/deploy-nginx created
+
+    [root@m-k8s ~]# kubectl get pods
+    NAME                            READY   STATUS              RESTARTS   AGE
+    deploy-nginx-67c78b5cfc-wlz96   0/1     ContainerCreating   0          8s
+    nginx                           1/1     Running             0          117m
+    ```
