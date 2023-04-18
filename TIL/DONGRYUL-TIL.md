@@ -21,3 +21,24 @@
 - 기획 구체화
 - 컨설턴트님 미팅
 - 기능 명세서 작성
+
+## 23-04-17
+- 쿠버네티스 파드, 서비스 배포 실습
+
+    파드 배포
+    ```
+    [root@m-k8s ~]# kubectl run nginx --image=nginx
+    pod/nginx created
+    [root@m-k8s ~]# kubectl get pod
+    NAME    READY   STATUS    RESTARTS   AGE
+    nginx   1/1     Running   0          5m23s
+    ```
+    서비스 배포
+    ```
+    [root@m-k8s ~]# kubectl expose pod nginx --type=NodePort --port=80
+    [root@m-k8s ~]# kubectl get service
+    NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+    kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP        159m
+    nginx        NodePort    10.108.172.218   <none>        80:30486/TCP   7m44s
+    ```
+
