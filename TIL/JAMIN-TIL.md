@@ -19,3 +19,6 @@
 
 ### 230418
 [기능명세 작성](https://subsequent-coelurus-2e0.notion.site/93900bcdf7b644829b23d4ef011e01e9)
+
+### 230419
+[기획 총정리 및 발표 준비](https://subsequent-coelurus-2e0.notion.site/0ac17c58698c445c890ade64b5e37825)
