@@ -23,7 +23,7 @@
   기획 구체화 회의 <br/>
 
 - 23.04.17
-  
+
 <h1>
 실시간 pitch 출력하기
 </h1>
@@ -71,6 +71,7 @@ export default function Home() {
   );
 }
 ```
+
 <br/>
 
 <h1>
@@ -250,3 +251,9 @@ function AudioRecorder() {
 
 export default AudioRecorder;
 ```
+
+- 23.04.19
+
+피그마 와이어 프레임 작업
+중간 발표 자료 조사
+chart.js 작업
