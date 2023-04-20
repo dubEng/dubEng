@@ -64,17 +64,10 @@
     ```
 
 ## 23-04-19
-노드 연결 - 오디오 그래프
+- container registry 구축 실습
+- React Pitch Detection 연구
 
-소스 노드를 생성해 음원을 입력
-
-작업 노드를 생성해 오디오 관련 작업 수행
-
-소스노드 - 작업노드 - 목적지노드를 연결해 출력
-
-1. AudioContext 객체 생성
-2. **"소스 Node" 생성 및 음원 입력**
-3. **"작업 Node" 생성 및 작업 수행**
-4. **"목적지 Node" 까지 연결(오디오 그래프)**
-
-소스Node, 작업Node, 목적지Node라는 단어는 편의를 위해 사용하는 명칭으로, 공식 명칭은 아니다.
+## 23-04-20
+- API 명세서 작성
+- Kubernetes Ingress 개념 학습
+- kubernetes nginx-controller 개념 학습
