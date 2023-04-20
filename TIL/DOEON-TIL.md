@@ -43,3 +43,61 @@
   2. 이후 UI에서 상태가 변경되면, 앱은 dispatch를 실행하여 action을 일으킴
   3. 새로운 action을 받은 store는 reducer를 실행하고 reducer를 통해 나온 값을 새로운 상태로 저장
   4. subscribe된 UI는 상태 업데이트로 변경된 데이터를 새롭게 렌더링
+
+#### 23.04.20
+
+### TypeScript의 다형성
+
+- 다형성, 제네릭, 클래스, 인터페이스 학습
+
+### 다형성
+
+> 다른 모양의 코드를 가질 수 있게 하는 것
+
+- 제네릭을 통해 이룰 수 있음
+  - 제네릭 : placeholder 타입을 쓸 수 있도록 함
+  - 타입스크립트가 placeholder 타입을 concrete로 바꿔줌
+  - 같은 코드를 다른 타입에 대해서 쓸 수 있도록 함
+
+### 실습
+
+- 브라우저에서 쓰는 로컬 스토리지 API와 비슷한 API를 가지는 클래스 만들기
+
+```tsx
+interface SStorage<T> {
+  [key: string]: T;
+}
+class LocalStorage<T> {
+  private storage: SStorage<T> = {};
+
+  set(key: string, value: T) {
+    this.storage[key] = value;
+  }
+  remove(key: string) {
+    delete this.storage[key];
+  }
+  get(key: string): T {
+    return this.storage[key];
+  }
+  clear() {
+    this.storage = {};
+  }
+}
+```
+
+- localStorage 클래스를 초기화할 때, 타입스크립트에게 T라고 불리는 제네릭을 받을 계획임
+- 제네릭은 이것을 다른 타입에게 물려줄 수 있음 → 클래스 이름에 들어오는 제네릭과 같은 제네릭을 인터페이스로 보내줄 수 있음
+- 제네릭을 클래스로 보내고, 클래스는 제네릭을 인터페이스로 보낸 후 인터페이스는 제네릭을 사용
+
+```tsx
+// string 타입의 로컬 스토리지
+const stringsStorage = new LocalStorage<string>();
+
+stringsStroage.get("ket"); // string을 받아올 수 있음
+stringstorage.set("hello", "how are you"); // TS가 T인 value를 string인 value로 바꿔줌 (localStorage를 string을 사용하여 만들었기 때문)
+
+const booleansStorage = new LocalStroage<boolean>();
+
+booleansStorage.get("xxx"); // boolean을 받아옴
+booleansStorage.set("hello", true);
+```
