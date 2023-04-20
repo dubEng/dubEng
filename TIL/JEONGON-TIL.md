@@ -257,3 +257,9 @@ export default AudioRecorder;
 피그마 와이어 프레임 작업
 중간 발표 자료 조사
 chart.js 작업
+
+- 23.04.20
+ 
+컨설턴트님 발표 피드백 <br/>
+피그마 와이 프레임 작업 1차 완료(모바일) <br/>
+![image](https://user-images.githubusercontent.com/79705809/233404590-e06d290c-4f7b-4006-aa79-433a21aa0fdd.png)
