@@ -475,3 +475,13 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 
 
 ## [2023-04-19]
+
+
+## [2023-04-20]
+발표자료 준비
+기능명세서
+PPT 작성
+API 명세서
+ERD 완료
+더빙 로직 구성
+추천 알고리즘 구성
