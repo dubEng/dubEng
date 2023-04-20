@@ -22,3 +22,6 @@
 
 ### 230419
 [기획 총정리 및 발표 준비](https://subsequent-coelurus-2e0.notion.site/0ac17c58698c445c890ade64b5e37825)
+
+### 230420
+[API 명세 작성](https://subsequent-coelurus-2e0.notion.site/a43bcf1b23784bad89f8930726acdf06?v=8510f1c06f8b4c22a69583ce4cc2b264)
