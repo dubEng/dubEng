@@ -71,3 +71,8 @@
 - API 명세서 작성
 - Kubernetes Ingress 개념 학습
 - kubernetes nginx-controller 개념 학습
+
+## 23-04-21
+- 중간 발표
+- EC2 Server에 Jenkins, Nginx 세팅
+
