@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="../static/js/showProgress.js"></script>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>youtube downloader</title>
+</head>
+
+<body>
+    <form method="post">
+        <div id="urlInputDiv">
+            <input id="urlInput" type="text" name="urlInp">
+        </div>
+
+
+
+        <div id="audioVideoDiv">
+            <button class="audioVideoButtons" type="submit" name="downBut" value="downloadAudio"
+                onclick="showLoading()">AUDIO</button>
+
+            <span id="audioVideoSpacer"></span>
+            <!-- <img id="audioVideoSpacer" src="http://cdn.lowgif.com/full/fac91d1e4b9e69fe-.gif"> -->
+
+            <button class="audioVideoButtons" type="submit" name="downBut" value="downloadVideo">VIDEO</button>
+        </div>
+
+
+    </form>
+</body>
+
+</html>
