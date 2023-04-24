@@ -76,3 +76,8 @@
 - 중간 발표
 - EC2 Server에 Jenkins, Nginx 세팅
 
+
+## 23-04-24
+- kubeadm 으로 Control plain 생성
+- calico 네트워크 생성
+- worker node join
