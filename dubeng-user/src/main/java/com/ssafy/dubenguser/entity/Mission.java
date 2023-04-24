@@ -18,4 +18,8 @@ public class Mission extends Time{
     private String title;
     private String assets;
 
+    @OneToOne(cascade = CascadeType.MERGE, targetEntity = Video.class, fetch = FetchType.LAZY)
+    @JoinColumn(name="video_id")
+    private Video video;
+
 }
