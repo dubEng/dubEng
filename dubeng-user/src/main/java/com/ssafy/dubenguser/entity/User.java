@@ -23,7 +23,7 @@ public class User extends Time{
     private String description;
     private String landName;
     private String recordCount;
-    private boolean IsVoted;
+    private Boolean  IsVoted;
     private long totalRecTime;
 
 }
