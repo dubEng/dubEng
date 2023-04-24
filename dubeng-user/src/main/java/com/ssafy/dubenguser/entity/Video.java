@@ -13,16 +13,17 @@ import javax.persistence.*;
 public class Video extends Time {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String title;
     private String videoPath;
     private String backgroundPath;
-    private int runtime;
+    private String voicePath;
+    private Long runtime;
     private String thumbnail;
-    private float startTime;
-    private float endTime;
+    private Long startTime;
+    private Long endTime;
     private Boolean isAdult;
     private String producer;
-    private int playCount;
+    private Long playCount;
     private Boolean gender;
 }

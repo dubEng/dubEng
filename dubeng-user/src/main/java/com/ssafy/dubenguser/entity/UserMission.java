@@ -14,7 +14,7 @@ public class UserMission extends Time{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @ManyToOne(cascade = CascadeType.MERGE, targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -23,4 +23,5 @@ public class UserMission extends Time{
     @JoinColumn(name = "mission_id")
     private Mission mission;
 
+    private Boolean isComplete;
 }

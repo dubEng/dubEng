@@ -13,11 +13,11 @@ import javax.persistence.*;
 public class VideoCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @ManyToOne(cascade = CascadeType.MERGE, targetEntity = Video.class, fetch = FetchType.LAZY)
     @JoinColumn(name="video_id")
-    private Video videoId;
+    private Video video;
     @ManyToOne(cascade = CascadeType.MERGE, targetEntity = Category.class, fetch = FetchType.LAZY)
-    @JoinColumn(name="catogory_id")
-    private Category categoryId;
+    @JoinColumn(name="category_id")
+    private Category category;
 }

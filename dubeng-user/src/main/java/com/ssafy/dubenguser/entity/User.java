@@ -24,6 +24,6 @@ public class User extends Time{
     private String landName;
     private String recordCount;
     private Boolean  IsVoted;
-    private long totalRecTime;
+    private Long totalRecTime;
 
 }

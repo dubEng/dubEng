@@ -13,12 +13,12 @@ import javax.persistence.*;
 public class Script {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @ManyToOne
     @JoinColumn(name="video_id")
-    private Video videoId;
-    private float startTime;
-    private float duration;
+    private Video video;
+    private Long startTime;
+    private Long duration;
     private String content;
     private String translateContent;
 }

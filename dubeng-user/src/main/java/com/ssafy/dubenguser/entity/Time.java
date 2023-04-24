@@ -17,10 +17,10 @@ public abstract class Time {
 
     @CreationTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-    private ZonedDateTime created_date;
+    private ZonedDateTime createdDate;
 
     @UpdateTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-    private  ZonedDateTime updated_date;
+    private  ZonedDateTime updatedDate;
 
 }

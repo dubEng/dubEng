@@ -14,7 +14,7 @@ public class Record extends Time{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @ManyToOne(cascade = CascadeType.MERGE, targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -25,9 +25,9 @@ public class Record extends Time{
 
     private Boolean  isPublic;
     private Boolean  isActive;
-    private long playCount;
+    private Long playCount;
     private String recordPath;
-    private long likeCount;
-    private long voteCount;
+    private Long likeCount;
+    private Long voteCount;
 
 }

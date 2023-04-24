@@ -13,11 +13,11 @@ import javax.persistence.*;
 public class VideoMission extends Time {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @OneToOne(cascade = CascadeType.MERGE, targetEntity = Video.class, fetch = FetchType.LAZY)
     @JoinColumn(name="video_id")
-    private Video videoId;
+    private Video video;
     @ManyToOne(cascade = CascadeType.MERGE, targetEntity = Mission.class, fetch = FetchType.LAZY)
     @JoinColumn(name="mission_id")
-    private Mission missionId;
+    private Mission mission;
 }
