@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user")
-public class User {
+public class User extends Time{
 
     @Id
     private String id;
@@ -20,7 +20,10 @@ public class User {
     private String profileImage;
     private String isPublic;
     private String roleType;
-
-
+    private String description;
+    private String landName;
+    private String recordCount;
+    private boolean IsVoted;
+    private long totalRecTime;
 
 }
