@@ -101,3 +101,45 @@ const booleansStorage = new LocalStroage<boolean>();
 booleansStorage.get("xxx"); // boolean을 받아옴
 booleansStorage.set("hello", true);
 ```
+
+#### 23.04.23
+
+## Figma
+
+### Figma의 Auto layout
+
+- Auto layout
+  > 상하좌우 여백이 설정한 값으로 자동으로 생성됨
+
+#### Hug
+
+- Auto layout에서 정한 여백을 그대로 안고 가는 설정
+- 요소 안 텍스트가 늘어나면 정해놓은 여백 그대로 요소의 크기가 유동적으로 변한다.
+- 자동 모드
+
+#### Fixed
+
+- Auto layout에서 정한 여백을 따르지 않는 설정
+- 요소 안 텍스트가 늘어나면 정해놓은 여백과 상관 없이 텍스트가 요소를 벗어난다.
+- 수동 모드
+
+### 개발 환경 세팅 전 알아두면 좋은 것 (개념 이해)
+
+- 패키지 관리자
+- npm, yarn, yarn2, ...
+- 빌드툴
+- webpack, vite, turbopack
+- eslint
+- 가져다 쓰는 거긴 하지만, 무엇인지 이해하고 쓰면 좋다
+- Babel
+- tailwind
+- postcss-import : 후처리기
+- scss : 전처리기
+- 색깔, 폰트 설정
+- 트윈 매크로
+- 컴포넌트를 외부에서 css를 조작 가능하도록 함
+- 로컬에서 https 돌아가게 설정
+- next.js 환경에서 트윈 매크로가 돌아가도록 하기 위한 설정 next.config.js에 withTwin 설정
+- https를 위한 key가 여러개 (4개)
+- 네이밍 컨벤션
+  - 컴포넌트, 함수, 변수, 디렉토리
