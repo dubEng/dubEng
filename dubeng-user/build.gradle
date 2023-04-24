@@ -5,10 +5,11 @@ buildscript {
 }
 
 plugins {
-    id 'java'
+
     id 'org.springframework.boot' version '2.7.11'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+    id 'java'
 }
 
 group = 'com.ssafy'
@@ -41,10 +42,9 @@ dependencies {
     implementation 'com.querydsl:querydsl-core'
     // QueryDSL JPA 라이브러리
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
-    // QueryDSL 추가
-    implementation 'com.querydsl:querydsl-apt'
-    // QueryDSL 관련된 쿼리 타입(QClass)을 생성할 때 필요한 라이브러리로, annotationProcessor을 사용하여 추가
-    annotationProcessor("com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
+    //querydsl 추가
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
     // java.lang.NoClassDefFoundError(javax.annotation.Entity) 발생 시 추가
     annotationProcessor('jakarta.persistence:jakarta.persistence-api')
     // java.lang.NoClassDefFoundError(javax.annotation.Generated) 발생 시 추가
@@ -55,8 +55,8 @@ dependencies {
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 
-    // aws s3 추가
-    implementation "com.amazonaws:aws-java-sdk-s3:1.12.281"
+//    // aws s3 추가
+//    implementation "com.amazonaws:aws-java-sdk-s3:1.12.281"
 }
 
 // Querydsl 설정부

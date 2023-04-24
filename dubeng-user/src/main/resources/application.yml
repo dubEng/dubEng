@@ -22,7 +22,7 @@ spring:
 
   # import application-oauth.yml
   profiles:
-    include: oauth
+    include: local
 
 # log level setting
 logging:
