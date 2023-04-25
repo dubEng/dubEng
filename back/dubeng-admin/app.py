@@ -1,15 +1,23 @@
 from flask import Flask, render_template, send_file, request, redirect, url_for, jsonify
+from youtube_transcript_api import YouTubeTranscriptApi
 
-import multiprocessing, time, os, glob
+import multiprocessing
+import time
+import os
+import glob
 from pytube import YouTube
 
-import time, re, os, json
+import time
+import re
+import os
+import json
 import xmltodict
 
 from pathlib import Path
 from waitress import serve
 
 app = Flask(__name__)
+
 
 def cleanDownloadFolder():
     time.sleep(600)
@@ -24,6 +32,7 @@ def deletIllegalSymbols(name):
     name = name.replace(" ", "")
     return name
 
+
 def getInfo(url):
     yt = YouTube(url)
     print("[영상 제목]", yt.title)  # 영상제목
@@ -31,14 +40,10 @@ def getInfo(url):
         "title": deletIllegalSymbols(yt.title),
         "thumbnail": yt.thumbnail_url,
         "author": yt.author,
-        "length": yt.length, # 영상 길이
-        "age_restricted":yt.age_restricted,
-        "thumbnail_url":yt.thumbnail_url
+        "length": yt.length,  # 영상 길이
+        "age_restricted": yt.age_restricted,
     }
     return data
-
-
-
 
 
 @app.route('/apiRequestDownload', methods=['POST', 'GET'])
@@ -49,7 +54,8 @@ def downloadApi():
     name = yt.streams.get_audio_only().title
 
     name = deletIllegalSymbols(name)
-    stream_audio.download(output_path='download/dwn', filename='original_audio.mp3')
+    stream_audio.download(output_path='download/dwn',
+                          filename='original_audio.mp3')
 
     import os
 
@@ -71,34 +77,36 @@ def downloadApi():
     # 'spleeter separate -p spleeter:2stems -o output my_song.mp3'
     os.system(spl)
 
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+
 
 @app.route('/cleanDir', methods=['POST', 'GET'])
 def cleanDir():
     cleanDownloadFolder()
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+
 
 @app.route('/apiRequestInfo', methods=['POST', 'GET'])
 def sendInfo():
     url = request.args.get('url')
+    video_id = request.args.get('video_id')
     yt = YouTube(url)
-    print("[영상 제목]", yt.title)  # 영상제목
     while True:
         try:
+            yt = YouTube(url)
             title = yt.title
             break
         except:
             print("Failed to get name. Retrying...")
-            time.sleep(600)
+            time.sleep(1)
             yt = YouTube(url)
             continue
     data = {
         "title": yt.title,
         "thumbnail": yt.thumbnail_url,
         "author": yt.author,
-        "length": yt.length, # 영상 길이
-        "age_restricted":yt.age_restricted,
-        "thumbnail_url":yt.thumbnail_url
+        "length": yt.length,  # 영상 길이
+        "age_restricted": yt.age_restricted,
     }
     captions = yt.captions
 
@@ -106,30 +114,40 @@ def sendInfo():
         print(caption)  # 가져올 수 있는 언어 확인
 
     caption = captions.get_by_language_code('a.en')
-    print(caption)
+    # print(caption)
 
-    print(caption.xml_captions)  # xml형태로 가져옴
+    # print(caption.xml_captions)  # xml형태로 가져옴
+    result = xmltodict.parse(caption.xml_captions)
+    # result = xmltodict.parse(caption)
+    dictionary = json.loads(json.dumps(result))
 
-    srt_caption = caption.xml_caption_to_srt(caption.xml_captions)  # xml -> srt
-    print(srt_caption)
+    sc = YouTubeTranscriptApi.get_transcript(video_id)
+    result = list()
+    for s in sc:
+        if s['start'] > 0 and s['start'] < 10:
+            result.append(s)
+        else:
+            break
+    last = {
+        "data": data,
+        "result": result
+    }
+    return last
+    # return jsonify(data)
 
-
-    # dataJson = getInfo(url)
-
-    return jsonify(data)
 
 def flaskRun():
     app.run(debug=True)
-    #serve(app, host=yourip, port = yourport)
-
+    # serve(app, host=yourip, port = yourport)
 
 
 if __name__ == '__main__':
-    #cleanDownloadFolder()
+    # cleanDownloadFolder()
     flaskProcess = multiprocessing.Process(name='p1', target=flaskRun)
-    deleFilesProcess = multiprocessing.Process(name='p', target=cleanDownloadFolder)
+    deleFilesProcess = multiprocessing.Process(
+        name='p', target=cleanDownloadFolder)
     flaskProcess.start()
     deleFilesProcess.start()
-    
+
 # if __name__ == '__main__':
 #     app.run()
