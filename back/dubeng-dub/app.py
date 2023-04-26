@@ -1,42 +1,41 @@
 from flask import Flask, request
 from flask_cors import CORS
 from pydub import AudioSegment
+from pydub.utils import make_chunks
 
 import pymysql
+import boto3
+from io import BytesIO
+from datetime import datetime
 
 #커스텀 객체 클래스 import
 import videoClass
 
+
 app = Flask(__name__)
 CORS(app)
 
-#연결정보 가져오는 함수
-def getConnectInfo():
-    #DB 연결정보 불러오기
-    f_conn = open("./env.txt")
+#env.txt 파일에서 정보 읽어오기
+f_conn = open("./env.txt")
 
-    host = f_conn.readline().strip()
-    user = f_conn.readline().strip()
-    database = f_conn.readline().strip()
-    charset = "utf8mb4"
-    cursorclass = pymysql.cursors.Cursor
+DB_HSOT = f_conn.readline().strip()
+DB_USER = f_conn.readline().strip()
+DB_DATABASE_NAME = f_conn.readline().strip()
+DB_CHARSET = "utf8mb4"
+# CURSORCLASS = pymysql.cursors.Cursor
+BUCKET_NAME = f_conn.readline().strip()
+AWS_ACCESS_KEY_ID = f_conn.readline().strip()
+AWS_SECRET_ACCESS_KEY = f_conn.readline().strip()
+AWS_DEFAULT_REGION = 'ap-northeast-2'
 
-    f_conn.close()
-
-    result = [host, user, database, charset, cursorclass]
-
-    return result
-
+f_conn.close()
 
 #videoId를 이용하여 해당 영상 정보를 DB에서 가져오는 함수
 def getVideoInfo(videoId):
     video = videoClass.video() #DB에서 가져온 정보를 저장할 video 객체
 
-    #DB에 연결할 정보 가져오기
-    connectInfo = getConnectInfo()
-
      #DB 연결
-    connection = pymysql.connect(host=connectInfo[0], user=connectInfo[1], database=connectInfo[2], charset=connectInfo[3], cursorclass=connectInfo[4])
+    connection = pymysql.connect(host=DB_HSOT, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=CURSORCLASS)
     cursor = connection.cursor()
 
     #video 테이블에서 정보 얻어오기
@@ -55,11 +54,8 @@ def getVideoInfo(videoId):
 def getScriptInfo(videoId):
     scriptList = [] #DB에서 가져온 정보를 저장할 script 객체를 담을 리스트 
 
-    #DB에 연결할 정보 가져오기
-    connectInfo = getConnectInfo()
-
-     #DB 연결
-    connection = pymysql.connect(host=connectInfo[0], user=connectInfo[1], database=connectInfo[2], charset=connectInfo[3], cursorclass=connectInfo[4])
+    #DB 연결
+    connection = pymysql.connect(host=DB_HSOT, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=CURSORCLASS)
     cursor = connection.cursor()
 
     #video 테이블에서 정보 얻어오기
@@ -117,18 +113,68 @@ def getOppositList(original, scripts, runtime):
     
     return chunks
 
-# def mergeAudio(firstList, lastList):
+def mergeAudio(firstList, lastList, bgAudio):
+    isSame = False
+    if (len(firstList) == len(lastList)): #시작과 끝이 다른 리스트에 있는 경우
+        isSame = True
     
+    #두 음원 파일을 번갈아가면서 붙이기
+    chunks = []
+    for i in range(0,len(lastList)):
+        chunks.append(firstList[i])
+        chunks.append(lastList[i])
+    
+    if (not isSame): #끝나는 부분이 fisrtList 있기 때문에 한 번 더 더해주기
+        chunks.append(firstList[len(firstList)-1])
+
+    #배열에 있는 음원들을 하나의 AudioSegment 객체로 합치기
+    mergedAudio = sum(chunks)
+
+    #음성파일의 길이에 맞춰서 배경음악의 길이 자르기
+    bgm_chunks = make_chunks(bgAudio, len(mergedAudio))
+
+    result = AudioSegment.empty()
+    for chunk in bgm_chunks:
+        result += chunk.overlay(mergeAudio)
+
+    return result
+
+def uploadToBucket(target, uploadName):
+    key = uploadName
+
+    # 음원 데이터를 메모리 내에서 처리하기 위해 BytesIO 객체 생성
+    audio_bytesio = BytesIO()
+
+    # AudioSegment 객체 생성
+    audio_segment = AudioSegment.from_file(target, format="mp3")
+
+    # AudioSegment 객체를 BytesIO에 기록
+    audio_segment.export(audio_bytesio, format="mp3")
+
+    # BytesIO에서 바이트 스트림 읽어오기
+    audio_bytes = audio_bytesio.getvalue()
+    client = boto3.client('s3',
+                      aws_access_key_id=AWS_ACCESS_KEY_ID,
+                      aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                      region_name=AWS_DEFAULT_REGION
+                      )
+    
+    client.upload_fileobj(BytesIO(audio_bytes), BUCKET_NAME, key)
+
+    url = f"https://{BUCKET_NAME}.s3.{AWS_DEFAULT_REGION}.amazonaws.com/{key}"
+
+    return url
 
 
-@app.route('/dub/start', methods=['POST'])
-def startDub():
+@app.route('/record/preview', methods=['POST'])
+def maekPreviewAudio():
     
     #request에서 정보 가져오기
     videoId = request.get_json()["videoId"]
     originalVoicePath = request.get_json()["originalPath"]
-    userVoiceList = request.get_json()["userPath"]
-
+    userVoiceList = request.files.getlist("userVoiceList")
+    userId = request.request.headers.get('Authorization')
+    
     #videoId로 DB에서 해당 video 정보 가져오기
     videoInfo = getVideoInfo(videoId)
 
@@ -142,28 +188,46 @@ def startDub():
     #사용자가 녹음한 음성파일 리스트를 AudioSegment 객체로 만든 후 리스트에 담기
     userAudioList = []
     for userVoice in userVoiceList:
-        user = AudioSegment.from_file(userVoice, format="mp3")
+        user = AudioSegment.from_file(userVoice)
         userAudioList.append(user)
     
-    # #두 녹음 파일 합치기
-    # finalAudio = ""
-    # if (scripts[0].startTime == 0): #사용자가 먼저 시작할 경우
-    #     finalAudio = mergeAudio(userAudioList, oppositeAudioList)
-    # else: #상대역이 먼저 시작할 경우
-    #     finalAudio = mergeAudio(oppositeAudioList, userAudioList)
+    #두 녹음 파일과 배경음악 합치기
+    bgAudio = AudioSegment.from_file(videoInfo.bgPath, format="mp3")
+    finalAudio = AudioSegment.empty()
+    if (scripts[0].startTime == 0): #사용자가 먼저 시작할 경우
+        finalAudio = mergeAudio(userAudioList, oppositeAudioList, bgAudio)
+    else: #상대역이 먼저 시작할 경우
+        finalAudio = mergeAudio(oppositeAudioList, userAudioList, bgAudio)
     
+    #s3 버킷에 업로드하기
+    keyStr = userId + videoInfo.title + ".mp3"
+    resultUrl = uploadToBucket(finalAudio, keyStr)
+
+    return resultUrl
     
 
+@app.route('/record/save', methods=['POST'])
+def save():
+    #request에서 정보 가져오기
+    videoId = request.get_json()["videoId"]
+    userId = request.headers.get('Authorization')
+    url = request.get_json()["url"]
+    date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+    #DB 연결
+    cursorclass = pymysql.cursors.Cursor
+    connection = pymysql.connect(host=DB_HSOT, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
+    cursor = connection.cursor()
 
+    #video 테이블에서 정보 얻어오기
+    sql = "INSERT INTO record (video_id, user_id, is_public, is_active, play_count, record_path, like_count, vote_count, created_date, updated_date) VALUES (%s, %s, 1, 1, 0, %s, 0, 0, %s, %s)"
+    values = (videoId, userId, url, date, date)
+    cursor.execute(sql, values)
 
+    connection.commit()
+    connection.close()
 
-    
-
-    data = {'video title': videoInfo.title, 'script content': scripts[0].content}
-
-    return data
-    
+    return "done"
 
 
 if __name__ == '__main__':
