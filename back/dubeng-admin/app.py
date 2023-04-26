@@ -33,6 +33,7 @@ AWS_DEFAULT_REGION = 'ap-northeast-2'
 
 f_conn.close()
 
+
 def cleanDownloadFolder():
     time.sleep(600)
     dwnDir = glob.glob('download/dwn/*')
@@ -46,23 +47,31 @@ def deletIllegalSymbols(name):
     name = name.replace(" ", "")
     return name
 
-def saveVideo(req):
-    try:
-        print(req['title'])
-        print(type(req["endTime"]))
-        #DB 연결
-        cursorclass = pymysql.cursors.Cursor
-        connection = pymysql.connect(host=DB_HSOT, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
-        cursor = connection.cursor()
-        sql = "INSERT INTO VIDEO (title, runtime, thumbnail, start_time, end_time, producer, gender, lang_type) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-        # cursor.execute(sql, (req['title'], req['runtime'], req['thumbnail'], req['startTime'], req['endTime'], req['producer'], req['gender'], req['lang']))
-        values=(req['title'], req['runtime'], req['thumbnail'], req['startTime'], req['endTime'], req['producer'], req['gender'], req['lang'])
-        cursor.execute(sql,values)
-        connection.commit()
-        connection.close()
-    except:
-        return False
-    return True    
+
+def saveVideoAndScript(video, scripts):
+    # DB 연결
+    cursorclass = pymysql.cursors.Cursor
+    connection = pymysql.connect(
+        host=DB_HSOT, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
+    cursor = connection.cursor()
+    sql = "INSERT INTO video (title, runtime, thumbnail, start_time, end_time, producer, gender, lang_type) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+    values = (video['title'], video['runtime'], video['thumbnail'], video['startTime'],
+              video['endTime'], video['producer'], video['gender'], video['lang'])
+    cursor.execute(sql, values)
+
+    print(cursor.lastrowid)
+
+    videoId = cursor.lastrowid
+    for sc in scripts:
+        sql = "INSERT INTO script (start_time, duration, content, translate_content, video_id, is_dub) VALUES (%s, %s, %s, %s, %s, %s)"
+        values = (sc['start_time'], sc['duration'], sc['content'],
+                  sc['translate_content'], videoId, sc['is_dub'])
+        cursor.execute(sql, values)
+
+    connection.commit()
+    connection.close()
+
+    return True
 
 
 # 영상 정보 불러오기 (기본정보 및 스크립트)
@@ -89,7 +98,7 @@ def sendInfo():
     for s in sc:
         if float(s['start']) >= float(start) and float(s['start']) <= float(end):
             result.append(s)
-        elif s['start']>float(end) :
+        elif s['start'] > float(end):
             break
     last = {
         "vedioInfo": data,
@@ -97,14 +106,18 @@ def sendInfo():
     }
     return last
 
+
 @app.route('/admin/saveVedio', methods=['POST'])
 def saveApi():
     req = request.get_json()['video']
-    flag = saveVideo(req)
-    print(flag)
+    scripts = request.get_json()['scripts']
+    # videoId = saveVideo(req)
+    # time.sleep(1)
+    # for script in scripts:
+    #     saveScript(script, str(videoId))
+    flag = saveVideoAndScript(req, scripts)
     if flag:
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
- 
 
     return json.dumps({'success': False}), 405, {'ContentType': 'application/json'}
 
@@ -112,14 +125,13 @@ def saveApi():
 @app.route('/admin/download', methods=['POST', 'GET'])
 def downloadApi():
     url = request.get_json()['url']
-    while True: 
+    while True:
         try:
             yt = YouTube(url)
             stream_audio = yt.streams.get_by_itag(140)
             name = yt.streams.get_audio_only().title + '.mp3'
 
-            stream_audio.download(output_path='download/dwn',
-                                filename=name)
+            stream_audio.download(output_path='download/dwn', filename=name)
             break
         except:
             yt = YouTube(url)
@@ -145,18 +157,13 @@ def cleanDir():
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
-
-
-
-
-
-
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
 
+
 def flaskRun():
     app.run(debug=True)
-    # serve(app, host=yourip, port = yourport)    
+    # serve(app, host=yourip, port = yourport)
 # if __name__ == '__main__':
 #     # cleanDownloadFolder()
 #     flaskProcess = multiprocessing.Process(name='p1', target=flaskRun)
@@ -164,4 +171,3 @@ def flaskRun():
 #         name='p', target=cleanDownloadFolder)
 #     flaskProcess.start()
 #     deleFilesProcess.start()
-
