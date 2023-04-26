@@ -1,5 +1,6 @@
 package com.ssafy.dubengdublist.service;
 
+import com.ssafy.dubengdublist.dto.contents.ContentsDetailRes;
 import com.ssafy.dubengdublist.dto.contents.ContentsRecommendRes;
 import com.ssafy.dubengdublist.dto.contents.ContentsSearchRes;
 import com.ssafy.dubengdublist.repository.VideoRepository;
@@ -34,5 +35,10 @@ public class ContentsServiceImpl implements ContentsService {
     @Transactional
     public Page<ContentsSearchRes> SelectAllSearch(String langType, Pageable pageable, List<Long> contentsSearch) {
         return videoRepository.selectAllContentsSearchRes(langType, pageable, contentsSearch);
+    }
+
+
+    public Page<ContentsDetailRes> SelectAllDetail(String langType, Pageable pageable, Long videoId) {
+        return videoRepository.selectAllContentsDetailRes(langType, pageable, videoId);
     }
 }
