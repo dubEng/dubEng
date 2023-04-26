@@ -6,6 +6,7 @@ import com.ssafy.dubenguser.entity.User;
 import com.ssafy.dubenguser.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,12 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
+    @Value("${kakao.clientId}")
+    private String KAKAO_CLIENT_ID;
+
+    @Value("${kakao.redirectUri}")
+    private String REDIRECT_URI;
+
     public String getAccessToken(String code){
 
         // 인가 코드를 통해 access-token 요청
@@ -27,14 +34,14 @@ public class UserService {
                 .baseUrl("https://kauth.kakao.com")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .build();
-
+        log.debug("KAKAO_CLIENT_ID : {}", KAKAO_CLIENT_ID);
         String response = webClient
                 .post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/oauth/token")
                         .queryParam("grant_type","authorization_code")
-                        .queryParam("client_id","fe2be7509651749a66cdc65452c43dc4")
-                        .queryParam("redirect_uri","http://localhost:9000/user/kakao/callback")
+                        .queryParam("client_id",KAKAO_CLIENT_ID)
+                        .queryParam("redirect_uri",REDIRECT_URI)
                         .queryParam("code",code)
                         .build())
                 .retrieve()
