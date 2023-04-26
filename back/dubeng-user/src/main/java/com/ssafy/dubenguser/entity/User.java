@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class User extends Time{
 
     @Id
-    private String id;
+    private Long id;
     private String email;
     private String nickname;
     private String isActive;
