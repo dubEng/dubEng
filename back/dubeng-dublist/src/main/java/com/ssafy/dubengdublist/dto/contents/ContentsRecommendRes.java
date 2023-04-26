@@ -6,10 +6,15 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class RecommendRes {
+public class ContentsRecommendRes {
 
     private Long id;
     private String title;
     private String thumbnail;
 
+    public ContentsRecommendRes(Long id, String title, String thumbnail) {
+        this.id = id;
+        this.title = title;
+        this.thumbnail = thumbnail;
+    }
 }

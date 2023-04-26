@@ -50,7 +50,6 @@ dependencies {
     // java.lang.NoClassDefFoundError(javax.annotation.Generated) 발생 시 추가
     annotationProcessor('jakarta.annotation:jakarta.annotation-api')
 
-
     //swagger
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
@@ -60,27 +59,22 @@ dependencies {
 
 }
 
-// Querydsl 설정부
-def generated = "$buildDir/generated/querydsl"
-
+//querydsl 추가 시작
+def querydslDir = "$buildDir/generated/querydsl"
 querydsl {
-    library = "com.querydsl:querydsl-apt"
     jpa = true
-    querydslSourcesDir = generated
+    querydslSourcesDir = querydslDir
 }
-
+sourceSets {
+    main.java.srcDir querydslDir
+}
 configurations {
     querydsl.extendsFrom compileClasspath
 }
-
 compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
-
-// gradle clean 시에 QClass 디렉토리 삭제
-clean {
-    delete file(generated)
-}
+//querydsl 추가 끝
 
 tasks.named('test') {
     useJUnitPlatform()
