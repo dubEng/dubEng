@@ -1,10 +1,10 @@
 from flask import Flask, render_template, send_file, request, redirect, url_for, jsonify
 from youtube_transcript_api import YouTubeTranscriptApi
 from pydub import AudioSegment
-from vedioInfo import getVedioId, get_video_info
-from io import BytesIO
 import classes
 import subprocess
+from vedioInfo import getVedioId, get_video_info
+from io import BytesIO
 import boto3
 import time
 import os
@@ -22,6 +22,7 @@ from waitress import serve
 
 app = Flask(__name__)
 
+# env 파일 읽어오기
 f_conn = open("./env.txt")
 
 DB_HSOT = f_conn.readline().strip()
@@ -37,18 +38,25 @@ AWS_DEFAULT_REGION = 'ap-northeast-2'
 f_conn.close()
 
 
-def cleanDownloadFolder():
-    time.sleep(600)
-    dwnDir = glob.glob('download/dwn/*')
+def cleanDownloadFolder(userId):
+    time.sleep(1)
+    path = 'download/dwn/output/'+userId+'/*'
+    dwnDir = glob.glob(path)
     for file in dwnDir:
         os.remove(file)
     print('i cleaned the download directory.')
+    path = 'download/dwn/'+userId+'.mp3'
+    os.remove(path)
+    print('i cleaned the original mp3')
 
 
 def deletIllegalSymbols(name):
-    name = re.sub(r'\W+', ' ', name)
-    name = name.replace(" ", "")
+    # 허용되지 않는 문자 제거
+    name = re.sub(r'[^\w\s-]', '', name).strip()
+    # 공백을 언더바로 변경
+    name = re.sub(r'\s+', '_', name)
     return name
+
 
 def uploadToBucket(filePath, uploadName):
     key = uploadName
@@ -64,11 +72,8 @@ def uploadToBucket(filePath, uploadName):
     # BytesIO에서 바이트 스트림 읽어오기
     audio_bytes = audio_bytesio.getvalue()
 
-    client = boto3.client('s3',
-                      aws_access_key_id=AWS_ACCESS_KEY_ID,
-                      aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-                      region_name=AWS_DEFAULT_REGION
-                      )
+    client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID,
+                          aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_DEFAULT_REGION)
 
     client.upload_fileobj(BytesIO(audio_bytes), BUCKET_NAME, key)
 
@@ -77,14 +82,16 @@ def uploadToBucket(filePath, uploadName):
     return url
 
 
+# 비디오 및 스크립트 Table에 저장하는 함수
 def saveVideoAndScript(video, scripts, userId):
     # DB 연결
     cursorclass = pymysql.cursors.Cursor
     connection = pymysql.connect(
         host=DB_HSOT, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
+    duration = int(video['endTime'])-int(video['startTime'])
     sql = "INSERT INTO video (title, runtime, video_path, thumbnail, start_time, end_time, producer, gender, lang_type) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    values = (video['title'], video['runtime'],video['video_path'], video['thumbnail'], video['startTime'],
+    values = (video['title'], str(duration), video['video_path'], video['thumbnail'], video['startTime'],
               video['endTime'], video['producer'], video['gender'], video['lang'])
     cursor.execute(sql, values)
 
@@ -106,89 +113,88 @@ def saveVideoAndScript(video, scripts, userId):
 
     return True
 
+
+# 음원 추출 및 분리하는 함수
 def seperateMp3(url, userId, videoTitle):
-    
     import os
     cnt = 0
+
+    # pytube로 영상 정보 가져오기
     yt = YouTube(url, on_progress_callback=None)
+
+    # 가져와질 때까지 retry...
     while True:
         try:
+            # userId의 이름으로 영상 저장
             newname = userId+'.mp3'
-            yt.streams.filter(only_audio=True).first().download(output_path='download/dwn', filename=newname)
-            
-            # mp3FilePath = filePath.replace('.mp4', newname)
-            # os.rename(filePath, mp3FilePath)
-            # print(mp3FilePath)
-            # stream_audio = yt.streams.get_by_itag(140)
-            # name = yt.streams.get_audio_only().title + '.mp3'
-            # stream_audio.download(output_path='download/dwn', filename=name)
+            yt.streams.filter(only_audio=True).first().download(
+                output_path='download/dwn', filename=newname)
             break
+
         except:
+            if cnt > 25:
+                break
             time.sleep(2)
             yt = YouTube(url, on_progress_callback=None)
-            cnt+=1
-            print('retrying....',cnt)
+            cnt += 1
+            print('retrying....', cnt)
             continue
 
-
+    # 음원이 저장된 경로로 이동
     path = "./download/dwn/"
     os.chdir(path)
 
+    # 배경음과 보컬 분리해서 로컬에 저장
     print('기다려주세요.')
     spl = r'spleeter separate -p spleeter:2stems -o output '+newname
-    # 'spleeter separate -p spleeter:2stems -o output my_song.mp3'
     os.system(spl)
-    # result = subprocess.getstatusoutput(spl)
     print("--------------------")
-    # print(result)
 
-    # S3 버킷 업로드    
+    # 로컬 음원 S3 버킷 업로드
+    videoTitle = deletIllegalSymbols(videoTitle)
     backgroundPath = "./output/"+userId+"/accompaniment.wav"
-    backgroundName = userId+"_accompaniment.wav"
+    backgroundName = userId+"_"+videoTitle+"_accompaniment.wav"
     vocalPath = "./output/"+userId+"/vocals.wav"
-    vocalName = userId+"_vocals.wav"
+    vocalName = userId+"_"+videoTitle+"_vocals.wav"
 
     backUrl = uploadToBucket(backgroundPath, backgroundName)
     vocalUrl = uploadToBucket(vocalPath, vocalName)
     result = {
-        "backUrl":backUrl,
-        "vocalUrl":vocalUrl
+        "backUrl": backUrl,
+        "vocalUrl": vocalUrl
     }
-    return result
+    # os.chdir('/dubeng-admin')
 
+    return result
 
 
 # 영상 정보 불러오기 (기본정보 및 스크립트)
 @app.route('/admin/videoInfo', methods=['POST', 'GET'])
 def sendInfo():
-    # url = request.args.get('url')
-    # start = request.args.get('start')
-    # end = request.args.get('end')
     url = request.get_json()['url']
     start = request.get_json()['start']
     end = request.get_json()['end']
+    lang = request.get_json()['lang']
+
+    # url 뒤에 있는 video id 추출 -> script 불러올 때 필요한 video Id
     video_id = getVedioId(url)
-
-    # yt = YouTube(url)
-
+    # video 정보 가져오기
     data = get_video_info(url)
-    # captions = yt.captions
-
-    # for caption in captions:
-    #     print(caption)  # 가져올 수 있는 언어 확인
-
-    sc = YouTubeTranscriptApi.get_transcript(video_id)
     result = list()
-    for s in sc:
-        if float(s['start']) >= float(start) and float(s['start']) <= float(end):
-            result.append(s)
-        elif s['start'] > float(end):
-            break
-    last = {
+    if lang == 'english':
+        # script 가져오기
+        sc = YouTubeTranscriptApi.get_transcript(video_id)
+        # start 및 end time 사이의 script 추출
+        for s in sc:
+            if float(s['start']) >= float(start) and float(s['start']) <= float(end):
+                result.append(s)
+            elif s['start'] > float(end):
+                break
+    response = {
         "vedioInfo": data,
         "scripts": result
     }
-    return last
+    return response
 
 
 @app.route('/admin/saveVedio', methods=['POST'])
@@ -197,7 +203,7 @@ def saveApi():
     scripts = request.get_json()['scripts']
     userId = request.get_json()['userId']
 
-    flag = saveVideoAndScript(req, scripts,userId)
+    flag = saveVideoAndScript(req, scripts, userId)
     if flag:
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
@@ -212,9 +218,10 @@ def downloadApi():
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
-@app.route('/cleanDir', methods=['POST', 'GET'])
+@app.route('/admin/cleanDir', methods=['POST', 'GET'])
 def cleanDir():
-    cleanDownloadFolder()
+    userId = request.args.get('userId')
+    cleanDownloadFolder(userId)
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
@@ -224,11 +231,3 @@ if __name__ == '__main__':
 
 def flaskRun():
     app.run(debug=True)
-    # serve(app, host=yourip, port = yourport)
-# if __name__ == '__main__':
-#     # cleanDownloadFolder()
-#     flaskProcess = multiprocessing.Process(name='p1', target=flaskRun)
-#     deleFilesProcess = multiprocessing.Process(
-#         name='p', target=cleanDownloadFolder)
-#     flaskProcess.start()
-#     deleFilesProcess.start()
