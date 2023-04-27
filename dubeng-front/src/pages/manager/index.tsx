@@ -2,23 +2,32 @@ import { useState } from "react";
 import useGetVideoInfoQuery from "@/apis/manager/queries/useGetVideoInfoQuery";
 
 export default function ManagerPage() {
-  const [url, setUrl] = useState<string>("");
-  const [start, setStart] = useState<number>(0);
-  const [end, setEnd] = useState<number>(0);
+  // 다중 input값 저장 객체
+  const [inputs, setInputs] = useState({
+    url: "",
+    start: 0,
+    end: 0,
+  });
 
+  // 비구조화 할당
+  const { url, start, end } = inputs;
+
+  // react-query
   const getVideoInfo = useGetVideoInfoQuery(url, start, end);
 
-  const onChangeVideoUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUrl(e.target.value);
-  };
-  // const onChangeVideoStart = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setStart(e.target.value);
-  // };
-  // const onChangeVideoEnd = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setEnd(e.target.value);
-  // };
+  // input값 onChange
+  const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
 
-  function handleGetVideo() {}
+    setInputs({
+      ...inputs,
+      [name]: value,
+    });
+  };
+
+  function handleGetVideo() {
+    console.log(inputs);
+  }
 
   return (
     <div>
@@ -32,7 +41,7 @@ export default function ManagerPage() {
             id="url"
             name="url"
             placeholder="비디오 url을 입력하세요."
-            onChange={onChangeVideoUrl}
+            onChange={onChangeValue}
           />
         </div>
         <div>
@@ -43,7 +52,7 @@ export default function ManagerPage() {
             id="start"
             name="start"
             placeholder="시작 시간"
-            // onChange={onChangeVideoStart}
+            onChange={onChangeValue}
           />
           ~
           <input
@@ -51,7 +60,7 @@ export default function ManagerPage() {
             id="end"
             name="end"
             placeholder="종료 시간"
-            // onChange={onChangeVideoEnd}
+            onChange={onChangeValue}
           />
           <button onClick={handleGetVideo}>불러오기</button>
         </div>
