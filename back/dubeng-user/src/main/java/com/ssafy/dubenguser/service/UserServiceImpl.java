@@ -1,5 +1,6 @@
 package com.ssafy.dubenguser.service;
 
+import com.ssafy.dubenguser.dto.UserCalenderRes;
 import com.ssafy.dubenguser.dto.UserCategoryRes;
 import com.ssafy.dubenguser.dto.UserJoinReq;
 import com.ssafy.dubenguser.dto.UserProfileRes;
@@ -11,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,4 +74,16 @@ public class UserServiceImpl implements UserService {
 
         return result;
     }
+
+    public UserCalenderRes getCalender(Long userId) {
+        ZonedDateTime today = ZonedDateTime.now();
+        ZonedDateTime startDate = today.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+        ZonedDateTime endDate = today.withDayOfMonth(today.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59).withNano(999_999_999);
+
+        UserCalenderRes result = userRepository.findCalenderByUserId(userId, startDate, endDate);
+
+        return result;
+    }
+
+
 }
