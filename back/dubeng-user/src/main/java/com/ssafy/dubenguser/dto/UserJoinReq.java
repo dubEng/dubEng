@@ -2,11 +2,10 @@ package com.ssafy.dubenguser.dto;
 
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class UserJoinRequestDTO {
+public class UserJoinReq {
     private String accessToken;
     private String refreshToken;
     private String nickname;
