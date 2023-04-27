@@ -38,6 +38,9 @@ dependencies {
     // annotationProcessor
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
+    //WebClient
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
     // QueryDSL 라이브러리
     implementation 'com.querydsl:querydsl-core'
     // QueryDSL JPA 라이브러리
