@@ -1,8 +1,10 @@
 import "@/styles/globals.css";
 import localFont from "next/font/local";
 import type { AppProps } from "next/app";
+import { useState } from "react";
 import { Provider } from "react-redux";
 import { store } from "../stores/store";
+import { QueryClientProvider, QueryClient } from "react-query";
 
 const pretendard = localFont({
   src: [
@@ -47,11 +49,14 @@ const pretendard = localFont({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
+  const [queryClient] = useState(() => new QueryClient());
   return (
     <main className={pretendard.className}>
-      <Provider store={store}>
-        <Component {...pageProps} />
-      </Provider>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <Component {...pageProps} />
+        </Provider>
+      </QueryClientProvider>
     </main>
   );
 }
