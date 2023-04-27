@@ -23,7 +23,11 @@ public class User extends Time{
     private String description;
     private String landName;
     private String recordCount;
-    private Boolean  IsVoted;
+    private Long IsVoted;
     private Long totalRecTime;
+
+    public void updateDubKingUser(Long IsVoted){
+        this.IsVoted = IsVoted + 1;
+    }
 
 }

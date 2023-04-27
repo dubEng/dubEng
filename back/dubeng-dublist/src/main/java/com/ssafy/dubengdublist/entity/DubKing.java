@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -27,5 +28,15 @@ public class DubKing extends Time{
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private ZonedDateTime endDate;
     private Boolean isActive;
+    
+    public DubKing(User user, Long totalVote, Boolean isActive){
+        this.user = user;
+        this.totalVote = totalVote;
+        this.isActive = isActive;
+    }
+
+    public void updateDubKing(Long totalVote){
+        this.totalVote = totalVote + 1;
+    }
 
 }

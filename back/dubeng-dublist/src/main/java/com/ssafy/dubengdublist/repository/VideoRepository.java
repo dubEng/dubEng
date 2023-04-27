@@ -1,6 +1,7 @@
 package com.ssafy.dubengdublist.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.dubengdublist.dto.community.CommunitySearchRes;
 import com.ssafy.dubengdublist.dto.contents.ContentsDetailRes;
 import com.ssafy.dubengdublist.dto.contents.ContentsRecommendRes;
 import com.ssafy.dubengdublist.entity.Script;

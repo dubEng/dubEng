@@ -1,6 +1,7 @@
 package com.ssafy.dubengdublist.controller;
 
 import com.ssafy.dubengdublist.dto.contents.ContentsDetailRes;
+import com.ssafy.dubengdublist.dto.contents.ContentsDetailScriptRes;
 import com.ssafy.dubengdublist.dto.contents.ContentsRecommendRes;
 import com.ssafy.dubengdublist.dto.contents.ContentsSearchRes;
 import com.ssafy.dubengdublist.service.ContentsServiceImpl;
@@ -52,7 +53,7 @@ public class ContentsController {
 
     @ApiOperation(value = "선택한 콘텐츠 영상 자세히 보기")
     @GetMapping("/{langType}/detail/{videoId}")
-    public Page<ContentsDetailRes> SelectAllDetail(@PathVariable("langType") String  langType, Pageable pageable, @PathVariable Long videoId){
+    public Page<ContentsDetailScriptRes> SelectAllDetail(@PathVariable("langType") String  langType, Pageable pageable, @PathVariable Long videoId){
         return contentsService.SelectAllDetail(langType, pageable, videoId);
     }
 
