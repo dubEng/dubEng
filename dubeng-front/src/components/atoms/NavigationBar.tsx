@@ -25,6 +25,7 @@ const menu = [
     isNavigatedButton: true
   },
   {
+    href: "/others",
     label: "녹음버튼",
     isNavigatedButton: false
   },
@@ -55,7 +56,7 @@ export default function NavigationBar() {
             {item.isNavigatedButton === false ? 
             <RecordingButton page={pathName} />
             :
-            <Link href={item.href!}>
+            <Link href={item.href}>
               <div className="flex flex-col justify-center items-center pt-4">
                 {pathName === item.href ? item.clickedIcon : item.icon}
                 {pathName === item.href ? (
