@@ -6,32 +6,6 @@ DEVELOPER_KEY = 'AIzaSyDpyrc3GmHgdivXEoluxuH1uC7kg5JoAro'
 YOUTUBE_API_SERVICE_NAME = 'youtube'
 YOUTUBE_API_VERSION = 'v3'
 
-class video:
-    def __init__(self):
-        self.title = ""
-        self.videoPath = ""
-        self.bgPath = ""       
-        self.runtime = 0        
-        self.thumbnail = ""
-        self.startTime = 0
-        self.endTime = 0
-        self.producer = ""
-        self.gender = ""
-        self.voicePath = ""
-
-
-    
-    def set(self, title, thumbnail, runtime, videoPath, bgPath, voicePath, startT, endT, producer, gender):
-        self.title = title
-        self.videoPath = videoPath
-        self.bgPath = bgPath   
-        self.runtime = runtime       
-        self.thumbnail = thumbnail
-        self.startTime = startT
-        self.endTime = endT
-        self.producer = producer
-        self.gender = gender
-        self.voicePath = voicePath
     
 
 def get_video_info(video_url):
@@ -45,6 +19,7 @@ def get_video_info(video_url):
     print(info['thumbnails']['maxres']['url']) # 썸네일
     print(info['channelTitle'])
     data = {
+        "url":video_url,
         "title":info['title'],
         "thumbnails":info['thumbnails']['maxres']['url'],
         "channelTitle":info['channelTitle']
