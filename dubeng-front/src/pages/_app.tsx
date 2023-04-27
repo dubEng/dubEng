@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { store } from "../stores/store";
+import NavigationBar from "@/components/atoms/NavigationBar";
 
 const pretendard = localFont({
   src: [
@@ -50,6 +51,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <main className={pretendard.className}>
       <Provider store={store}>
+        <NavigationBar />
         <Component {...pageProps} />
       </Provider>
     </main>
