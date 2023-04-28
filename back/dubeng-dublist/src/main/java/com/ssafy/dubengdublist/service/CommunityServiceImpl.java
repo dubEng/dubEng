@@ -1,10 +1,7 @@
 package com.ssafy.dubengdublist.service;
 
 import com.ssafy.dubengdublist.dto.community.*;
-import com.ssafy.dubengdublist.entity.DubKing;
-import com.ssafy.dubengdublist.entity.Record;
-import com.ssafy.dubengdublist.entity.RecordComment;
-import com.ssafy.dubengdublist.entity.User;
+import com.ssafy.dubengdublist.entity.*;
 import com.ssafy.dubengdublist.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +21,7 @@ public class CommunityServiceImpl implements CommunityService{
     private final UserRepository userRepository;
     private final RecordCommentRepository recordCommentRepository;
     private final RecordRepository recordRepository;
+    private final RecordLikeRepository recordLikeRepository;
 
 
     public CommunityDubKingRes SelectOneDubKing(String langType, String userId) {
@@ -94,5 +92,26 @@ public class CommunityServiceImpl implements CommunityService{
         recordComment.deleteComment();
         return 200;
 
+    }
+
+    @Transactional
+    public Integer selectOneDetailLike(String userId, Long recordId) {
+        Optional<User> ouser = userRepository.findById(userId);
+        User user = ouser.get();
+        Optional<Record> orecord = recordRepository.findById(recordId);
+        Record record = orecord.get();
+        // userid와 recordid로 해서 찾은 recordlike 값
+        RecordLike recordLike = videoRepository.selectOneRecordLike(recordId, userId);
+
+        // 만약 아예 없다면
+        if (recordLike == null){
+            recordLikeRepository.save(new RecordLike(user, record, true));
+            record.updateLikeCount(true, record.getLikeCount());
+        }else {
+            recordLike.updateRecordLike(recordLike.getIsActive());
+            record.updateLikeCount(recordLike.getIsActive(), record.getLikeCount());
+        }
+
+        return 200;
     }
 }

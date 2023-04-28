@@ -18,4 +18,6 @@ public interface CommunityService {
     public Integer updateDetailComment(String userId, Long recordCommentId, CommunityDetailCommentReq communityDetailCommentReq);
 
     public Integer deleteDetailComment(String userId, Long recordCommentId, CommunityDetailCommentReq communityDetailCommentReq);
+
+    public Integer selectOneDetailLike(String userId, Long recordId);
 }

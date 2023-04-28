@@ -1,5 +1,6 @@
 package com.ssafy.dubengdublist.entity;
 
+import com.ssafy.dubengdublist.repository.VideoBookmarkRepository;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,4 +22,14 @@ public class VideoBookmark {
     @JoinColumn(name="video_id")
     private Video video;
     private Boolean isActive;
+
+    public VideoBookmark(User user, Video video, Boolean isActive){
+        this.user = user;
+        this.video = video;
+        this.isActive = isActive;
+    }
+
+    public void updateVideoBookmark(Boolean isActive) {
+        this.isActive = !isActive;
+    }
 }

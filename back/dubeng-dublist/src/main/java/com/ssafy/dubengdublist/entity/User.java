@@ -22,7 +22,7 @@ public class User extends Time{
     private String roleType;
     private String description;
     private String landName;
-    private String recordCount;
+    private Long recordCount;
     private Long IsVoted;
     private Long totalRecTime;
 

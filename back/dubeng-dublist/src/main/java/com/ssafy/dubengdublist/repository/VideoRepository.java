@@ -1,6 +1,10 @@
 package com.ssafy.dubengdublist.repository;
 
 import com.ssafy.dubengdublist.dto.contents.ContentsRecommendRes;
+import com.ssafy.dubengdublist.dto.home.HomeDubKing;
+import com.ssafy.dubengdublist.dto.home.HomePopularity;
+import com.ssafy.dubengdublist.dto.home.HomeRank;
+import com.ssafy.dubengdublist.dto.record.RecordScript;
 import com.ssafy.dubengdublist.entity.Video;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +13,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
-public interface VideoRepository extends JpaRepository<Video, Integer>, VideoRepositoryCustom {
+import java.util.List;
+
+public interface VideoRepository extends JpaRepository<Video, Long>, VideoRepositoryCustom {
 
 
     // member가 찜한 스토어 목록

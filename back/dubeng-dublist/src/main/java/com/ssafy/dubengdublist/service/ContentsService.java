@@ -17,4 +17,5 @@ public interface ContentsService {
     public Page<ContentsSearchRes> SelectAllSearch(String langType, String title,Pageable pageable, List<Long> contentsSearch);
     public Page<ContentsDetailScriptRes> SelectAllDetail(String langType, Pageable pageable, Long videoId);
 
+    public Integer selectOneDetailScrap(String userId, Long videoId);
 }

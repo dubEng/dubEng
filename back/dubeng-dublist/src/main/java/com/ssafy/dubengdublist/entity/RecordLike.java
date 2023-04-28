@@ -26,4 +26,14 @@ public class RecordLike extends Time{
 
     private Boolean isActive;
 
+    public RecordLike(User user, Record record, Boolean isActive){
+        this.user = user;
+        this.record = record;
+        this.isActive = isActive;
+    }
+
+    public void updateRecordLike(Boolean isActive){
+        this.isActive = !isActive;
+    }
+
 }

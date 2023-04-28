@@ -30,4 +30,12 @@ public class Record extends Time{
     private Long likeCount;
     private Long voteCount;
 
+    public void updateLikeCount(Boolean likeIsActive, Long likeCount){
+        if (likeIsActive){ // 눌림
+            this.likeCount = likeCount + 1;
+        }else { // 안눌림
+            this.likeCount = likeCount - 1;
+        }
+    }
+
 }

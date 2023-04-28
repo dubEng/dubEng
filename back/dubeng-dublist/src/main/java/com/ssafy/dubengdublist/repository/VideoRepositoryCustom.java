@@ -6,6 +6,13 @@ import com.ssafy.dubengdublist.dto.community.CommunityDubKingRes;
 import com.ssafy.dubengdublist.dto.community.CommunitySearchRes;
 import com.ssafy.dubengdublist.dto.contents.ContentsDetailScriptRes;
 import com.ssafy.dubengdublist.dto.contents.ContentsSearchRes;
+import com.ssafy.dubengdublist.dto.home.HomeDubKing;
+import com.ssafy.dubengdublist.dto.home.HomePopularity;
+import com.ssafy.dubengdublist.dto.home.HomeRank;
+import com.ssafy.dubengdublist.dto.record.RecordScript;
+import com.ssafy.dubengdublist.dto.record.RecordVideo;
+import com.ssafy.dubengdublist.entity.RecordLike;
+import com.ssafy.dubengdublist.entity.VideoBookmark;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -24,4 +31,13 @@ public interface VideoRepositoryCustom {
     public Page<CommunityDetailScriptRes> selectAllCommunityDetailRes(String langType, Pageable pageable, Long videoId);
 
     Page<CommunityCommentRes> selectAllCommunityDetailCommentRes(String langType, Pageable pageable, Long recordId);
+    public RecordLike selectOneRecordLike(Long recordId, String userId);
+    public VideoBookmark selectOneVideoBookmark(Long videoId, String userId);
+    public RecordVideo selectRecordVideo(Long videoId);
+    List<RecordScript> selectRecordScript(Long videoId);
+    List<HomePopularity> selectAllHomePopularity();
+
+    List<HomeRank> selectAllHomeRank();
+    List<HomeDubKing> selectAllHomeDubKing();
+
 }

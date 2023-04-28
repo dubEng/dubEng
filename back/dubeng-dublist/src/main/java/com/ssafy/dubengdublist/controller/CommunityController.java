@@ -73,4 +73,10 @@ public class CommunityController {
         return new ResponseEntity<Integer>(communityService.deleteDetailComment(userId, recordCommentId, communityDetailCommentReq), HttpStatus.ACCEPTED);
     }
 
+    @ApiOperation(value = "더빙한 작품 영상 좋아요")
+    @PostMapping("/{langType}/like/{recordId}")
+    public ResponseEntity<?> selectOneDetailLike(@PathVariable("langType") String  langType, @RequestParam String userId, @PathVariable("recordId") Long recordId){
+        return new ResponseEntity<Integer>(communityService.selectOneDetailLike(userId, recordId), HttpStatus.ACCEPTED);
+    }
+
 }
