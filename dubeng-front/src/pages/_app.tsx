@@ -1,8 +1,10 @@
 import "@/styles/globals.css";
 import localFont from "next/font/local";
 import type { AppProps } from "next/app";
+import { useState } from "react";
 import { Provider } from "react-redux";
 import { store } from "../stores/store";
+import { QueryClientProvider, QueryClient } from "react-query";
 import NavigationBar from "@/components/atoms/NavigationBar";
 import Header from "@/components/atoms/Header";
 
@@ -49,15 +51,18 @@ const pretendard = localFont({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
+  const [queryClient] = useState(() => new QueryClient());
   return (
     <main className={pretendard.className}>
-      <Provider store={store}>
-        <Header />
-        <NavigationBar />
-        <div className="mt-57 mb-61">
-        <Component {...pageProps} />
-        </div>
-      </Provider>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <Header />
+          <NavigationBar />
+          <div className="mt-57 mb-61">
+            <Component {...pageProps} />
+          </div>
+        </Provider>
+      </QueryClientProvider>
     </main>
   );
 }
