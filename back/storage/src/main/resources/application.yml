@@ -9,3 +9,12 @@ logging:
     root: info
     com:
       ssafy: debug
+
+spring:
+  # import application-local.yml
+  profiles:
+    include: local
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
