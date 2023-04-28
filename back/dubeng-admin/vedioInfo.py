@@ -1,8 +1,10 @@
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import urllib.parse
+f_conn = open("./env-vedioInfo.txt")
+DEVELOPER_KEY = f_conn.readline().strip()
+f_conn.close()
 
-DEVELOPER_KEY = 'AIzaSyDpyrc3GmHgdivXEoluxuH1uC7kg5JoAro'
 YOUTUBE_API_SERVICE_NAME = 'youtube'
 YOUTUBE_API_VERSION = 'v3'
 
