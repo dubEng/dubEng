@@ -1,10 +1,8 @@
 package com.ssafy.dubenguser.service;
 
-import com.ssafy.dubenguser.dto.UserCalenderRes;
-import com.ssafy.dubenguser.dto.UserCategoryRes;
-import com.ssafy.dubenguser.dto.UserJoinReq;
-import com.ssafy.dubenguser.dto.UserProfileRes;
+import com.ssafy.dubenguser.dto.*;
 import com.ssafy.dubenguser.entity.User;
+import com.ssafy.dubenguser.exception.InvalidInputException;
 import com.ssafy.dubenguser.exception.NotFoundException;
 import com.ssafy.dubenguser.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,15 +74,31 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    @Transactional
     public UserCalenderRes getCalender(Long userId) {
         ZonedDateTime today = ZonedDateTime.now();
         ZonedDateTime startDate = today.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
         ZonedDateTime endDate = today.withDayOfMonth(today.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59).withNano(999_999_999);
 
         UserCalenderRes result = userRepository.findCalenderByUserId(userId, startDate, endDate);
-
         return result;
     }
+
+    @Transactional
+    public List<UserRecordRes> getRecords(Long userId, UserRecordReq request) {
+        if(request.getIsPublic()==null || request.getIsLimit()==null || request.getLanType()==null)
+            throw new InvalidInputException("모든 값을 채워주세요!");
+
+        List<UserRecordRes> result = userRepository.findRecordByUserId(userId, request.getIsPublic(), request.getIsLimit(), request.getLanType());
+        return result;
+    }
+
+    @Transactional
+    public List<UserLikedRecordRes> getLikedRecords(Long userId) {
+        List<UserLikedRecordRes> result = new ArrayList<>();
+        return result;
+    }
+
 
 
 }
