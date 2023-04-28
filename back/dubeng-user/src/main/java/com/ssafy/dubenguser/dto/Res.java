@@ -3,7 +3,7 @@ package com.ssafy.dubenguser.dto;
 import lombok.Data;
 
 @Data
-public class ResponseDTO<T> {
+public class Res<T> {
     private int statusCode;
     private T Data;
 

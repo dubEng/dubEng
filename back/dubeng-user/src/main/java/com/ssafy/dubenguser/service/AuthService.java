@@ -2,8 +2,7 @@ package com.ssafy.dubenguser.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.dubenguser.dto.TokenDTO;
-import com.ssafy.dubenguser.entity.User;
+import com.ssafy.dubenguser.dto.Token;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.HashMap;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -90,7 +88,7 @@ public class AuthService {
      * refreshToken 을 통하여 token 갱신
      * ATK RTK 둘 다 갱신된다.
      */
-    public TokenDTO requestRefresh(TokenDTO requestDTO){
+    public Token requestRefresh(Token requestDTO){
 
         //
         WebClient webClient = WebClient.builder()
@@ -119,7 +117,7 @@ public class AuthService {
         if(result.get("refresh_token") != null){
             refresh_token = (String) result.get("refresh_token");
         }
-        TokenDTO responseDTO = new TokenDTO((String) result.get("access_token"), refresh_token);
+        Token responseDTO = new Token((String) result.get("access_token"), refresh_token);
 
         return responseDTO;
     }

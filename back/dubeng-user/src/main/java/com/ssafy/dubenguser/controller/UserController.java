@@ -1,89 +1,50 @@
 package com.ssafy.dubenguser.controller;
 
-import com.ssafy.dubenguser.dto.TokenDTO;
-import com.ssafy.dubenguser.dto.UserJoinRequestDTO;
-import com.ssafy.dubenguser.service.AuthService;
-import com.ssafy.dubenguser.service.UserService;
+import com.ssafy.dubenguser.dto.UserCalenderRes;
+import com.ssafy.dubenguser.dto.UserProfileRes;
+import com.ssafy.dubenguser.dto.UserRecordReq;
+import com.ssafy.dubenguser.dto.UserRecordRes;
+import com.ssafy.dubenguser.entity.User;
+import com.ssafy.dubenguser.service.UserServiceImpl;
+import io.swagger.models.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
 
 @Slf4j
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/mypage")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
-    private final AuthService authService;
+    private final UserServiceImpl userService;
+    private static final String SUCCESS = "success";
+    private static final String FAIL = "fail";
 
-    @GetMapping("/kakao/callback")
-    public void getAuthCode(@RequestParam String code, HttpServletResponse response, RedirectAttributes attributes) throws IOException {
-        log.debug("auth code : {}", code);
-
-        //code로 access-token 요청
-        HashMap<String, Object> result = authService.getAccessToken(code);
-
-        //회원 가입 여부 체크
-        String redirectUri = "/";
-        if(!userService.checkEnrolledMember((Long) result.get("userId"))){
-            redirectUri = "/join";
-        }
-
-        //토큰 POST 방식 적재
-        attributes.addFlashAttribute("token", result);
-        response.sendRedirect("http://localhost:3000" + redirectUri);
+    @GetMapping()
+    public ResponseEntity<UserProfileRes> getUserProfile(HttpServletRequest httpServletRequest) {
+        User user = (User) httpServletRequest.getAttribute("user");
+        UserProfileRes result = userService.getProfile(user.getId());
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/parse")
-    public ResponseEntity<Long> parseAccessToken(@RequestBody TokenDTO requestDTO){
-        log.debug("accessToken : {}", requestDTO.getAccessToken());
-
-        //service - parseToken
-        Long userId = authService.parseToken(requestDTO.getAccessToken());
-
-        return new ResponseEntity<Long>(userId, HttpStatus.OK);
-    }
-    @PostMapping("/refresh")
-    public ResponseEntity<TokenDTO> refreshToken(@RequestBody TokenDTO requestDTO){
-        log.debug("refreshToken : {}", requestDTO);
-
-        //service - refresh
-        TokenDTO responseDTO = authService.requestRefresh(requestDTO);
-
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    @GetMapping("/calendar")
+    public ResponseEntity<UserCalenderRes> getUserCalendar(HttpServletRequest httpServletRequest) {
+        User user = (User) httpServletRequest.getAttribute("user");
+        UserCalenderRes result = userService.getCalender(user.getId());
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    /**
-     * 회원가입
-     * 구현 안돼어있음.
-     */
-    @PostMapping("join")
-    public void join(@RequestBody UserJoinRequestDTO requestDTO){
-        log.debug("requestDTO : {}", requestDTO.toString());
-
-        Long userId = authService.parseToken(requestDTO.getAccessToken());
-
-        if(userService.checkEnrolledMember(userId)){
-            //이미 등록된 사용자 입니다.
-        }
-
-        userService.save(requestDTO);
-
-
-    }
-    @GetMapping("/check/{nickname}")
-    public ResponseEntity<Boolean> checkDuplicateNickname(@PathVariable String nickname){
-        log.debug("nickname : {}", nickname);
-
-        boolean check = userService.isExistNickname(nickname);
-
-        return new ResponseEntity<Boolean>(check, HttpStatus.OK);
+    @PostMapping("/recordList")
+    public ResponseEntity<List<UserRecordRes>> getUserRecordList(HttpServletRequest httpServletRequest, @RequestBody UserRecordReq request) {
+        User user = (User) httpServletRequest.getAttribute("user");
+        List<UserRecordRes> recordList = userService.getRecords(user.getId(), request);
+        return new ResponseEntity<>(recordList, HttpStatus.OK);
     }
 }
