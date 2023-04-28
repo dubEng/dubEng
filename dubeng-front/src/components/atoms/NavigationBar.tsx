@@ -11,7 +11,7 @@ import RecordingButton from "./RecordingButton";
 
 const menu = [
   {
-    href: "/home",
+    href: "/",
     label: "홈",
     icon: <MdHomeFilled size={24} color="#767676" />,
     clickedIcon: <MdHomeFilled size={24} color="#ff6d60" />,
