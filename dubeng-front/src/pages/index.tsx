@@ -1,13 +1,5 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import ManagerPage from "./manager";
+import Background from "@/components/atoms/Background";
 
-const inter = Inter({ subsets: ["latin"] });
-
-export default function Home() {
-  return (
-    <div>
-      <ManagerPage />
-    </div>
-  );
+export default function HomePage() {
+  return <>홈 페이지</>;
 }
