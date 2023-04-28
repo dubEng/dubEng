@@ -49,7 +49,7 @@ export default function NavigationBar() {
   const pathName = usePathname();
 
   return (
-    <nav className="h-61 pt-8 pb-8 fixed left-0 right-0 bottom-0 z-50 bg-white border-t-1 border-[#DEE2E6] ">
+    <nav className={getNavigationBarStyle(pathName)}>
       <ul className="flex justify-around">
         {menu.map((item) => (
           <li key={item.href}>
@@ -72,4 +72,12 @@ export default function NavigationBar() {
       </ul>
     </nav>
   );
+
+  function getNavigationBarStyle(pathName:string) : string {
+    if(pathName === "/community/shorts"){
+      return "h-61 pt-8 pb-8 fixed left-0 right-0 bottom-0 z-50 bg-dubblack border-t-1 border-[#DEE2E6]";
+    } else {
+      return "h-61 pt-8 pb-8 fixed left-0 right-0 bottom-0 z-50 bg-white border-t-1 border-[#DEE2E6]";
+    }
+  }
 }
