@@ -7,13 +7,17 @@ export default function ManagerPage() {
     url: "",
     start: 0,
     end: 0,
+    lang: "",
   });
 
+  // 다중 requestbody 값 저장 객체
+  const [videoInfo, setVideoInfo] = useState({});
+
   // 비구조화 할당
-  const { url, start, end } = inputs;
+  const { url, start, end, lang } = inputs;
 
   // react-query
-  const getVideoInfo = useGetVideoInfoQuery(url, start, end);
+  const getVideoInfo = useGetVideoInfoQuery(url, start, end, lang);
 
   // input값 onChange
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,6 +31,9 @@ export default function ManagerPage() {
 
   function handleGetVideo() {
     console.log(inputs);
+  }
+  function handleSaveVideo() {
+    console.log("등록하기 버튼 눌렀다!");
   }
 
   return (
@@ -62,9 +69,89 @@ export default function ManagerPage() {
             placeholder="종료 시간"
             onChange={onChangeValue}
           />
-          <button onClick={handleGetVideo}>불러오기</button>
         </div>
+        <div>
+          <label htmlFor="lang">언어</label>
+          <br />
+          <div>
+            <label htmlFor="english">English</label>
+            <input
+              type="radio"
+              value="english"
+              id="english"
+              name="lang"
+              onChange={onChangeValue}
+            />
+            <label htmlFor="korean">한국어</label>
+            <input
+              type="radio"
+              value="korean"
+              id="korean"
+              name="lang"
+              onChange={onChangeValue}
+            />
+          </div>
+        </div>
+        <button
+          className="rounded-[8px] bg-dubblue px-16"
+          onClick={handleGetVideo}
+        >
+          불러오기
+        </button>
       </div>
+      <p className="text-24 font-bold">더빙 콘텐츠 정보</p>
+
+      <p>콘텐츠 미리보기</p>
+      {/* <iframe
+        src="https://www.youtube.com/watch?v=vQM7qLK0fV0&t=2s"
+        frameBorder="0"
+      ></iframe> */}
+
+      <p>썸네일</p>
+      <img src="#" alt="videoThumbnail" />
+
+      <label htmlFor="videoTitle">콘텐츠 제목</label>
+      <input type="text" />
+
+      <label htmlFor="videoRuntime">런타임</label>
+      <input type="number" />
+
+      <label htmlFor="videoLanguage">영상 언어</label>
+      <br />
+      <div>
+        <label htmlFor="english">English</label>
+        <input
+          type="radio"
+          value="english"
+          id="english"
+          name="lang"
+          onChange={onChangeValue}
+        />
+        <label htmlFor="korean">한국어</label>
+        <input
+          type="radio"
+          value="korean"
+          id="korean"
+          name="lang"
+          onChange={onChangeValue}
+        />
+      </div>
+
+      <label htmlFor="videoProduction">제작사</label>
+      <input type="text" />
+
+      <p className="text-24 font-bold">스크립트</p>
+
+      <p className="text-24 font-bold">콘텐츠 정보 입력하기</p>
+      <p>카테고리</p>
+      <div>카테고리 태그들 들어갈 공간</div>
+      <p>음성 파일 첨부</p>
+      <button
+        className="rounded-[8px] bg-dubblue px-16"
+        onClick={handleSaveVideo}
+      >
+        등록하기
+      </button>
     </div>
   );
 }
