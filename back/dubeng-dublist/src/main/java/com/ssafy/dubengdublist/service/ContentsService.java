@@ -14,7 +14,7 @@ import java.util.List;
 public interface ContentsService {
 
     public HashMap<String, Object> SelectAllRecommend(String langType, Pageable pageable);
-    public Page<ContentsSearchRes> SelectAllSearch(String langType, Pageable pageable, List<Long> contentsSearch);
+    public Page<ContentsSearchRes> SelectAllSearch(String langType, String title,Pageable pageable, List<Long> contentsSearch);
     public Page<ContentsDetailScriptRes> SelectAllDetail(String langType, Pageable pageable, Long videoId);
 
 }

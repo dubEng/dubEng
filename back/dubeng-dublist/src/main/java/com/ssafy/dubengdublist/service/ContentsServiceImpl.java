@@ -34,8 +34,8 @@ public class ContentsServiceImpl implements ContentsService {
     }
 
     @Transactional
-    public Page<ContentsSearchRes> SelectAllSearch(String langType, Pageable pageable, List<Long> contentsSearch) {
-        return videoRepository.selectAllContentsSearchRes(langType, pageable, contentsSearch);
+    public Page<ContentsSearchRes> SelectAllSearch(String langType, String title, Pageable pageable, List<Long> contentsSearch) {
+        return videoRepository.selectAllContentsSearchRes(langType, title, pageable, contentsSearch);
     }
 
     @Transactional

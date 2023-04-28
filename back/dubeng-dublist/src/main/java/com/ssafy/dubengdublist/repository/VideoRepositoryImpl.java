@@ -9,10 +9,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.dubengdublist.dto.community.*;
 import com.ssafy.dubengdublist.dto.contents.*;
-import com.ssafy.dubengdublist.entity.QRecord;
-import com.ssafy.dubengdublist.entity.QUser;
-import com.ssafy.dubengdublist.entity.Script;
-import com.ssafy.dubengdublist.entity.Video;
+import com.ssafy.dubengdublist.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -22,6 +19,7 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ssafy.dubengdublist.entity.QRecordComment.recordComment;
 import static com.ssafy.dubengdublist.entity.QScript.script;
 import static com.ssafy.dubengdublist.entity.QUser.user;
 import static com.ssafy.dubengdublist.entity.QVideo.video;
@@ -35,15 +33,20 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public Page<ContentsSearchRes> selectAllContentsSearchRes(String langType, Pageable pageable,List<Long> contentsSearch){
+    public Page<ContentsSearchRes> selectAllContentsSearchRes(String langType, String title,Pageable pageable,List<Long> contentsSearch){
 
         BooleanBuilder builder = new BooleanBuilder();
 
-        for(Long s : contentsSearch){
-            builder.or(videoCategory.category.id.eq(s));
+        if (!StringUtils.isEmpty(contentsSearch)) {
+            for(Long s : contentsSearch){
+                builder.or(videoCategory.category.id.eq(s));
+            }
         }
         if (!StringUtils.isEmpty(langType)) {
             builder.and(video.langType.eq(langType));
+        }
+        if (!StringUtils.isEmpty(title)) {
+            builder.and(video.title.contains(title));
         }
 
         List<ContentsSearchRes> content = queryFactory
@@ -63,14 +66,19 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
-    public Page<CommunitySearchRes> selectAllCommunitySearchRes(String langType, Pageable pageable, List<Long> contentsSearch){
+    public Page<CommunitySearchRes> selectAllCommunitySearchRes(String langType, String  title, Pageable pageable, List<Long> contentsSearch){
         BooleanBuilder builder = new BooleanBuilder();
 
-        for(Long s : contentsSearch){
-            builder.or(videoCategory.category.id.eq(s));
+        if (!StringUtils.isEmpty(contentsSearch)) {
+            for(Long s : contentsSearch){
+                builder.or(videoCategory.category.id.eq(s));
+            }
         }
         if (!StringUtils.isEmpty(langType)) {
             builder.and(video.langType.eq(langType));
+        }
+        if (!StringUtils.isEmpty(title)) {
+            builder.and(video.title.contains(title));
         }
 
         List<CommunitySearchRes> content = queryFactory
@@ -123,6 +131,42 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         return PageableExecutionUtils.getPage(contentsDetailScriptResList, pageable, countQuery::fetchCount);
     }
 
+    public Page<CommunityDetailScriptRes> selectAllCommunityDetailRes(String langType, Pageable pageable, Long videoId){
+        // 맨 처음은 해당 영상 + 뒤에는 랜덤 영상(추천)
+        NumberExpression<Integer> roleRankPath = new CaseBuilder()
+                .when(video.id.eq(videoId)).then(1)
+                .otherwise(2);
+
+        List<CommunityDetailRes> content = queryFactory
+                .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.nickname, QRecord.record.id))
+                .from(video)
+                .where(video.langType.eq(langType), QRecord.record.isPublic.eq(true))
+                .join(QRecord.record)
+                .on(video.id.eq(QRecord.record.video.id))
+                .leftJoin(user)
+                .on(QRecord.record.user.id.eq(user.id))
+                .leftJoin(recordComment)
+                .on(recordComment.record.id.eq(QRecord.record.id))
+                .groupBy(QRecord.record.id)
+                .orderBy(roleRankPath.asc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        List<CommunityDetailScriptRes> communityDetailScriptResList = new ArrayList<>();
+        for(CommunityDetailRes c : content){
+            CommunityDetailScriptRes cd = new CommunityDetailScriptRes(c.getId(), c.getTitle(), c.getThumbnail(), c.getVideoPath(), c.getCreatedDate(), c.getRecordLikeCount(), c.getRecordCommentCount(),c.getNickname(), c.getRecordId(), selectAllScript(c.getId()));
+            communityDetailScriptResList.add(cd);
+        }
+
+        JPAQuery<Record> countQuery = queryFactory
+                .select(QRecord.record)
+                .from(QRecord.record);
+
+        return PageableExecutionUtils.getPage(communityDetailScriptResList, pageable, countQuery::fetchCount);
+    }
+
+
     public List<ContentsScriptRes> selectAllScript(Long videoId){
         List<ContentsScriptRes> scriptList = queryFactory
                 .select(new QContentsScriptRes(script.startTime, script.duration, script.content, script.translateContent))
@@ -162,6 +206,23 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         return communityDubKingRes;
     }
 
+    public Page<CommunityCommentRes> selectAllCommunityDetailCommentRes(String langType, Pageable pageable, Long recordId){
 
+        List<CommunityCommentRes> content = queryFactory
+                .select(new QCommunityCommentRes(user.nickname, recordComment.content, recordComment.updatedDate))
+                .from(recordComment)
+                .leftJoin(user)
+                .on(recordComment.user.id.eq(user.id))
+                .where(recordComment.record.id.eq(recordId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Video> countQuery = queryFactory
+                .select(video)
+                .from(video);
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
 
 }

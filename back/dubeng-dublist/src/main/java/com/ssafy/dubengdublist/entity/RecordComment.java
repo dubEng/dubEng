@@ -25,4 +25,19 @@ public class RecordComment extends Time{
     private Record record;
     private Boolean isActive;
     private String content;
+
+    public RecordComment(User user, Record record, Boolean isActive, String content){
+        this.user = user;
+        this.record = record;
+        this.isActive = isActive;
+        this.content = content;
+    }
+
+    public void updateComment(String content){
+        this.content = content;
+    }
+
+    public void deleteComment() {
+        this.isActive = true;
+    }
 }

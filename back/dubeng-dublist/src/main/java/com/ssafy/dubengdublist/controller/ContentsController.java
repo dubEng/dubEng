@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 
+
 @RestController
 @RequiredArgsConstructor
 @Api("더빙 컨텐츠 API")
@@ -47,8 +48,8 @@ public class ContentsController {
 
     @ApiOperation(value = "카테고리에서 검색한 콘텐츠 목록 불러오기")
     @GetMapping("/{langType}/search")
-    public Page<ContentsSearchRes> SelectAllSearch(@PathVariable("langType") String  langType, Pageable pageable, @RequestParam List<Long> contentsSearch){
-        return contentsService.SelectAllSearch(langType, pageable, contentsSearch);
+    public Page<ContentsSearchRes> SelectAllSearch(@PathVariable("langType") String  langType, @RequestParam(required = false) String  title,Pageable pageable, @RequestParam(required = false) List<Long> contentsSearch){
+        return contentsService.SelectAllSearch(langType, title, pageable, contentsSearch);
     }
 
     @ApiOperation(value = "선택한 콘텐츠 영상 자세히 보기")

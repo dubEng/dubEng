@@ -20,10 +20,12 @@ public class CommunityDetailScriptRes {
     private Long recordCommentCount;
     private Long recordLikeCount;
     private String nickname;
+    private Long recordId;
     private List<ContentsScriptRes> scriptList;
 
+
     @QueryProjection
-    public CommunityDetailScriptRes(Long id, String title, String thumbnail,String videoPath, ZonedDateTime createdDate, Long recordCommentCount, Long recordLikeCount, String nickname,List<ContentsScriptRes> scriptList ) {
+    public CommunityDetailScriptRes(Long id, String title, String thumbnail,String videoPath, ZonedDateTime createdDate, Long recordCommentCount, Long recordLikeCount, String nickname,Long recordId, List<ContentsScriptRes> scriptList) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
@@ -32,6 +34,7 @@ public class CommunityDetailScriptRes {
         this.recordLikeCount = recordLikeCount;
         this.nickname = nickname;
         this.createdDate = createdDate;
+        this.recordId = recordId;
         this.scriptList = scriptList;
     }
 
