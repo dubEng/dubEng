@@ -57,6 +57,34 @@ def deletIllegalSymbols(name):
     name = re.sub(r'\s+', '_', name)
     return name
 
+# 장르/상황 카테고리 목록 가져오는 함수
+def getCategories():
+    categories = [] # DB에서 가져온 카테고리 정보를 저장할 객체를 담을 리스트
+
+    #DB 연결
+    cursorclass = pymysql.cursors.Cursor
+    connection = pymysql.connect(host=DB_HSOT, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
+    cursor = connection.cursor()
+    
+    # 카테고리 테이블에서 정보 얻어오기
+    sql = "select * from category"
+    cursor.execute(sql)
+    rows = cursor.fetchall()
+
+    for r in rows:
+        id = r[0]
+        cate = {
+            "id":id,
+            "name":r[1]
+        }
+        categories.append(cate)
+
+    connection.commit()
+    connection.close()
+
+    return categories
+
+
 
 def uploadToBucket(filePath, uploadName):
     key = uploadName
@@ -83,7 +111,7 @@ def uploadToBucket(filePath, uploadName):
 
 
 # 비디오 및 스크립트 Table에 저장하는 함수
-def saveVideoAndScript(video, scripts, userId):
+def saveVideoAndScript(video, scripts, userId, categories, file_exist):
     # DB 연결
     cursorclass = pymysql.cursors.Cursor
     connection = pymysql.connect(
@@ -104,41 +132,50 @@ def saveVideoAndScript(video, scripts, userId):
                   sc['translate_content'], videoId, sc['is_dub'])
         cursor.execute(sql, values)
 
-    data = seperateMp3(video['video_path'], userId, video['title'])
-    sql = "UPDATE video SET background_path=%s, voice_path=%s WHERE id=%s"
-    cursor.execute(sql, (data['backUrl'], data['vocalUrl'], videoId))
+    for cate in categories:
+        sql = "insert into video_category (video_id, category_id) values (%s, %s)"
+        values = (videoId, cate['id'])
+        cursor.execute(sql, values)
 
-    connection.commit()
-    connection.close()
+    data = seperateMp3(video['video_path'], userId, video['title'], file_exist)
+    if data is not None:
+        sql = "UPDATE video SET background_path=%s, voice_path=%s WHERE id=%s"
+        cursor.execute(sql, (data['backUrl'], data['vocalUrl'], videoId))
 
-    return True
+        connection.commit()
+        connection.close()
+
+        return True
+    else:
+        return False
 
 
 # 음원 추출 및 분리하는 함수
-def seperateMp3(url, userId, videoTitle):
+def seperateMp3(url, userId, videoTitle, file_exist):
     import os
     cnt = 0
 
     # pytube로 영상 정보 가져오기
     yt = YouTube(url, on_progress_callback=None)
-
-    # 가져와질 때까지 retry...
-    while True:
-        try:
-            # userId의 이름으로 영상 저장
-            newname = userId+'.mp3'
-            yt.streams.filter(only_audio=True).first().download(
-                output_path='download/dwn', filename=newname)
-            break
-
-        except:
-            if cnt > 25:
+    result = None
+    if file_exist==False:
+        # 가져와질 때까지 retry...
+        while True:
+            try:
+                # userId의 이름으로 영상 저장
+                newname = userId+'.mp3'
+                yt.streams.filter(only_audio=True).first().download(
+                    output_path='download/dwn', filename=newname)
                 break
-            time.sleep(2)
-            yt = YouTube(url, on_progress_callback=None)
-            cnt += 1
-            print('retrying....', cnt)
-            continue
+
+            except:
+                if cnt > 25:
+                    return result
+                time.sleep(2)
+                yt = YouTube(url, on_progress_callback=None)
+                cnt += 1
+                print('retrying....', cnt)
+                continue
 
     # 음원이 저장된 경로로 이동
     path = "./download/dwn/"
@@ -199,12 +236,20 @@ def sendInfo():
 
 @app.route('/admin/saveVedio', methods=['POST'])
 def saveApi():
+    
     req = request.get_json()['video']
     scripts = request.get_json()['scripts']
     userId = request.get_json()['userId']
+    categories = request.get_json()['categories']
+    file_exist = False
+    if 'file' in request.files:
+        file = request.files['file']
+        file.save('download/dwn/'+userId+'.mp3')
+        file_exist = True
 
-    flag = saveVideoAndScript(req, scripts, userId)
+    flag = saveVideoAndScript(req, scripts, userId, categories, file_exist)
     if flag:
+        # cleanDownloadFolder(userId)
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
     return json.dumps({'success': False}), 405, {'ContentType': 'application/json'}
@@ -213,7 +258,7 @@ def saveApi():
 @app.route('/admin/download', methods=['POST', 'GET'])
 def downloadApi():
     url = request.get_json()['url']
-    seperateMp3(url, "12937", "videoTitle")
+    seperateMp3(url, "39576", "testTitle")
 
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
@@ -224,6 +269,13 @@ def cleanDir():
     cleanDownloadFolder(userId)
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
+@app.route('/category', methods=['GET'])
+def getCate():
+    try:
+        result = getCategories()
+    except:
+        return json.dumps({'success': "not found"}), 404, {'ContentType': 'application/json'}
+    return jsonify(result)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

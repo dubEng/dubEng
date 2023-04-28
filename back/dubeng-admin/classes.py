@@ -24,3 +24,11 @@ class video:
         self.producer = producer
         self.gender = gender
         self.voicePath = voicePath
+
+class category:
+    def __init__(self):
+            self.id = 0
+            self.name = ""
+    def set(self, id, name):
+         self.id = id
+         self.name = name
