@@ -26,4 +26,5 @@ public class Video extends Time {
     private String producer;
     private Long playCount;
     private Boolean gender;
+    private String langType;
 }

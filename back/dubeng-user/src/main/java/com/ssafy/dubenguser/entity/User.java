@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class User extends Time{
 
     @Id
-    private String id;
+    private Long id;
     private String email;
     private String nickname;
     private String isActive;
@@ -22,7 +22,7 @@ public class User extends Time{
     private String roleType;
     private String description;
     private String landName;
-    private String recordCount;
+    private Long recordCount;
     private Boolean  IsVoted;
     private Long totalRecTime;
 

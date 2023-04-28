@@ -1,3 +1,8 @@
+server:
+  port: 9000
+  servlet:
+    context-path: /user
+
 # JPA
 spring:
   jpa:
@@ -29,4 +34,7 @@ logging:
   level:
     root: info
     com:
-      temp: debug
+      ssafy: debug
+
+
+

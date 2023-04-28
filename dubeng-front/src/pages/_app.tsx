@@ -5,6 +5,8 @@ import { useState } from "react";
 import { Provider } from "react-redux";
 import { store } from "../stores/store";
 import { QueryClientProvider, QueryClient } from "react-query";
+import NavigationBar from "@/components/atoms/NavigationBar";
+import Header from "@/components/atoms/Header";
 
 const pretendard = localFont({
   src: [
@@ -54,7 +56,11 @@ export default function App({ Component, pageProps }: AppProps) {
     <main className={pretendard.className}>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
-          <Component {...pageProps} />
+          <Header />
+          <NavigationBar />
+          <div className="mt-57 mb-61">
+            <Component {...pageProps} />
+          </div>
         </Provider>
       </QueryClientProvider>
     </main>
