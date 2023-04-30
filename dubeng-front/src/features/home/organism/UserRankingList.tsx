@@ -56,7 +56,7 @@ export default function UserRankingList() {
         <div className="col-span-3"></div>
         <div className="col-span-5 text-13 text-dubblack"> 닉네임</div>
         <div className="text-13 text-dubblack flex items-center justify-center col-span-2">녹음시간</div>
-        <div className="text-13 text-dubblack flex items-center justify-center col-span-2">더빙 횟수</div>
+        <div className="text-13 text-dubblack flex items-center justify-center col-span-2">더빙 수</div>
       </div>
       {userRankingList &&
         userRankingList.map((item) => (
