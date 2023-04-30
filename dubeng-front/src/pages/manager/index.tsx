@@ -1,5 +1,7 @@
 import { useState } from "react";
 import useGetVideoInfoQuery from "@/apis/manager/queries/useGetVideoInfoQuery";
+import ScriptListItem from "@/features/manager/organism/ScriptListItem";
+import useCategoryQuery from "@/apis/manager/queries/useCategoryQuery";
 
 export default function ManagerPage() {
   // 다중 input값 저장 객체
@@ -10,14 +12,72 @@ export default function ManagerPage() {
     lang: "",
   });
 
-  // 다중 requestbody 값 저장 객체
-  const [videoInfo, setVideoInfo] = useState({});
+  const scripts = [
+    {
+      duration: 1.126,
+      start: 49.007,
+      text: "Oh, my God. He's..",
+      subTitle: "안녕",
+    },
+    {
+      duration: 1.836,
+      start: 50.216,
+      text: "Look at the way\nhe's just staring at me.",
+      subTitle: "안녕",
+    },
+    {
+      duration: 1.502,
+      start: 53.219,
+      text: "I think he's tryin'\nto mouth something at me",
+      subTitle: "안녕",
+    },
+    {
+      duration: 1.335,
+      start: 54.804,
+      text: "but I can't make it out.",
+      subTitle: "안녕",
+    },
+    {
+      duration: 1.627,
+      start: 60.393,
+      text: "Okay, dinner's ready.",
+      subTitle: "안녕",
+    },
+    {
+      duration: 1.21,
+      start: 62.103,
+      text: "- Good game.\n- Yeah.",
+      subTitle: "안녕",
+    },
+    {
+      duration: 1.669,
+      start: 63.354,
+      text: "Yeah, solid effort,\nsolid effort.",
+      subTitle: "안녕",
+    },
+  ];
+
+  // // 다중 requestbody 값 저장 객체
+  // const videoInfo, setVideoInfo] = useState({});
 
   // 비구조화 할당
   const { url, start, end, lang } = inputs;
 
   // react-query
   const getVideoInfo = useGetVideoInfoQuery(url, start, end, lang);
+
+  // 카테고리 조회 react-query
+  // const { data } = useCategoryQuery();
+  const data = [
+    {
+      id: 1,
+      name: "판타지",
+    },
+    {
+      id: 2,
+      name: "로맨스",
+    },
+  ];
 
   // input값 onChange
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,6 +89,7 @@ export default function ManagerPage() {
     });
   };
 
+  // 요청 보내는 파트
   function handleGetVideo() {
     console.log(inputs);
   }
@@ -141,10 +202,13 @@ export default function ManagerPage() {
       <input type="text" />
 
       <p className="text-24 font-bold">스크립트</p>
+      {scripts.map((script, idx) => (
+        <ScriptListItem {...script} key={script.start} />
+      ))}
 
       <p className="text-24 font-bold">콘텐츠 정보 입력하기</p>
       <p>카테고리</p>
-      <div>카테고리 태그들 들어갈 공간</div>
+      {data.map((category: { name: any }, idx: any) => category.name)}
       <p>음성 파일 첨부</p>
       <button
         className="rounded-[8px] bg-dubblue px-16"
