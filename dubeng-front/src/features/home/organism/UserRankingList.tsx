@@ -51,13 +51,12 @@ export default function UserRankingList() {
   ];
 
   return (
-    <section>
-      <div className="grid grid-cols-12 mb-16 gap-8">
-        <div className="col-span-2"></div>
-        <div className="flex justify-end text-13 text-dubblack">닉네임</div>
-        <div className="col-span-7"></div>
-        <div className="text-13 text-dubblack flex items-center justify-center">녹음시간</div>
-        <div className="text-13 text-dubblack flex items-center justify-center">더빙 횟수</div>
+    <section className="mx-16">
+      <div className="grid grid-cols-12 mb-8 gap-8">
+        <div className="col-span-3"></div>
+        <div className="col-span-5 text-13 text-dubblack"> 닉네임</div>
+        <div className="text-13 text-dubblack flex items-center justify-center col-span-2">녹음시간</div>
+        <div className="text-13 text-dubblack flex items-center justify-center col-span-2">더빙 횟수</div>
       </div>
       {userRankingList &&
         userRankingList.map((item) => (

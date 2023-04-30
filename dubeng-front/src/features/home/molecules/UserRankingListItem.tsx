@@ -17,14 +17,14 @@ export default function UserRankingListItem({
       <div className="flex justify-end">
         <Image src={imageUrl} alt={"profile"} width={38} height={38} className="rounded-md" />
       </div>
-      <div className="col-span-7">
+      <div className="col-span-5">
         <div className="text-14 text-dubblack">{nickname}</div>
         <div className="text-10 text-dubgray">{introduce}</div>
       </div>
-      <div className="text-14 text-dubblack flex items-center justify-center">
+      <div className="text-14 text-dubblack flex items-center justify-center col-span-2">
         {recordingTime}
       </div>
-      <div className="text-14 text-dubblack flex items-center justify-center">
+      <div className="text-14 text-dubblack flex items-center justify-center col-span-2">
         {dubingCount}
       </div>
     </div>
