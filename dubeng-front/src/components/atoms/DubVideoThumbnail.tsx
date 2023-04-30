@@ -1,13 +1,8 @@
 import Image from "next/image";
 import WeBareBears from "../../../public/images/dump/webarebears_image.png"
+import { DubProduct } from "@/types/DubProduct";
 
-
-interface Iprops {
-  title: string;
-  url: string;
-}
-
-export default function DubVideoThumbnail({ title = "제목입니다.", url="" }: Iprops) {
+export default function DubVideoThumbnail({ title = "제목입니다.", url="" }: DubProduct) {
   return (
     <div className="relative object-cover">
     <Image src={WeBareBears} className="rounded-18" alt={title} width={272} height={152} />
