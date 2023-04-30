@@ -1,19 +1,13 @@
+import { DubKing } from "@/types/DubKing";
 import Image from "next/image";
 import { AiTwotoneCrown } from "react-icons/ai";
-
-interface Iprops {
-  ranking: number;
-  nickname: string;
-  totalCount: number;
-  dubKingImageUrl: string;
-}
 
 export default function DubKingItem({
   ranking,
   nickname,
   totalCount,
   dubKingImageUrl,
-}: Iprops) {
+}: DubKing) {
   if (ranking == 1) {
     return (
       <div className="container w-90 h-137">
@@ -35,7 +29,7 @@ export default function DubKingItem({
     );
   } else if (ranking == 2) {
     return (
-      <div className="container w-90 h-137">
+      <div className="container w-90 h-137 mt-30">
         <div className="flex flex-col justify-center items-center">
           <Image
             src={dubKingImageUrl}
@@ -53,7 +47,7 @@ export default function DubKingItem({
     );
   } else if (ranking == 3) {
     return (
-      <div className="container w-90 h-137">
+      <div className="container w-90 h-137 mt-30">
         <div className="flex flex-col justify-center items-center">
           <Image
             src={dubKingImageUrl}
