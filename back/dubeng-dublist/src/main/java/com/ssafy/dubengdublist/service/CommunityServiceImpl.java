@@ -2,6 +2,7 @@ package com.ssafy.dubengdublist.service;
 
 import com.ssafy.dubengdublist.dto.community.*;
 import com.ssafy.dubengdublist.entity.*;
+import com.ssafy.dubengdublist.exception.NotFoundException;
 import com.ssafy.dubengdublist.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,9 +23,16 @@ public class CommunityServiceImpl implements CommunityService{
     private final RecordCommentRepository recordCommentRepository;
     private final RecordRepository recordRepository;
     private final RecordLikeRepository recordLikeRepository;
+    private final CategoryRepository categoryRepository;
 
 
     public CommunityDubKingRes SelectOneDubKing(String langType, String userId) {
+        Optional<User> ouser = userRepository.findById(userId);
+        if(!ouser.isPresent()) {
+            throw new NotFoundException("존재하지 않는 유저입니다!");
+        }else if(ouser.get().getIsVoted() >= 3){
+            throw new NotFoundException("하루 3번 투표가 끝났습니다.");
+        }
         return videoRepository.SelectOneDubKing(langType, userId);
     }
 
@@ -32,15 +40,19 @@ public class CommunityServiceImpl implements CommunityService{
     public Integer insertDubKing(String userId,String votedId) {
 
         Optional<User> user = userRepository.findById(userId);
-        User user1 = user.get();
-
+        if(!user.isPresent()){
+            throw new NotFoundException("존재하지 않는 유저입니다!");
+        }
         Optional<User> voted = userRepository.findById(votedId);
+        if(!voted.isPresent()){
+            throw new NotFoundException("존재하지 않는 유저입니다!");
+        }
+        User user1 = user.get();
         User voted1 = voted.get();
 
         DubKing dubKing = dubKingRepository.idDubKingVotedId(votedId);
         // 이미 존재한거라면
         if(dubKing != null){
-            System.out.println("여기에 들어옴");
             dubKing.updateDubKing(dubKing.getTotalVote());
         }else { // 처음 만들어야 한다면
             dubKingRepository.save(new DubKing(voted1, new Long(0), false));
@@ -50,22 +62,48 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     public Page<CommunitySearchRes> SelectAllSearch(String langType, String  title, Pageable pageable, List<Long> contentsSearch) {
+        for(Long c : contentsSearch){
+            Optional<Category> category = categoryRepository.findById(c);
+            if(!category.isPresent()){
+                throw new NotFoundException("존재하지 않는 카테고리입니다!");
+            }
+        }
         return videoRepository.selectAllCommunitySearchRes(langType, title, pageable, contentsSearch);
     }
 
     public Page<CommunityDetailScriptRes> SelectAllDetail(String langType, Pageable pageable, Long videoId) {
+        Optional<Video> ovideo = videoRepository.findById(videoId);
+        if(!ovideo.isPresent()){
+            throw new NotFoundException("존재하지 않는 비디오입니다!");
+        }
         return videoRepository.selectAllCommunityDetailRes(langType, pageable, videoId);
 
     }
 
+    @Override
     public Page<CommunityCommentRes> SelectAllDetailComment(String langType, Pageable pageable, Long recordId) {
-        return videoRepository.selectAllCommunityDetailCommentRes(langType, pageable, recordId);
+        return null;
+    }
+
+    public Page<CommunityCommentRes> SelectAllDetailComment(Pageable pageable, Long recordId) {
+        Optional<Record> orecord = recordRepository.findById(recordId);
+        if(!orecord.isPresent()){
+            throw new NotFoundException("존재하지 않는 녹음입니다!");
+        }
+        return videoRepository.selectAllCommunityDetailCommentRes(pageable, recordId);
     }
 
     public Integer insertDetailComment(String userId, Long recordId, CommunityDetailCommentReq communityDetailCommentReq) {
         Optional<User> ouser = userRepository.findById(userId);
+        if(!ouser.isPresent()){
+            throw new NotFoundException("존재하지 않는 유저입니다!");
+        }
         User user = ouser.get();
+        
         Optional<Record> orecord = recordRepository.findById(recordId);
+        if(!orecord.isPresent()){
+            throw new NotFoundException("존재하지 않는 녹음입니다!");
+        }
         Record record = orecord.get();
         recordCommentRepository.save(new RecordComment(user, record, false, communityDetailCommentReq.getContent()));
         return 200;
@@ -74,8 +112,14 @@ public class CommunityServiceImpl implements CommunityService{
     @Transactional
     public Integer updateDetailComment(String userId, Long recordCommentId, CommunityDetailCommentReq communityDetailCommentReq) {
         Optional<User> ouser = userRepository.findById(userId);
+        if(!ouser.isPresent()){
+            throw new NotFoundException("존재하지 않는 유저입니다!");
+        }
         User user = ouser.get();
         Optional<RecordComment> orecordComment = recordCommentRepository.findById(recordCommentId);
+        if(!orecordComment.isPresent()){
+            throw new NotFoundException("존재하지 않는 댓글입니다!");
+        }
         RecordComment recordComment = orecordComment.get();
         System.out.println(recordComment.getId());
         recordComment.updateComment(communityDetailCommentReq.getContent());
@@ -85,8 +129,14 @@ public class CommunityServiceImpl implements CommunityService{
     @Transactional
     public Integer deleteDetailComment(String userId, Long recordCommentId, CommunityDetailCommentReq communityDetailCommentReq) {
         Optional<User> ouser = userRepository.findById(userId);
+        if(!ouser.isPresent()){
+            throw new NotFoundException("존재하지 않는 유저입니다!");
+        }
         User user = ouser.get();
         Optional<RecordComment> orecordComment = recordCommentRepository.findById(recordCommentId);
+        if(!orecordComment.isPresent()){
+            throw new NotFoundException("존재하지 않는 댓글입니다!");
+        }
         RecordComment recordComment = orecordComment.get();
         System.out.println(recordComment.getId());
         recordComment.deleteComment();
@@ -97,8 +147,14 @@ public class CommunityServiceImpl implements CommunityService{
     @Transactional
     public Integer selectOneDetailLike(String userId, Long recordId) {
         Optional<User> ouser = userRepository.findById(userId);
+        if(!ouser.isPresent()){
+            throw new NotFoundException("존재하지 않는 유저입니다!");
+        }
         User user = ouser.get();
         Optional<Record> orecord = recordRepository.findById(recordId);
+        if(!orecord.isPresent()){
+            throw new NotFoundException("존재하지 않는 녹음입니다!");
+        }
         Record record = orecord.get();
         // userid와 recordid로 해서 찾은 recordlike 값
         RecordLike recordLike = videoRepository.selectOneRecordLike(recordId, userId);

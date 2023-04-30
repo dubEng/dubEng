@@ -19,8 +19,7 @@ import java.util.List;
 @Api("더빙 작품 API")
 @RequestMapping(path="/community")
 public class CommunityController {
-
-    private final ContentsServiceImpl contentsService;
+    
     private final CommunityServiceImpl communityService;
 
     @ApiOperation(value = "더빙왕 컨텐츠")
@@ -50,32 +49,32 @@ public class CommunityController {
 
 
     @ApiOperation(value = "더빙한 작품 영상 댓글 보기")
-    @GetMapping("/{langType}/comment/{recordId}")
-    public Page<CommunityCommentRes> SelectAllDetailComment(@PathVariable("langType") String  langType, Pageable pageable, @PathVariable Long recordId){
-        return communityService.SelectAllDetailComment(langType, pageable, recordId);
+    @GetMapping("/comment/{recordId}")
+    public Page<CommunityCommentRes> SelectAllDetailComment(Pageable pageable, @PathVariable Long recordId){
+        return communityService.SelectAllDetailComment(pageable, recordId);
     }
 
     @ApiOperation(value = "더빙한 작품 영상 댓글 쓰기")
-    @PostMapping("/{langType}/comment/{recordId}")
-    public ResponseEntity<?> insertDetailComment(@PathVariable("langType") String  langType, @RequestParam String userId, @PathVariable("recordId") Long recordId, @RequestBody CommunityDetailCommentReq communityDetailCommentReq){
+    @PostMapping("/comment/{recordId}")
+    public ResponseEntity<?> insertDetailComment(@RequestParam String userId, @PathVariable("recordId") Long recordId, @RequestBody CommunityDetailCommentReq communityDetailCommentReq){
         return new ResponseEntity<Integer>(communityService.insertDetailComment(userId, recordId, communityDetailCommentReq), HttpStatus.ACCEPTED);
     }
 
     @ApiOperation(value = "더빙한 작품 영상 댓글 수정")
-    @PutMapping("/{langType}/comment/{recordCommentId}")
-    public ResponseEntity<?> updateDetailComment(@PathVariable("langType") String  langType, @RequestParam String userId, @PathVariable("recordCommentId") Long recordCommentId, @RequestBody CommunityDetailCommentReq communityDetailCommentReq){
+    @PutMapping("/comment/{recordCommentId}")
+    public ResponseEntity<?> updateDetailComment(@RequestParam String userId, @PathVariable("recordCommentId") Long recordCommentId, @RequestBody CommunityDetailCommentReq communityDetailCommentReq){
         return new ResponseEntity<Integer>(communityService.updateDetailComment(userId, recordCommentId, communityDetailCommentReq), HttpStatus.ACCEPTED);
     }
 
-    @ApiOperation(value = "더빙한 작품 영상 댓글 수정")
-    @DeleteMapping("/{langType}/comment/{recordCommentId}")
-    public ResponseEntity<?> deleteDetailComment(@PathVariable("langType") String  langType, @RequestParam String userId, @PathVariable("recordCommentId") Long recordCommentId, @RequestBody CommunityDetailCommentReq communityDetailCommentReq){
+    @ApiOperation(value = "더빙한 작품 영상 댓글 삭제")
+    @DeleteMapping("/comment/{recordCommentId}")
+    public ResponseEntity<?> deleteDetailComment(@RequestParam String userId, @PathVariable("recordCommentId") Long recordCommentId, @RequestBody CommunityDetailCommentReq communityDetailCommentReq){
         return new ResponseEntity<Integer>(communityService.deleteDetailComment(userId, recordCommentId, communityDetailCommentReq), HttpStatus.ACCEPTED);
     }
 
     @ApiOperation(value = "더빙한 작품 영상 좋아요")
-    @PostMapping("/{langType}/like/{recordId}")
-    public ResponseEntity<?> selectOneDetailLike(@PathVariable("langType") String  langType, @RequestParam String userId, @PathVariable("recordId") Long recordId){
+    @PostMapping("/like/{recordId}")
+    public ResponseEntity<?> selectOneDetailLike(@RequestParam String userId, @PathVariable("recordId") Long recordId){
         return new ResponseEntity<Integer>(communityService.selectOneDetailLike(userId, recordId), HttpStatus.ACCEPTED);
     }
 

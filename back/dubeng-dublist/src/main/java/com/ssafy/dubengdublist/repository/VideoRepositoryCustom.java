@@ -30,13 +30,16 @@ public interface VideoRepositoryCustom {
 
     public Page<CommunityDetailScriptRes> selectAllCommunityDetailRes(String langType, Pageable pageable, Long videoId);
 
-    Page<CommunityCommentRes> selectAllCommunityDetailCommentRes(String langType, Pageable pageable, Long recordId);
+    Page<CommunityCommentRes> selectAllCommunityDetailCommentRes(Pageable pageable, Long recordId);
     public RecordLike selectOneRecordLike(Long recordId, String userId);
     public VideoBookmark selectOneVideoBookmark(Long videoId, String userId);
-    public RecordVideo selectRecordVideo(Long videoId);
-    List<RecordScript> selectRecordScript(Long videoId);
-    List<HomePopularity> selectAllHomePopularity();
 
+    // 여기는 녹음 상세 페이지     
+//    public RecordVideo selectRecordVideo(Long videoId);
+    List<RecordScript> selectRecordScript(Long videoId);
+    
+    // 여기는 홈 화면들
+    List<HomePopularity> selectAllHomePopularity();
     List<HomeRank> selectAllHomeRank();
     List<HomeDubKing> selectAllHomeDubKing();
 
