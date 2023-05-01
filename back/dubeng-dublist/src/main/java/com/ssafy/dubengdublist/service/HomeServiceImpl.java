@@ -3,6 +3,7 @@ package com.ssafy.dubengdublist.service;
 import com.ssafy.dubengdublist.dto.home.HomeDubKing;
 import com.ssafy.dubengdublist.dto.home.HomePopularity;
 import com.ssafy.dubengdublist.dto.home.HomeRank;
+import com.ssafy.dubengdublist.exception.NotFoundException;
 import com.ssafy.dubengdublist.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class HomeServiceImpl implements HomeService{
 
     public List<HomePopularity> selectAllHomePopularity(){
         List<HomePopularity> homePopularity = videoRepository.selectAllHomePopularity();
+//        if(homePopularity.size() == 0){
+//            throw new NotFoundException("데이터가 없습니다.");
+//        }
         return homePopularity;
     }
 

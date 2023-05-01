@@ -1,5 +1,6 @@
 package com.ssafy.dubenguser.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ public class UserRecordRes {
     private Long playCount;
     private ZonedDateTime updatedDate;
     @Builder
+    @QueryProjection
     public UserRecordRes(String title, String thumbnail, Long playCount, ZonedDateTime updatedDate) {
         this.title = title;
         this.thumbnail = thumbnail;

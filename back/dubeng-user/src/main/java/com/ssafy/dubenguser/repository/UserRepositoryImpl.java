@@ -3,12 +3,11 @@ package com.ssafy.dubenguser.repository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.dubenguser.dto.UserCalenderRes;
-import com.ssafy.dubenguser.dto.UserCategoryRes;
-import com.ssafy.dubenguser.dto.UserLikedRecordRes;
-import com.ssafy.dubenguser.dto.UserRecordRes;
+import com.ssafy.dubenguser.dto.*;
 import com.ssafy.dubenguser.entity.Category;
+import com.ssafy.dubenguser.entity.QVideo;
 import com.ssafy.dubenguser.entity.UserCalender;
+import com.ssafy.dubenguser.entity.Video;
 import com.ssafy.dubenguser.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +23,7 @@ import static com.ssafy.dubenguser.entity.QUser.user;
 import static com.ssafy.dubenguser.entity.QUserCategory.userCategory;
 import static com.ssafy.dubenguser.entity.QUserCalender.userCalender;
 import static com.ssafy.dubenguser.entity.QVideo.video;
+import static com.ssafy.dubenguser.entity.QVideoBookmark.videoBookmark;
 
 @Slf4j
 public class UserRepositoryImpl implements UserRepositoryCustom {
@@ -33,7 +33,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         this.jpaQueryFactory = new JPAQueryFactory(em);
     }
     @Override
-    public List<UserCategoryRes> findCategoriesByUserId(Long userId) {
+    public List<Category> findCategoriesByUserId(Long userId) {
         List<Category> categories = jpaQueryFactory
                 .select(category)
                 .from(user)
@@ -45,19 +45,11 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         if(categories.isEmpty())
             throw new NotFoundException("선택한 카테고리가 없습니다!");
 
-        List<UserCategoryRes> categoryList = new ArrayList<>();
-
-        for(Category c: categories) {
-            UserCategoryRes res = new UserCategoryRes();
-            res.setCategoryName(c.getName());
-            categoryList.add(res);
-        }
-
-        return categoryList;
+        return categories;
     }
 
     @Override
-    public UserCalenderRes findCalenderByUserId(Long userId, ZonedDateTime start, ZonedDateTime end) {
+    public List<UserCalender> findCalenderByUserId(Long userId, ZonedDateTime start, ZonedDateTime end) {
         List<UserCalender> userCalendars = jpaQueryFactory
                 .selectFrom(userCalender)
                 .where(userCalender.user.id.eq(userId).and(userCalender.calDate.between(start, end)))
@@ -66,16 +58,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         if(userCalendars.isEmpty())
             throw new NotFoundException("출석일이 없습니다!");
 
-        List<ZonedDateTime> result = new ArrayList<>();
-
-        for(UserCalender uc: userCalendars) {
-            result.add(uc.getCalDate());
-        }
-
-        UserCalenderRes res = new UserCalenderRes();
-        res.setDates(result);
-
-        return res;
+        return userCalendars;
     }
 
     @Override
@@ -91,10 +74,10 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             builder.and(video.langType.eq(lanType));
         }
 
-        List<Tuple> recordList = new ArrayList<>();
+        List<UserRecordRes> recordList;
         if(isLimit) {
             recordList = jpaQueryFactory
-                    .select(video.title, video.thumbnail, record.playCount, record.updatedDate)
+                    .select(new QUserRecordRes(video.title, video.thumbnail, record.playCount, record.updatedDate))
                     .from(record)
                     .innerJoin(video)
                     .on(record.video.id.eq(video.id))
@@ -104,7 +87,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                     .fetch();
         } else {
             recordList = jpaQueryFactory
-                    .select(video.title, video.thumbnail, record.playCount, record.updatedDate)
+                    .select(new QUserRecordRes(video.title, video.thumbnail, record.playCount, record.updatedDate))
                     .from(record)
                     .innerJoin(video)
                     .on(record.video.id.eq(video.id))
@@ -116,33 +99,63 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         if(recordList.isEmpty())
             throw new NotFoundException("아직 더빙한 내역이 없습니다!");
 
-        List<UserRecordRes> result = new ArrayList<>();
-        for(Tuple rt: recordList) {
-            UserRecordRes res = UserRecordRes.builder()
-                    .title(rt.get(video.title))
-                    .thumbnail(rt.get(video.thumbnail))
-                    .playCount(rt.get(record.playCount))
-                    .updatedDate(rt.get(record.updatedDate))
-                    .build();
-            result.add(res);
-        }
-
-        return result;
+        return recordList;
 
     }
 
     @Override
-    public List<UserLikedRecordRes> findLikedRecordByUserId(Long userId) {
-        List<Tuple> likedRecordList = jpaQueryFactory
-                .select(video.title, video.thumbnail, user.nickname, record.playCount, recordLike.updatedDate)
-                .from(recordLike)
-                .innerJoin(record).on(recordLike.record.id.eq(record.id))
-                .innerJoin(video).on(record.video.id.eq(video.id))
-                .innerJoin(user).on(recordLike.user.id.eq(userId))
-                .orderBy(record.updatedDate.desc())
-                .fetch();
+    public List<UserLikedRecordRes> findLikedRecordByUserId(Long userId, Boolean isLimit) {
 
-        List<UserLikedRecordRes> result = new ArrayList<>();
+        List<UserLikedRecordRes> result;
+
+        if(isLimit){
+            result = jpaQueryFactory
+                    .select(new QUserLikedRecordRes(video.title, video.thumbnail, user.nickname, record.playCount, recordLike.updatedDate))
+                    .from(recordLike)
+                    .innerJoin(record).on(recordLike.record.id.eq(record.id))
+                    .innerJoin(video).on(record.video.id.eq(video.id))
+                    .innerJoin(user).on(recordLike.user.id.eq(userId))
+                    .orderBy(record.updatedDate.desc())
+                    .limit(5)
+                    .fetch();
+        } else {
+            result = jpaQueryFactory
+                    .select(new QUserLikedRecordRes(video.title, video.thumbnail, user.nickname, record.playCount, recordLike.updatedDate))
+                    .from(recordLike)
+                    .innerJoin(record).on(recordLike.record.id.eq(record.id))
+                    .innerJoin(video).on(record.video.id.eq(video.id))
+                    .innerJoin(user).on(recordLike.user.id.eq(userId))
+                    .orderBy(record.updatedDate.desc())
+                    .fetch();
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<UserBookmarkedVideoRes> findBookmarkedVideoByUserId(Long userId, Boolean isLimit) {
+
+        List<UserBookmarkedVideoRes> result;
+
+        if(isLimit) {
+            result = jpaQueryFactory
+                    .select(new QUserBookmarkedVideoRes(video.title, video.thumbnail))
+                    .from(videoBookmark)
+                    .innerJoin(video)
+                    .on(videoBookmark.video.id.eq(video.id))
+                    .orderBy(video.updatedDate.desc())
+                    .limit(5)
+                    .fetch();
+        }else {
+            result = jpaQueryFactory
+                    .select(new QUserBookmarkedVideoRes(video.title, video.thumbnail))
+                    .from(videoBookmark)
+                    .innerJoin(video)
+                    .on(videoBookmark.video.id.eq(video.id))
+                    .orderBy(video.updatedDate.desc())
+                    .fetch();
+        }
+
         return result;
     }
 }
