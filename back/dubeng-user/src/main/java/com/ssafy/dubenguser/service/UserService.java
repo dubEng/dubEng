@@ -11,5 +11,6 @@ public interface UserService {
     public UserProfileRes getProfile(Long id);
     public UserCalenderRes getCalender(Long userId);
     public List<UserRecordRes> getRecords(Long userId, UserRecordReq request);
-    public List<UserLikedRecordRes> getLikedRecords(Long userId);
+    public List<UserLikedRecordRes> getLikedRecords(Long userId, Boolean isLimit);
+    public List<UserBookmarkedVideoRes> getBookmarkedVideos(Long userId, Boolean isLimit);
 }

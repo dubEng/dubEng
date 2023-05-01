@@ -5,20 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.ZonedDateTime;
 @Data
 @NoArgsConstructor
-public class UserRecordRes {
+public class UserBookmarkedVideoRes {
     private String title;
     private String thumbnail;
-    private Long playCount;
-    private ZonedDateTime updatedDate;
+
     @Builder
     @QueryProjection
-    public UserRecordRes(String title, String thumbnail, Long playCount, ZonedDateTime updatedDate) {
+    public UserBookmarkedVideoRes(String title, String thumbnail) {
         this.title = title;
         this.thumbnail = thumbnail;
-        this.playCount = playCount;
-        this.updatedDate = updatedDate;
     }
 }
