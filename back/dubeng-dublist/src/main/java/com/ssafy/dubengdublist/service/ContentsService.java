@@ -13,9 +13,8 @@ import java.util.List;
 
 public interface ContentsService {
 
-    public HashMap<String, Object> SelectAllRecommend(String langType, Pageable pageable);
-    public Page<ContentsSearchRes> SelectAllSearch(String langType, String title,Pageable pageable, List<Long> contentsSearch);
-    public Page<ContentsDetailScriptRes> SelectAllDetail(String langType, Pageable pageable, Long videoId);
-
-    public Integer selectOneDetailScrap(String userId, Long videoId);
+    public HashMap<String, Object> findContentsRecommend(String langType, Pageable pageable);
+    public Page<ContentsSearchRes> findContentsSearch(String langType, String title,Pageable pageable, List<Long> contentsSearch);
+    public Page<ContentsDetailScriptRes> findContentsDetails(String langType, Pageable pageable, Long videoId);
+    public Integer addContentsScrap(String userId, Long videoId);
 }

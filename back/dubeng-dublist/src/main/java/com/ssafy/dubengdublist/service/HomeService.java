@@ -1,14 +1,14 @@
 package com.ssafy.dubengdublist.service;
 
-import com.ssafy.dubengdublist.dto.home.HomeDubKing;
-import com.ssafy.dubengdublist.dto.home.HomePopularity;
-import com.ssafy.dubengdublist.dto.home.HomeRank;
+import com.ssafy.dubengdublist.dto.home.HomeDubKingRes;
+import com.ssafy.dubengdublist.dto.home.HomePopularityRes;
+import com.ssafy.dubengdublist.dto.home.HomeRankRes;
 
 import java.util.List;
 
 public interface HomeService {
 
-    List<HomePopularity> selectAllHomePopularity();
-    List<HomeRank> selectAllHomeRank();
-    List<HomeDubKing> selectAllHomeDubKing();
+    List<HomePopularityRes> findHomePopularity();
+    List<HomeRankRes> findHomeRank();
+    List<HomeDubKingRes> findHomeDubKing();
 }

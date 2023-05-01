@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class HomeRank {
+public class HomeRankRes {
 
     private String id;
     private String nickName;
@@ -16,7 +16,7 @@ public class HomeRank {
     private Long recordCount;
 
     @QueryProjection
-    public HomeRank(String id, String nickName, String description,String profileImage, Long totalRecTime, Long recordCount) {
+    public HomeRankRes(String id, String nickName, String description, String profileImage, Long totalRecTime, Long recordCount) {
         this.id = id;
         this.nickName = nickName;
         this.description = description;

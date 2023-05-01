@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class HomeDubKing {
+public class HomeDubKingRes {
 
     private Long id;
     private String userId;
@@ -15,7 +15,7 @@ public class HomeDubKing {
     private Long totalVote;
 
     @QueryProjection
-    public HomeDubKing(Long id, String userId, String nickname,String profileImage, Long totalVote) {
+    public HomeDubKingRes(Long id, String userId, String nickname, String profileImage, Long totalVote) {
         this.id = id;
         this.userId = userId;
         this.nickname = nickname;
