@@ -25,10 +25,10 @@ public class FileController {
         fileService.fileSave(requestDTO);
     }
     @GetMapping("/dublist")
-    public Set<Object> getfilePath(@RequestParam Long videoId, @RequestParam String nickname, @RequestParam int recodeNum){
+    public Set<Object> getfilePath(@RequestParam Long videoId, @RequestParam String nickname){
         log.debug("videoId : {}, userId : {}", videoId, nickname);
 
-        String key = fileService.getKey(videoId, nickname, recodeNum);
+        String key = fileService.getKey(videoId, nickname);
 
         Set<Object> pathList = fileService.getPathInCache(key);
 
