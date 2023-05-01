@@ -288,7 +288,7 @@ def cleanDir():
         return json.dumps({'success': "Not Found Dir or File"}), 405, {'ContentType': 'application/json'}
 
 
-@ app.route('/category', methods=['GET'])
+@ app.route('/admin/category', methods=['GET'])
 def getCate():
     try:
         result = getCategories()
