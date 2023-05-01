@@ -18,7 +18,6 @@ import java.util.Set;
 public class SaveFileService {
     private final RedisTemplate<String, Object> redisTemplate;
     public void fileSave(SaveFileRequestDTO requestDTO) throws IOException {
-
         String fullPath = "";
 
         // OS 확인
@@ -33,7 +32,7 @@ public class SaveFileService {
         // 폴더 없을 경우 생성
         RecodeInfo recode = requestDTO.getRecodeInfo();
 
-        String key = getKey(recode.getVideoId(), recode.getNickname(), recode.getRecodeNum());
+        String key = recode.getVideoId() + "_" + recode.getNickname();
         fullPath += key;
 
         File folder = new File(fullPath);
