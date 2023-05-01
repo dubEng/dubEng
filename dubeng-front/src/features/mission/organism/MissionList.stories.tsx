@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import MissionList from "./MissionList";
 
 const meta: Meta<typeof MissionList> = {
-  title: "features/mission/atoms/MissionList",
+  title: "features/mission/organism/MissionList",
   component: MissionList,
 };
 
