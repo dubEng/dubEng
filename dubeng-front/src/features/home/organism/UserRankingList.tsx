@@ -10,7 +10,7 @@ export default function UserRankingList() {
   const userRankingList: UserRanking[] = [
     {
       ranking: 1,
-      imageUrl: ProfileOne,
+      imageUrl: ProfileFive,
       nickname: "김아영",
       introduce: "8 Team Leader",
       recordingTime: 100,
@@ -42,7 +42,7 @@ export default function UserRankingList() {
     },
     {
       ranking: 5,
-      imageUrl: ProfileFive,
+      imageUrl: ProfileOne,
       nickname: "김자민",
       introduce: "안산 꿀주먹",
       recordingTime: 6,
