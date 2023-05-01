@@ -1,0 +1,11 @@
+version: '3'
+services:
+  spring:
+    container_name: 'spring-dubenglist-container'
+    build:
+      context: .    # Build Context Directory
+      dockerfile: ./Dockerfile      # Dockerfile
+    ports:
+      - "9002:8080"
+    volumes:    # Connect Local Volume
+      - /home/ubuntu/file_volume:/Home
