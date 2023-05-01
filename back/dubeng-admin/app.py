@@ -211,30 +211,34 @@ def seperateMp3(url, userId, videoTitle, file_exist):
 
 
 # 영상 정보 불러오기 (기본정보 및 스크립트)
-@app.route('/admin/videoInfo', methods=['GET'])
-def sendInfo():
-    url = request.get_json()['url']
-    start = request.get_json()['start']
-    end = request.get_json()['end']
-    lang = request.get_json()['lang']
-
+@app.route('/admin/videoInfo/<start>/<end>', methods=['GET'])
+def sendInfo(start, end):
+    url = request.args.get('url')
+    lang = request.args.get('lang')
     # url 뒤에 있는 video id 추출 -> script 불러올 때 필요한 video Id
     video_id = getVedioId(url)
+    print(url)
     # video 정보 가져오기
     data = get_video_info(url)
     result = list()
+
     if lang == 'english':
         # script 가져오기
         sc = YouTubeTranscriptApi.get_transcript(video_id)
-        # start 및 end time 사이의 script 추출
-        for s in sc:
+        transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+        transcript = transcript_list.find_transcript(['en'])
+        translated_transcript = transcript.translate(
+            'ko').fetch()  # 한국어 script
+
+        for s, t in zip(sc, translated_transcript):
             if float(s['start']) >= float(start) and float(s['start']) <= float(end):
+                s['translation'] = t['text']
                 result.append(s)
             elif s['start'] > float(end):
                 break
     response = {
         "vedioInfo": data,
-        "scripts": result
+        "scripts": result,
     }
     return response
 
