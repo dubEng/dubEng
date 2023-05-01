@@ -1,7 +1,10 @@
 package com.ssafy.dubenguser.service;
 
 import com.ssafy.dubenguser.dto.*;
+import com.ssafy.dubenguser.entity.Category;
 import com.ssafy.dubenguser.entity.User;
+import com.ssafy.dubenguser.entity.UserCalender;
+import com.ssafy.dubenguser.exception.DuplicateException;
 import com.ssafy.dubenguser.exception.InvalidInputException;
 import com.ssafy.dubenguser.exception.NotFoundException;
 import com.ssafy.dubenguser.repository.UserRepository;
@@ -10,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,10 @@ public class UserServiceImpl implements UserService {
      *
      */
     public void save(UserJoinReq requestDTO){
+        if(isExistNickname(requestDTO.getNickname()))
+            throw new DuplicateException("이미 등록된 닉네임입니다.");
 
+//        userRepository.save(new User())
     }
 
     /**
@@ -64,11 +69,20 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("존재하지 않는 유저입니다!");
         }
 
-        List<UserCategoryRes> categories = userRepository.findCategoriesByUserId(user.get().getId());
+        List<Category> categories = userRepository.findCategoriesByUserId(user.get().getId());
+
+        List<UserCategoryRes> categoryList = new ArrayList<>();
+
+        for(Category c: categories) {
+            UserCategoryRes res = new UserCategoryRes();
+            res.setCategoryName(c.getName());
+            categoryList.add(res);
+        }
+
         UserProfileRes result = UserProfileRes.builder()
                 .totalRecTime(user.get().getTotalRecTime())
                 .recordCount(user.get().getRecordCount())
-                .category(categories)
+                .category(categoryList)
                 .build();
 
         return result;
@@ -80,7 +94,16 @@ public class UserServiceImpl implements UserService {
         ZonedDateTime startDate = today.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
         ZonedDateTime endDate = today.withDayOfMonth(today.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59).withNano(999_999_999);
 
-        UserCalenderRes result = userRepository.findCalenderByUserId(userId, startDate, endDate);
+        List<UserCalender> userCalendars = userRepository.findCalenderByUserId(userId, startDate, endDate);
+        List<ZonedDateTime> res = new ArrayList<>();
+
+        for(UserCalender uc: userCalendars) {
+            res.add(uc.getCalDate());
+        }
+
+        UserCalenderRes result = new UserCalenderRes();
+        result.setDates(res);
+
         return result;
     }
 
@@ -94,11 +117,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public List<UserLikedRecordRes> getLikedRecords(Long userId) {
-        List<UserLikedRecordRes> result = new ArrayList<>();
+    public List<UserLikedRecordRes> getLikedRecords(Long userId, Boolean isLimit) {
+        List<UserLikedRecordRes> result = userRepository.findLikedRecordByUserId(userId, isLimit);
         return result;
     }
 
-
+    @Transactional
+    public List<UserBookmarkedVideoRes> getBookmarkedVideos(Long userId, Boolean isLimit) {
+        List<UserBookmarkedVideoRes> result = userRepository.findBookmarkedVideoByUserId(userId, isLimit);
+        return result;
+    }
 
 }
