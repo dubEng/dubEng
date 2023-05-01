@@ -28,10 +28,10 @@ public class ContentsController {
     private final ContentsServiceImpl contentsService;
 
     @ApiOperation(value = "00님이 좋아하실 영상")
-    @GetMapping("/{langType}/recommand")
-    public ResponseEntity<?> SelectAllRecommend(@PathVariable("langType") String  langType, int page, int size){
+    @GetMapping("/recommand/{langType}")
+    public ResponseEntity<?> ContentsRecommendList(@PathVariable("langType") String  langType, int page, int size){
         PageRequest pageRequest = PageRequest.of(page, size);
-        HashMap<String, Object> ContentsRecommend= contentsService.SelectAllRecommend(langType, pageRequest);
+        HashMap<String, Object> ContentsRecommend= contentsService.findContentsRecommend(langType, pageRequest);
         List<ContentsRecommendRes> list = (List<ContentsRecommendRes>) ContentsRecommend.get("ContentsRecommendList");
         Boolean hasNextPage = (Boolean) ContentsRecommend.get("hasNextPage");
         HashMap<String, Object> resultMap = new HashMap<>();
@@ -46,22 +46,22 @@ public class ContentsController {
     }
 
 
-    @ApiOperation(value = "카테고리에서 검색한 콘텐츠 목록 불러오기")
-    @GetMapping("/{langType}/search")
-    public Page<ContentsSearchRes> SelectAllSearch(@PathVariable("langType") String  langType, @RequestParam(required = false) String  title,Pageable pageable, @RequestParam(required = false) List<Long> contentsSearch){
-        return contentsService.SelectAllSearch(langType, title, pageable, contentsSearch);
+    @ApiOperation(value = "검색 & 카테고리에서 콘텐츠 목록 불러오기")
+    @GetMapping("/search/{langType}")
+    public Page<ContentsSearchRes> ContentsSearchList(@PathVariable("langType") String  langType, @RequestParam(required = false) String  title,Pageable pageable, @RequestParam(required = false) List<Long> contentsSearch){
+        return contentsService.findContentsSearch(langType, title, pageable, contentsSearch);
     }
 
     @ApiOperation(value = "선택한 콘텐츠 영상 자세히 보기")
-    @GetMapping("/{langType}/detail/{videoId}")
-    public Page<ContentsDetailScriptRes> SelectAllDetail(@PathVariable("langType") String  langType, Pageable pageable, @PathVariable Long videoId){
-        return contentsService.SelectAllDetail(langType, pageable, videoId);
+    @GetMapping("/detail/{langType}/{videoId}")
+    public Page<ContentsDetailScriptRes> ContentsDetails(@PathVariable("langType") String  langType, Pageable pageable, @PathVariable Long videoId){
+        return contentsService.findContentsDetails(langType, pageable, videoId);
     }
 
     @ApiOperation(value = "콘텐츠 영상 스크랩")
     @PostMapping("/scrap/{videoId}")
-    public ResponseEntity<?> selectOneDetailScrap(@RequestParam String userId, @PathVariable("videoId") Long videoId){
-        return new ResponseEntity<Integer>(contentsService.selectOneDetailScrap(userId, videoId), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> ContentsScrapAdd(@RequestParam String userId, @PathVariable("videoId") Long videoId){
+        return new ResponseEntity<Integer>(contentsService.addContentsScrap(userId, videoId), HttpStatus.ACCEPTED);
     }
 
 }

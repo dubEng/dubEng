@@ -21,11 +21,11 @@ import java.util.List;
 
 @Configuration
 @EnableSwagger2
-public class SwaggerConfiguration {
+public class SwaggerConfig {
 
     private final TypeResolver typeResolver;
 
-    public SwaggerConfiguration(TypeResolver typeResolver) {
+    public SwaggerConfig(TypeResolver typeResolver) {
         this.typeResolver = typeResolver;
     }
 

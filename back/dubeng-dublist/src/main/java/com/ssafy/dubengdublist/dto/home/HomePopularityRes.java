@@ -4,11 +4,9 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.ZonedDateTime;
-
 @Getter
 @NoArgsConstructor
-public class HomePopularity {
+public class HomePopularityRes {
 
     private Long id;
     private String title;
@@ -19,7 +17,7 @@ public class HomePopularity {
     private Long recordId;
 
     @QueryProjection
-    public HomePopularity(Long id, String title, String thumbnail,String videoPath, String userId, String nickname, Long recordId) {
+    public HomePopularityRes(Long id, String title, String thumbnail, String videoPath, String userId, String nickname, Long recordId) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;

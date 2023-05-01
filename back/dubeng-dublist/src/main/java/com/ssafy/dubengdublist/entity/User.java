@@ -16,9 +16,9 @@ public class User extends Time{
     private String id;
     private String email;
     private String nickname;
-    private String isActive;
+    private Boolean isActive;
     private String profileImage;
-    private String isPublic;
+    private Boolean isPublic;
     private String roleType;
     private String description;
     private String landName;

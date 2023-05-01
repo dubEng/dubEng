@@ -23,59 +23,59 @@ public class CommunityController {
     private final CommunityServiceImpl communityService;
 
     @ApiOperation(value = "더빙왕 컨텐츠")
-    @GetMapping("/{langType}/dubking")
-    public ResponseEntity<?> SelectOneDubKing(@PathVariable("langType") String  langType, @RequestParam String userId){
-        CommunityDubKingRes communityDubKingRes = communityService.SelectOneDubKing(langType, userId);
+    @GetMapping("/dubking/{langType}")
+    public ResponseEntity<?> DubKingList(@PathVariable("langType") String  langType, @RequestParam String userId){
+        CommunityDubKingRes communityDubKingRes = communityService.findDubKing(langType, userId);
         return new ResponseEntity(communityDubKingRes, HttpStatus.ACCEPTED);
     }
 
     @ApiOperation(value = "더빙왕 컨텐츠 투표")
     @PostMapping("/dubking")
-    public ResponseEntity<?> insertDubKing(@RequestParam String userId, @RequestParam String votedId){
-        return new ResponseEntity<Integer>(communityService.insertDubKing(userId, votedId), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> DubKingAdd(@RequestParam String userId, @RequestParam String votedId){
+        return new ResponseEntity<Integer>(communityService.addDubKing(userId, votedId), HttpStatus.ACCEPTED);
     }
 
     @ApiOperation(value = "카테고리에서 검색한 더빙 작품 목록 불러오기")
-    @GetMapping("/{langType}/search")
-    public Page<CommunitySearchRes> SelectAllSearch(@PathVariable("langType") String  langType,  @RequestParam(required = false) String  title, Pageable pageable, @RequestParam(required = false) List<Long> contentsSearch){
-        return communityService.SelectAllSearch(langType, title, pageable, contentsSearch);
+    @GetMapping("/search/{langType}")
+    public Page<CommunitySearchRes> CommunitySearchList(@PathVariable("langType") String  langType,  @RequestParam(required = false) String  title, Pageable pageable, @RequestParam(required = false) List<Long> contentsSearch){
+        return communityService.findCommunitySearch(langType, title, pageable, contentsSearch);
     }
 
     @ApiOperation(value = "선택한 더빙 작품 영상 자세히 보기")
-    @GetMapping("/{langType}/detail/{videoId}")
-    public Page<CommunityDetailScriptRes> SelectAllDetail(@PathVariable("langType") String  langType, Pageable pageable, @PathVariable Long videoId){
-        return communityService.SelectAllDetail(langType, pageable, videoId);
+    @GetMapping("/detail/{recordId}/{langType}")
+    public Page<CommunityDetailScriptRes> CommunityDetails(@PathVariable("langType") String  langType, Pageable pageable, @PathVariable Long recordId){
+        return communityService.findCommunityDetail(langType, pageable, recordId);
     }
 
 
     @ApiOperation(value = "더빙한 작품 영상 댓글 보기")
     @GetMapping("/comment/{recordId}")
-    public Page<CommunityCommentRes> SelectAllDetailComment(Pageable pageable, @PathVariable Long recordId){
-        return communityService.SelectAllDetailComment(pageable, recordId);
+    public Page<CommunityCommentRes> CommunityCommentList(Pageable pageable, @PathVariable Long recordId){
+        return communityService.findCommunityComment(pageable, recordId);
     }
 
     @ApiOperation(value = "더빙한 작품 영상 댓글 쓰기")
     @PostMapping("/comment/{recordId}")
-    public ResponseEntity<?> insertDetailComment(@RequestParam String userId, @PathVariable("recordId") Long recordId, @RequestBody CommunityDetailCommentReq communityDetailCommentReq){
-        return new ResponseEntity<Integer>(communityService.insertDetailComment(userId, recordId, communityDetailCommentReq), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> CommunityCommentAdd(@RequestParam String userId, @PathVariable("recordId") Long recordId, @RequestBody CommunityDetailCommentReq communityDetailCommentReq){
+        return new ResponseEntity<Integer>(communityService.addCommunityComment(userId, recordId, communityDetailCommentReq), HttpStatus.ACCEPTED);
     }
 
     @ApiOperation(value = "더빙한 작품 영상 댓글 수정")
     @PutMapping("/comment/{recordCommentId}")
-    public ResponseEntity<?> updateDetailComment(@RequestParam String userId, @PathVariable("recordCommentId") Long recordCommentId, @RequestBody CommunityDetailCommentReq communityDetailCommentReq){
-        return new ResponseEntity<Integer>(communityService.updateDetailComment(userId, recordCommentId, communityDetailCommentReq), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> CommunityCommentModify(@RequestParam String userId, @PathVariable("recordCommentId") Long recordCommentId, @RequestBody CommunityDetailCommentReq communityDetailCommentReq){
+        return new ResponseEntity<Integer>(communityService.modifyCommunityComment(userId, recordCommentId, communityDetailCommentReq), HttpStatus.ACCEPTED);
     }
 
     @ApiOperation(value = "더빙한 작품 영상 댓글 삭제")
     @DeleteMapping("/comment/{recordCommentId}")
-    public ResponseEntity<?> deleteDetailComment(@RequestParam String userId, @PathVariable("recordCommentId") Long recordCommentId, @RequestBody CommunityDetailCommentReq communityDetailCommentReq){
-        return new ResponseEntity<Integer>(communityService.deleteDetailComment(userId, recordCommentId, communityDetailCommentReq), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> CommunityCommentRemove(@RequestParam String userId, @PathVariable("recordCommentId") Long recordCommentId, @RequestBody CommunityDetailCommentReq communityDetailCommentReq){
+        return new ResponseEntity<Integer>(communityService.removeCommunityComment(userId, recordCommentId, communityDetailCommentReq), HttpStatus.ACCEPTED);
     }
 
     @ApiOperation(value = "더빙한 작품 영상 좋아요")
     @PostMapping("/like/{recordId}")
-    public ResponseEntity<?> selectOneDetailLike(@RequestParam String userId, @PathVariable("recordId") Long recordId){
-        return new ResponseEntity<Integer>(communityService.selectOneDetailLike(userId, recordId), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> CommunityLikeAdd(@RequestParam String userId, @PathVariable("recordId") Long recordId){
+        return new ResponseEntity<Integer>(communityService.addCommunityLike(userId, recordId), HttpStatus.ACCEPTED);
     }
 
 }

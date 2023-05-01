@@ -1,7 +1,7 @@
 package com.ssafy.dubengdublist.service;
 
-import com.ssafy.dubengdublist.dto.record.RecordScript;
-import com.ssafy.dubengdublist.dto.record.RecordVideo;
+import com.ssafy.dubengdublist.dto.record.RecordScriptRes;
+import com.ssafy.dubengdublist.dto.record.RecordVideoRes;
 import com.ssafy.dubengdublist.entity.Video;
 import com.ssafy.dubengdublist.exception.NotFoundException;
 import com.ssafy.dubengdublist.repository.VideoRepository;
@@ -17,13 +17,13 @@ public class RecordServiceImpl implements RecordService{
 
     private final VideoRepository videoRepository;
 
-    public RecordVideo selectRecordVideo(Long videoId){
+    public RecordVideoRes findRecordVideo(Long videoId){
         Optional<Video> optionalVideo = videoRepository.findById(videoId);
         if(!optionalVideo.isPresent()){
             throw new NotFoundException("존재하지 않는 비디오입니다!");
         }
         Video video = optionalVideo.get();
-        RecordVideo recordVideo =RecordVideo.builder()
+        RecordVideoRes recordVideoRes = RecordVideoRes.builder()
                 .id(video.getId())
                 .title(video.getTitle())
                 .videoPath(video.getVideoPath())
@@ -31,16 +31,16 @@ public class RecordServiceImpl implements RecordService{
                 .endTime(video.getEndTime())
                 .build();
 
-        return recordVideo;
+        return recordVideoRes;
     }
 
-    public List<RecordScript> selectRecordScript(Long videoId){
+    public List<RecordScriptRes> findRecordScript(Long videoId){
         Optional<Video> optionalVideo = videoRepository.findById(videoId);
         if(!optionalVideo.isPresent()){
             throw new NotFoundException("존재하지 않는 비디오입니다!");
         }
-        List<RecordScript> recordScript = videoRepository.selectRecordScript(videoId);
-        return recordScript;
+        List<RecordScriptRes> recordScriptRes = videoRepository.findByRecordScript(videoId);
+        return recordScriptRes;
     }
 
 }

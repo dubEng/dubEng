@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class RecordScript {
+public class RecordScriptRes {
 
     private Long id;
     private Long startTime;
@@ -15,7 +15,7 @@ public class RecordScript {
     private String translateContent;
 
     @QueryProjection
-    public RecordScript(Long id, Long startTime, Long duration,String content,String translateContent) {
+    public RecordScriptRes(Long id, Long startTime, Long duration, String content, String translateContent) {
         this.id = id;
         this.startTime = startTime;
         this.duration = duration;

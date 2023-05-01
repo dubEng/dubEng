@@ -26,18 +26,18 @@ public class CommunityServiceImpl implements CommunityService{
     private final CategoryRepository categoryRepository;
 
 
-    public CommunityDubKingRes SelectOneDubKing(String langType, String userId) {
+    public CommunityDubKingRes findDubKing(String langType, String userId) {
         Optional<User> ouser = userRepository.findById(userId);
         if(!ouser.isPresent()) {
             throw new NotFoundException("존재하지 않는 유저입니다!");
         }else if(ouser.get().getIsVoted() >= 3){
             throw new NotFoundException("하루 3번 투표가 끝났습니다.");
         }
-        return videoRepository.SelectOneDubKing(langType, userId);
+        return videoRepository.findByOneDubKing(langType, userId);
     }
 
     @Transactional
-    public Integer insertDubKing(String userId,String votedId) {
+    public Integer addDubKing(String userId,String votedId) {
 
         Optional<User> user = userRepository.findById(userId);
         if(!user.isPresent()){
@@ -50,7 +50,7 @@ public class CommunityServiceImpl implements CommunityService{
         User user1 = user.get();
         User voted1 = voted.get();
 
-        DubKing dubKing = dubKingRepository.idDubKingVotedId(votedId);
+        DubKing dubKing = dubKingRepository.findByVotedId(votedId);
         // 이미 존재한거라면
         if(dubKing != null){
             dubKing.updateDubKing(dubKing.getTotalVote());
@@ -61,39 +61,33 @@ public class CommunityServiceImpl implements CommunityService{
         return 200;
     }
 
-    public Page<CommunitySearchRes> SelectAllSearch(String langType, String  title, Pageable pageable, List<Long> contentsSearch) {
-        for(Long c : contentsSearch){
-            Optional<Category> category = categoryRepository.findById(c);
-            if(!category.isPresent()){
-                throw new NotFoundException("존재하지 않는 카테고리입니다!");
-            }
-        }
-        return videoRepository.selectAllCommunitySearchRes(langType, title, pageable, contentsSearch);
+    public Page<CommunitySearchRes> findCommunitySearch(String langType, String  title, Pageable pageable, List<Long> contentsSearch) {
+        return videoRepository.findByCategoryCommunity(langType, title, pageable, contentsSearch);
     }
 
-    public Page<CommunityDetailScriptRes> SelectAllDetail(String langType, Pageable pageable, Long videoId) {
-        Optional<Video> ovideo = videoRepository.findById(videoId);
+    public Page<CommunityDetailScriptRes> findCommunityDetail(String langType, Pageable pageable, Long recordId) {
+        Optional<Video> ovideo = videoRepository.findById(recordId);
         if(!ovideo.isPresent()){
             throw new NotFoundException("존재하지 않는 비디오입니다!");
         }
-        return videoRepository.selectAllCommunityDetailRes(langType, pageable, videoId);
+        return videoRepository.findByAllCommunity(langType, pageable, recordId);
 
     }
 
-    @Override
-    public Page<CommunityCommentRes> SelectAllDetailComment(String langType, Pageable pageable, Long recordId) {
-        return null;
-    }
+//    @Override
+//    public Page<CommunityCommentRes> CommunityCommentList(String langType, Pageable pageable, Long recordId) {
+//        return null;
+//    }
 
-    public Page<CommunityCommentRes> SelectAllDetailComment(Pageable pageable, Long recordId) {
+    public Page<CommunityCommentRes> findCommunityComment(Pageable pageable, Long recordId) {
         Optional<Record> orecord = recordRepository.findById(recordId);
         if(!orecord.isPresent()){
             throw new NotFoundException("존재하지 않는 녹음입니다!");
         }
-        return videoRepository.selectAllCommunityDetailCommentRes(pageable, recordId);
+        return videoRepository.findAllCommunityComment(pageable, recordId);
     }
 
-    public Integer insertDetailComment(String userId, Long recordId, CommunityDetailCommentReq communityDetailCommentReq) {
+    public Integer addCommunityComment(String userId, Long recordId, CommunityDetailCommentReq communityDetailCommentReq) {
         Optional<User> ouser = userRepository.findById(userId);
         if(!ouser.isPresent()){
             throw new NotFoundException("존재하지 않는 유저입니다!");
@@ -110,7 +104,7 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Transactional
-    public Integer updateDetailComment(String userId, Long recordCommentId, CommunityDetailCommentReq communityDetailCommentReq) {
+    public Integer modifyCommunityComment(String userId, Long recordCommentId, CommunityDetailCommentReq communityDetailCommentReq) {
         Optional<User> ouser = userRepository.findById(userId);
         if(!ouser.isPresent()){
             throw new NotFoundException("존재하지 않는 유저입니다!");
@@ -127,7 +121,7 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Transactional
-    public Integer deleteDetailComment(String userId, Long recordCommentId, CommunityDetailCommentReq communityDetailCommentReq) {
+    public Integer removeCommunityComment(String userId, Long recordCommentId, CommunityDetailCommentReq communityDetailCommentReq) {
         Optional<User> ouser = userRepository.findById(userId);
         if(!ouser.isPresent()){
             throw new NotFoundException("존재하지 않는 유저입니다!");
@@ -145,7 +139,7 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Transactional
-    public Integer selectOneDetailLike(String userId, Long recordId) {
+    public Integer addCommunityLike(String userId, Long recordId) {
         Optional<User> ouser = userRepository.findById(userId);
         if(!ouser.isPresent()){
             throw new NotFoundException("존재하지 않는 유저입니다!");
@@ -157,7 +151,7 @@ public class CommunityServiceImpl implements CommunityService{
         }
         Record record = orecord.get();
         // userid와 recordid로 해서 찾은 recordlike 값
-        RecordLike recordLike = videoRepository.selectOneRecordLike(recordId, userId);
+        RecordLike recordLike = videoRepository.findByRecordLike(recordId, userId);
 
         // 만약 아예 없다면
         if (recordLike == null){

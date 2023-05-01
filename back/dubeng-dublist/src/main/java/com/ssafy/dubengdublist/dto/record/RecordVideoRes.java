@@ -1,13 +1,12 @@
 package com.ssafy.dubengdublist.dto.record;
 
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class RecordVideo {
+public class RecordVideoRes {
 
     private Long id;
     private String title;
@@ -16,7 +15,7 @@ public class RecordVideo {
     private Long endTime;
 
     @Builder
-    public RecordVideo(Long id, String title, String videoPath,Long startTime,Long endTime) {
+    public RecordVideoRes(Long id, String title, String videoPath, Long startTime, Long endTime) {
         this.id = id;
         this.title = title;
         this.videoPath = videoPath;
