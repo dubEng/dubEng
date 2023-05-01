@@ -32,7 +32,7 @@ public class SaveFileService {
         // 폴더 없을 경우 생성
         RecodeInfo recode = requestDTO.getRecodeInfo();
 
-        String key = recode.getVideoId() + "_" + recode.getNickname();
+        String key = getKey(recode.getVideoId(), recode.getNickname());
         fullPath += key;
 
         File folder = new File(fullPath);
@@ -43,7 +43,6 @@ public class SaveFileService {
 
         //파일이 없다면 에러 발생
         if(requestDTO.getAudioFile().isEmpty()) throw new RuntimeException();
-
 
         fullPath += "/" + requestDTO.getAudioFile().getOriginalFilename();
         log.debug("file full path : {}", fullPath);
@@ -71,13 +70,11 @@ public class SaveFileService {
         log.debug("list : {}", members.toString());
         return members;
     }
-    public String getKey(Long videoId, String nickname, int recodeNum){
+    public String getKey(Long videoId, String nickname){
         String key = new StringBuilder()
                 .append(videoId)
                 .append("_")
-                .append(nickname)
-                .append("_")
-                .append(recodeNum).toString();
+                .append(nickname).toString();
 
         return key;
     }
