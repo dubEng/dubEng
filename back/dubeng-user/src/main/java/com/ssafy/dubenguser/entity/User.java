@@ -1,9 +1,6 @@
 package com.ssafy.dubenguser.entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,15 +8,16 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user")
+@Setter
 public class User extends Time{
 
     @Id
     private Long id;
     private String email;
     private String nickname;
-    private String isActive;
+    private Boolean isActive;
     private String profileImage;
-    private String isPublic;
+    private Boolean isPublic;
     private String roleType;
     private String description;
     private String landName;
@@ -28,7 +26,7 @@ public class User extends Time{
     private Long totalRecTime;
 
     @Builder
-    public User(Long id, String email, String nickname, String isActive, String profileImage, String isPublic, String roleType, String description, String landName, Long recordCount, Boolean isVoted, Long totalRecTime) {
+    public User(Long id, String email, String nickname, Boolean isActive, String profileImage, Boolean isPublic, String roleType, String description, String landName, Long recordCount, Boolean isVoted, Long totalRecTime) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
