@@ -1,6 +1,7 @@
 package com.ssafy.dubenguser.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,5 +25,10 @@ public class UserCategory extends Time{
     @JoinColumn(name = "category_id")
     private Category category;
 
-
+    @Builder
+    public UserCategory(Long id, User user, Category category) {
+        this.id = id;
+        this.user = user;
+        this.category = category;
+    }
 }

@@ -4,9 +4,12 @@ import com.ssafy.dubenguser.dto.*;
 import com.ssafy.dubenguser.entity.Category;
 import com.ssafy.dubenguser.entity.User;
 import com.ssafy.dubenguser.entity.UserCalender;
+import com.ssafy.dubenguser.entity.UserCategory;
 import com.ssafy.dubenguser.exception.DuplicateException;
 import com.ssafy.dubenguser.exception.InvalidInputException;
 import com.ssafy.dubenguser.exception.NotFoundException;
+import com.ssafy.dubenguser.repository.CategoryRepository;
+import com.ssafy.dubenguser.repository.UserCategoryRepository;
 import com.ssafy.dubenguser.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,16 +26,38 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
+    private final UserCategoryRepository userCategoryRepository;
+    private final CategoryRepository categoryRepository;
 
     /**
      *
      */
-    public void save(UserJoinReq requestDTO){
-        if(isExistNickname(requestDTO.getNickname()))
+    public void addUser(UserJoinReq request){
+        if(checkExistNickname(request.getNickname()))
             throw new DuplicateException("이미 등록된 닉네임입니다.");
 
-//        userRepository.save(new User())
+        User newUser = User.builder()
+                .email(request.getEmail())
+                .nickname(request.getNickname())
+                .description(request.getDescription())
+                .landName(request.getLandName())
+                .build();
+
+        User savedUser = userRepository.save(newUser);
+
+        for(String category: request.getCategories()) {
+            Optional<Category> nc = categoryRepository.findByName(category);
+
+            if(!nc.isPresent())
+                throw new NotFoundException("존재하지 않는 카테고리입니다!");
+
+            UserCategory uc = UserCategory.builder()
+                    .category(nc.get())
+                    .user(savedUser)
+                    .build();
+
+            userCategoryRepository.save(uc);
+        }
     }
 
     /**
@@ -51,7 +76,7 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-    public boolean isExistNickname(String nickname) {
+    public boolean checkExistNickname(String nickname) {
         Optional<User> user = userRepository.findByNickname(nickname);
 
         if (user.isPresent()){  // 이미 닉네임 존재
@@ -62,7 +87,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public UserProfileRes getProfile(Long id) {
+    public UserProfileRes findProfile(Long id) {
         Optional<User> user = userRepository.findById(id);
 
         if(!user.isPresent()) {
@@ -89,7 +114,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public UserCalenderRes getCalender(Long userId) {
+    public UserCalendarRes findCalendar(Long userId) {
         ZonedDateTime today = ZonedDateTime.now();
         ZonedDateTime startDate = today.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
         ZonedDateTime endDate = today.withDayOfMonth(today.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59).withNano(999_999_999);
@@ -101,14 +126,14 @@ public class UserServiceImpl implements UserService {
             res.add(uc.getCalDate());
         }
 
-        UserCalenderRes result = new UserCalenderRes();
+        UserCalendarRes result = new UserCalendarRes();
         result.setDates(res);
 
         return result;
     }
 
     @Transactional
-    public List<UserRecordRes> getRecords(Long userId, UserRecordReq request) {
+    public List<UserRecordRes> findRecord(Long userId, UserRecordReq request) {
         if(request.getIsPublic()==null || request.getIsLimit()==null || request.getLanType()==null)
             throw new InvalidInputException("모든 값을 채워주세요!");
 
@@ -117,14 +142,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public List<UserLikedRecordRes> getLikedRecords(Long userId, Boolean isLimit) {
-        List<UserLikedRecordRes> result = userRepository.findLikedRecordByUserId(userId, isLimit);
+    public List<RecordLikeRes> findRecordLike(Long userId, Boolean isLimit) {
+        List<RecordLikeRes> result = userRepository.findLikedRecordByUserId(userId, isLimit);
         return result;
     }
 
     @Transactional
-    public List<UserBookmarkedVideoRes> getBookmarkedVideos(Long userId, Boolean isLimit) {
-        List<UserBookmarkedVideoRes> result = userRepository.findBookmarkedVideoByUserId(userId, isLimit);
+    public List<VideoBookmarkRes> findVideoBookmark(Long userId, Boolean isLimit) {
+        List<VideoBookmarkRes> result = userRepository.findBookmarkedVideoByUserId(userId, isLimit);
         return result;
     }
 

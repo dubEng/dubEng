@@ -8,6 +8,9 @@ import java.util.List;
 public class UserJoinReq {
     private String accessToken;
     private String refreshToken;
+    private String email;
     private String nickname;
-    private List<String> category;
+    private String description;
+    private String landName;
+    private List<String> categories;
 }

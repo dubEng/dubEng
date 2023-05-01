@@ -21,7 +21,7 @@ public class AuthService {
     @Value("${kakao.redirectUri}")
     private String REDIRECT_URI;
 
-    public HashMap<String, Object> getAccessToken(String code){
+    public HashMap<String, Object> findAccessToken(String code){
 
         // 인가 코드를 통해 access-token 요청
         WebClient webClient = WebClient.builder()
@@ -43,7 +43,7 @@ public class AuthService {
                 .block();
 
         // parse JSON - Null 처리 해야함.
-        HashMap<String, Object> result = getKakaoResponse(response);
+        HashMap<String, Object> result = findKakaoResponse(response);
 
         //Null 처리
         if(result.get("access_token") == null) throw new RuntimeException();
@@ -75,7 +75,7 @@ public class AuthService {
                 .block();
 
         // parse JSON
-        HashMap<String, Object> result = getKakaoResponse(response);
+        HashMap<String, Object> result = findKakaoResponse(response);
 
         //Null 처리
         if(result.get("id") == null) throw new RuntimeException();
@@ -109,7 +109,7 @@ public class AuthService {
                 .block();
 
         // parse JSON
-        HashMap<String, Object> result = getKakaoResponse(response);
+        HashMap<String, Object> result = findKakaoResponse(response);
 
         String refresh_token = requestDTO.getRefreshToken();
 
@@ -126,7 +126,7 @@ public class AuthService {
      * @Param response : kakao로 부터 받은 데이터
      * 파싱해서 Map 형태로 Return
      */
-    private HashMap<String, Object> getKakaoResponse(String response) {
+    private HashMap<String, Object> findKakaoResponse(String response) {
         log.debug(response.toString());
         HashMap<String, Object> result = null;
         try {

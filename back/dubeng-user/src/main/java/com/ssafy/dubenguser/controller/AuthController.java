@@ -4,6 +4,8 @@ import com.ssafy.dubenguser.dto.Token;
 import com.ssafy.dubenguser.dto.UserJoinReq;
 import com.ssafy.dubenguser.service.AuthService;
 import com.ssafy.dubenguser.service.UserServiceImpl;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,16 +21,19 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Api("회원 API")
 public class AuthController {
     private final UserServiceImpl userService;
     private final AuthService authService;
+    private static final String SUCCESS = "success";
+    private static final String FAIL = "fail";
 
     @GetMapping("/kakao/callback")
-    public void getAuthCode(@RequestParam String code, HttpServletResponse response, RedirectAttributes attributes) throws IOException {
+    public void authCodeDetails(@RequestParam String code, HttpServletResponse response, RedirectAttributes attributes) throws IOException {
         log.debug("auth code : {}", code);
 
         //code로 access-token 요청
-        HashMap<String, Object> result = authService.getAccessToken(code);
+        HashMap<String, Object> result = authService.findAccessToken(code);
 
         //회원 가입 여부 체크
         String redirectUri = "/";
@@ -42,7 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("/parse")
-    public ResponseEntity<Long> parseAccessToken(@RequestBody Token requestDTO){
+    public ResponseEntity<Long> accessTokenParse(@RequestBody Token requestDTO){
         log.debug("accessToken : {}", requestDTO.getAccessToken());
 
         //service - parseToken
@@ -51,7 +56,7 @@ public class AuthController {
         return new ResponseEntity<Long>(userId, HttpStatus.OK);
     }
     @PostMapping("/refresh")
-    public ResponseEntity<Token> refreshToken(@RequestBody Token requestDTO){
+    public ResponseEntity<Token> refreshTokenRequest(@RequestBody Token requestDTO){
         log.debug("refreshToken : {}", requestDTO);
 
         //service - refresh
@@ -64,25 +69,24 @@ public class AuthController {
      * 회원가입
      * 구현 안돼어있음.
      */
-    @PostMapping("join")
-    public void join(@RequestBody UserJoinReq requestDTO){
-        log.debug("requestDTO : {}", requestDTO.toString());
-
-        Long userId = authService.parseToken(requestDTO.getAccessToken());
+    @PostMapping("/join")
+    @ApiOperation(value = "회원가입하기")
+    public ResponseEntity<String> userAdd(@RequestBody UserJoinReq request){
+        Long userId = authService.parseToken(request.getAccessToken());
 
         if(userService.checkEnrolledMember(userId)){
             //이미 등록된 사용자 입니다.
         }
+        userService.addUser(request);
 
-        userService.save(requestDTO);
-
-
+        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
     @GetMapping("/check/{nickname}")
-    public ResponseEntity<Boolean> checkDuplicateNickname(@PathVariable String nickname){
+    @ApiOperation(value = "닉네임 중복체크")
+    public ResponseEntity<Boolean> duplicateNicknameCheck(@PathVariable String nickname){
         log.debug("nickname : {}", nickname);
 
-        boolean check = userService.isExistNickname(nickname);
+        boolean check = userService.checkExistNickname(nickname);
 
         return new ResponseEntity<Boolean>(check, HttpStatus.OK);
     }
