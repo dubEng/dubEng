@@ -1,8 +1,6 @@
-from flask import Flask, render_template, send_file, request, redirect, url_for, jsonify
+from flask import Flask, request, jsonify
 from youtube_transcript_api import YouTubeTranscriptApi
 from pydub import AudioSegment
-import classes
-import subprocess
 from vedioInfo import getVedioId, get_video_info
 from io import BytesIO
 import boto3
@@ -15,10 +13,7 @@ import time
 import re
 import os
 import json
-
-from pathlib import Path
-from waitress import serve
-
+import logging
 
 app = Flask(__name__)
 
@@ -36,6 +31,15 @@ AWS_SECRET_ACCESS_KEY = f_conn.readline().strip()
 AWS_DEFAULT_REGION = 'ap-northeast-2'
 
 f_conn.close()
+# 로그 생성
+
+# 로깅 설정
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
 
 
 def cleanDownloadFolder(userId):
@@ -45,11 +49,11 @@ def cleanDownloadFolder(userId):
         dwnDir = glob.glob(path)
         for file in dwnDir:
             os.remove(file)
-        print('i cleaned the download directory.')
+        logging.info(f"I cleaned the download directory")
         path = './download/dwn/'+userId+'.mp3'
         if os.path.exists(path):
             os.remove(path)
-            print('i cleaned the original mp3')
+            logging.info(f"I cleaned the original mp3")
             return True
     return False
 
@@ -128,8 +132,6 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
               video['endTime'], video['producer'], video['gender'], video['lang'])
     cursor.execute(sql, values)
 
-    print(cursor.lastrowid)
-
     videoId = cursor.lastrowid
     for sc in scripts:
         sql = "INSERT INTO script (start_time, duration, content, translate_content, video_id, is_dub) VALUES (%s, %s, %s, %s, %s, %s)"
@@ -179,18 +181,17 @@ def seperateMp3(url, userId, videoTitle, file_exist):
                 time.sleep(2)
                 yt = YouTube(url, on_progress_callback=None)
                 cnt += 1
-                print('retrying....', cnt)
-                continue
+                logging.info(f"retrying.....{cnt}")
 
     # 음원이 저장된 경로로 이동
     path = "./download/dwn/"
     os.chdir(path)
 
     # 배경음과 보컬 분리해서 로컬에 저장
-    print('기다려주세요.')
+    logging.info(f"Please wait a minute... I will start seperate")
     spl = r'spleeter separate -p spleeter:2stems -o output '+newname
     os.system(spl)
-    print("--------------------")
+
 
     # 로컬 음원 S3 버킷 업로드
     videoTitle = deletIllegalSymbols(videoTitle)
@@ -217,7 +218,7 @@ def sendInfo(start, end):
     lang = request.args.get('lang')
     # url 뒤에 있는 video id 추출 -> script 불러올 때 필요한 video Id
     video_id = getVedioId(url)
-    print(url)
+    logging.info(f"{url}")
     # video 정보 가져오기
     data = get_video_info(url)
     result = list()
@@ -246,7 +247,6 @@ def sendInfo(start, end):
 @app.route('/admin/saveVedio', methods=['POST'])
 def saveApi():
     req = json.loads(request.form.get('data'))
-    print(req)
     video = req.get('video')
     scripts = req.get('scripts')
     userId = req.get('userId')
@@ -256,12 +256,11 @@ def saveApi():
     if 'file' in request.files:
         file = request.files['file']
         if file.filename == '':
-            print('파일이 없습니다.')
+            logging.info(f"no file, i will download from youtube")
             file_exist = False
         else:
             file.save('download/dwn/'+userId+'.mp3')
             file_exist = True
-    print(file_exist)
     flag = saveVideoAndScript(video, scripts, userId, categories, file_exist)
     if flag:
         cleanDownloadFolder(userId)
