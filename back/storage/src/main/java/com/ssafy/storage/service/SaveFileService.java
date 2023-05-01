@@ -2,6 +2,7 @@ package com.ssafy.storage.service;
 
 import com.ssafy.storage.dto.SaveFileRequestDTO;
 import com.ssafy.storage.dto.RecodeInfo;
+import com.ssafy.storage.exception.FileListNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -9,6 +10,7 @@ import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Set;
 
@@ -17,6 +19,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class SaveFileService {
     private final RedisTemplate<String, Object> redisTemplate;
+
     public void fileSave(SaveFileRequestDTO requestDTO) throws IOException {
         String fullPath = "";
 
@@ -42,13 +45,19 @@ public class SaveFileService {
         }
 
         //파일이 없다면 에러 발생
-        if(requestDTO.getAudioFile().isEmpty()) throw new RuntimeException();
+        if(requestDTO.getAudioFile().isEmpty()) throw new FileNotFoundException();
 
         fullPath += "/" + requestDTO.getAudioFile().getOriginalFilename();
         log.debug("file full path : {}", fullPath);
 
         // Save File
-        requestDTO.getAudioFile().transferTo(new File(fullPath));
+        // window에서 Exception
+        try{
+            requestDTO.getAudioFile().transferTo(new File(fullPath));
+        }catch (FileNotFoundException e){
+            throw new FileNotFoundException("파일 경로가 잘못되었습니다.");
+        }
+
 
         //파일 저장이 완료된다면 캐시에 경로 저장
         setPathInCache(key, fullPath);
@@ -65,8 +74,16 @@ public class SaveFileService {
 
         log.debug("cache 입력 완료");
     }
+
+    /**
+     *  Redis 에 저장된 임시 저장된 Recode File Path list 가져오기
+     */
     public Set<Object> getPathInCache(String key){
         Set<Object> members = redisTemplate.opsForSet().members(key);
+
+        if(members.isEmpty()){
+            throw new FileListNotFoundException();
+        }
         log.debug("list : {}", members.toString());
         return members;
     }

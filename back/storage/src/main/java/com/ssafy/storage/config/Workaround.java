@@ -22,7 +22,7 @@ public class Workaround implements WebMvcOpenApiTransformationFilter {
 
         Server devServer = new Server();
         devServer.setDescription("production");
-        devServer.setUrl("https://k8b208.p.ssafy.io/recode");
+        devServer.setUrl("https://k8b208.p.ssafy.io");
         openAPI.setServers(Arrays.asList(localServer, devServer));
 
         return openAPI;

@@ -6,6 +6,5 @@ import lombok.Data;
 public class RecodeInfo {
     private Long videoId;
     private String nickname;
-
     private int recodeNum;
 }
