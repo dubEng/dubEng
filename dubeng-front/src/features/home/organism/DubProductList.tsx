@@ -5,18 +5,28 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
 const responsive = {
+  bigDesktop: {
+    breakpoint: { max: 3000, min: 1650 },
+    items: 5,
+    partialVisibilityGutter: 40, // this is needed to tell the amount of px that should be visible.
+  },
+  middleDesktop: {
+    breakpoint: { max: 1650, min: 1300 },
+    items: 4,
+    partialVisibilityGutter: 40, // this is needed to tell the amount of px that should be visible.
+  },
   desktop: {
-    breakpoint: { max: 3000, min: 816 },
+    breakpoint: { max: 1300, min: 1000 },
     items: 3,
     partialVisibilityGutter: 40, // this is needed to tell the amount of px that should be visible.
   },
   tablet: {
-    breakpoint: { max: 816, min: 576 },
+    breakpoint: { max: 1000, min: 655 },
     items: 2,
-    partialVisibilityGutter: 30, // this is needed to tell the amount of px that should be visible.
+    partialVisibilityGutter: 40, // this is needed to tell the amount of px that should be visible.
   },
   mobile: {
-    breakpoint: { max: 576, min: 0 },
+    breakpoint: { max: 655, min: 0 },
     items: 1,
     partialVisibilityGutter: 70, // this is needed to tell the amount of px that should be visible.
   },
@@ -42,6 +52,10 @@ export default function DubProductList() {
     },
     {
       title: "해리포터",
+      url: "",
+    },
+    {
+      title: "아따맘마",
       url: "",
     },
   ];
