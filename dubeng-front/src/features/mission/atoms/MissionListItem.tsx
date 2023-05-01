@@ -1,18 +1,13 @@
+import { MissionItem } from "@/types/MissionItem";
 import Image from "next/image";
-
-interface Iprops {
-  imageUrl: string;
-  missionContent: string;
-  color: string;
-}
 
 export default function MissionListItem({
   imageUrl,
   missionContent,
   color,
-}: Iprops) {
+}: MissionItem) {
   return (
-    <div className="w-150 h-201 relative rounded-tl-lg bg-white rounded-lg">
+    <div className="w-150 h-201 relative rounded-tl-lg bg-[#F8F8F8] rounded-lg mx-12 mb-32">
       <div className={getBoxStyle(color)}>
         <div className="w-80 h-80 rounded-lg">
           <Image
@@ -28,7 +23,8 @@ export default function MissionListItem({
     </div>
   );
 
+  //TODO: twin.macro 적용 해야함
   function getBoxStyle(color: string): string {
-    return `w-150 h-150 rounded-tl-lg rounded-tr-lg bg-[${color}] flex justify-center items-center`;
+    return `w-150 h-150 rounded-tl-lg rounded-tr-lg bg-[#A6BAF5] flex justify-center items-center`;
   }
 }
