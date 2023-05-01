@@ -20,6 +20,11 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
   # Swagger
   # Spring boot 2.6 이후 ant_path_matcher -> path_pattern_parser로
   # 변경되면서 몇몇 라이브러리 오류 -> 아래로 지정
