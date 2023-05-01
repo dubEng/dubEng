@@ -36,27 +36,27 @@ export default function DubProductList() {
   const dubProductList: DubProduct[] = [
     {
       title: "New Year, New Bears | We Bare Bears",
-      url: "",
+      url: "0",
     },
     {
       title: "겨울 왕국",
-      url: "",
+      url: "1",
     },
     {
       title: "라이언킹",
-      url: "",
+      url: "2",
     },
     {
       title: "워킹데드",
-      url: "",
+      url: "3",
     },
     {
       title: "해리포터",
-      url: "",
+      url: "4",
     },
     {
       title: "아따맘마",
-      url: "",
+      url: "5",
     },
   ];
 
@@ -64,7 +64,7 @@ export default function DubProductList() {
     <Carousel responsive={responsive} partialVisible>
       {dubProductList &&
         dubProductList.map((item) => (
-          <DubVideoThumbnail title={item.title} url={item.url} />
+          <DubVideoThumbnail title={item.title} url={item.url} key={item.url} />
         ))}
     </Carousel>
   );

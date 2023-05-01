@@ -61,6 +61,7 @@ export default function UserRankingList() {
       {userRankingList &&
         userRankingList.map((item) => (
           <UserRankingListItem
+            key={item.ranking}
             imageUrl={item.imageUrl}
             introduce={item.introduce}
             nickname={item.nickname}
