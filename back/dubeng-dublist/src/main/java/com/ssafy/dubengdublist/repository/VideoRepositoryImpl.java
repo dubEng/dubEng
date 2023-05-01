@@ -10,9 +10,7 @@ import com.ssafy.dubengdublist.dto.community.*;
 import com.ssafy.dubengdublist.dto.contents.*;
 import com.ssafy.dubengdublist.dto.home.*;
 import com.ssafy.dubengdublist.dto.record.QRecordScript;
-import com.ssafy.dubengdublist.dto.record.QRecordVideo;
 import com.ssafy.dubengdublist.dto.record.RecordScript;
-import com.ssafy.dubengdublist.dto.record.RecordVideo;
 import com.ssafy.dubengdublist.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +37,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         this.queryFactory = new JPAQueryFactory(em);
     }
 
+    // 컨텐츠 페이지
     public Page<ContentsSearchRes> selectAllContentsSearchRes(String langType, String title,Pageable pageable,List<Long> contentsSearch){
 
         BooleanBuilder builder = new BooleanBuilder();
@@ -172,8 +171,6 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         return PageableExecutionUtils.getPage(communityDetailScriptResList, pageable, countQuery::fetchCount);
     }
 
-
-    // JPA로 빼기
     public List<ContentsScriptRes> selectAllScript(Long videoId){
         List<ContentsScriptRes> scriptList = queryFactory
                 .select(new QContentsScriptRes(script.startTime, script.duration, script.content, script.translateContent))
@@ -212,7 +209,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         return communityDubKingRes;
     }
 
-    public Page<CommunityCommentRes> selectAllCommunityDetailCommentRes(String langType, Pageable pageable, Long recordId){
+    public Page<CommunityCommentRes> selectAllCommunityDetailCommentRes(Pageable pageable, Long recordId){
 
         List<CommunityCommentRes> content = queryFactory
                 .select(new QCommunityCommentRes(user.nickname, recordComment.content, recordComment.updatedDate))
@@ -253,16 +250,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         return videoBookmark;
     }
 
-    // JPA로 빼기
-    public RecordVideo selectRecordVideo(Long videoId){
-        RecordVideo recordVideo = queryFactory
-                .select(new QRecordVideo(video.id, video.title, video.videoPath, video.startTime, video.endTime))
-                .from(video)
-                .where(video.id.eq(videoId))
-                .fetchFirst();
-        return recordVideo;
-    }
-
+    // 녹음 상세 페이지
     public List<RecordScript> selectRecordScript(Long videoId){
         List<RecordScript> recordScript = queryFactory
                 .select(new QRecordScript(script.id, script.startTime, script.duration, script.content,script.translateContent))
@@ -274,6 +262,8 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         return recordScript;
     }
 
+    
+    // 홈 화면에 필요한 데이터 query문    
     public List<HomePopularity> selectAllHomePopularity(){
         List<HomePopularity> homePopularities = queryFactory
                 .select(new QHomePopularity(video.id, video.title, video.thumbnail,video.videoPath, QRecord.record.user.id, user.nickname, QRecord.record.id))

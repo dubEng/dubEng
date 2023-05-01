@@ -59,8 +59,8 @@ public class ContentsController {
     }
 
     @ApiOperation(value = "콘텐츠 영상 스크랩")
-    @PostMapping("/{langType}/scrap/{videoId}")
-    public ResponseEntity<?> selectOneDetailScrap(@PathVariable("langType") String  langType, @RequestParam String userId, @PathVariable("videoId") Long videoId){
+    @PostMapping("/scrap/{videoId}")
+    public ResponseEntity<?> selectOneDetailScrap(@RequestParam String userId, @PathVariable("videoId") Long videoId){
         return new ResponseEntity<Integer>(contentsService.selectOneDetailScrap(userId, videoId), HttpStatus.ACCEPTED);
     }
 

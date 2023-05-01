@@ -23,23 +23,26 @@ import java.util.List;
 @RequestMapping(path="/home")
 public class HomeController {
     private final HomeService homeService;
+    private static final String SUCCESS = "success";
+    private static final String FAIL = "fail";
+
     @ApiOperation(value = "홈 인기 더빙")
     @GetMapping("/popularity")
     public ResponseEntity<?> selectAllHomePopularity(){
         List<HomePopularity> homePopularity = homeService.selectAllHomePopularity();
-        return new ResponseEntity(homePopularity, HttpStatus.ACCEPTED);
+        return new ResponseEntity(homePopularity, HttpStatus.OK);
     }
     @ApiOperation(value = "홈 유저 랭킹")
     @GetMapping("/rank")
     public ResponseEntity<?> selectAllHomeRank(){
         List<HomeRank> homeRanks = homeService.selectAllHomeRank();
-        return new ResponseEntity(homeRanks, HttpStatus.ACCEPTED);
+        return new ResponseEntity(homeRanks, HttpStatus.OK);
     }
     @ApiOperation(value = "홈 더빙왕 랭킹")
     @GetMapping("/dubking")
     public ResponseEntity<?> selectAllDubKing() {
         List<HomeDubKing> homeDubKings = homeService.selectAllHomeDubKing();
-        return new ResponseEntity(homeDubKings, HttpStatus.ACCEPTED);
+        return new ResponseEntity(homeDubKings, HttpStatus.OK);
     }
     
 }

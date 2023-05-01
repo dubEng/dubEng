@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface DubKingRepository extends JpaRepository<DubKing, Integer>, DubKingRepositoryCustom {
+public interface DubKingRepository extends JpaRepository<DubKing, Long>, DubKingRepositoryCustom {
 
 
 
