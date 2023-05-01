@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Slf4j
 @RestController
-@RequestMapping("/dub")
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class FileController {
     private final SaveFileService fileService;
@@ -24,11 +24,12 @@ public class FileController {
 
         fileService.fileSave(requestDTO);
     }
-    @GetMapping("/get/file")
-    public Set<Object> getfilePath(@RequestParam String videoId, @RequestParam String userId){
-        log.debug("videoId : {}, userId : {}", videoId, userId);
+    @GetMapping("/dublist")
+    public Set<Object> getfilePath(@RequestParam Long videoId, @RequestParam String nickname, @RequestParam int recodeNum){
+        log.debug("videoId : {}, userId : {}", videoId, nickname);
 
-        String key = videoId + "_" + userId;
+        String key = fileService.getKey(videoId, nickname, recodeNum);
+
         Set<Object> pathList = fileService.getPathInCache(key);
 
         return pathList;

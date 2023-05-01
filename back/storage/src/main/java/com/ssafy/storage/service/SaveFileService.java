@@ -1,20 +1,15 @@
 package com.ssafy.storage.service;
 
 import com.ssafy.storage.dto.SaveFileRequestDTO;
-import com.ssafy.storage.dto.UserProfile;
+import com.ssafy.storage.dto.RecodeInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @Slf4j
@@ -36,9 +31,9 @@ public class SaveFileService {
             fullPath = "/Home/";
         }
         // 폴더 없을 경우 생성
-        UserProfile userProfile = requestDTO.getUserProfile();
+        RecodeInfo recode = requestDTO.getRecodeInfo();
 
-        String key = userProfile.getVideoId() + "_" + userProfile.getUserId();
+        String key = getKey(recode.getVideoId(), recode.getNickname(), recode.getRecodeNum());
         fullPath += key;
 
         File folder = new File(fullPath);
@@ -76,5 +71,15 @@ public class SaveFileService {
         Set<Object> members = redisTemplate.opsForSet().members(key);
         log.debug("list : {}", members.toString());
         return members;
+    }
+    public String getKey(Long videoId, String nickname, int recodeNum){
+        String key = new StringBuilder()
+                .append(videoId)
+                .append("_")
+                .append(nickname)
+                .append("_")
+                .append(recodeNum).toString();
+
+        return key;
     }
 }
