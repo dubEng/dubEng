@@ -1,71 +1,58 @@
 import DubVideoThumbnail from "../../../components/atoms/DubVideoThumbnail";
 
 import { DubProduct } from "@/types/DubProduct";
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
-
-const responsive = {
-  bigDesktop: {
-    breakpoint: { max: 3000, min: 1650 },
-    items: 5,
-    partialVisibilityGutter: 40, // this is needed to tell the amount of px that should be visible.
-  },
-  middleDesktop: {
-    breakpoint: { max: 1650, min: 1300 },
-    items: 4,
-    partialVisibilityGutter: 40, // this is needed to tell the amount of px that should be visible.
-  },
-  desktop: {
-    breakpoint: { max: 1300, min: 1000 },
-    items: 3,
-    partialVisibilityGutter: 40, // this is needed to tell the amount of px that should be visible.
-  },
-  tablet: {
-    breakpoint: { max: 1000, min: 655 },
-    items: 2,
-    partialVisibilityGutter: 40, // this is needed to tell the amount of px that should be visible.
-  },
-  mobile: {
-    breakpoint: { max: 655, min: 0 },
-    items: 1,
-    partialVisibilityGutter: 70, // this is needed to tell the amount of px that should be visible.
-  },
-};
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
 
 export default function DubProductList() {
   const dubProductList: DubProduct[] = [
-    {
-      title: "New Year, New Bears | We Bare Bears",
-      url: "0",
-    },
-    {
-      title: "겨울 왕국",
-      url: "1",
-    },
-    {
-      title: "라이언킹",
-      url: "2",
-    },
-    {
-      title: "워킹데드",
-      url: "3",
-    },
-    {
-      title: "해리포터",
-      url: "4",
-    },
-    {
-      title: "아따맘마",
-      url: "5",
-    },
+    { videoId: 0, title: "New Year, New Bears | We Bare Bears", url: "0" },
+    { videoId: 1, title: "겨울 왕국", url: "1" },
+    { videoId: 2, title: "라이언킹", url: "2" },
+    { videoId: 3, title: "워킹데드", url: "3" },
+    { videoId: 4, title: "해리포터", url: "4" },
+    { videoId: 5, title: "아따맘마", url: "5" },
   ];
 
   return (
-    <Carousel responsive={responsive} partialVisible>
+    <Swiper
+      slidesPerView={1.4}
+      spaceBetween={16}
+      onSlideChange={() => console.log("slide change")}
+      onSwiper={(swiper) => console.log(swiper)}
+      breakpoints={{
+        655: {
+          slidesPerView: 1.4,
+          spaceBetween: 16,
+        },
+        1000: {
+          slidesPerView: 2,
+          spaceBetween: 16,
+        },
+        1300: {
+          slidesPerView: 3,
+          spaceBetween: 16,
+        },
+        1650: {
+          slidesPerView: 4,
+          spaceBetween: 16,
+        },
+        3000: {
+          slidesPerView: 5,
+          spaceBetween: 16,
+        },
+      }}
+    >
       {dubProductList &&
-        dubProductList.map((item) => (
-          <DubVideoThumbnail title={item.title} url={item.url} key={item.url} />
+        dubProductList.map((item, index) => (
+          <SwiperSlide key={item.videoId}>
+            <DubVideoThumbnail
+              title={item.title}
+              url={item.url}
+              videoId={item.videoId}
+            />
+          </SwiperSlide>
         ))}
-    </Carousel>
+    </Swiper>
   );
 }
