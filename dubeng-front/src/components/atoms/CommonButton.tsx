@@ -7,9 +7,19 @@ interface Iprops {
 }
 
 export default function CommonButton({ children, isDisabled }: Iprops) {
+  if (isDisabled) {
+    return (
+      <button
+        disabled
+        className="rounded-8 bg-dubblue text-white text-16 px-48 py-8"
+      >
+        {children}
+      </button>
+    );
+  }
   return (
-    <button className="rounded-8 bg-dubblue text-dubgraylight text-16 px-48 py-8">
-      저장하기
+    <button className="rounded-8 bg-dubblue text-white text-16 px-48 py-8">
+      {children}
     </button>
   );
 }
