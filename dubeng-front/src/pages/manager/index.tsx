@@ -199,12 +199,10 @@ export default function ManagerPage() {
     };
 
     const postData = {
-      data: {
-        video: video,
-        userId: "39576",
-        scripts: scriptsData,
-        categories: selectedTag,
-      },
+      video: video,
+      userId: "39576",
+      scripts: scriptsData,
+      categories: selectedTag,
     };
 
     console.log("!!! postData", JSON.stringify(postData));
@@ -368,7 +366,7 @@ export default function ManagerPage() {
       <label htmlFor="videoGender">더빙 성우 성별</label>
       <br />
       <div>
-        <label htmlFor="male">남성</label>
+        <label htmlFor="0">남성</label>
         <input
           type="radio"
           value={0}
@@ -377,7 +375,7 @@ export default function ManagerPage() {
           name="0"
           onChange={handleClickGenderButton}
         />
-        <label htmlFor="female">여성</label>
+        <label htmlFor="1">여성</label>
         <input
           type="radio"
           value={1}
