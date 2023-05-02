@@ -10,3 +10,9 @@ export enum CommonAlertType {
     COMMENT_DELETE = "COMMENT_DELETE",
     CONTENTS_DELETE = "CONTENTS_DELETE",
 }
+
+export enum SoundType {
+    DEFAULT = "DEFAULT",
+    PLAYING = "PLAYING",
+    DISABLE = "DISABLE"
+}

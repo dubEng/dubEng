@@ -12,5 +12,5 @@ export default meta;
 type Story = StoryObj<typeof DubVideoThumbnail>;
 
 export const Default: Story = {
-    render: () => <DubVideoThumbnail title='New Year, New Bears | We Bare Bears' url=''  />,
+    render: () => <DubVideoThumbnail title='New Year, New Bears | We Bare Bears' url=''  videoId={1} />,
 };
