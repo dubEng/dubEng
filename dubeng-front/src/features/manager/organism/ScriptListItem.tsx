@@ -4,25 +4,27 @@ interface Iprops {
   duration: number;
   start: number;
   text: string;
-  subTitle: string;
+  translation: string;
 }
 
 export default function ScriptListItem({
   duration,
   start,
   text,
-  subTitle,
+  translation,
 }: Iprops) {
-  const [newTexts, setNewTexts] = useState({
+  const [newScript, setNewScript] = useState({
     english: text,
-    korean: subTitle,
+    korean: translation,
+    start: start,
+    end: start + duration,
   });
 
-  const handleNewTexts = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNewScript = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    setNewTexts({
-      ...newTexts,
+    setNewScript({
+      ...newScript,
       [name]: value,
     });
   };
@@ -42,24 +44,52 @@ export default function ScriptListItem({
         <input
           type="text"
           name="english"
-          value={newTexts.english}
-          onChange={handleNewTexts}
+          value={newScript.english}
+          onChange={handleNewScript}
         />
       </div>
       <div className="flex justify-between">
         <p>한국어</p>
-        <p>{subTitle}</p>
+        <p>{translation}</p>
         <input
           type="text"
           name="korean"
-          value={newTexts.korean}
-          onChange={handleNewTexts}
+          value={newScript.korean}
+          onChange={handleNewScript}
         />
       </div>
-      <p>문장별 구간 설정</p>
-      <input type="number" />
+      <input
+        type="number"
+        value={newScript.start}
+        name="start"
+        onChange={handleNewScript}
+      />{" "}
       ~
-      <input type="number" />
+      <input
+        type="number"
+        value={newScript.end}
+        name="end"
+        onChange={handleNewScript}
+      />
+      <br />
+      <label htmlFor={start.toString()}>더빙 여부</label>
+      <br />
+      <div>
+        <label htmlFor="true">해당</label>
+        <input
+          type="radio"
+          value="true"
+          id={start.toString()}
+          name={start.toString()}
+        />
+        <label htmlFor="false">해당 없음</label>
+        <input
+          type="radio"
+          value="false"
+          id={start.toString()}
+          name={start.toString()}
+        />
+      </div>
       <hr />
     </div>
   );
