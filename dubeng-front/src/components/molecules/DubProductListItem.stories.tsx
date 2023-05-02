@@ -16,7 +16,7 @@ export const Default: Story = {
   render: () => (
     <DubProductListItem
       title={"길어져서 2줄이 되면 어떻게 도나요 최대로 "}
-      thumbnail={WeBareBears}
+      thumbnail={""}
       runtime={"2분 11초"}
       imageUrl={profileImg}
       nickname={"언도"}
