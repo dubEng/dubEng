@@ -117,7 +117,7 @@ export default function ManagerPage() {
     console.log("getVideoInfo");
     try {
       const videoInfoResult = await refetch();
-      console.log("videoInfoResult", videoInfoResult);
+      console.log("videoInfoResult", videoInfoResult.data.scripts);
       setVideoInfo(videoInfoResult.data.vedioInfo);
       setScripts(videoInfoResult.data.scripts);
     } catch (error) {
