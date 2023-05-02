@@ -1,3 +1,7 @@
+server:
+  servlet:
+    context-path: /dub
+
 # JPA
 spring:
   jpa:
@@ -30,3 +34,4 @@ logging:
     root: info
     com:
       temp: debug
+
