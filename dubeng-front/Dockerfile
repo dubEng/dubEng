@@ -2,9 +2,10 @@ FROM node:alpine AS build
 
 WORKDIR /app
 
-COPY . /app
 
 RUN npm install
+
+COPY . /app
 
 RUN npm run build
 
