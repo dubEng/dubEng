@@ -1,16 +1,11 @@
 package com.ssafy.dubenguser.service;
 
 import com.ssafy.dubenguser.dto.*;
-import com.ssafy.dubenguser.entity.Category;
-import com.ssafy.dubenguser.entity.User;
-import com.ssafy.dubenguser.entity.UserCalender;
-import com.ssafy.dubenguser.entity.UserCategory;
+import com.ssafy.dubenguser.entity.*;
 import com.ssafy.dubenguser.exception.DuplicateException;
 import com.ssafy.dubenguser.exception.InvalidInputException;
 import com.ssafy.dubenguser.exception.NotFoundException;
-import com.ssafy.dubenguser.repository.CategoryRepository;
-import com.ssafy.dubenguser.repository.UserCategoryRepository;
-import com.ssafy.dubenguser.repository.UserRepository;
+import com.ssafy.dubenguser.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +23,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserCategoryRepository userCategoryRepository;
     private final CategoryRepository categoryRepository;
+    private final MissionRepository missionRepository;
+    private final UserMissionRepository userMissionRepository;
 
     /**
      *
@@ -57,6 +54,12 @@ public class UserServiceImpl implements UserService {
                     .build();
 
             userCategoryRepository.save(uc);
+        }
+
+        List<Mission> missionList = missionRepository.findAll();
+
+        for(Mission m: missionList) {
+            userMissionRepository.save(UserMission.builder().user(savedUser).mission(m).build());
         }
     }
 
