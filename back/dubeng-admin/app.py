@@ -245,7 +245,7 @@ def sendInfo(start, end):
 @app.route('/admin/saveVideo', methods=['POST'])
 def saveApi():
     req = json.loads(request.form.get('data'))
-    video = req.get('video')
+    video = req['video']
     scripts = req.get('scripts')
     userId = req.get('userId')
     categories = req.get('categories')
