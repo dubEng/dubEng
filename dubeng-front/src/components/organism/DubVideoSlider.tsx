@@ -46,20 +46,22 @@ export default function DubVideoSlider({ isOpen, setOpen }: Iprops) {
         <Sheet.Container>
           <Sheet.Header />
           <Sheet.Content>
-            <p className="flex justify-start mx-16 text-19 font-bold mb-16">
-              이 영상, 지금 더빙 어때요?
-            </p>
-            {dumpList &&
-              dumpList.map((item, index) => (
-                <div className="mb-16" key={index}>
-                  <DubVideoListItem
-                    title={item.title}
-                    thumbnail={item.thumbnail}
-                    runtime={item.runtime}
-                    key={index}
-                  />
-                </div>
-              ))}
+            <div className="mx-16">
+              <p className="flex justify-start text-19 font-bold mb-16">
+                이 영상, 지금 더빙 어때요?
+              </p>
+              {dumpList &&
+                dumpList.map((item, index) => (
+                  <div className="mb-16" key={index}>
+                    <DubVideoListItem
+                      title={item.title}
+                      thumbnail={item.thumbnail}
+                      runtime={item.runtime}
+                      key={index}
+                    />
+                  </div>
+                ))}
+            </div>
           </Sheet.Content>
         </Sheet.Container>
         <Sheet.Backdrop />
