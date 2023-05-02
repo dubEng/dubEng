@@ -41,7 +41,6 @@ logging.basicConfig(
 )
 
 
-
 def cleanDownloadFolder(userId):
     time.sleep(3)
     path = './download/dwn/output/'+userId+'/*'
@@ -141,7 +140,7 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
 
     for cate in categories:
         sql = "insert into video_category (video_id, category_id) values (%s, %s)"
-        values = (videoId, cate['id'])
+        values = (videoId, cate)
         cursor.execute(sql, values)
 
     data = seperateMp3(video['videoPath'], userId, video['title'], file_exist)
@@ -191,7 +190,6 @@ def seperateMp3(url, userId, videoTitle, file_exist):
     logging.info(f"Please wait a minute... I will start seperate")
     spl = r'spleeter separate -p spleeter:2stems -o output '+newname
     os.system(spl)
-
 
     # 로컬 음원 S3 버킷 업로드
     videoTitle = deletIllegalSymbols(videoTitle)
