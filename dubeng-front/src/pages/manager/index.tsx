@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import useGetVideoInfoQuery from "@/apis/manager/queries/useGetVideoInfoQuery";
 import ScriptListItem from "@/features/manager/organism/ScriptListItem";
 import useCategoryQuery from "@/apis/manager/queries/useCategoryQuery";
+import useVideoPost from "@/apis/manager/mutations/useVideoPost";
 import CommonInputBox from "@/components/atoms/CommonInputBox";
 import TagButton from "@/components/atoms/TagButton";
+import { RootState } from "@/stores/store";
 
 export default function ManagerPage() {
   const [inputs, setInputs] = useState({
@@ -76,11 +79,19 @@ export default function ManagerPage() {
     translation: string;
   }
 
+  interface categoryType {
+    id: number;
+  }
+
+  //
+  const test = useSelector((state) => state);
+  console.log("test", test);
+
   // script 정보 관리하는 useState
   const [scripts, setScripts] = useState<scriptsType[]>([]);
 
-  // // post용 다중 requestbody 값 저장 객체
-  // const [videoInfo, setVideoInfo] = useState({});
+  // // post용
+  const mutation = useVideoPost();
 
   // 비구조화 할당
   const { url, start, end, lang } = inputs;
@@ -88,18 +99,33 @@ export default function ManagerPage() {
   // get용 react-query
   const { refetch } = useGetVideoInfoQuery(url, start, end, lang);
 
+  // 영상 성별
+  const [gender, setGender] = useState(0);
+
+  const handleClickGenderButton = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGender(parseInt(e.target.value));
+    console.log(gender);
+  };
+
   // // 카테고리 조회 react-query
   const { data } = useCategoryQuery();
 
   // 선택한 카테고리 태그
-  const [selectedTag, setSelectedTag] = useState<string[]>([]);
+  const [selectedTag, setSelectedTag] = useState<number[]>([]);
+
   // 태그 선택
-  const handleClickTag = (name: string) => {
-    if (selectedTag.includes(name)) {
-      setSelectedTag(selectedTag.filter((tagName) => tagName !== name));
+  const handleClickTag = (id: number) => {
+    if (selectedTag.includes(id)) {
+      setSelectedTag(selectedTag.filter((tagId) => tagId !== id));
     } else {
-      setSelectedTag([...selectedTag, name]);
+      setSelectedTag([...selectedTag, id]);
     }
+  };
+
+  const [audioFile, setAudioFile] = useState<FileList | null>(null);
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // console.log(e.target.files);
+    setAudioFile(e.target.files);
   };
 
   // input값 onChange
@@ -118,7 +144,7 @@ export default function ManagerPage() {
     try {
       const videoInfoResult = await refetch();
       console.log("videoInfoResult", videoInfoResult.data.scripts);
-      setVideoInfo(videoInfoResult.data.vedioInfo);
+      setVideoInfo(videoInfoResult.data.videoInfo);
       setScripts(videoInfoResult.data.scripts);
     } catch (error) {
       console.log(error);
@@ -150,8 +176,62 @@ export default function ManagerPage() {
     getVideoInfo();
   }
 
-  function handleSaveVideo() {
+  function handleSaveVideoButton() {
     console.log("등록하기 버튼 눌렀다!");
+    saveDubVideo();
+  }
+
+  const userIdData = useSelector((state: RootState) => state.user.userId);
+  const scriptsData = useSelector((state: RootState) => state.scriptsPostInfo);
+
+  function makeFormData() {
+    const formData = new FormData();
+
+    const video = {
+      videoPath: videoInfo?.url,
+      title: videoInfo?.title,
+      thumbnail: videoInfo?.thumbnails,
+      startTime: start,
+      endTime: end,
+      producer: videoInfo?.channelTitle,
+      gender: gender,
+      lang: lang,
+    };
+
+    const postData = {
+      data: {
+        video: video,
+        userId: "39576",
+        scripts: scriptsData,
+        categories: selectedTag,
+      },
+    };
+
+    console.log("!!! postData", JSON.stringify(postData));
+
+    formData.append(
+      "data",
+      new Blob([JSON.stringify(postData)], { type: "application/json" })
+    );
+
+    console.log("~~~ postData를 붙인 formData", formData);
+
+    if (audioFile) {
+      formData.append(`file`, audioFile[0]);
+    }
+
+    console.log("!!! audioFile 붙인 formData", formData);
+
+    return formData;
+  }
+
+  async function saveDubVideo() {
+    const formData = makeFormData();
+    console.log("!!!!formData는 여기", formData);
+
+    try {
+      const videoPostResult = await mutation.mutateAsync(formData);
+    } catch (error) {}
   }
 
   return (
@@ -285,44 +365,52 @@ export default function ManagerPage() {
       )}
 
       <p className="text-24 font-bold">콘텐츠 정보 입력하기</p>
-      <label htmlFor="videoLanguage">더빙 성우 성별</label>
+      <label htmlFor="videoGender">더빙 성우 성별</label>
       <br />
       <div>
         <label htmlFor="male">남성</label>
         <input
           type="radio"
-          value="male"
-          id="male"
-          name="gender"
-          onChange={onChangeValue}
+          value={0}
+          checked={gender === 0}
+          id="0"
+          name="0"
+          onChange={handleClickGenderButton}
         />
         <label htmlFor="female">여성</label>
         <input
           type="radio"
-          value="female"
-          id="female"
-          name="gender"
-          onChange={onChangeValue}
+          value={1}
+          checked={gender === 1}
+          id="1"
+          name="1"
+          onChange={handleClickGenderButton}
         />
       </div>
       <p>카테고리</p>
       <div className="flex">
         {data?.map((tag: { id: number; name: string }, idx: number) => (
-          <div onClick={() => handleClickTag(tag.name)}>
+          <div onClick={() => handleClickTag(tag.id)}>
             <TagButton
-              onClick={() => handleClickTag(tag.name)}
+              onClick={() => handleClickTag(tag.id)}
               id={tag.id}
               key={idx}
               name={tag.name}
-              isSelected={selectedTag.includes(tag.name) ? true : false}
+              isSelected={selectedTag.includes(tag.id) ? true : false}
             />
           </div>
         ))}
       </div>
       <p>음성 파일 첨부</p>
+      <input
+        type="file"
+        name="file"
+        id="uploadAudio"
+        onChange={handleFileInput}
+      />
       <button
         className="rounded-[8px] bg-dubblue px-16"
-        onClick={handleSaveVideo}
+        onClick={handleSaveVideoButton}
       >
         등록하기
       </button>
