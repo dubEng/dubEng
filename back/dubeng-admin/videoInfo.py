@@ -28,7 +28,7 @@ def get_video_info(video_url):
     }
     return data
 
-def getVedioId(url):
+def getVideoId(url):
     video_id = url.split("v=")[1] # "v=" 다음에 오는 값 추출
     # print(video_id) # 동영상 ID 출력
     return video_id

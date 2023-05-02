@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from youtube_transcript_api import YouTubeTranscriptApi
 from pydub import AudioSegment
-from vedioInfo import getVedioId, get_video_info
+from videoInfo import getVideoId, get_video_info
 from io import BytesIO
 import boto3
 import time
@@ -128,15 +128,15 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
     cursor = connection.cursor()
     duration = int(video['endTime'])-int(video['startTime'])
     sql = "INSERT INTO video (title, runtime, video_path, thumbnail, start_time, end_time, producer, gender, lang_type) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    values = (video['title'], str(duration), video['video_path'], video['thumbnail'], video['startTime'],
+    values = (video['title'], str(duration), video['videoPath'], video['thumbnail'], video['startTime'],
               video['endTime'], video['producer'], video['gender'], video['lang'])
     cursor.execute(sql, values)
 
     videoId = cursor.lastrowid
     for sc in scripts:
         sql = "INSERT INTO script (start_time, duration, content, translate_content, video_id, is_dub) VALUES (%s, %s, %s, %s, %s, %s)"
-        values = (sc['start_time'], sc['duration'], sc['content'],
-                  sc['translate_content'], videoId, sc['is_dub'])
+        values = (sc['startTime'], sc['duration'], sc['content'],
+                  sc['translateContent'], videoId, sc['isDub'])
         cursor.execute(sql, values)
 
     for cate in categories:
@@ -144,7 +144,7 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
         values = (videoId, cate['id'])
         cursor.execute(sql, values)
 
-    data = seperateMp3(video['video_path'], userId, video['title'], file_exist)
+    data = seperateMp3(video['videoPath'], userId, video['title'], file_exist)
     if data is not None:
         sql = "UPDATE video SET background_path=%s, voice_path=%s WHERE id=%s"
         cursor.execute(sql, (data['backUrl'], data['vocalUrl'], videoId))
@@ -217,7 +217,7 @@ def sendInfo(start, end):
     url = request.args.get('url')
     lang = request.args.get('lang')
     # url 뒤에 있는 video id 추출 -> script 불러올 때 필요한 video Id
-    video_id = getVedioId(url)
+    video_id = getVideoId(url)
     logging.info(f"{url}")
     # video 정보 가져오기
     data = get_video_info(url)
@@ -238,13 +238,13 @@ def sendInfo(start, end):
             elif s['start'] > float(end):
                 break
     response = {
-        "vedioInfo": data,
+        "videoInfo": data,
         "scripts": result,
     }
     return response
 
 
-@app.route('/admin/saveVedio', methods=['POST'])
+@app.route('/admin/saveVideo', methods=['POST'])
 def saveApi():
     req = json.loads(request.form.get('data'))
     video = req.get('video')
