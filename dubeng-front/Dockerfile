@@ -1,4 +1,4 @@
-FROM node:alpine AS build
+FROM node:16-alpine AS build
 
 WORKDIR /app
 
@@ -6,15 +6,11 @@ COPY ./package.json /app
 
 RUN npm install
 
+# 어떤 파일이 이미지에 들어가야 하는지 
+# 첫 번째 .은 이 프로젝트의 모든 폴더 및 파일들 (Dockerfile을 제외한)
+# 두 번째 .은 파일을 저장할 컨테이너 내부 경로 (ex /app)
 COPY . /app
-
-RUN npm run build
-
-FROM nginx
 
 EXPOSE 3000
 
-# nginx proxy path 설정 파일
-COPY ./nginx/default.conf /etc/nginx/conf.d/react.conf
-
-COPY --from=build /app/build /usr/share/nginx/html
+RUN npm run build
