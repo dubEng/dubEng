@@ -51,7 +51,7 @@ export default function DubVideoSlider({ isOpen, setOpen }: Iprops) {
             </p>
             {dumpList &&
               dumpList.map((item, index) => (
-                <div className="mb-16">
+                <div className="mb-16" key={index}>
                   <DubVideoListItem
                     title={item.title}
                     thumbnail={item.thumbnail}
