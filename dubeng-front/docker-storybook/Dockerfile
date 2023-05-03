@@ -16,3 +16,4 @@ EXPOSE 6006
 RUN npm run build-storybook
 
 CMD ["npm", "run", "storybook"]
+
