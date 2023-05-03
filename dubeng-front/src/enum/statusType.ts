@@ -24,3 +24,20 @@ export enum EmptyType {
   EMPTY_COMMENT = "EMPTY_COMMENT",
   EMPTY_VOTE = "EMPTY_VOTE",
 }
+
+export enum SituationType {
+  PLACE_1 = "PLACE_1",
+  PLACE_2 = "PLACE_2",
+  EMOTION = "EMOTION",
+  COUNTRY = "COUNTRY",
+}
+
+export enum DubType {
+  DUB_VIDEO = "DUB_VIDEO",
+  DUB_PRODUCT = "DUB_PRODUCT",
+}
+
+export enum LangType {
+  ENGLISH = "ENGLISH",
+  KOREAN = "KOREAN",
+}
