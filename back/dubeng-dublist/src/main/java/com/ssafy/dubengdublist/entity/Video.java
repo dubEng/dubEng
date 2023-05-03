@@ -22,7 +22,6 @@ public class Video extends Time {
     private String thumbnail;
     private Long startTime;
     private Long endTime;
-    private Boolean isAdult;
     private String producer;
     private Long playCount;
     private Boolean gender;
