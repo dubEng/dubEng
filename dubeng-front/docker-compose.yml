@@ -15,5 +15,5 @@ services:
       context: .
       dockerfile: ./docker-storybook/Dockerfile
     ports:
-      - "6006:6006"
+      - "6006:3000"
     
