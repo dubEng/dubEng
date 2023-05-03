@@ -388,15 +388,13 @@ export default function ManagerPage() {
       <p>카테고리</p>
       <div className="flex">
         {data?.map((tag: { id: number; name: string }, idx: number) => (
-          <div onClick={() => handleClickTag(tag.id)}>
-            <TagButton
-              onClick={() => handleClickTag(tag.id)}
-              id={tag.id}
-              key={idx}
-              name={tag.name}
-              isSelected={selectedTag.includes(tag.id) ? true : false}
-            />
-          </div>
+          <TagButton
+            onClick={() => handleClickTag(tag.id)}
+            id={tag.id}
+            key={idx}
+            name={tag.name}
+            isSelected={selectedTag.includes(tag.id) ? true : false}
+          />
         ))}
       </div>
       <p>음성 파일 첨부</p>
