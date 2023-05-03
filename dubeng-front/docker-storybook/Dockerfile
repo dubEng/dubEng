@@ -19,5 +19,5 @@ COPY ./docker-storybook/nginx/default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 3000
 
-COPY --from=builer /app/storybook-static /usr/share/nginx/html
+COPY --from=builder /app/storybook-static /usr/share/nginx/html
 
