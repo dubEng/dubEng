@@ -4,6 +4,7 @@ services:
   front:
     container_name: 'react-container'
     build:
+      context: .
       dockerfile: ./docker-next/Dockerfile
     ports:
       - "3000:3000"
@@ -11,6 +12,7 @@ services:
   storybook:
     container_name: 'storybook-container'
     build:
+      context: .
       dockerfile: ./docker-storybook/Dockerfile
     ports:
       - "6006:6006"
