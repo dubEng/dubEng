@@ -15,5 +15,9 @@ RUN npm run build-storybook
 
 FROM nginx
 
-COPY --from=builer /app/storybook-static /usr/share/ngnix/html
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 3000
+
+COPY --from=builer /app/storybook-static /usr/share/nginx/html
 
