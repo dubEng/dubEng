@@ -24,9 +24,10 @@ public class User extends Time{
     private Long recordCount;
     private Boolean isVoted;
     private Long totalRecTime;
+    private Boolean gender;
 
     @Builder
-    public User(Long id, String email, String nickname, Boolean isActive, String profileImage, Boolean isPublic, String roleType, String description, String landName, Long recordCount, Boolean isVoted, Long totalRecTime) {
+    public User(Long id, String email, String nickname, Boolean isActive, String profileImage, Boolean isPublic, String roleType, String description, String landName, Long recordCount, Boolean isVoted, Long totalRecTime, Boolean gender) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
@@ -39,5 +40,6 @@ public class User extends Time{
         this.recordCount = recordCount;
         this.isVoted = isVoted;
         this.totalRecTime = totalRecTime;
+        this.gender = gender;
     }
 }

@@ -13,7 +13,7 @@ import java.time.ZonedDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user_calendar")
+@Table(name = "user_calender")
 public class UserCalender {
 
     @Id

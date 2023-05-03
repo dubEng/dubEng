@@ -13,4 +13,5 @@ public class UserJoinReq {
     private String description;
     private String landName;
     private List<String> categories;
+    private Boolean gender;
 }
