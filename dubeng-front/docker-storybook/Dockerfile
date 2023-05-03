@@ -15,7 +15,7 @@ RUN npm run build-storybook
 
 FROM nginx
 
-COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY ./docker-storybook/nginx/default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 3000
 
