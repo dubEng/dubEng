@@ -1,4 +1,4 @@
-FROM node:16-alpine AS builder
+FROM node:16-alpine AS build
 
 WORKDIR /app
 
@@ -11,13 +11,9 @@ RUN npm install
 # 두 번째 .은 파일을 저장할 컨테이너 내부 경로 (ex /app)
 COPY ../ /app
 
+EXPOSE 6006
+
 RUN npm run build-storybook
 
-FROM nginx
-
-COPY ./docker-storybook/nginx/default.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 3000
-
-COPY --from=builder /app/storybook-static /usr/share/nginx/html
+CMD ["npm", "run", "storybook"]
 
