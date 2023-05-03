@@ -29,6 +29,7 @@
     "react-modal-sheet": "^1.10.2",
     "react-query": "^3.39.3",
     "react-redux": "^8.0.5",
+    "react-youtube": "^10.1.0",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
     "swiper": "^9.2.4",
