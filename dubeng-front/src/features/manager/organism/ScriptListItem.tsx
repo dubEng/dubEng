@@ -1,4 +1,4 @@
-import { addScriptsInfo } from "@/stores/manager/scriptsPostSlice";
+import { addScriptsInfo } from "../../../stores/manager/scriptsPostSlice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
