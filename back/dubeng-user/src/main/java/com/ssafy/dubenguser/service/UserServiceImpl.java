@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserService {
                 .nickname(request.getNickname())
                 .description(request.getDescription())
                 .landName(request.getLandName())
+                .gender(request.getGender())
                 .build();
 
         User savedUser = userRepository.save(newUser);
