@@ -1,4 +1,4 @@
-FROM node:16-alpine AS build
+FROM node:16-alpine AS builder
 
 WORKDIR /app
 
@@ -11,8 +11,9 @@ RUN npm install
 # 두 번째 .은 파일을 저장할 컨테이너 내부 경로 (ex /app)
 COPY ../ /app
 
-EXPOSE 6006
-
 RUN npm run build-storybook
 
-CMD ["npm", "run", "storybook"]
+FROM nginx
+
+COPY --from=builer /app/storybook-static /usr/share/ngnix/html
+
