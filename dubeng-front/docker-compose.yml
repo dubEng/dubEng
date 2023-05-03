@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  front:
+    container_name: 'react-container'
+    build:
+      dockerfile: ./docker-next/Dockerfile
+    ports:
+      - "3000:3000"
+  
+  storybook:
+    container_name: 'storybook-container'
+    build:
+      dockerfile: ./docker-storybook/Dockerfile
+    ports:
+      - "6006:6006"
+    
