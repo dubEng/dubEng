@@ -25,6 +25,7 @@ public class User extends Time{
     private Long recordCount;
     private Long IsVoted;
     private Long totalRecTime;
+    private Boolean gender;
 
     public void updateDubKingUser(Long IsVoted){
         this.IsVoted = IsVoted + 1;
