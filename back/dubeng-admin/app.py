@@ -244,33 +244,32 @@ def sendInfo(start, end):
 
 @app.route('/admin/saveVideo', methods=['POST'])
 def saveApi():
-    print(request)
-    print(request.form.get('data'))
-    print(request.files['file'])
-    req = request.form.get('data')
-    video = req['video']
-    scripts = req.get('scripts')
-    userId = req.get('userId')
-    categories = req.get('categories')
+    try:
+        req = json.loads(request.form['data'])
+        video = req['video']
+        scripts = req.get('scripts')
+        userId = req.get('userId')
+        categories = req.get('categories')
 
 
-
-    file_exist = False
-    if 'file' in request.files:
-        file = request.files['file']
-        if file.filename == '':
-            logging.info(f"no file, i will download from youtube")
-            file_exist = False
-        else:
-            file.save('download/dwn/'+userId+'.mp3')
-            file_exist = True
-    flag = saveVideoAndScript(video, scripts, userId, categories, file_exist)
-    if flag:
-        cleanDownloadFolder(userId)
-        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
-    elif flag == False:
-        return json.dumps({'success': "False, Tried too many. Save again."}), 405, {'ContentType': 'application/json'}
-    return json.dumps({'success': False}), 405, {'ContentType': 'application/json'}
+        file_exist = False
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename == '':
+                logging.info(f"no file, i will download from youtube")
+                file_exist = False
+            else:
+                file.save('download/dwn/'+userId+'.mp3')
+                file_exist = True
+        flag = saveVideoAndScript(video, scripts, userId, categories, file_exist)
+        if flag:
+            cleanDownloadFolder(userId)
+            return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+        elif flag == False:
+            return json.dumps({'success': "False, Tried too many. Save again."}), 405, {'ContentType': 'application/json'}
+    except Exception as e:    # 모든 예외의 에러 메시지를 출력할 때는 Exception을 사용
+        print('예외가 발생했습니다.', e)
+    return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
 
 
 @ app.route('/admin/download', methods=['POST', 'GET'])
