@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
      *  false : 등록된 회원이 없다.
      *  true : 등록된 회원이 있다.
      */
-    public boolean checkEnrolledMember(Long id){
+    public boolean checkEnrolledMember(String id){
 
         Optional<User> member = userRepository.findById(id);
 
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public UserProfileRes findProfile(Long id) {
+    public UserProfileRes findProfile(String id) {
         Optional<User> user = userRepository.findById(id);
 
         if(!user.isPresent()) {
@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public UserCalendarRes findCalendar(Long userId) {
+    public UserCalendarRes findCalendar(String userId) {
         ZonedDateTime today = ZonedDateTime.now();
         ZonedDateTime startDate = today.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
         ZonedDateTime endDate = today.withDayOfMonth(today.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59).withNano(999_999_999);
@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public List<UserRecordRes> findRecord(Long userId, UserRecordReq request) {
+    public List<UserRecordRes> findRecord(String userId, UserRecordReq request) {
         if(request.getIsPublic()==null || request.getIsLimit()==null || request.getLanType()==null)
             throw new InvalidInputException("모든 값을 채워주세요!");
 
@@ -146,13 +146,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public List<RecordLikeRes> findRecordLike(Long userId, Boolean isLimit) {
+    public List<RecordLikeRes> findRecordLike(String userId, Boolean isLimit) {
         List<RecordLikeRes> result = userRepository.findLikedRecordByUserId(userId, isLimit);
         return result;
     }
 
     @Transactional
-    public List<VideoBookmarkRes> findVideoBookmark(Long userId, Boolean isLimit) {
+    public List<VideoBookmarkRes> findVideoBookmark(String userId, Boolean isLimit) {
         List<VideoBookmarkRes> result = userRepository.findBookmarkedVideoByUserId(userId, isLimit);
         return result;
     }

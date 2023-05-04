@@ -29,7 +29,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         this.jpaQueryFactory = new JPAQueryFactory(em);
     }
     @Override
-    public List<Category> findCategoriesByUserId(Long userId) {
+    public List<Category> findCategoriesByUserId(String userId) {
         List<Category> categories = jpaQueryFactory
                 .select(category)
                 .from(user)
@@ -45,7 +45,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<UserCalender> findCalenderByUserId(Long userId, ZonedDateTime start, ZonedDateTime end) {
+    public List<UserCalender> findCalenderByUserId(String userId, ZonedDateTime start, ZonedDateTime end) {
         List<UserCalender> userCalendars = jpaQueryFactory
                 .selectFrom(userCalender)
                 .where(userCalender.user.id.eq(userId).and(userCalender.calDate.between(start, end)))
@@ -58,7 +58,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<UserRecordRes> findRecordByUserId(Long userId, Boolean isPublic, Boolean isLimit, String lanType) {
+    public List<UserRecordRes> findRecordByUserId(String userId, Boolean isPublic, Boolean isLimit, String lanType) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(record.user.id.eq(userId));
 
@@ -100,7 +100,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<RecordLikeRes> findLikedRecordByUserId(Long userId, Boolean isLimit) {
+    public List<RecordLikeRes> findLikedRecordByUserId(String userId, Boolean isLimit) {
 
         List<RecordLikeRes> result;
 
@@ -129,7 +129,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<VideoBookmarkRes> findBookmarkedVideoByUserId(Long userId, Boolean isLimit) {
+    public List<VideoBookmarkRes> findBookmarkedVideoByUserId(String userId, Boolean isLimit) {
 
         List<VideoBookmarkRes> result;
 
