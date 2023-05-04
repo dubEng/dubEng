@@ -247,11 +247,13 @@ def saveApi():
     print(request)
     print(request.form.get('data'))
     print(request.files['file'])
-    req = json.loads(request.form.get('data'))
+    req = request.form.get('data')
     video = req['video']
     scripts = req.get('scripts')
     userId = req.get('userId')
     categories = req.get('categories')
+
+
 
     file_exist = False
     if 'file' in request.files:
