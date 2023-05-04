@@ -5,14 +5,18 @@ import com.ssafy.dubengdublist.entity.*;
 import com.ssafy.dubengdublist.exception.NotFoundException;
 import com.ssafy.dubengdublist.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommunityServiceImpl implements CommunityService{
@@ -24,6 +28,7 @@ public class CommunityServiceImpl implements CommunityService{
     private final RecordRepository recordRepository;
     private final RecordLikeRepository recordLikeRepository;
     private final CategoryRepository categoryRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
 
 
     public CommunityDubKingRes findDubKing(String langType, String userId) {
@@ -163,5 +168,22 @@ public class CommunityServiceImpl implements CommunityService{
         }
 
         return 200;
+    }
+
+    public void setLikeToRedis(String userId, Long recordId){
+        Optional<User> ouser = userRepository.findById(userId);
+        if(!ouser.isPresent()){
+            throw new NotFoundException("존재하지 않는 유저입니다!");
+        }
+        User user = ouser.get();
+        Optional<Record> orecord = recordRepository.findById(recordId);
+        if(!orecord.isPresent()){
+            throw new NotFoundException("존재하지 않는 녹음입니다!");
+        }
+        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
+        String key = "like_recordId::"+Long.toString(recordId);
+        setOperations.add(key, userId); // 좋아요 완료
+
+        log.info("like set : {}", recordId);
     }
 }
