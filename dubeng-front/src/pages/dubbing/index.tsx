@@ -1,3 +1,4 @@
+import PitchGraph from "@/features/dubbing/atoms/PitchGraph";
 import DubBox from "@/features/dubbing/organism/DubBox";
 import { Script } from "@/types/Script";
 import { useState, useEffect } from "react";
@@ -143,8 +144,8 @@ export default function DubbingPage() {
   }
 
   const opts: YouTubeProps["opts"] = {
-    height: "390",
-    width: "640",
+    height: "218",
+    width: "390",
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
       autoplay: 1,
@@ -195,6 +196,7 @@ export default function DubbingPage() {
         onPlay={onPlay}
         onStateChange={onStateChange}
       />
+      <PitchGraph />
       {/* <DubBox /> */}
       <button onClick={moveScroll}>스크립트 스크롤</button>
       <div className="h-156 overflow-y-scroll bg-dubgraylight mb-32">
