@@ -8,6 +8,9 @@ const options: ApexOptions = {
   chart: {
     height: 350,
     type: "area",
+    toolbar: {
+      show: false,
+    }
   },
   dataLabels: {
     enabled: false,
@@ -28,6 +31,7 @@ const options: ApexOptions = {
     ],
   },
   tooltip: {
+    enabled: false,
     x: {
       format: "dd/MM/yy HH:mm",
     },
