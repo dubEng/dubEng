@@ -10,43 +10,43 @@ export default function UserRankingList() {
   const userRankingList: UserRanking[] = [
     {
       ranking: 1,
-      imageUrl: ProfileOne,
-      nickname: "김자민",
-      introduce: "안산 꿀주먹",
-      recordingTime: 10,
-      dubingCount: 53,
+      imageUrl: ProfileFive,
+      nickname: "김아영",
+      introduce: "8 Team Leader",
+      recordingTime: 100,
+      dubingCount: 531,
     },
     {
       ranking: 2,
       imageUrl: ProfileTwo,
       nickname: "김동동",
       introduce: "FE, BE, DevOps",
-      recordingTime: 10,
-      dubingCount: 53,
+      recordingTime: 9,
+      dubingCount: 453,
     },
     {
       ranking: 3,
       imageUrl: ProfileThree,
       nickname: "김언도",
       introduce: "안녕하세요, 언도입니다.",
-      recordingTime: 10,
-      dubingCount: 53,
+      recordingTime: 8,
+      dubingCount: 333,
     },
     {
       ranking: 4,
       imageUrl: ProfileFour,
       nickname: "김지희",
       introduce: "CA말이 우수워?",
-      recordingTime: 10,
-      dubingCount: 53,
+      recordingTime: 7,
+      dubingCount: 210,
     },
     {
       ranking: 5,
-      imageUrl: ProfileFive,
-      nickname: "김아영",
-      introduce: "8 Team Leader",
-      recordingTime: 10,
-      dubingCount: 53,
+      imageUrl: ProfileOne,
+      nickname: "김자민",
+      introduce: "안산 꿀주먹",
+      recordingTime: 6,
+      dubingCount: 153,
     },
   ];
 
@@ -61,6 +61,7 @@ export default function UserRankingList() {
       {userRankingList &&
         userRankingList.map((item) => (
           <UserRankingListItem
+            key={item.ranking}
             imageUrl={item.imageUrl}
             introduce={item.introduce}
             nickname={item.nickname}
