@@ -8,17 +8,22 @@ import com.ssafy.dubengdublist.entity.*;
 import com.ssafy.dubengdublist.exception.NotFoundException;
 import com.ssafy.dubengdublist.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ContentsServiceImpl implements ContentsService {
@@ -27,6 +32,7 @@ public class ContentsServiceImpl implements ContentsService {
     private final UserRepository userRepository;
     private final VideoBookmarkRepository videoBookmarkRepository;
     private final RecordRepository recordRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Transactional
     public HashMap<String, Object> findContentsRecommend(String langType, Pageable pageable){
@@ -82,4 +88,18 @@ public class ContentsServiceImpl implements ContentsService {
 
         return 200;
     }
+    public Integer addPlayCntToRedis(Long recordId){
+        String key = "recordPlayCnt::"+recordId;
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        if(valueOperations.get(key)==null){
+            Long newCnt = recordRepository.findPlayCount(recordId)+1;
+            valueOperations.set(key,Long.toString(newCnt), Duration.ofHours(2));
+        }
+        else{
+            valueOperations.increment(key);
+        }
+        log.info("add play count to redis : {} ", valueOperations.get(key));
+        return 200;
+    }
+
 }
