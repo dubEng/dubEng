@@ -3,8 +3,10 @@ import Image from "next/image";
 import Logo from "../../../public/images/logo/dubeng_logo.png";
 import { MdOutlineArrowBackIos } from "react-icons/md";
 import { AiOutlineEdit } from "react-icons/ai";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
+  const route = useRouter();
   const pathName = usePathname();
 
   if (pathName === "/") {
@@ -54,10 +56,28 @@ export default function Header() {
   } else if (pathName === "/signup") {
     return (
       <div className="fixed left-0 right-0 top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-start pl-16 items-center bg-white">
-        <button>
+        <button onClick={()=>{route.back()}}>
           <MdOutlineArrowBackIos className="mr-8 mb-2" />
         </button>
         회원가입
+      </div>
+    );
+  }else if (pathName === "/signup/interest") {
+    return (
+      <div className="fixed left-0 right-0 top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-start pl-16 items-center bg-white">
+        <button onClick={()=>{route.back()}}>
+          <MdOutlineArrowBackIos className="mr-8 mb-2" />
+        </button>
+        회원가입
+      </div>
+    );
+  } else if (pathName === "/signup/kitchen") {
+    return (
+      <div className="fixed left-0 right-0 top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-start pl-16 items-center bg-white">
+        <button onClick={()=>{route.back()}}>
+          <MdOutlineArrowBackIos className="mr-8 mb-2" />
+        </button>
+        나의 관심사
       </div>
     );
   } else if (pathName === "/mypage/profileEdit") {
