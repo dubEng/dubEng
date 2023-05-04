@@ -2,6 +2,9 @@ package com.ssafy.dubenguser.controller;
 
 import com.ssafy.dubenguser.dto.Token;
 import com.ssafy.dubenguser.dto.UserJoinReq;
+import com.ssafy.dubenguser.exception.DuplicateException;
+import com.ssafy.dubenguser.exception.NotFoundException;
+import com.ssafy.dubenguser.exception.UnAuthorizedException;
 import com.ssafy.dubenguser.service.AuthService;
 import com.ssafy.dubenguser.service.UserServiceImpl;
 import io.swagger.annotations.Api;
@@ -37,7 +40,7 @@ public class AuthController {
 
         //회원 가입 여부 체크
         String redirectUri = "/";
-        if(!userService.checkEnrolledMember((Long) result.get("userId"))){
+        if(!userService.checkEnrolledMember((String) result.get("userId"))){
             redirectUri = "/join";
         }
 
@@ -73,9 +76,12 @@ public class AuthController {
     @ApiOperation(value = "회원가입하기")
     public ResponseEntity<String> userAdd(@RequestBody UserJoinReq request){
         Long userId = authService.parseToken(request.getAccessToken());
-
-        if(userService.checkEnrolledMember(userId)){
-            //이미 등록된 사용자 입니다.
+        if(userId == null) {
+            throw new UnAuthorizedException("토큰을 가져올 수 없습니다!");
+        }
+        String newUserId = Long.toString(userId);
+        if(userService.checkEnrolledMember(newUserId)){
+            throw new DuplicateException("이미 등록된 사용자입니다.");
         }
         userService.addUser(request);
 

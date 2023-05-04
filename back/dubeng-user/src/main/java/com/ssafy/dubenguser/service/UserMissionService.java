@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface UserMissionService {
 
-    public List<UserMissionRes> findUserMissions(Long userId);
-    public List<String> findAssets(Long userId);
+    public List<UserMissionRes> findUserMissions(String userId);
+    public List<String> findAssets(String userId);
 }

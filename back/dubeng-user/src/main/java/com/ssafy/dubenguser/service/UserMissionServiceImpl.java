@@ -21,7 +21,7 @@ public class UserMissionServiceImpl implements UserMissionService{
 
 
     @Override
-    public List<UserMissionRes> findUserMissions(Long userId) {
+    public List<UserMissionRes> findUserMissions(String userId) {
         Optional<User> user = userRepository.findById(userId);
 
         if(!user.isPresent()) {
@@ -33,7 +33,7 @@ public class UserMissionServiceImpl implements UserMissionService{
     }
 
     @Override
-    public List<String> findAssets(Long userId) {
+    public List<String> findAssets(String userId) {
         Optional<User> user = userRepository.findById(userId);
 
         if(!user.isPresent()) {

@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class User extends Time{
 
     @Id
-    private Long id;
+    private String id;
     private String email;
     private String nickname;
     private Boolean isActive;
@@ -27,7 +27,7 @@ public class User extends Time{
     private Boolean gender;
 
     @Builder
-    public User(Long id, String email, String nickname, Boolean isActive, String profileImage, Boolean isPublic, String roleType, String description, String landName, Long recordCount, Boolean isVoted, Long totalRecTime, Boolean gender) {
+    public User(String id, String email, String nickname, Boolean isActive, String profileImage, Boolean isPublic, String roleType, String description, String landName, Long recordCount, Boolean isVoted, Long totalRecTime, Boolean gender) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
