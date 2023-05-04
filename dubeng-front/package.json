@@ -31,6 +31,7 @@
     "react-modal-sheet": "^1.10.2",
     "react-query": "^3.39.3",
     "react-redux": "^8.0.5",
+    "react-speech-recognition": "^3.10.0",
     "react-youtube": "^10.1.0",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
@@ -46,6 +47,7 @@
     "@storybook/nextjs": "^7.0.7",
     "@storybook/react": "^7.0.7",
     "@storybook/testing-library": "^0.0.14-next.2",
+    "@types/react-speech-recognition": "^3.9.2",
     "eslint-plugin-storybook": "^0.6.11",
     "storybook": "^7.0.7"
   }
