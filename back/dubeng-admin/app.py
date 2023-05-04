@@ -14,6 +14,7 @@ import re
 import os
 import json
 import logging
+from pitch import getPitches
 
 app = Flask(__name__)
 
@@ -145,8 +146,9 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
 
     data = seperateMp3(video['videoPath'], userId, video['title'], file_exist)
     if data is not None:
-        sql = "UPDATE video SET background_path=%s, voice_path=%s WHERE id=%s"
-        cursor.execute(sql, (data['backUrl'], data['vocalUrl'], videoId))
+        sql = "UPDATE video SET background_path=%s, voice_path=%s, pitch=%s WHERE id=%s"
+        cursor.execute(
+            sql, (data['backUrl'], data['vocalUrl'], data['pitch'], videoId))
 
         connection.commit()
         connection.close()
@@ -191,6 +193,11 @@ def seperateMp3(url, userId, videoTitle, file_exist):
     spl = r'spleeter separate -p spleeter:2stems -o output '+newname
     os.system(spl)
 
+    # 사람 소리 주파수 추출해서 배열 정제하라?
+    pitch_list = getPitches(userId)
+    # text로 변환
+    pitch_text = json.dumps(pitch_list)
+
     # 로컬 음원 S3 버킷 업로드
     videoTitle = deletIllegalSymbols(videoTitle)
     backgroundPath = "./output/"+userId+"/accompaniment.wav"
@@ -202,7 +209,8 @@ def seperateMp3(url, userId, videoTitle, file_exist):
     vocalUrl = uploadToBucket(vocalPath, vocalName)
     result = {
         "backUrl": backUrl,
-        "vocalUrl": vocalUrl
+        "vocalUrl": vocalUrl,
+        "pitch": pitch_text
     }
     # os.chdir('/dubeng-admin')
 
@@ -251,7 +259,6 @@ def saveApi():
         userId = req.get('userId')
         categories = req.get('categories')
 
-
         file_exist = False
         if 'file' in request.files:
             file = request.files['file']
@@ -261,7 +268,8 @@ def saveApi():
             else:
                 file.save('download/dwn/'+userId+'.mp3')
                 file_exist = True
-        flag = saveVideoAndScript(video, scripts, userId, categories, file_exist)
+        flag = saveVideoAndScript(
+            video, scripts, userId, categories, file_exist)
         if flag:
             cleanDownloadFolder(userId)
             return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
