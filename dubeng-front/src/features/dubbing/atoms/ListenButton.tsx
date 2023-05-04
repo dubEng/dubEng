@@ -6,16 +6,29 @@ import { SoundType } from "../../../enum/statusType";
 
 interface Iprops {
   soundStatus: string;
+  onClick: () => void;
 }
 
-export default function ListenButton({ soundStatus }: Iprops) {
+export default function ListenButton({ soundStatus, onClick }: Iprops) {
   if (soundStatus == SoundType.DEFAULT) {
     return (
-      <Image src={SoundIcon} alt={"defaultButton"} width={44} height={44} />
+      <Image
+        src={SoundIcon}
+        alt={"defaultButton"}
+        width={44}
+        height={44}
+        onClick={onClick}
+      />
     );
   } else if (soundStatus == SoundType.PLAYING) {
     return (
-      <Image src={SoundPlayIcon} alt={"playButton"} width={44} height={44} />
+      <Image
+        src={SoundPlayIcon}
+        alt={"playButton"}
+        width={44}
+        height={44}
+        onClick={onClick}
+      />
     );
   } else {
     return (
@@ -24,6 +37,7 @@ export default function ListenButton({ soundStatus }: Iprops) {
         alt={"disableButton"}
         width={44}
         height={44}
+        onClick={onClick}
       />
     );
   }
