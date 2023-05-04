@@ -1,4 +1,6 @@
+import { addScriptsInfo } from "../../../stores/manager/scriptsPostSlice";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 interface Iprops {
   duration: number;
@@ -14,11 +16,12 @@ export default function ScriptListItem({
   translation,
 }: Iprops) {
   const [newScript, setNewScript] = useState({
-    english: text,
-    korean: translation,
-    start: start,
-    end: start + duration,
+    content: text,
+    translateContent: translation,
+    startTime: start,
+    duration: duration,
   });
+  const [isDub, setIsDub] = useState(1);
 
   const handleNewScript = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,6 +30,22 @@ export default function ScriptListItem({
       ...newScript,
       [name]: value,
     });
+  };
+
+  // 라디오버튼 조작
+  const handleClickRadioButton = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsDub(parseInt(e.target.value));
+  };
+
+  const dispatch = useDispatch();
+
+  const handleSubmitButton = () => {
+    // dispatch해줄 것
+    const scriptsToSubmit = { ...newScript, isDub: isDub };
+    dispatch(addScriptsInfo(scriptsToSubmit));
+
+    // const test = useSelector((state) => state);
+    // console.log(test);
   };
 
   return (
@@ -43,8 +62,8 @@ export default function ScriptListItem({
         <p>{text}</p>
         <input
           type="text"
-          name="english"
-          value={newScript.english}
+          name="content"
+          value={newScript.content}
           onChange={handleNewScript}
         />
       </div>
@@ -53,43 +72,53 @@ export default function ScriptListItem({
         <p>{translation}</p>
         <input
           type="text"
-          name="korean"
-          value={newScript.korean}
+          name="translateContent"
+          value={newScript.translateContent}
           onChange={handleNewScript}
         />
       </div>
       <input
         type="number"
-        value={newScript.start}
-        name="start"
+        value={newScript.startTime}
+        name="startTime"
         onChange={handleNewScript}
       />{" "}
-      ~
+      지속시간
       <input
         type="number"
-        value={newScript.end}
-        name="end"
+        value={newScript.duration}
+        name="duration"
         onChange={handleNewScript}
       />
       <br />
       <label htmlFor={start.toString()}>더빙 여부</label>
       <br />
       <div>
-        <label htmlFor="true">해당</label>
+        <label htmlFor="1">해당</label>
         <input
           type="radio"
-          value="true"
+          value={1}
+          checked={isDub === 1}
           id={start.toString()}
           name={start.toString()}
+          onChange={handleClickRadioButton}
         />
-        <label htmlFor="false">해당 없음</label>
+        <label htmlFor="0">해당 없음</label>
         <input
           type="radio"
-          value="false"
+          value={0}
+          checked={isDub === 0}
           id={start.toString()}
           name={start.toString()}
+          onChange={handleClickRadioButton}
         />
       </div>
+      <button
+        className="rounded-8 px-8 py-4 bg-dubcoral text-14 text-white"
+        onClick={handleSubmitButton}
+      >
+        확정
+      </button>
       <hr />
     </div>
   );
