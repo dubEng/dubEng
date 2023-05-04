@@ -5,7 +5,7 @@ interface Iprops {
   onClick: () => void;
 }
 
-export default function TagButton({ id, name, isSelected }: Iprops) {
+export default function TagButton({ id, name, isSelected, onClick }: Iprops) {
   if (isSelected === true) {
     return (
       <button className="rounded-20 m-4 px-16 py-8 border-1 border-dubcoral bg-dubcoral text-white text-16">
