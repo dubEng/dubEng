@@ -28,8 +28,8 @@ export default function CommentInputBox({
         placeholder={placeholder}
         onKeyDown={onKeyDown}
       />
-      <div className="flex items-center justify-center bg-dubcoral rounded-full w-32 h-32">
-        <MdArrowUpward className="text-dubivory" size={24} />
+      <div className="flex items-center justify-center bg-dubcoral border-1 border-red-200 rounded-full w-32 h-32">
+        <MdArrowUpward className="text-dubivory" size={20} />
       </div>
     </div>
   );
