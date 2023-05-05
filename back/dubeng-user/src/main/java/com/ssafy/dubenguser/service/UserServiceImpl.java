@@ -91,14 +91,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public UserProfileRes findProfile(String id) {
-        Optional<User> user = userRepository.findById(id);
+    public UserProfileRes findProfile(UserProfileReq request) {
+        if(request.getUserId() == null)
+            throw new InvalidInputException("유저 아이디가 없습니다!");
 
-        if(!user.isPresent()) {
+        Optional<User> findUser = userRepository.findById(request.getUserId());
+
+        if(!findUser.isPresent()) 
             throw new NotFoundException("존재하지 않는 유저입니다!");
-        }
 
-        List<Category> categories = userRepository.findCategoriesByUserId(user.get().getId());
+        User user = findUser.get();
+
+        List<Category> categories = userRepository.findCategoriesByUserId(user.getId());
 
         List<UserCategoryRes> categoryList = new ArrayList<>();
 
@@ -109,8 +113,11 @@ public class UserServiceImpl implements UserService {
         }
 
         UserProfileRes result = UserProfileRes.builder()
-                .totalRecTime(user.get().getTotalRecTime())
-                .recordCount(user.get().getRecordCount())
+                .nickname(user.getNickname())
+                .profileImage(user.getProfileImage())
+                .description(user.getDescription())
+                .totalRecTime(user.getTotalRecTime())
+                .recordCount(user.getRecordCount())
                 .category(categoryList)
                 .build();
 

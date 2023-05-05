@@ -2,6 +2,7 @@ package com.ssafy.dubenguser.controller;
 
 import com.ssafy.dubenguser.dto.*;
 import com.ssafy.dubenguser.entity.User;
+import com.ssafy.dubenguser.exception.InvalidInputException;
 import com.ssafy.dubenguser.service.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,10 +27,9 @@ public class UserController {
     private static final String FAIL = "fail";
 
     @ApiOperation(value = "프로필 보여주기")
-    @GetMapping()
-    public ResponseEntity<UserProfileRes> userProfileDetails(HttpServletRequest httpServletRequest) {
-        User user = (User) httpServletRequest.getAttribute("user");
-        UserProfileRes result = userService.findProfile(user.getId());
+    @PostMapping("/profile")
+    public ResponseEntity<UserProfileRes> userProfileDetails(UserProfileReq userProfileReq) {
+        UserProfileRes result = userService.findProfile(userProfileReq);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
