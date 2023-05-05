@@ -17,6 +17,7 @@ export default function LogInPage(){
       window.Kakao.init(jsKey);
       
       window.Kakao.Auth.authorize({
+        // redirectUri: 'https://k8b208.p.ssafy.io/user/auth/kakao/callback'
         redirectUri: 'http://localhost:9000/user/auth/kakao/callback'
       });
     }

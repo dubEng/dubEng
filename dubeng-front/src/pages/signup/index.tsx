@@ -8,6 +8,7 @@ import { CheckMessageStatus } from "@/enum/statusType";
 import CheckMessage from "@/components/atoms/CheckMessage";
 import { MdChangeCircle } from "react-icons/md";
 import SignUpButton from "@/features/signup/atoms/SignUpButton";
+import userGetNicknameCheck from "@/apis/signup/queries/useGetNicknameCheck";
 
 export default function SignUpPage(){
   const [nickname, setNickname] = useState<string>('');
@@ -15,23 +16,35 @@ export default function SignUpPage(){
   const [nextBtnStatus, setNextBtnStatus] = useState<boolean>(false);
   const [checknicknameMsg, setchecknicknameMsg] = useState<CheckMessageStatus>(CheckMessageStatus.INIT);
   const [checkintroduceMsg, setcheckintroduceMsg] = useState<CheckMessageStatus>(CheckMessageStatus.INIT);
+  
+  const {refetch, error} = userGetNicknameCheck(nickname);
+
   const nicknameLimitSize = 6;
   const introduceLimitSize = 15;
 
   const route = useRouter();
-  const nicknameChange = (e : React.ChangeEvent<HTMLInputElement>) =>{
+  const nicknameChange = async (e : React.ChangeEvent<HTMLInputElement>) =>{
     const nickname = e.target.value;
     setNickname(nickname);
 
     //유효성 체크
-    if(!nickname || nickname.length > nicknameLimitSize  || nickname.length <= 1){
+    if(!nickname || nickname.length > nicknameLimitSize || nickname.length <= 1){
       setchecknicknameMsg(CheckMessageStatus.NICKNAME_LIMIT_SIX);
       setNextBtnStatus(false);
       return;
     }
     setchecknicknameMsg(CheckMessageStatus.ISVALID);
+    
     //back과 통신
+    const data = await refetch();
+    if(error){
+      // 닉네임 중복
+      console.log(error);
+      setchecknicknameMsg(CheckMessageStatus.NICKNAME_DUPLICATION);
+      setNextBtnStatus(false);
+    }
 
+    console.log(data);
   }
   const introduceChange = (e : React.ChangeEvent<HTMLInputElement>) =>{
     setIntroduce(e.target.value);
@@ -43,11 +56,12 @@ export default function SignUpPage(){
       return;
     }
     setcheckintroduceMsg(CheckMessageStatus.INIT);
-    //back과 통신
 
     setNextBtnStatus(true);
   }
   const singupNextHandler = () =>{
+    // 리덕스 저장
+    
     route.push('/signup/interest');
   }
   return (

@@ -1,7 +1,8 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useCallback} from "react";
 import { useRouter } from "next/navigation";
 import TagButton from "@/components/atoms/TagButton";
 import SignUpButton from "@/features/signup/atoms/SignUpButton";
+import userGetInterestList from "@/apis/signup/queries/useGetInterestList";
 
 interface interest{
     id : number;
@@ -9,30 +10,43 @@ interface interest{
 }
 export default function interestPage(){
     const route = useRouter();
-
-    const [interestList, setInterestList] = useState<interest[]>([{id:1, name : '판타지1'},{id:2, name : '판타지2'},{id:3, name : '판타지3'},])
-    const [nextBtnStatus, setNextBtnStatus] = useState<boolean>(true);
+    const {refetch, error} = userGetInterestList();
+    const [interestList, setInterestList] = useState<interest[]>([])
+    const [nextBtnStatus, setNextBtnStatus] = useState<boolean>(false);
+    const [selectedTag, setSelectedTag] = useState<number[]>([]);    // 선택한 카테고리 태그
     useEffect(()=>{
-        // const list = {'tagName' : '판타지4'};
-        // setInterestList([...interestList, list]);
-    });
-    // 선택한 카테고리 태그
-    const [selectedTag, setSelectedTag] = useState<number[]>([]);
-
+        getInterestList();
+    },[]);
+    const getInterestList = useCallback(
+        async () =>{
+            const {data} = await refetch();
+            setInterestList(data);
+            console.log(data);
+            
+        },[]
+    );
     // 태그 선택
     const handleClickTag = (id: number) => {
-        console.log("클릭햇슈");
-        
         console.log(selectedTag);
         if (selectedTag.includes(id)) {
             setSelectedTag(selectedTag.filter((tagId) => tagId !== id));
         } else {
             setSelectedTag([...selectedTag, id]);
         }
+        // 태그 선택이 여러개가 되어야 함.
+        if(selectedTag.length === 1){
+            setNextBtnStatus(false);
+            return;
+        }
+        setNextBtnStatus(true);
         
     };
     const singupNextHandler = () =>{
+        // 저장
+        console.log(selectedTag);
+
         route.push('/signup/kitchen');
+
     }
     return (
         <div className="container mx-auto">
