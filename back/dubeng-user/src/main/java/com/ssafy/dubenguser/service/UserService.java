@@ -8,7 +8,7 @@ public interface UserService {
     public void addUser(UserJoinReq requestDTO);
     public boolean checkEnrolledMember(String id);
     public boolean checkExistNickname(String nickname);
-    public UserProfileRes findProfile(String id);
+    public UserProfileRes findProfile(UserProfileReq request);
     public UserCalendarRes findCalendar(String userId);
     public List<UserRecordRes> findRecord(String userId, UserRecordReq request);
     public List<RecordLikeRes> findRecordLike(String userId, Boolean isLimit);
