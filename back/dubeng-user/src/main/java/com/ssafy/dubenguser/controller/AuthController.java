@@ -54,13 +54,13 @@ public class AuthController {
     }
 
     @PostMapping("/parse")
-    public ResponseEntity<Long> accessTokenParse(@RequestBody Token requestDTO){
+    public ResponseEntity<String> accessTokenParse(@RequestBody Token requestDTO){
         log.debug("accessToken : {}", requestDTO.getAccessToken());
 
         //service - parseToken
-        Long userId = authService.parseToken(requestDTO.getAccessToken());
+        String userId = authService.parseToken(requestDTO.getAccessToken());
 
-        return new ResponseEntity<Long>(userId, HttpStatus.OK);
+        return new ResponseEntity<String>(userId, HttpStatus.OK);
     }
     @PostMapping("/refresh")
     public ResponseEntity<Token> refreshTokenRequest(@RequestBody Token requestDTO){
@@ -79,12 +79,11 @@ public class AuthController {
     @PostMapping("/join")
     @ApiOperation(value = "회원가입하기")
     public ResponseEntity<String> userAdd(@RequestBody UserJoinReq request){
-        Long userId = authService.parseToken(request.getAccessToken());
+        String userId = authService.parseToken(request.getAccessToken());
         if(userId == null) {
             throw new UnAuthorizedException("토큰을 가져올 수 없습니다!");
         }
-        String newUserId = Long.toString(userId);
-        if(userService.checkEnrolledMember(newUserId)){
+        if(userService.checkEnrolledMember(userId)){
             throw new DuplicateException("이미 등록된 사용자입니다.");
         }
         userService.addUser(request);

@@ -48,7 +48,7 @@ public class AuthService {
         //Null 처리
         if(result.get("access_token") == null) throw new RuntimeException();
 
-        Long id = parseToken((String) result.get("access_token"));
+        String id = parseToken((String) result.get("access_token"));
         result.put("userId", id);
 
         //회원이 없다면
@@ -59,7 +59,7 @@ public class AuthService {
      * accessToken을 받아
      * kakao Auth 서버에 parse 요청
      */
-    public Long parseToken(String accessToken){
+    public String parseToken(String accessToken){
         WebClient webClient = WebClient.builder()
                 .baseUrl("https://kapi.kakao.com")
                 .defaultHeader("Authorization", "Bearer " + accessToken)
@@ -80,16 +80,15 @@ public class AuthService {
         //Null 처리
         if(result.get("id") == null) throw new RuntimeException();
         Long id = (Long) result.get("id");
-        log.debug("{}", id);
+        log.debug("{}",id);
 
-        return id;
+        return Long.toString(id);
     }
     /**
      * refreshToken 을 통하여 token 갱신
      * ATK RTK 둘 다 갱신된다.
      */
     public Token requestRefresh(Token requestDTO){
-
         //
         WebClient webClient = WebClient.builder()
                 .baseUrl("https://kauth.kakao.com")
@@ -127,7 +126,7 @@ public class AuthService {
      * 파싱해서 Map 형태로 Return
      */
     private HashMap<String, Object> findKakaoResponse(String response) {
-        log.debug(response.toString());
+        log.debug(response);
         HashMap<String, Object> result = null;
         try {
             result = new ObjectMapper().readValue(response, HashMap.class);
