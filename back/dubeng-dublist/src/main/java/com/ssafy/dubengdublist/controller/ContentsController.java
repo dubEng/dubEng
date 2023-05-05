@@ -4,6 +4,7 @@ import com.ssafy.dubengdublist.dto.contents.ContentsDetailRes;
 import com.ssafy.dubengdublist.dto.contents.ContentsDetailScriptRes;
 import com.ssafy.dubengdublist.dto.contents.ContentsRecommendRes;
 import com.ssafy.dubengdublist.dto.contents.ContentsSearchRes;
+import com.ssafy.dubengdublist.service.CommunityService;
 import com.ssafy.dubengdublist.service.ContentsServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +27,7 @@ import java.util.List;
 public class ContentsController {
 
     private final ContentsServiceImpl contentsService;
+    private final CommunityService communityService;
 
     @ApiOperation(value = "00님이 좋아하실 영상")
     @GetMapping("/recommand/{langType}")
@@ -66,11 +68,10 @@ public class ContentsController {
 
     @ApiOperation(value = "선택한 영상 콘텐츠 조회수 증가")
     @GetMapping("/playCount/{recordId}")
-    public ResponseEntity<?> ContentPlayCount(@PathVariable("recordId") Long recordId){
+    public ResponseEntity<?> ContentPlayCount(@PathVariable("recordId") Long recordId, @RequestParam String userId){
         // 1. 레디스에 조회수 증가
-
+        contentsService.addPlayCntToRedis(recordId);
         // 2. 리턴으로 캐시에서 조회수, 좋아요 수, 좋아요 여부
-
-        return new ResponseEntity<>(contentsService.addPlayCntToRedis(recordId), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(contentsService.findPlayCounts(recordId, userId), HttpStatus.ACCEPTED);
     }
 }

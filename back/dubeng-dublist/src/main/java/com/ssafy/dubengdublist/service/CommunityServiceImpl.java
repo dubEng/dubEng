@@ -154,36 +154,14 @@ public class CommunityServiceImpl implements CommunityService{
         if(!orecord.isPresent()){
             throw new NotFoundException("존재하지 않는 녹음입니다!");
         }
-        Record record = orecord.get();
-        // userid와 recordid로 해서 찾은 recordlike 값
-        RecordLike recordLike = videoRepository.findByRecordLike(recordId, userId);
-
-        // 만약 아예 없다면
-        if (recordLike == null){
-            recordLikeRepository.save(new RecordLike(user, record, true));
-            record.updateLikeCount(true, record.getLikeCount());
-        }else {
-            recordLike.updateRecordLike(recordLike.getIsActive());
-            record.updateLikeCount(recordLike.getIsActive(), record.getLikeCount());
-        }
-
-        return 200;
-    }
-
-    public void setLikeToRedis(String userId, Long recordId){
-        Optional<User> ouser = userRepository.findById(userId);
-        if(!ouser.isPresent()){
-            throw new NotFoundException("존재하지 않는 유저입니다!");
-        }
-        User user = ouser.get();
-        Optional<Record> orecord = recordRepository.findById(recordId);
-        if(!orecord.isPresent()){
-            throw new NotFoundException("존재하지 않는 녹음입니다!");
-        }
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
         String key = "like_recordId::"+Long.toString(recordId);
-        setOperations.add(key, userId); // 좋아요 완료
-
-        log.info("like set : {}", recordId);
+        if(setOperations.add(key, userId)==1){ // 좋아요 완료
+            return 1;
+        }else{ // 이미 좋아요를 눌렀음.
+            setOperations.remove(key, userId); // 좋아요 취소
+        }
+        return 0;
     }
+
 }
