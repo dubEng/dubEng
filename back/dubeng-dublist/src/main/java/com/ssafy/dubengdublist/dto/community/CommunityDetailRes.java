@@ -19,17 +19,19 @@ public class CommunityDetailRes {
     private ZonedDateTime createdDate;
     private Long recordCommentCount;
     private Long recordLikeCount;
+    private String userId;
     private String nickname;
     private Long recordId;
 
     @QueryProjection
-    public CommunityDetailRes(Long id, String title, String thumbnail, String videoPath, ZonedDateTime createdDate, Long recordCommentCount, Long recordLikeCount, String nickname, Long recordId) {
+    public CommunityDetailRes(Long id, String title, String thumbnail, String videoPath, ZonedDateTime createdDate, Long recordCommentCount, Long recordLikeCount,String userId, String nickname, Long recordId) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
         this.videoPath = videoPath;
         this.recordCommentCount =recordCommentCount;
         this.recordLikeCount = recordLikeCount;
+        this.userId = userId;
         this.nickname = nickname;
         this.createdDate = createdDate;
         this.recordId = recordId;

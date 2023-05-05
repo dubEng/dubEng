@@ -147,7 +147,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .otherwise(2);
 
         List<CommunityDetailRes> content = queryFactory
-                .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.nickname, QRecord.record.id))
+                .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.id, user.nickname, QRecord.record.id))
                 .from(video)
                 .where(video.langType.eq(langType), QRecord.record.isPublic.eq(true))
                 .join(QRecord.record)
@@ -165,7 +165,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         // 스크립트 리스트 가져오기
         List<CommunityDetailScriptRes> communityDetailScriptResList = new ArrayList<>();
         for(CommunityDetailRes c : content){
-            CommunityDetailScriptRes cd = new CommunityDetailScriptRes(c.getId(), c.getTitle(), c.getThumbnail(), c.getVideoPath(), c.getCreatedDate(), c.getRecordLikeCount(), c.getRecordCommentCount(),c.getNickname(), c.getRecordId(), selectAllScript(c.getId()));
+            CommunityDetailScriptRes cd = new CommunityDetailScriptRes(c.getId(), c.getTitle(), c.getThumbnail(), c.getVideoPath(), c.getCreatedDate(), c.getRecordCommentCount(),c.getUserId(), c.getNickname(), c.getRecordId(), selectAllScript(c.getId()));
             communityDetailScriptResList.add(cd);
         }
 
@@ -219,7 +219,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
     public Page<CommunityCommentRes> findAllCommunityComment(Pageable pageable, Long recordId){
 
         List<CommunityCommentRes> content = queryFactory
-                .select(new QCommunityCommentRes(user.nickname, recordComment.content, recordComment.updatedDate))
+                .select(new QCommunityCommentRes(user.id, user.nickname, recordComment.content, recordComment.updatedDate))
                 .from(recordComment)
                 .leftJoin(user)
                 .on(recordComment.user.id.eq(user.id))
@@ -260,7 +260,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
     // 녹음 상세 페이지
     public List<RecordScriptRes> findByRecordScript(Long videoId){
         List<RecordScriptRes> recordScriptRes = queryFactory
-                .select(new QRecordScriptRes(script.id, script.startTime, script.duration, script.content,script.translateContent))
+                .select(new QRecordScriptRes(script.id, script.startTime, script.duration, script.content,script.translateContent, script.pitch))
                 .from(script)
                 .join(video)
                 .on(video.id.eq(script.video.id))
