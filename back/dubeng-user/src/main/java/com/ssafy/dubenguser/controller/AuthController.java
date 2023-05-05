@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,9 @@ public class AuthController {
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
+    @Value("${auth.redirectUrl}")
+    private static String SEND_REDIRECT_URL;
+
     @GetMapping("/kakao/callback")
     public void authCodeDetails(@RequestParam String code, HttpServletResponse response, RedirectAttributes attributes) throws IOException {
         log.debug("auth code : {}", code);
@@ -39,14 +43,14 @@ public class AuthController {
         HashMap<String, Object> result = authService.findAccessToken(code);
 
         //회원 가입 여부 체크
-        String redirectUri = "/";
+        String redirectUri = "/front";
         if(!userService.checkEnrolledMember((String) result.get("userId"))){
-            redirectUri = "/join";
+            redirectUri += "/join";
         }
 
         //토큰 POST 방식 적재
         attributes.addFlashAttribute("token", result);
-        response.sendRedirect("http://localhost:3000" + redirectUri);
+        response.sendRedirect(SEND_REDIRECT_URL + redirectUri);
     }
 
     @PostMapping("/parse")
