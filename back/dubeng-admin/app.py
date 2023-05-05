@@ -1,3 +1,4 @@
+import subprocess
 from flask import Flask, request, jsonify
 from youtube_transcript_api import YouTubeTranscriptApi
 from pydub import AudioSegment
@@ -44,13 +45,13 @@ logging.basicConfig(
 
 def cleanDownloadFolder(userId):
     time.sleep(3)
-    path = './download/dwn/output/'+userId+'/*'
-    if os.path.exists('download/dwn/output/'+userId):
+    path = './download/output/'+userId+'/*'
+    if os.path.exists('download/output/'+userId):
         dwnDir = glob.glob(path)
         for file in dwnDir:
             os.remove(file)
         logging.info(f"I cleaned the download directory")
-        path = './download/dwn/'+userId+'.mp3'
+        path = './download/'+userId+'.mp3'
         if os.path.exists(path):
             os.remove(path)
             logging.info(f"I cleaned the original mp3")
@@ -133,11 +134,6 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
     cursor.execute(sql, values)
 
     videoId = cursor.lastrowid
-    for sc in scripts:
-        sql = "INSERT INTO script (start_time, duration, content, translate_content, video_id, is_dub) VALUES (%s, %s, %s, %s, %s, %s)"
-        values = (sc['startTime'], sc['duration'], sc['content'],
-                  sc['translateContent'], videoId, sc['isDub'])
-        cursor.execute(sql, values)
 
     for cate in categories:
         sql = "insert into video_category (video_id, category_id) values (%s, %s)"
@@ -149,13 +145,26 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
         sql = "UPDATE video SET background_path=%s, voice_path=%s, pitch=%s WHERE id=%s"
         cursor.execute(
             sql, (data['backUrl'], data['vocalUrl'], data['pitch'], videoId))
-
-        connection.commit()
-        connection.close()
-
-        return True
     else:
         return False
+    pitch = json.loads(data['pitch'])
+    standard = data['standard']
+    for sc in scripts:
+        sql = "INSERT INTO script (start_time, duration, content, translate_content, video_id, is_dub, pitch) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        temp = list()
+        start = sc['startTime'] * standard
+        end = start+sc['duration'] * standard
+        for idx in range(int(start), int(end)):
+            temp.append(pitch[idx])
+        pitch_text = json.dumps(temp)
+
+        values = (sc['startTime'], sc['duration'], sc['content'],
+                  sc['translateContent'], videoId, sc['isDub'], pitch_text)
+        cursor.execute(sql, values)
+
+    connection.commit()
+    connection.close()
+    return True
 
 
 # 음원 추출 및 분리하는 함수
@@ -171,9 +180,8 @@ def seperateMp3(url, userId, videoTitle, file_exist):
         while True:
             try:
                 # userId의 이름으로 영상 저장
-
                 yt.streams.filter(only_audio=True).first().download(
-                    output_path='download/dwn', filename=newname)
+                    output_path='download', filename=newname)
                 break
 
             except:
@@ -185,24 +193,22 @@ def seperateMp3(url, userId, videoTitle, file_exist):
                 logging.info(f"retrying.....{cnt}")
 
     # 음원이 저장된 경로로 이동
-    path = "./download/dwn/"
-    os.chdir(path)
+    newname = "./download/"+userId+".mp3"
 
-    # 배경음과 보컬 분리해서 로컬에 저장
-    logging.info(f"Please wait a minute... I will start seperate")
-    spl = r'spleeter separate -p spleeter:2stems -o output '+newname
-    os.system(spl)
+    # # 배경음과 보컬 분리해서 로컬에 저장
+    spl_command = ['spleeter', 'separate', '-p',
+                   'spleeter:2stems', '-o', './download/output', newname]
+
+    subprocess.run(spl_command, check=True)
 
     # 사람 소리 주파수 추출해서 배열 정제하라?
-    pitch_list = getPitches(userId)
-    # text로 변환
-    pitch_text = json.dumps(pitch_list)
+    pitch_result = getPitches(userId)
 
     # 로컬 음원 S3 버킷 업로드
     videoTitle = deletIllegalSymbols(videoTitle)
-    backgroundPath = "./output/"+userId+"/accompaniment.wav"
+    backgroundPath = "./download/output/"+userId+"/accompaniment.wav"
     backgroundName = userId+"_"+videoTitle+"_accompaniment.wav"
-    vocalPath = "./output/"+userId+"/vocals.wav"
+    vocalPath = "./download/output/"+userId+"/vocals.wav"
     vocalName = userId+"_"+videoTitle+"_vocals.wav"
 
     backUrl = uploadToBucket(backgroundPath, backgroundName)
@@ -210,9 +216,9 @@ def seperateMp3(url, userId, videoTitle, file_exist):
     result = {
         "backUrl": backUrl,
         "vocalUrl": vocalUrl,
-        "pitch": pitch_text
+        "pitch": pitch_result['pitch'],
+        "standard": pitch_result['standard']
     }
-    # os.chdir('/dubeng-admin')
 
     return result
 
@@ -220,33 +226,37 @@ def seperateMp3(url, userId, videoTitle, file_exist):
 # 영상 정보 불러오기 (기본정보 및 스크립트)
 @app.route('/admin/videoInfo/<start>/<end>', methods=['GET'])
 def sendInfo(start, end):
-    url = request.args.get('url')
-    lang = request.args.get('lang')
-    # url 뒤에 있는 video id 추출 -> script 불러올 때 필요한 video Id
-    video_id = getVideoId(url)
-    logging.info(f"{url}")
-    # video 정보 가져오기
-    data = get_video_info(url)
-    result = list()
+    try:
+        url = request.args.get('url')
+        lang = request.args.get('lang')
+        # url 뒤에 있는 video id 추출 -> script 불러올 때 필요한 video Id
+        video_id = getVideoId(url)
+        logging.info(f"{url}")
+        # video 정보 가져오기
+        data = get_video_info(url)
+        result = list()
 
-    if lang == 'english':
-        # script 가져오기
-        sc = YouTubeTranscriptApi.get_transcript(video_id)
-        transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-        transcript = transcript_list.find_transcript(['en'])
-        translated_transcript = transcript.translate(
-            'ko').fetch()  # 한국어 script
+        if lang == 'english':
+            # script 가져오기
+            sc = YouTubeTranscriptApi.get_transcript(video_id)
+            transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+            transcript = transcript_list.find_transcript(['en'])
+            translated_transcript = transcript.translate(
+                'ko').fetch()  # 한국어 script
 
-        for s, t in zip(sc, translated_transcript):
-            if float(s['start']) >= float(start) and float(s['start']) <= float(end):
-                s['translation'] = t['text']
-                result.append(s)
-            elif s['start'] > float(end):
-                break
-    response = {
-        "videoInfo": data,
-        "scripts": result,
-    }
+            for s, t in zip(sc, translated_transcript):
+                if float(s['start']) >= float(start) and float(s['start']) <= float(end):
+                    s['translation'] = t['text']
+                    result.append(s)
+                elif s['start'] > float(end):
+                    break
+        response = {
+            "videoInfo": data,
+            "scripts": result,
+        }
+    except Exception as e:    # 모든 예외의 에러 메시지를 출력할 때는 Exception을 사용
+        print(e)
+        return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
     return response
 
 
@@ -266,7 +276,8 @@ def saveApi():
                 logging.info(f"no file, i will download from youtube")
                 file_exist = False
             else:
-                file.save('download/dwn/'+userId+'.mp3')
+                os.makedirs('download/output/'+userId, exist_ok=True)
+                file.save('download/'+userId+'.mp3')
                 file_exist = True
         flag = saveVideoAndScript(
             video, scripts, userId, categories, file_exist)

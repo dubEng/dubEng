@@ -1,38 +1,38 @@
 import librosa
 import numpy as np
 import wave
+import json
+import logging
+# 로깅 설정
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 
 
 def getPitches(userId):
     # Load the audio file
-    path = './output/'+userId + '/vocals.wav'
+    path = './download/output/'+userId + '/vocals.wav'
     y, sr = librosa.load(path)
 
     # Calculate pitch using pyin
     f0, voiced_flag, voiced_probs = librosa.pyin(
-        y, fmin=librosa.note_to_hz('C2'), fmax=librosa.note_to_hz('C4'))
+        y, fmin=librosa.note_to_hz('F2'), fmax=librosa.note_to_hz('C5'))
 
     with wave.open(path, 'rb') as wav_file:
         framerate = wav_file.getframerate()
         frames = wav_file.getnframes()
-        print(framerate)
         duration = frames / float(framerate)
-        print("Duration:", duration, "seconds")
-
+        logging.info("Duration: %s seconds", duration)
     standard = int(len(f0)/duration)
 
     idx = 0
     pitch = list()
     sum = 0
-    for i in f0:
-        if idx == standard:
-            pitch.append(sum/standard)
-            sum = 0
-            idx = 0
-        if np.isnan(i):
-            sum += 0
-        else:
-            sum += i
-        idx += 1
 
-    return pitch
+    result = {
+        "pitch": json.dumps(f0.tolist()),
+        "standard": standard
+    }
+    return result
