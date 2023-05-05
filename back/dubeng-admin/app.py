@@ -16,6 +16,8 @@ import os
 import json
 import logging
 from pitch import getPitches
+import numpy as np
+
 
 app = Flask(__name__)
 
@@ -155,10 +157,14 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
         start = sc['startTime'] * standard
         end = start+sc['duration'] * standard
         for idx in range(int(start), int(end)):
-            temp.append(pitch[idx])
+            if np.isnan(pitch[idx]):
+                temp.append(0)
+            else:
+                temp.append(int(pitch[idx]))
+
         pitch_text = json.dumps(temp)
 
-        values = (sc['startTime'], sc['duration'], sc['content'],
+        values = (sc['startTime']*1000, sc['duration']*1000, sc['content'],
                   sc['translateContent'], videoId, sc['isDub'], pitch_text)
         cursor.execute(sql, values)
 
