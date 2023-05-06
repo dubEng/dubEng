@@ -4,4 +4,5 @@ export interface Script{
     duration: number;
     content: string;
     translateContent: string;
+    pitchList: number[];
 }
