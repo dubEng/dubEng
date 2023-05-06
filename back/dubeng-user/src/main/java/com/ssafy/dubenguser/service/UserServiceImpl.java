@@ -29,22 +29,22 @@ public class UserServiceImpl implements UserService {
     /**
      *
      */
-    public void addUser(UserJoinReq request){
+    public void addUser(UserJoinReq request, String userId){
         if(checkExistNickname(request.getNickname()))
             throw new DuplicateException("이미 등록된 닉네임입니다.");
 
         User newUser = User.builder()
-                .email(request.getEmail())
+                .id(userId)
                 .nickname(request.getNickname())
-                .description(request.getDescription())
-                .landName(request.getLandName())
+                .description(request.getIntroduce())
+                .landName(request.getKitchenName())
                 .gender(request.getGender())
                 .build();
 
         User savedUser = userRepository.save(newUser);
 
-        for(String category: request.getCategories()) {
-            Optional<Category> nc = categoryRepository.findByName(category);
+        for(Long category: request.getCategories()) {
+            Optional<Category> nc = categoryRepository.findById(category);
 
             if(!nc.isPresent())
                 throw new NotFoundException("존재하지 않는 카테고리입니다!");

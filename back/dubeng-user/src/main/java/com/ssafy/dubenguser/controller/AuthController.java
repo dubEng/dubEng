@@ -12,13 +12,16 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 
 @Slf4j
@@ -33,7 +36,7 @@ public class AuthController {
     private static final String FAIL = "fail";
 
     @Value("${auth.redirectUrl}")
-    private static String SEND_REDIRECT_URL;
+    private String SEND_REDIRECT_URL;
 
     @GetMapping("/kakao/callback")
     public void authCodeDetails(@RequestParam String code, HttpServletResponse response, RedirectAttributes attributes) throws IOException {
@@ -42,14 +45,30 @@ public class AuthController {
         //code로 access-token 요청
         HashMap<String, Object> result = authService.findAccessToken(code);
 
+        String imageUrl = authService.getKakaoImageUrl((String) result.get("access_token"));
+
+        Cookie cookie = new Cookie("accessToken", (String) result.get("access_token"));
+        cookie.setMaxAge(3600);
+        cookie.setDomain("localhost");
+        cookie.setPath("/");
+
+        response.addCookie(cookie);
+
         //회원 가입 여부 체크
-        String redirectUri = "/front";
-        if(!userService.checkEnrolledMember((String) result.get("userId"))){
-            redirectUri += "/join";
+        String redirectUri = "/front/signup";
+        if(userService.checkEnrolledMember((String) result.get("userId"))){
+            redirectUri = "/front/login/success";
+            response.sendRedirect(SEND_REDIRECT_URL + redirectUri);
+            return;
         }
 
-        //토큰 POST 방식 적재
-        attributes.addFlashAttribute("token", result);
+        //토큰 쿠키 방식 적재
+        Cookie cookie2 = new Cookie("imageUrl", imageUrl);
+        cookie2.setMaxAge(3600);
+        cookie2.setDomain("localhost");
+        cookie2.setPath("/");
+        response.addCookie(cookie2);
+
         response.sendRedirect(SEND_REDIRECT_URL + redirectUri);
     }
 
@@ -79,6 +98,7 @@ public class AuthController {
     @PostMapping("/join")
     @ApiOperation(value = "회원가입하기")
     public ResponseEntity<String> userAdd(@RequestBody UserJoinReq request){
+        log.debug("userAdd : {}", request.toString());
         String userId = authService.parseToken(request.getAccessToken());
         if(userId == null) {
             throw new UnAuthorizedException("토큰을 가져올 수 없습니다!");
@@ -86,7 +106,7 @@ public class AuthController {
         if(userService.checkEnrolledMember(userId)){
             throw new DuplicateException("이미 등록된 사용자입니다.");
         }
-        userService.addUser(request);
+        userService.addUser(request, userId);
 
         return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
