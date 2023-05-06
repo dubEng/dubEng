@@ -14,7 +14,7 @@ export default function DubbingPage() {
 
   const [selectedScript, setSelectedScript] = useState<number>(0);
 
-  const [scriptList, setScriptList] = useState<Script[]>([
+  const [scriptList, setScriptList] = useState<any[]>([
     {
       id: 1,
       startTime: 1,
@@ -248,15 +248,17 @@ export default function DubbingPage() {
           centeredSlides
         >
           {scriptList &&
-            scriptList.map((item) => (
+            scriptList.map((item, index) => (
               <SwiperSlide key={item.id}>
                 <DubBox
+                  id={item.id}
                   content={item.content}
                   duration={item.duration}
                   startTime={item.startTime}
                   translateContent={item.translateContent}
                   pitchList={item.pitchList}
-                  id={item.id}
+                  scriptIndex={index+1}
+                  scriptLength={scriptList.length}
                 />
               </SwiperSlide>
             ))}

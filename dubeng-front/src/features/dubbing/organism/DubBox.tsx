@@ -13,8 +13,15 @@ import SpeechRecognition, {
 import { Script } from "@/types/Script";
 import PitchGraph from "../atoms/PitchGraph";
 
-
-export default function DubBox({startTime, duration, content, translateContent, pitchList }: Script) {
+export default function DubBox({
+  startTime,
+  duration,
+  content,
+  translateContent,
+  pitchList,
+  scriptLength,
+  scriptIndex,
+}: Script) {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [soundStatus, setSoundStatus] = useState<SoundType>(SoundType.DEFAULT);
@@ -27,11 +34,7 @@ export default function DubBox({startTime, duration, content, translateContent, 
 
   const [myPitchList, setMyPitchList] = useState<number[]>([]);
 
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-  } = useSpeechRecognition();
+  const { transcript, listening, resetTranscript } = useSpeechRecognition();
 
   useEffect(() => {
     (async () => {
@@ -118,7 +121,14 @@ export default function DubBox({startTime, duration, content, translateContent, 
 
   return (
     <div className="w-359 h-420 relative bg-white rounded-20 container mx-auto">
+      <div>
+        {scriptIndex}/{scriptLength}
+      </div>
       <PitchGraph moviePitchList={pitchList} myPitchList={myPitchList} />
+      <div>
+        <p className="text-14 text-dubblack font-normal">{content}</p>
+        <p className="text-14 text-dubgray font-normal">{translateContent}</p>
+      </div>
       {/* <div>
         <div>
           <button onClick={() => handleStartButton(3000)} disabled={recording}>
