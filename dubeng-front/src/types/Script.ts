@@ -5,4 +5,6 @@ export interface Script{
     content: string;
     translateContent: string;
     pitchList: number[];
+    scriptIndex: number;
+    scriptLength: number;
 }
