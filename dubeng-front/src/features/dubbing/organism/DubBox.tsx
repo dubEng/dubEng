@@ -6,7 +6,7 @@ import PlayButton from "../atoms/PlayButton";
 import RecordButton from "../atoms/RecordButton";
 import { SoundType } from "../../../enum/statusType";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -19,6 +19,9 @@ export default function DubBox() {
 
   const [recording, setRecording] = useState<boolean>(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
 
   // 브라우저 호환성 체크
   const [speechRecognitionSupported, setSpeechRecognitionSupported] = useState<
@@ -36,6 +39,29 @@ export default function DubBox() {
     // sets to true or false after component has been mounted
     setSpeechRecognitionSupported(browserSupportsSpeechRecognition);
   }, [browserSupportsSpeechRecognition]);
+
+  useEffect(() => {
+    (async () => {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          audioChunksRef.current.push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        setRecording(false);
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: "audio/wav",
+        });
+        setAudioBlob(audioBlob);
+        SpeechRecognition.stopListening();
+      };
+    })();
+  }, []);
 
   if (speechRecognitionSupported === null) {
     return null; // return null on first render, can be a loading indicator
@@ -68,62 +94,49 @@ export default function DubBox() {
 
     // 녹음 시작
     setRecording(true);
-    const chunks: Blob[] = [];
-    const mediaStreamConstraints = { audio: true };
+    audioChunksRef.current = [];
+    mediaRecorderRef.current?.start();
 
-    navigator.mediaDevices
-      .getUserMedia(mediaStreamConstraints)
-      .then((mediaStream) => {
-        const mediaRecorder = new MediaRecorder(mediaStream);
-        mediaRecorder.start();
-
-        mediaRecorder.addEventListener("dataavailable", (event) => {
-          chunks.push(event.data);
-        });
-
-        mediaRecorder.addEventListener("stop", () => {
-          setRecording(false);
-          const audioBlob = new Blob(chunks, { type: "audio/wav" });
-          setAudioBlob(audioBlob);
-        });
-
-        setTimeout(() => {
-          mediaRecorder.stop();
-        }, recordingTime);
-      });
+    // 지정 시간 후 녹음 종료
+    setTimeout(() => {
+     mediaRecorderRef.current?.stop();
+    }, recordingTime);
   }
 
   function handleStopButton() {
     SpeechRecognition.stopListening();
+    if(mediaRecorderRef.current?.state == "recording"){
+      mediaRecorderRef.current.stop();
+    }
   }
 
   const sendRecording = async (blob: Blob) => {
     const formData = new FormData();
-    formData.append('recording', blob, 'recording.wav');
-    
-    const response = await fetch('/api/recordings', {
-      method: 'POST',
+    formData.append("recording", blob, "recording.wav");
+
+    const response = await fetch("/api/recordings", {
+      method: "POST",
       body: formData,
     });
-    
+
     const data = await response.json();
     console.log(data);
   };
 
   const playRecording = () => {
-    if (audioBlob) {
-      const url = URL.createObjectURL(audioBlob);
+    const blob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+      const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
       audio.play();
-    }
   };
 
   return (
     <div className="w-359 h-420 relative">
       <div>
-        <div>Microphone: {listening ? "듣는 중" : "안 듣는 중"}</div>
         <div>
-          <button onClick={() => handleStartButton(3000)} disabled={recording}>Start</button>
+          <button onClick={() => handleStartButton(3000)} disabled={recording}>
+            Start
+          </button>
         </div>
         <div>
           <button onClick={handleStopButton}>Stop</button>
@@ -132,10 +145,13 @@ export default function DubBox() {
           <button onClick={resetTranscript}>Reset</button>
         </div>
         <div>
-          <button onClick={playRecording} disabled={!audioBlob}>Play Recording</button>
+          <button onClick={playRecording} disabled={!audioBlob}>
+            Play Recording
+          </button>
         </div>
         <br />
-        <div>실시간 STT: {transcript}</div>
+        <div>STT 마이크 상태: {listening ? "듣는 중" : "안 듣는 중"}</div>
+        <div>실시간 STT 결과: {transcript}</div>
         <div>녹음 상태: {recording ? "Recording..." : "not Recording"}</div>
       </div>
       <div className="flex justify-evenly">
