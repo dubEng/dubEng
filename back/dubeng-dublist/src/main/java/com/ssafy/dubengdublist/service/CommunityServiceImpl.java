@@ -10,10 +10,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -41,6 +45,22 @@ public class CommunityServiceImpl implements CommunityService{
         return videoRepository.findByOneDubKing(langType, userId);
     }
 
+    public Map<String, Object> findDubKing2(String langType, String userId){
+        Optional<User> ouser = userRepository.findById(userId);
+        if(!ouser.isPresent()) {
+            throw new NotFoundException("존재하지 않는 유저입니다!");
+        }
+        Map<String, Object> result = new HashMap<>();
+        // 하루 3번 투표 여부 확인
+        String key = "vote_userId::"+userId;
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        String cnt = (String) valueOperations.get(key);
+        if(cnt.equals("3")){
+            result.put("", "")
+        }
+
+    }
+
     @Transactional
     public Integer addDubKing(String userId,String votedId) {
 
@@ -52,19 +72,32 @@ public class CommunityServiceImpl implements CommunityService{
         if(!voted.isPresent()){
             throw new NotFoundException("존재하지 않는 유저입니다!");
         }
-        User user1 = user.get();
-        User voted1 = voted.get();
 
-        DubKing dubKing = dubKingRepository.findByVotedId(votedId);
-        // 이미 존재한거라면
-        if(dubKing != null){
-            dubKing.updateDubKing(dubKing.getTotalVote());
-        }else { // 처음 만들어야 한다면
-            dubKingRepository.save(new DubKing(voted1, new Long(0), false));
+        // 투표 하는 사람.
+        String key = "vote_userId::"+userId;
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        Object ovalue = valueOperations.get(key);
+        if(ovalue==null){
+            valueOperations.set(key,Long.toString(1L));
         }
-        user1.updateDubKingUser(user1.getIsVoted() + 1);
+        else{
+            valueOperations.increment(key);
+        }
+        log.info("add vote counts to redis : {} ", valueOperations.get(key));
+
+        // 투표 받는 사람.
+        String key2 = "dubKing_userId::"+votedId;
+        if(valueOperations.get(key2)==null){
+            valueOperations.set(key2,Long.toString(1L));
+        }
+        else{
+            valueOperations.increment(key2);
+        }
+        log.info("add king counts to redis : {} ", valueOperations.get(key2));
+
         return 200;
     }
+
 
     public Page<CommunitySearchRes> findCommunitySearch(String langType, String  title, Pageable pageable, List<Long> contentsSearch) {
         return videoRepository.findByCategoryCommunity(langType, title, pageable, contentsSearch);
