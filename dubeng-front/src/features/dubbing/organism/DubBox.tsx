@@ -43,6 +43,24 @@ export default function DubBox() {
   useEffect(() => {
     (async () => {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      const audioContext = new AudioContext();
+      const source = audioContext.createMediaStreamSource(stream);
+
+      // const analyser = audioContext.createAnalyser();
+      // analyser.fftSize = 2048;
+      // analyser.smoothingTimeConstant = 0.8;
+
+      // source.connect(analyser);
+
+      // const frequencyData = new Uint8Array(analyser.frequencyBinCount);
+      // analyser.getByteFrequencyData(frequencyData);
+
+      // const maxPowerIndex = frequencyData.indexOf(Math.max(...frequencyData));
+
+      // const frequencyHz = maxPowerIndex * audioContext.sampleRate / analyser.fftSize;
+      // console.log('HZ', frequencyHz);
+
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
 
@@ -99,13 +117,13 @@ export default function DubBox() {
 
     // 지정 시간 후 녹음 종료
     setTimeout(() => {
-     mediaRecorderRef.current?.stop();
+      mediaRecorderRef.current?.stop();
     }, recordingTime);
   }
 
   function handleStopButton() {
     SpeechRecognition.stopListening();
-    if(mediaRecorderRef.current?.state == "recording"){
+    if (mediaRecorderRef.current?.state == "recording") {
       mediaRecorderRef.current.stop();
     }
   }
@@ -124,10 +142,10 @@ export default function DubBox() {
   };
 
   const playRecording = () => {
-    const blob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
-      const url = URL.createObjectURL(blob);
-      const audio = new Audio(url);
-      audio.play();
+    const blob = new Blob(audioChunksRef.current, { type: "audio/wav" });
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    audio.play();
   };
 
   return (
