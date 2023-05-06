@@ -1,5 +1,4 @@
 "use client";
-
 import "regenerator-runtime/runtime";
 import ListenButton from "../atoms/ListenButton";
 import PlayButton from "../atoms/PlayButton";
@@ -11,8 +10,11 @@ import { useEffect, useRef, useState } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import { Script } from "@/types/Script";
+import PitchGraph from "../atoms/PitchGraph";
 
-export default function DubBox() {
+
+export default function DubBox({startTime, duration, content, translateContent, pitchList }: Script) {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [soundStatus, setSoundStatus] = useState<SoundType>(SoundType.DEFAULT);
@@ -23,43 +25,17 @@ export default function DubBox() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
-  // 브라우저 호환성 체크
-  const [speechRecognitionSupported, setSpeechRecognitionSupported] = useState<
-    boolean | null
-  >(null);
+  const [myPitchList, setMyPitchList] = useState<number[]>([]);
 
   const {
     transcript,
     listening,
     resetTranscript,
-    browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
-
-  useEffect(() => {
-    // sets to true or false after component has been mounted
-    setSpeechRecognitionSupported(browserSupportsSpeechRecognition);
-  }, [browserSupportsSpeechRecognition]);
 
   useEffect(() => {
     (async () => {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-      const audioContext = new AudioContext();
-      const source = audioContext.createMediaStreamSource(stream);
-
-      // const analyser = audioContext.createAnalyser();
-      // analyser.fftSize = 2048;
-      // analyser.smoothingTimeConstant = 0.8;
-
-      // source.connect(analyser);
-
-      // const frequencyData = new Uint8Array(analyser.frequencyBinCount);
-      // analyser.getByteFrequencyData(frequencyData);
-
-      // const maxPowerIndex = frequencyData.indexOf(Math.max(...frequencyData));
-
-      // const frequencyHz = maxPowerIndex * audioContext.sampleRate / analyser.fftSize;
-      // console.log('HZ', frequencyHz);
 
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
@@ -80,14 +56,6 @@ export default function DubBox() {
       };
     })();
   }, []);
-
-  if (speechRecognitionSupported === null) {
-    return null; // return null on first render, can be a loading indicator
-  }
-
-  if (!speechRecognitionSupported) {
-    return <span>Browser does not support speech recognition.</span>;
-  }
 
   function handlePlayButton() {
     setIsPlaying(!isPlaying);
@@ -149,8 +117,9 @@ export default function DubBox() {
   };
 
   return (
-    <div className="w-359 h-420 relative">
-      <div>
+    <div className="w-359 h-420 relative bg-white rounded-20 container mx-auto">
+      <PitchGraph moviePitchList={pitchList} myPitchList={myPitchList} />
+      {/* <div>
         <div>
           <button onClick={() => handleStartButton(3000)} disabled={recording}>
             Start
@@ -171,7 +140,7 @@ export default function DubBox() {
         <div>STT 마이크 상태: {listening ? "듣는 중" : "안 듣는 중"}</div>
         <div>실시간 STT 결과: {transcript}</div>
         <div>녹음 상태: {recording ? "Recording..." : "not Recording"}</div>
-      </div>
+      </div> */}
       <div className="flex justify-evenly">
         <PlayButton isPlaying={isPlaying} onClick={handlePlayButton} />
         <RecordButton isRecording={isRecording} onClick={handleRecordButton} />
