@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit'
 
 interface UserState {
   userId: string;
@@ -7,12 +7,12 @@ interface UserState {
 }
 
 const initialState: UserState = {
-  userId: "1",
+  userId: "",
   roleType: "",
-};
+}
 
 export const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     saveUserInfo: (state, action) => {
@@ -20,8 +20,8 @@ export const userSlice = createSlice({
       state.roleType = action.payload.roleType;
     },
   },
-});
+})
 
-export const { saveUserInfo } = userSlice.actions;
+export const { saveUserInfo } = userSlice.actions
 
-export default userSlice.reducer;
+export default userSlice.reducer

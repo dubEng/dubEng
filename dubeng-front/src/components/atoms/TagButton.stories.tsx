@@ -12,5 +12,5 @@ export default meta;
 type Story = StoryObj<typeof TagButton>;
 
 export const Default: Story = {
-  render: () => <TagButton id={1} isSelected={true} name="TagButton" onClick={()=>{}} />,
+  render: () => <TagButton />,
 };
