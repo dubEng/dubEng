@@ -7,7 +7,6 @@ import { store } from "../stores/store";
 import { QueryClientProvider, QueryClient } from "react-query";
 import NavigationBar from "@/components/atoms/NavigationBar";
 import Header from "@/components/atoms/Header";
-import 'regenerator-runtime/runtime';
 
 const pretendard = localFont({
   src: [

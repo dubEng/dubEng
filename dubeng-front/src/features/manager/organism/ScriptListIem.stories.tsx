@@ -12,7 +12,5 @@ export default meta;
 type Story = StoryObj<typeof ScriptListItem>;
 
 export const Default: Story = {
-  render: () => (
-    <ScriptListItem start={0} text="aaa" duration={10} translation="" />
-  ),
+  render: () => <ScriptListItem />,
 };
