@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,8 +26,8 @@ public class CommunityController {
     @ApiOperation(value = "더빙왕 컨텐츠")
     @GetMapping("/dubking/{langType}")
     public ResponseEntity<?> DubKingList(@PathVariable("langType") String  langType, @RequestParam String userId){
-        CommunityDubKingRes communityDubKingRes = communityService.findDubKing(langType, userId);
-        return new ResponseEntity(communityDubKingRes, HttpStatus.ACCEPTED);
+        Map<String, Object> result = communityService.findDubKing(langType, userId);
+        return new ResponseEntity(result, HttpStatus.ACCEPTED);
     }
 
     @ApiOperation(value = "더빙왕 컨텐츠 투표")

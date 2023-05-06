@@ -25,6 +25,7 @@ public class RedisService {
     private final UserRepository userRepository;
     private final VideoRepository videoRepository;
     private final VideoBookmarkRepository videoBookmarkRepository;
+    private final DubKingRepository dubKingRepository;
 
     @Scheduled(fixedDelay = 300000)
     @Transactional
@@ -94,6 +95,32 @@ public class RedisService {
                 User u = ouser.get();
                 videoBookmarkRepository.save(new VideoBookmark(u, video, true));
             }
+        }
+    }
+    // 매일 자정 갱신
+    @Scheduled(cron = "0 0 0 * * *")
+    @Transactional
+    public void deleteVoteCnt(){
+        Set<String> redisKeys = redisTemplate.keys("vote_userId*");
+        redisTemplate.delete(redisKeys);
+    }
+
+    // 매주 월요일 자정 업데이트
+    @Scheduled(cron = "0 0 0 * * 1")
+    public void updateDubKing(){
+        dubKingRepository.deleteAll();
+        Set<String> redisKeys = redisTemplate.keys("dubKing_userId*");
+        Iterator<String> it = redisKeys.iterator();
+        while(it.hasNext()){
+            String data = it.next();
+            String userId = data.split("::")[1];
+            Long voteCnt = Long.parseLong((String) redisTemplate.opsForValue().get(data));
+            Optional<User> ouser = userRepository.findById(userId);
+            if(!ouser.isPresent()){
+                throw new NotFoundException("존재하지 않는 유저입니다!");
+            }
+            User user = ouser.get();
+            dubKingRepository.save(new DubKing(user, voteCnt, true));
         }
     }
 }

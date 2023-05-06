@@ -35,17 +35,7 @@ public class CommunityServiceImpl implements CommunityService{
     private final RedisTemplate<String, Object> redisTemplate;
 
 
-    public CommunityDubKingRes findDubKing(String langType, String userId) {
-        Optional<User> ouser = userRepository.findById(userId);
-        if(!ouser.isPresent()) {
-            throw new NotFoundException("존재하지 않는 유저입니다!");
-        }else if(ouser.get().getIsVoted() >= 3){
-            throw new NotFoundException("하루 3번 투표가 끝났습니다.");
-        }
-        return videoRepository.findByOneDubKing(langType, userId);
-    }
-
-    public Map<String, Object> findDubKing2(String langType, String userId){
+    public Map<String, Object> findDubKing(String langType, String userId) {
         Optional<User> ouser = userRepository.findById(userId);
         if(!ouser.isPresent()) {
             throw new NotFoundException("존재하지 않는 유저입니다!");
@@ -54,12 +44,18 @@ public class CommunityServiceImpl implements CommunityService{
         // 하루 3번 투표 여부 확인
         String key = "vote_userId::"+userId;
         ValueOperations valueOperations = redisTemplate.opsForValue();
-        String cnt = (String) valueOperations.get(key);
-        if(cnt.equals("3")){
-            result.put("", "")
+        Object ovalue = valueOperations.get(key);
+        Long cnt;
+        if(ovalue==null) cnt = 0L;
+        else cnt = Long.parseLong((String) ovalue);
+        if(cnt>=3L){
+            result.put("message", "하루 3번 투표가 끝났습니다.");
+        }else{
+            result.put("result", videoRepository.findByOneDubKing(langType, userId));
         }
-
+        return result;
     }
+
 
     @Transactional
     public Integer addDubKing(String userId,String votedId) {
