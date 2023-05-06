@@ -1,14 +1,17 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 import Image from "next/image";
 import LoginImage from "../../../public/images/login/noone.png";
-
+import { saveSignupInfo } from "../../stores/user/signupSlice";
 import CommonInputBox from "@/components/atoms/CommonInputBox";
 import { CheckMessageStatus } from "@/enum/statusType";
 import CheckMessage from "@/components/atoms/CheckMessage";
 import { MdChangeCircle } from "react-icons/md";
 import SignUpButton from "@/features/signup/atoms/SignUpButton";
 import userGetNicknameCheck from "@/apis/signup/queries/useGetNicknameCheck";
+
+import cookie from 'react-cookies';
 
 export default function SignUpPage(){
   const [nickname, setNickname] = useState<string>('');
@@ -17,12 +20,24 @@ export default function SignUpPage(){
   const [checknicknameMsg, setchecknicknameMsg] = useState<CheckMessageStatus>(CheckMessageStatus.INIT);
   const [checkintroduceMsg, setcheckintroduceMsg] = useState<CheckMessageStatus>(CheckMessageStatus.INIT);
   
+  const [profileImage, setProfileImage] = useState<string | null>(null); // 기본 이미지
   const {refetch, error} = userGetNicknameCheck(nickname);
 
   const nicknameLimitSize = 6;
   const introduceLimitSize = 15;
 
   const route = useRouter();
+  const dispatch = useDispatch();
+  
+  useEffect(()=>{
+    console.log(cookie.load("accessToken"));
+    console.log(cookie.load("imageUrl"));
+
+    // null 처리 해야함
+    setProfileImage(cookie.load("imageUrl"));
+
+  },[]);
+
   const nicknameChange = async (e : React.ChangeEvent<HTMLInputElement>) =>{
     const nickname = e.target.value;
     setNickname(nickname);
@@ -61,7 +76,14 @@ export default function SignUpPage(){
   }
   const singupNextHandler = () =>{
     // 리덕스 저장
-    
+    // dispatch해줄 것
+    const signuoInfoToSubmit = { accessToken: cookie.load("accessToken"),
+        imageUrl : profileImage,
+        nickname : nickname,
+        introduce : introduce
+    };
+    dispatch(saveSignupInfo(signuoInfoToSubmit))
+
     route.push('/signup/interest');
   }
   return (
@@ -69,8 +91,8 @@ export default function SignUpPage(){
       <div className="m-16 mt-100">
         <div className="my-40 grid">
           <div className="mx-auto relative">
-            <Image className="rounded-full" src={LoginImage} alt="dubLogoImg" width={140}></Image>
-            <button className="absolute right-14 bottom-14 z-2 rounded-full bg-white"><MdChangeCircle size={30}/></button>
+            {profileImage && <Image className="rounded-full" src={profileImage} alt="dubLogoImg" width={140} height={140}></Image>}
+            <button className="absolute right-12 bottom-4 z-2 rounded-full bg-white"><MdChangeCircle size={30}/></button>
           </div>
 
           
