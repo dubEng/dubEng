@@ -21,13 +21,16 @@ export default function DubBox({
   pitchList,
   scriptLength,
   scriptIndex,
+  youtubePlayer,
 }: Script) {
+
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [soundStatus, setSoundStatus] = useState<SoundType>(SoundType.DEFAULT);
+  const [soundStatus, setSoundStatus] = useState<SoundType>(SoundType.DISABLE);
 
-  const [recording, setRecording] = useState<boolean>(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -35,6 +38,7 @@ export default function DubBox({
   const [myPitchList, setMyPitchList] = useState<number[]>([]);
 
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
+
 
   useEffect(() => {
     (async () => {
@@ -50,7 +54,7 @@ export default function DubBox({
       };
 
       mediaRecorder.onstop = () => {
-        setRecording(false);
+        setIsRecording(false);
         const audioBlob = new Blob(audioChunksRef.current, {
           type: "audio/wav",
         });
@@ -60,21 +64,48 @@ export default function DubBox({
     })();
   }, []);
 
-  function handlePlayButton() {
-    setIsPlaying(!isPlaying);
-  }
-  function handleRecordButton() {
-    setIsRecording(!isRecording);
-  }
-  function handleListenButton() {
-    if (soundStatus === SoundType.DEFAULT) {
-      setSoundStatus(SoundType.PLAYING);
-    } else {
-      setSoundStatus(SoundType.DEFAULT);
-    }
+  function handleScriptPlayButton() {
+    setIsPlaying(true);
+
+    youtubePlayer.playVideo();
+
+    setTimeout(() => {
+        youtubePlayer.pauseVideo();
+        setIsPlaying(false);
+    }, duration);
   }
 
-  function handleStartButton(recordingTime: number) {
+  function handleScriptStopButton() {
+    setIsPlaying(false);
+    youtubePlayer.pauseVideo();
+  }
+
+  function handleRecordButton() {
+    setIsRecording(true);
+
+    // 녹음 전 유튜브 영상 멈추기
+    setIsPlaying(false);
+    youtubePlayer.pauseVideo();
+
+    // 녹음 시작하기
+    startRecording(duration);
+  }
+  function handleListenButton() {
+    setSoundStatus(SoundType.PLAYING);
+
+    // 내 소리 듣기 전 유튜브 영상 멈추기
+    setIsPlaying(false);
+    youtubePlayer.pauseVideo();
+    
+    // 내 소리 듣기
+    listenMyVoice();
+  }
+
+  function handleAudioEnded() {
+    setSoundStatus(SoundType.DEFAULT);
+  }
+
+  function startRecording(recordingTime: number) {
     // 스크립트 리셋
     resetTranscript();
 
@@ -82,79 +113,63 @@ export default function DubBox({
     SpeechRecognition.startListening({ continuous: true, language: "en-US" });
 
     // 녹음 시작
-    setRecording(true);
     audioChunksRef.current = [];
-    mediaRecorderRef.current?.start();
+    if(mediaRecorderRef.current){
+      mediaRecorderRef.current.start();
+    }
 
     // 지정 시간 후 녹음 종료
     setTimeout(() => {
-      mediaRecorderRef.current?.stop();
+      if (mediaRecorderRef.current?.state == "recording") {
+        mediaRecorderRef.current.stop();
+      }
+      setIsRecording(false);
+      setSoundStatus(SoundType.DEFAULT);
     }, recordingTime);
   }
 
-  function handleStopButton() {
-    SpeechRecognition.stopListening();
-    if (mediaRecorderRef.current?.state == "recording") {
-      mediaRecorderRef.current.stop();
-    }
-  }
-
-  const sendRecording = async (blob: Blob) => {
-    const formData = new FormData();
-    formData.append("recording", blob, "recording.wav");
-
-    const response = await fetch("/api/recordings", {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await response.json();
-    console.log(data);
-  };
-
-  const playRecording = () => {
+  const listenMyVoice = () => {
     const blob = new Blob(audioChunksRef.current, { type: "audio/wav" });
     const url = URL.createObjectURL(blob);
-    const audio = new Audio(url);
-    audio.play();
+    if(audioRef.current){
+      audioRef.current.src = url;
+      audioRef.current.play();
+    }
   };
 
   return (
-    <div className="w-359 h-420 relative bg-white rounded-20 container mx-auto">
-      <div>
-        {scriptIndex}/{scriptLength}
+    <div className="w-359 h-350 bg-white rounded-20 container mx-auto p-16">
+      <div className="flex justify-between">
+        <p className="text-12 text-dubblack font-normal">
+          {scriptIndex}/{scriptLength}
+        </p>
       </div>
-      <PitchGraph moviePitchList={pitchList} myPitchList={myPitchList} />
-      <div>
-        <p className="text-14 text-dubblack font-normal">{content}</p>
-        <p className="text-14 text-dubgray font-normal">{translateContent}</p>
+      <div className="flex justify-center">
+        <PitchGraph moviePitchList={pitchList} myPitchList={myPitchList} />
       </div>
+      <p className="text-14 text-dubblack font-normal flex justify-start mx-16">
+        {content}
+      </p>
+      <p className="text-14 text-dubgray font-normal flex justify-start mx-16">
+        {translateContent}
+      </p>
+      <p className="text-14 text-dubblue font-normal flex justify-start h-34 mx-16">
+        {transcript}
+      </p>
+      <audio ref={audioRef} style={{ display: 'none' }} onEnded={handleAudioEnded} />
       {/* <div>
-        <div>
-          <button onClick={() => handleStartButton(3000)} disabled={recording}>
-            Start
-          </button>
-        </div>
-        <div>
-          <button onClick={handleStopButton}>Stop</button>
-        </div>
-        <div>
-          <button onClick={resetTranscript}>Reset</button>
-        </div>
-        <div>
-          <button onClick={playRecording} disabled={!audioBlob}>
-            Play Recording
-          </button>
-        </div>
-        <br />
         <div>STT 마이크 상태: {listening ? "듣는 중" : "안 듣는 중"}</div>
         <div>실시간 STT 결과: {transcript}</div>
-        <div>녹음 상태: {recording ? "Recording..." : "not Recording"}</div>
       </div> */}
       <div className="flex justify-evenly">
-        <PlayButton isPlaying={isPlaying} onClick={handlePlayButton} />
-        <RecordButton isRecording={isRecording} onClick={handleRecordButton} />
-        <ListenButton soundStatus={soundStatus} onClick={handleListenButton} />
+        <PlayButton
+          isPlaying={isPlaying}
+          playVideo={handleScriptPlayButton}
+          stopVideo={handleScriptStopButton}
+          disable={isRecording || soundStatus == SoundType.PLAYING}
+        />
+        <RecordButton isRecording={isRecording} startRecording={handleRecordButton} disable={soundStatus == SoundType.PLAYING} />
+        <ListenButton soundStatus={soundStatus} startListening={handleListenButton} disable={isRecording} />
       </div>
     </div>
   );
