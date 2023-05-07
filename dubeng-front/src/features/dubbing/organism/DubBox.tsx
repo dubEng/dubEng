@@ -12,9 +12,10 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import { Script } from "@/types/Script";
 import PitchGraph from "../atoms/PitchGraph";
+import PlayBar from "../atoms/PlayBar";
+// import { useSwiperSlide } from "swiper/react";
 
 export default function DubBox({
-  startTime,
   duration,
   content,
   translateContent,
@@ -23,12 +24,17 @@ export default function DubBox({
   scriptIndex,
   youtubePlayer,
 }: Script) {
+  // const swiperSlide = useSwiperSlide();
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [soundStatus, setSoundStatus] = useState<SoundType>(SoundType.DISABLE);
 
+  const [speechToText, setSpeechToText] = useState<string>("");
+
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+
+  const [answer, setAnswer] = useState<boolean>(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -38,7 +44,6 @@ export default function DubBox({
   const [myPitchList, setMyPitchList] = useState<number[]>([]);
 
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
-
 
   useEffect(() => {
     (async () => {
@@ -64,14 +69,19 @@ export default function DubBox({
     })();
   }, []);
 
+  useEffect(() => {
+    setSpeechToText(transcript);
+    onMatching();
+  }, [listening]);
+
   function handleScriptPlayButton() {
     setIsPlaying(true);
 
     youtubePlayer.playVideo();
 
     setTimeout(() => {
-        youtubePlayer.pauseVideo();
-        setIsPlaying(false);
+      youtubePlayer.pauseVideo();
+      setIsPlaying(false);
     }, duration);
   }
 
@@ -96,7 +106,7 @@ export default function DubBox({
     // 내 소리 듣기 전 유튜브 영상 멈추기
     setIsPlaying(false);
     youtubePlayer.pauseVideo();
-    
+
     // 내 소리 듣기
     listenMyVoice();
   }
@@ -114,7 +124,7 @@ export default function DubBox({
 
     // 녹음 시작
     audioChunksRef.current = [];
-    if(mediaRecorderRef.current){
+    if (mediaRecorderRef.current) {
       mediaRecorderRef.current.start();
     }
 
@@ -131,14 +141,50 @@ export default function DubBox({
   const listenMyVoice = () => {
     const blob = new Blob(audioChunksRef.current, { type: "audio/wav" });
     const url = URL.createObjectURL(blob);
-    if(audioRef.current){
+    if (audioRef.current) {
       audioRef.current.src = url;
       audioRef.current.play();
     }
   };
 
+  const onMatching = () => {
+    // 스크립트 특수문자 제거하기
+    // [\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]
+    const reg = /[`~!@#$%^&*()_|+\-=?;:'",.\\{}<>/]/gim;
+
+    const answer = content.replace(reg, "").toLowerCase().split(" ");
+
+    const speaker = speechToText
+      .toLowerCase()
+      .replace(reg, "")
+      .toLowerCase()
+      .split(" ");
+
+    console.log("answer", answer);
+    console.log("speaker", speaker);
+
+    // 정답 매칭
+    let flag = true;
+    let idx = 0;
+    if (answer?.length && speaker.length) {
+      if (answer?.length != speaker.length) {
+        flag = false;
+      } else {
+        while (idx < answer.length && idx < speaker.length) {
+          if (answer[idx] != speaker[idx]) {
+            flag = false;
+            break;
+          }
+          idx++;
+        }
+      }
+    }
+
+    setAnswer(flag);
+  };
+
   return (
-    <div className="w-359 h-350 bg-white rounded-20 container mx-auto p-16">
+    <div className="w-359 h-370 bg-white rounded-20 container mx-auto p-16">
       <div className="flex justify-between">
         <p className="text-12 text-dubblack font-normal">
           {scriptIndex}/{scriptLength}
@@ -153,14 +199,30 @@ export default function DubBox({
       <p className="text-14 text-dubgray font-normal flex justify-start mx-16">
         {translateContent}
       </p>
-      <p className="text-14 text-dubblue font-normal flex justify-start h-34 mx-16">
-        {transcript}
+      {listening ? (
+        <p className="text-14 text-dubblue font-normal flex justify-start h-34 mx-16 mb-16">
+          {transcript}
+        </p>
+      ) : answer ? (
+        <p className="text-14 text-[#0FA64B] font-normal flex justify-start h-34 mx-16 mb-16">
+          {speechToText}
+        </p>
+      ) : (
+        <p className="text-14 text-dubcoral font-normal flex justify-start h-34 mx-16 mb-16">
+          {speechToText}
+        </p>
+      )}
+      <audio
+        ref={audioRef}
+        style={{ display: "none" }}
+        onEnded={handleAudioEnded}
+      />
+      <p className="text-12 text-dubblack font-normal flex justify-end mx-16 mb-4">
+        {duration / 1000}초
       </p>
-      <audio ref={audioRef} style={{ display: 'none' }} onEnded={handleAudioEnded} />
-      {/* <div>
-        <div>STT 마이크 상태: {listening ? "듣는 중" : "안 듣는 중"}</div>
-        <div>실시간 STT 결과: {transcript}</div>
-      </div> */}
+      <div className="mb-16 mx-16">
+        <PlayBar />
+      </div>
       <div className="flex justify-evenly">
         <PlayButton
           isPlaying={isPlaying}
@@ -168,8 +230,16 @@ export default function DubBox({
           stopVideo={handleScriptStopButton}
           disable={isRecording || soundStatus == SoundType.PLAYING}
         />
-        <RecordButton isRecording={isRecording} startRecording={handleRecordButton} disable={soundStatus == SoundType.PLAYING} />
-        <ListenButton soundStatus={soundStatus} startListening={handleListenButton} disable={isRecording} />
+        <RecordButton
+          isRecording={isRecording}
+          startRecording={handleRecordButton}
+          disable={soundStatus == SoundType.PLAYING}
+        />
+        <ListenButton
+          soundStatus={soundStatus}
+          startListening={handleListenButton}
+          disable={isRecording}
+        />
       </div>
     </div>
   );

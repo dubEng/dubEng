@@ -6,6 +6,7 @@ import DubBox from "@/features/dubbing/organism/DubBox";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import PlayBar from "@/features/dubbing/atoms/PlayBar";
 
 interface Iprops {
   id: number;
@@ -283,8 +284,8 @@ export default function DubbingPage() {
         onPlay={onPlay}
         onStateChange={onStateChange}
       />
-
-      <div className="w-391 h-370 bg-dubgraylight flex justify-center items-center">
+      <PlayBar />
+      <div className="w-391 h-390 bg-dubgraylight flex justify-center items-center">
         <Swiper
           spaceBetween={4}
           onSlideChange={handleSlideChange}
