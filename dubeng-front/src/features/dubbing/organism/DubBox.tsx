@@ -71,7 +71,7 @@ export default function DubBox({
 
   useEffect(() => {
     setSpeechToText(transcript);
-    onMatching();
+    onMatching(transcript);
   }, [listening]);
 
   function handleScriptPlayButton() {
@@ -147,21 +147,21 @@ export default function DubBox({
     }
   };
 
-  const onMatching = () => {
+  const onMatching = (myAnswer: string) => {
     // 스크립트 특수문자 제거하기
     // [\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]
     const reg = /[`~!@#$%^&*()_|+\-=?;:'",.\\{}<>/]/gim;
 
     const answer = content.replace(reg, "").toLowerCase().split(" ");
 
-    const speaker = speechToText
+    const speaker = myAnswer
       .toLowerCase()
       .replace(reg, "")
       .toLowerCase()
       .split(" ");
 
     console.log("answer", answer);
-    console.log("speaker", speaker);
+    console.log("myAnswer", myAnswer);
 
     // 정답 매칭
     let flag = true;
