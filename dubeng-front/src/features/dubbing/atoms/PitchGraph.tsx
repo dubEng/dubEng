@@ -66,7 +66,7 @@ export default function PitchGraph({moviePitchList, myPitchList}: PitchDataList)
   // };
 
   return (
-    <div className="mixed-chart">
+    <>
       {typeof window !== "undefined" && (
         <Chart
           options={options}
@@ -83,6 +83,6 @@ export default function PitchGraph({moviePitchList, myPitchList}: PitchDataList)
           height={125}
         />
       )}
-    </div>
+    </>
   );
 }
