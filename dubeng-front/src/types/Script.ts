@@ -1,3 +1,5 @@
+import { YouTubePlayer } from "react-youtube";
+
 export interface Script{
     id: number;
     startTime: number;
@@ -7,4 +9,5 @@ export interface Script{
     pitchList: number[];
     scriptIndex: number;
     scriptLength: number;
+    youtubePlayer: YouTubePlayer;
 }
