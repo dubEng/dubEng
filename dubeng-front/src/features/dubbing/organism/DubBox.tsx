@@ -37,6 +37,7 @@ export default function DubBox({
   const [answer, setAnswer] = useState<boolean>(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
+  const mediaStreamRef = useRef<any>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -48,6 +49,7 @@ export default function DubBox({
   useEffect(() => {
     (async () => {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaStreamRef.current = stream;
 
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
@@ -92,6 +94,7 @@ export default function DubBox({
 
   function handleRecordButton() {
     setIsRecording(true);
+    // analyzeMicrophone(mediaStreamRef.current);
 
     // 녹음 전 유튜브 영상 멈추기
     setIsPlaying(false);
@@ -182,6 +185,27 @@ export default function DubBox({
 
     setAnswer(flag);
   };
+
+  // const analyzeMicrophone = (stream: MediaStream) => {
+  //   const audioCtx = new AudioContext();
+  //   const analyser = audioCtx.createAnalyser();
+  //   analyser.fftSize = 4096;
+  //   const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+  //   const source = audioCtx.createMediaStreamSource(stream);
+  //   source.connect(analyser);
+  //   const recordingTimer = setInterval(() => {
+  //     analyser.getByteFrequencyData(dataArray);
+  //     const maxIndex = dataArray.indexOf(Math.max(...dataArray));
+  //     const maxHz = (maxIndex * audioCtx.sampleRate) / analyser.fftSize;
+  //     console.log("maxHz", maxHz);
+  //     setMyPitchList((data) => [...data, maxHz]);
+  //   }, 500);
+  //   setTimeout(() => {
+  //     clearInterval(recordingTimer);
+  //     stream.getTracks().forEach((track) => track.stop());
+  //   }, duration);
+  // };
 
   return (
     <div className="w-359 h-370 bg-white rounded-20 container mx-auto p-16">

@@ -7,6 +7,7 @@ import DubBox from "@/features/dubbing/organism/DubBox";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import PlayBar from "@/features/dubbing/atoms/PlayBar";
+import CommonButton from "@/components/atoms/CommonButton";
 
 interface Iprops {
   id: number;
@@ -143,56 +144,56 @@ export default function DubbingPage() {
   }, [selectedScript]);
 
   // 1초마다 영상 실행 시간 가져오기
-  // useEffect(() => {
-  //   const watchTime = setInterval(() => {
+  useEffect(() => {
+    const watchTime = setInterval(() => {
 
-  //     // 영상이 재생중일 때만 실행
-  //     if (nowPlaying) {
-  //       const time = Math.floor(Number(youtubePlayer?.getCurrentTime()));
+      // 영상이 재생중일 때만 실행
+      if (nowPlaying) {
+        const time = Math.floor(Number(youtubePlayer?.getCurrentTime()));
 
-  //       //TODO: 21 -> endTime
-  //       if (time == 0) {
-  //         setSelectedScript(0);
-  //       }
+        //TODO: 21 -> endTime
+        if (time == 0) {
+          setSelectedScript(0);
+        }
 
-  //       // console.log("현재 선택된 스크립트", selectedScript);
-  //       // console.log("time", time);
+        // console.log("현재 선택된 스크립트", selectedScript);
+        // console.log("time", time);
 
-  //       /* 실시간 하이라이팅 */
-  //       // flag가 false이거나 선택된 스크립트의 idx값이 전체 스크립트의 길이보다 작으면 실행
-  //       if (selectedScript < scriptList.length && time > 0) {
-  //         // 해당 스크립트 리스트의 startTime이 undefined가 아니라면
-  //         if (scriptList[selectedScript]?.startTime != undefined) {
-  //           // console.log(
-  //           //   "현재 스크립트 startTime",
-  //           //   scriptList[selectedScript]?.startTime
-  //           // );
-  //           // console.log(
-  //           //   "다음 startTime",
-  //           //   scriptList[selectedScript + 1]?.startTime
-  //           // );
-  //           // 현재 재생되고 있는 영상의 시간이 현재 스크립트의 시작 시간보다 크거나 같고
-  //           // 현재 재생되고 있는 영상의 시간이 다음 스크립트의 시작 시간보다 작거나 같다면
-  //           // selectedScript를 증가하지 않고 넘어간다.
-  //           if (
-  //             scriptList[selectedScript]?.startTime <= time &&
-  //             time <= scriptList[selectedScript + 1]?.startTime
-  //           ) {
-  //             // console.log("현재 스크립트가 재생중인 영상과 일치합니다.");
-  //           } else {
-  //             // console.log("다음 스크립트로 넘어가자");
-  //             setSelectedScript(selectedScript + 1);
-  //           }
-  //         }
-  //       }
-  //       // console.log("-------------------------------------------");
-  //     }
-  //   }, 1000);
+        /* 실시간 하이라이팅 */
+        // flag가 false이거나 선택된 스크립트의 idx값이 전체 스크립트의 길이보다 작으면 실행
+        if (selectedScript < scriptList.length && time > 0) {
+          // 해당 스크립트 리스트의 startTime이 undefined가 아니라면
+          if (scriptList[selectedScript]?.startTime != undefined) {
+            // console.log(
+            //   "현재 스크립트 startTime",
+            //   scriptList[selectedScript]?.startTime
+            // );
+            // console.log(
+            //   "다음 startTime",
+            //   scriptList[selectedScript + 1]?.startTime
+            // );
+            // 현재 재생되고 있는 영상의 시간이 현재 스크립트의 시작 시간보다 크거나 같고
+            // 현재 재생되고 있는 영상의 시간이 다음 스크립트의 시작 시간보다 작거나 같다면
+            // selectedScript를 증가하지 않고 넘어간다.
+            if (
+              scriptList[selectedScript]?.startTime <= time &&
+              time <= scriptList[selectedScript + 1]?.startTime
+            ) {
+              // console.log("현재 스크립트가 재생중인 영상과 일치합니다.");
+            } else {
+              // console.log("다음 스크립트로 넘어가자");
+              setSelectedScript(selectedScript + 1);
+            }
+          }
+        }
+        // console.log("-------------------------------------------");
+      }
+    }, 1000);
 
-  //   return () => {
-  //     clearInterval(watchTime);
-  //   };
-  // });
+    return () => {
+      clearInterval(watchTime);
+    };
+  });
 
   const opts: YouTubeProps["opts"] = {
     height: "218",
@@ -201,7 +202,7 @@ export default function DubbingPage() {
       start: videoInfo.startTime,
       end: videoInfo.endTime,
       // https://developers.google.com/youtube/player_parameters
-      autoplay: 1,
+      autoplay: 0,
       rel: 0, //관련 동영상 표시하지 않음 (근데 별로 쓸모 없는듯..)
       modestbranding: 0, // 컨트롤 바에 youtube 로고를 표시하지 않음
       controls: 0,
@@ -310,7 +311,7 @@ export default function DubbingPage() {
             ))}
         </Swiper>
       </div>
-      <div className="h-156 overflow-y-scroll bg-white mb-32">
+      <div className="h-156 overflow-y-scroll bg-white mb-16 w-391">
         <p className="flex justify-start mx-16 text-16 font-bold mt-16 mb-8">
           전체 스크립트
         </p>
@@ -338,6 +339,9 @@ export default function DubbingPage() {
             );
           }
         })}
+      </div>
+      <div className="flex justify-center w-391 mb-16">
+        <CommonButton children="저장하기" isDisabled />
       </div>
     </>
   );
