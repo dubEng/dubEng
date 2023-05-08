@@ -123,12 +123,19 @@ export default function DubbingPage() {
     videoPath: "YXOUOOtfTBs",
   });
 
+  const [recordingBlobList, setRecordingBlobList] = useState<Blob[]>([]);
+
   // 브라우저 호환성 체크
   const [speechRecognitionSupported, setSpeechRecognitionSupported] = useState<
     boolean | null
   >(null);
 
   const { browserSupportsSpeechRecognition } = useSpeechRecognition();
+
+  useEffect(() => {
+    const initialBlobs: Blob[] = Array.from({ length: scriptList.length }, () => new Blob());
+    setRecordingBlobList(initialBlobs);
+  }, [scriptList]);
 
   useEffect(() => {
     // sets to true or false after component has been mounted
@@ -254,6 +261,17 @@ export default function DubbingPage() {
     youtubePlayer.seekTo(seekTo);
   };
 
+  function addRecordingBlobList(index: number ,blob: Blob) {
+    setRecordingBlobList(prevArray => {
+      const newArray = [...prevArray];
+      console.log('newArray', newArray);
+      const transferIndex = index-1;
+
+      newArray[transferIndex] = blob;
+      return newArray;
+    });
+  }
+
   // const sendRecording = async (blob: Blob) => {
   //   const formData = new FormData();
   //   formData.append("recording", blob, "recording.wav");
@@ -315,6 +333,8 @@ export default function DubbingPage() {
                   setSpeechToText={setSpeechToText}
                   timerId={timerId}
                   setTimerId={setTimerId}
+                  addRecordingBlobList={addRecordingBlobList}
+                  
                 />
               </SwiperSlide>
             ))}

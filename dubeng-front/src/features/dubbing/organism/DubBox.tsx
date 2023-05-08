@@ -4,6 +4,7 @@ import ListenButton from "../atoms/ListenButton";
 import PlayButton from "../atoms/PlayButton";
 import RecordButton from "../atoms/RecordButton";
 import { SoundType } from "../../../enum/statusType";
+import { useDispatch } from 'react-redux';
 
 import { useEffect, useRef, useState } from "react";
 
@@ -27,14 +28,14 @@ export default function DubBox({
   setSpeechToText,
   setTimerId,
   timerId,
+  addRecordingBlobList
 }: Script) {
   // const swiperSlide = useSwiperSlide();
+  const dispatch = useDispatch();
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [soundStatus, setSoundStatus] = useState<SoundType>(SoundType.DISABLE);
-
-  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
 
   const [answer, setAnswer] = useState<boolean>(false);
 
@@ -67,7 +68,9 @@ export default function DubBox({
         const audioBlob = new Blob(audioChunksRef.current, {
           type: "audio/wav",
         });
-        setAudioBlob(audioBlob);
+
+        addRecordingBlobList(scriptIndex, audioBlob);
+
         SpeechRecognition.stopListening();
       };
     })();
@@ -112,6 +115,7 @@ export default function DubBox({
     // 녹음 시작하기
     startRecording(duration);
   }
+
   function handleListenButton() {
     setSoundStatus(SoundType.PLAYING);
 
