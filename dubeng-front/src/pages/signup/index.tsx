@@ -30,9 +30,6 @@ export default function SignUpPage(){
   const dispatch = useDispatch();
   
   useEffect(()=>{
-    console.log(cookie.load("accessToken"));
-    console.log(cookie.load("imageUrl"));
-
     // null 처리 해야함
     setProfileImage(cookie.load("imageUrl"));
 
@@ -51,15 +48,13 @@ export default function SignUpPage(){
     setchecknicknameMsg(CheckMessageStatus.ISVALID);
     
     //back과 통신
-    const data = await refetch();
+    await refetch();
+    
     if(error){
       // 닉네임 중복
-      console.log(error);
       setchecknicknameMsg(CheckMessageStatus.NICKNAME_DUPLICATION);
       setNextBtnStatus(false);
     }
-
-    console.log(data);
   }
   const introduceChange = (e : React.ChangeEvent<HTMLInputElement>) =>{
     setIntroduce(e.target.value);

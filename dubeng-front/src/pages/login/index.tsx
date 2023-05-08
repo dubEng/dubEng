@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import DubLogoImage from "../../../public/images/logo/dubeng_logo.png";
 import LoginBtnImage from "../../../public/images/login/kakao_login_medium_wide.png";
@@ -12,13 +11,14 @@ declare global {
 
 export default function LogInPage(){
   const loginHandler = () =>{
-    const jsKey = "3b8aa9073d9bab90e4440dbad2ccffb2";
+    const jsKey = process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY;
+    const redirectUri = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
+
     if(!window.Kakao.isInitialized()){
       window.Kakao.init(jsKey);
       
       window.Kakao.Auth.authorize({
-        // redirectUri: 'https://k8b208.p.ssafy.io/user/auth/kakao/callback'
-        redirectUri: 'http://localhost:9000/user/auth/kakao/callback'
+        redirectUri: redirectUri
       });
     }
   }
