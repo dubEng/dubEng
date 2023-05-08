@@ -8,6 +8,9 @@ import boto3
 from io import BytesIO
 from datetime import datetime
 
+import json
+from urllib.request import urlopen
+
 #커스텀 객체 클래스 import
 import videoClass
 
@@ -173,10 +176,9 @@ def uploadToBucket(target, uploadName):
 def maekPreviewAudio():
     
     #request에서 정보 가져오기
-    videoId = request.get_json()["videoId"]
-    userId = request.get_json()["userId"]
-    userVoiceList = request.files["files"]
-
+    req = json.loads(request.form['data'])
+    videoId = req.get("videoId")
+    userId = req.get("userId")
     
     #videoId로 DB에서 해당 video 정보 가져오기
     videoInfo = getVideoInfo(videoId)
@@ -184,18 +186,26 @@ def maekPreviewAudio():
     #videoId로 DB에서 script 정보 가져오기
     scripts = getScriptInfo(videoId)
 
-    #원본 음성 파일 중 상대역 부분만 잘라서 리스트로 만들기
-    original = AudioSegment.from_file(videoInfo.voicePath, format="wav")
-    oppositeAudioList = getOppositList(original, scripts, videoInfo.runtime)
-
     #사용자가 녹음한 음성파일 리스트를 AudioSegment 객체로 만든 후 리스트에 담기
     userAudioList = []
-    for userVoice in userVoiceList:
-        user = AudioSegment.from_file(userVoice)
-        userAudioList.append(user)
-    
+    files = request.files.getlist('file')
+
+    for file in files:
+        wav_data = file.read()
+        audio_segment = AudioSegment.from_wav(BytesIO(wav_data))
+        userAudioList.append(audio_segment)
+
+    #원본 음성 파일 중 상대역 부분만 잘라서 리스트로 만들기
+    response = urlopen(videoInfo.voicePath)
+    wav_data = response.read()
+    original = AudioSegment.from_file(BytesIO(wav_data), format="wav")
+    oppositeAudioList = getOppositList(original, scripts, videoInfo.runtime)
+
+
     #두 녹음 파일과 배경음악 합치기
-    bgAudio = AudioSegment.from_file(videoInfo.bgPath, format="wav")
+    response = urlopen(videoInfo.bgPath)
+    wav_data = response.read()
+    bgAudio = AudioSegment.from_file(BytesIO(wav_data), format="wav")
     finalAudio = AudioSegment.empty()
     if (scripts[0].startTime == 0): #사용자가 먼저 시작할 경우
         finalAudio = mergeAudio(userAudioList, oppositeAudioList, bgAudio)
