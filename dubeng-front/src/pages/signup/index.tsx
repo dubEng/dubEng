@@ -2,7 +2,6 @@ import {useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
-import LoginImage from "../../../public/images/login/noone.png";
 import { saveSignupInfo } from "../../stores/user/signupSlice";
 import CommonInputBox from "@/components/atoms/CommonInputBox";
 import { CheckMessageStatus } from "@/enum/statusType";
@@ -21,8 +20,8 @@ export default function SignUpPage(){
   const [checkintroduceMsg, setcheckintroduceMsg] = useState<CheckMessageStatus>(CheckMessageStatus.INIT);
   
   const [profileImage, setProfileImage] = useState<string | null>(null); // 기본 이미지
-  const {refetch, error} = userGetNicknameCheck(nickname);
-
+  const {data, error} = userGetNicknameCheck(nickname);
+  
   const nicknameLimitSize = 6;
   const introduceLimitSize = 15;
 
@@ -31,34 +30,29 @@ export default function SignUpPage(){
   
   useEffect(()=>{
     // null 처리 해야함
-    setProfileImage(cookie.load("imageUrl"));
-
+    const kakaoImageUrl = cookie.load("imageUrl");
+    if(kakaoImageUrl){
+      setProfileImage(kakaoImageUrl);
+    }
+  
   },[]);
-
-  const nicknameChange = async (e : React.ChangeEvent<HTMLInputElement>) =>{
-    const nickname = e.target.value;
-    setNickname(nickname);
-
+  useEffect(()=>{
     //유효성 체크
     if(!nickname || nickname.length > nicknameLimitSize || nickname.length <= 1){
       setchecknicknameMsg(CheckMessageStatus.NICKNAME_LIMIT_SIX);
       setNextBtnStatus(false);
       return;
     }
-    setchecknicknameMsg(CheckMessageStatus.ISVALID);
-    
-    //back과 통신
-    await refetch();
-    
-    if(error){
+
+    if(data){
       // 닉네임 중복
       setchecknicknameMsg(CheckMessageStatus.NICKNAME_DUPLICATION);
       setNextBtnStatus(false);
+      return;
     }
-  }
-  const introduceChange = (e : React.ChangeEvent<HTMLInputElement>) =>{
-    setIntroduce(e.target.value);
-    
+    setchecknicknameMsg(CheckMessageStatus.ISVALID);
+  },[data,nickname])
+  useEffect(()=>{
     //유효성 체크
     if(!introduce || introduce.length > introduceLimitSize || introduce.length <= 1){
       setcheckintroduceMsg(CheckMessageStatus.INTRODUCE_LIMIT_FIFTEEN);
@@ -68,6 +62,14 @@ export default function SignUpPage(){
     setcheckintroduceMsg(CheckMessageStatus.INIT);
 
     setNextBtnStatus(true);
+  },[introduce]);
+
+  const nicknameChange = async (e : React.ChangeEvent<HTMLInputElement>) =>{
+    const nickname = e.target.value;
+    setNickname(nickname);
+  }
+  const introduceChange = (e : React.ChangeEvent<HTMLInputElement>) =>{
+    setIntroduce(e.target.value);
   }
   const singupNextHandler = () =>{
     // 리덕스 저장
@@ -87,7 +89,7 @@ export default function SignUpPage(){
         <div className="my-40 grid">
           <div className="mx-auto relative">
             {profileImage && <Image className="rounded-full" src={profileImage} alt="dubLogoImg" width={140} height={140}></Image>}
-            <button className="absolute right-12 bottom-4 z-2 rounded-full bg-white"><MdChangeCircle size={30}/></button>
+            {profileImage && <button className="absolute right-12 bottom-4 z-2 rounded-full bg-white"><MdChangeCircle size={30}/></button>}
           </div>
 
           

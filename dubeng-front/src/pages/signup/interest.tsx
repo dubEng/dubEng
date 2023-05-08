@@ -1,10 +1,11 @@
-import {useState, useEffect, useCallback} from "react";
+import {useState, useEffect} from "react";
 import { useRouter } from "next/navigation";
 import TagButton from "@/components/atoms/TagButton";
 import SignUpButton from "@/features/signup/atoms/SignUpButton";
 import userGetInterestList from "@/apis/signup/queries/useGetInterestList";
 import { useDispatch } from "react-redux";
 import { saveInterest } from "@/stores/user/signupSlice";
+
 export interface Interest{
     id : number;
     name : string;
@@ -12,37 +13,25 @@ export interface Interest{
 export default function interestPage(){
     const route = useRouter();
     const dispatch = useDispatch();
-    const {refetch, error} = userGetInterestList();
-    const [interestList, setInterestList] = useState<Interest[]>([])
+    const {data} = userGetInterestList();
     const [nextBtnStatus, setNextBtnStatus] = useState<boolean>(false);
     const [selectedTag, setSelectedTag] = useState<number[]>([]);    // 선택한 카테고리 태그
 
     useEffect(()=>{
-        getInterestList();
-        
-    },[]);
-    const getInterestList = useCallback(
-        async () =>{
-            const {data} = await refetch();
-            setInterestList(data);
-            console.log(data);
-            
-        },[]
-    );
+        if(selectedTag.length < 1){
+            setNextBtnStatus(false);
+        } else {
+            setNextBtnStatus(true);
+        }
+    },[selectedTag]);
+
     // 태그 선택
     const handleClickTag = (id: number) => {
-        console.log(selectedTag);
         if (selectedTag.includes(id)) {
             setSelectedTag(selectedTag.filter((tagId) => tagId !== id));
         } else {
             setSelectedTag([...selectedTag, id]);
         }
-        // 태그 선택이 여러개가 되어야 함.
-        if(selectedTag.length === 1){
-            setNextBtnStatus(false);
-            return;
-        }
-        setNextBtnStatus(true);
         
     };
     const singupNextHandler = () =>{
@@ -62,7 +51,7 @@ export default function interestPage(){
                         <p className="font-bold mb-6">나의 관심사</p>
                         <div>
                             {/* 관심사 목록 */}
-                            {interestList?.map((inter, idx:number)=>(
+                            {data && data.map((inter, idx:number)=>(
                               <TagButton
                                 onClick={() => handleClickTag(inter.id)}
                                 id={inter.id}
