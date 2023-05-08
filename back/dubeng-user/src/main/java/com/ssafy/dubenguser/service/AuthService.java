@@ -1,19 +1,33 @@
 package com.ssafy.dubenguser.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.dubenguser.dto.Token;
+import com.ssafy.dubenguser.dto.UserLoginReq;
+import com.ssafy.dubenguser.dto.UserLoginRes;
+import com.ssafy.dubenguser.entity.User;
+import com.ssafy.dubenguser.exception.UnAuthorizedException;
+import com.ssafy.dubenguser.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.json.JSONParser;
+import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AuthService {
     @Value("${kakao.clientId}")
     private String KAKAO_CLIENT_ID;
@@ -21,6 +35,8 @@ public class AuthService {
     @Value("${kakao.redirectUri}")
     private String REDIRECT_URI;
 
+    private final UserRepository userRepository;
+    
     public HashMap<String, Object> findAccessToken(String code){
 
         // 인가 코드를 통해 access-token 요청
@@ -43,7 +59,7 @@ public class AuthService {
                 .block();
 
         // parse JSON - Null 처리 해야함.
-        HashMap<String, Object> result = findKakaoResponse(response);
+        HashMap<String, Object> result = parseTokenResponse(response);
 
         //Null 처리
         if(result.get("access_token") == null) throw new RuntimeException();
@@ -53,6 +69,56 @@ public class AuthService {
 
         //회원이 없다면
         return result;
+    }
+    public String getKakaoImageUrl(String accessToken){
+        log.debug("getKakaoUserInfo ATK : {}", accessToken);
+
+        WebClient webClient = WebClient.builder()
+                .baseUrl("https://kapi.kakao.com")
+                .defaultHeader("Authorization", "Bearer " + accessToken)
+                .build();
+
+        String response = webClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/v2/user/me")
+                        .build())
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        // parse JSON
+        log.debug(response);
+
+        HashMap<String, Object> result = null;
+        if(parseTokenResponse(response).get("properties") != null){
+            result = (LinkedHashMap) parseTokenResponse(response).get("properties");
+        }
+        return (String) result.get("thumbnail_image");
+    }
+    public UserLoginRes findUser(UserLoginReq request){
+        //토큰파싱
+        String userId = parseToken(request.getAccessToken());
+
+        log.debug("userId : {}", userId);
+        // 회원 정보 가져오기
+        Optional<User> findUser = userRepository.findById(userId);
+        if(!findUser.isPresent()) throw new UnAuthorizedException();
+
+        User loginUser = findUser.get();
+
+        // imageUrl 가져오기
+        String kakaoImageUrl = getKakaoImageUrl(request.getAccessToken());
+
+        UserLoginRes userLoginRes = UserLoginRes.builder()
+                .userId(userId)
+                .accessToken(request.getAccessToken())
+                .refreshToken(request.getRefreshToken())
+                .nickname(loginUser.getNickname())
+                .imageUrl(kakaoImageUrl)
+                .build();
+
+        return userLoginRes;
     }
 
     /**
@@ -75,7 +141,7 @@ public class AuthService {
                 .block();
 
         // parse JSON
-        HashMap<String, Object> result = findKakaoResponse(response);
+        HashMap<String, Object> result = parseTokenResponse(response);
 
         //Null 처리
         if(result.get("id") == null) throw new RuntimeException();
@@ -108,7 +174,7 @@ public class AuthService {
                 .block();
 
         // parse JSON
-        HashMap<String, Object> result = findKakaoResponse(response);
+        HashMap<String, Object> result = parseTokenResponse(response);
 
         String refresh_token = requestDTO.getRefreshToken();
 
@@ -125,15 +191,18 @@ public class AuthService {
      * @Param response : kakao로 부터 받은 데이터
      * 파싱해서 Map 형태로 Return
      */
-    private HashMap<String, Object> findKakaoResponse(String response) {
+    private HashMap<String, Object> parseTokenResponse(String response) {
         log.debug(response);
         HashMap<String, Object> result = null;
-        try {
-            result = new ObjectMapper().readValue(response, HashMap.class);
 
-        } catch (JsonProcessingException e) {
+        try{
+            result = new ObjectMapper().readValue(response, HashMap.class);
+            log.debug(result.toString());
+        }catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+
+        log.debug("parse result : {}", result.toString());
         return result;
     }
 }
