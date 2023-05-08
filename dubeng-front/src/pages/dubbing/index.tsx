@@ -8,6 +8,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import PlayBar from "@/features/dubbing/atoms/PlayBar";
 import CommonButton from "@/components/atoms/CommonButton";
+import useDubRecordVideoInfoQuery from "@/apis/dubbing/queries/useDubRecordVideoInfoQuery";
+import useDubRecordScriptQuery from "@/apis/dubbing/queries/useDubRecordScriptQuery";
+import useRecordPreviewPost from "@/apis/dubbing/mutations/useRecordPreviewPost";
+
+import { useSelector } from "react-redux";
+import { RootState } from "../../stores/store";
 
 interface Iprops {
   id: number;
@@ -18,6 +24,19 @@ interface Iprops {
 }
 
 export default function DubbingPage() {
+  const { isLoading, isError, data } = useDubRecordVideoInfoQuery(1);
+
+  const scriptListTemp = useDubRecordScriptQuery(1);
+
+  const userId = useSelector((state: RootState) => state.user.userId);
+
+  const { mutateAsync } = useRecordPreviewPost();
+
+  console.log("scriptListTemp", scriptListTemp);
+  console.log("data", data);
+  console.log("isLoading", isLoading);
+  console.log("isError", isError);
+
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
   const [nowPlaying, setNowPlaying] = useState<boolean>(false);
@@ -133,7 +152,10 @@ export default function DubbingPage() {
   const { browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   useEffect(() => {
-    const initialBlobs: Blob[] = Array.from({ length: scriptList.length }, () => new Blob());
+    const initialBlobs: Blob[] = Array.from(
+      { length: scriptList.length },
+      () => new Blob()
+    );
     setRecordingBlobList(initialBlobs);
   }, [scriptList]);
 
@@ -261,15 +283,30 @@ export default function DubbingPage() {
     youtubePlayer.seekTo(seekTo);
   };
 
-  function addRecordingBlobList(index: number ,blob: Blob) {
-    setRecordingBlobList(prevArray => {
+  function addRecordingBlobList(index: number, blob: Blob) {
+    setRecordingBlobList((prevArray) => {
       const newArray = [...prevArray];
-      console.log('newArray', newArray);
-      const transferIndex = index-1;
+      console.log("newArray", newArray);
+      const transferIndex = index - 1;
 
       newArray[transferIndex] = blob;
       return newArray;
     });
+  }
+
+  async function handleSaveButton() {
+    const formData = new FormData();
+
+    formData.append('videoId', data.id);
+    formData.append('userId', userId);
+    const newBlob: Blob = new Blob([recordingBlobList[0]], { type: "audio/wav" });
+
+    console.log('newBlob', newBlob);
+
+    formData.append('userVoiceList', newBlob);
+
+    const response = await mutateAsync(formData);
+    console.log('response', response);
   }
 
   // const sendRecording = async (blob: Blob) => {
@@ -334,7 +371,6 @@ export default function DubbingPage() {
                   timerId={timerId}
                   setTimerId={setTimerId}
                   addRecordingBlobList={addRecordingBlobList}
-                  
                 />
               </SwiperSlide>
             ))}
@@ -370,7 +406,7 @@ export default function DubbingPage() {
         })}
       </div>
       <div className="flex justify-center w-391 mb-16">
-        <CommonButton children="저장하기" isDisabled />
+        <CommonButton children="저장하기" isDisabled onClick={handleSaveButton} />
       </div>
     </>
   );
