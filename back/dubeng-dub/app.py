@@ -7,9 +7,6 @@ import pymysql
 import boto3
 from io import BytesIO
 from datetime import datetime
-import requests
-import json
-
 
 #커스텀 객체 클래스 import
 import videoClass
@@ -38,7 +35,8 @@ def getVideoInfo(videoId):
     video = videoClass.video() #DB에서 가져온 정보를 저장할 video 객체
 
     #DB 연결
-    connection = pymysql.connect(host=DB_HOST, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=CURSORCLASS)
+    cursorclass = pymysql.cursors.Cursor
+    connection = pymysql.connect(host=DB_HOST, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
 
     #video 테이블에서 정보 얻어오기
@@ -58,7 +56,8 @@ def getScriptInfo(videoId):
     scriptList = [] #DB에서 가져온 정보를 저장할 script 객체를 담을 리스트 
 
     #DB 연결
-    connection = pymysql.connect(host=DB_HOST, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=CURSORCLASS)
+    cursorclass = pymysql.cursors.Cursor
+    connection = pymysql.connect(host=DB_HOST, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
 
     #video 테이블에서 정보 얻어오기
@@ -168,13 +167,6 @@ def uploadToBucket(target, uploadName):
 
     return url
 
-def getFile(videoId,nickname):
-    request_url = f"https://k8b208.p.ssafy.io/recode/dublist?videoId={videoId}&nickname={nickname}"
-    response = requests.get(request_url)
-
-    data = json.loads(response.content)
-    return data
-
 
 @app.route('/record/preview', methods=['POST'])
 def maekPreviewAudio():
@@ -182,10 +174,8 @@ def maekPreviewAudio():
     #request에서 정보 가져오기
     videoId = request.get_json()["videoId"]
     originalVoicePath = request.get_json()["originalPath"]
-    nickname = request.get_json()["nickname"]
     userId = request.get_json()["userId"]
-
-    userVoiceList = getFile(videoId, nickname)
+    userVoiceList = request.files["files"]
     
     #videoId로 DB에서 해당 video 정보 가져오기
     videoInfo = getVideoInfo(videoId)
