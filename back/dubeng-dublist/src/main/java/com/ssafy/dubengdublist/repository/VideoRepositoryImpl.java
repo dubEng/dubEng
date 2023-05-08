@@ -272,14 +272,19 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
 
         List<RecordScriptPitchRes> recordScriptPitchRes = new ArrayList<>();
         for(RecordScriptRes r : recordScriptRes){
-            r.getPitch().split(", ");
-            String[] pl =  r.getPitch().split(", ");
-            List<String> pitchList = Arrays.asList(pl);
-            List<Integer> newList = pitchList.stream()
-                    .map(s -> Integer.parseInt(s))
-                    .collect(Collectors.toList());
-            RecordScriptPitchRes res = new RecordScriptPitchRes(r.getId(), r.getStartTime(), r.getDuration(), r.getContent(),r.getTranslateContent(), newList);
-            recordScriptPitchRes.add(res);
+            if (r.getPitch().equals("[]")) {
+                List<Integer> newList = new ArrayList<>();
+                RecordScriptPitchRes res = new RecordScriptPitchRes(r.getId(), r.getStartTime(), r.getDuration(), r.getContent(),r.getTranslateContent(), newList);
+                recordScriptPitchRes.add(res);
+            }else {
+                String[] pl =  r.getPitch().split(", ");
+                List<String> pitchList = Arrays.asList(pl);
+                List<Integer> newList = pitchList.stream()
+                        .map(s -> Integer.parseInt(s))
+                        .collect(Collectors.toList());
+                RecordScriptPitchRes res = new RecordScriptPitchRes(r.getId(), r.getStartTime(), r.getDuration(), r.getContent(),r.getTranslateContent(), newList);
+                recordScriptPitchRes.add(res);
+            }
         }
         return recordScriptPitchRes;
     }
