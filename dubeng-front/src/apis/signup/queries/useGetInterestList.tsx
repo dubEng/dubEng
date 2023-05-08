@@ -5,8 +5,7 @@ import { Interest } from "@/pages/signup/interest";
 
 const fetcher = () =>
   axios
-    // .get(process.env.NEXT_PUBLIC_BASE_URL + `/admin/category`)
-    .get('https://k8b208.p.ssafy.io' + `/admin/category`)
+    .get(process.env.NEXT_PUBLIC_BASE_URL + `/admin/category`)
     .then(({ data }) => {
       const response = data as Interest[];
       
