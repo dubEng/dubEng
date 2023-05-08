@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  basePath: '/front',
-}
+  images: {
+    domains: ["i.ytimg.com"],
+  },
+  basePath: "/front",
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
