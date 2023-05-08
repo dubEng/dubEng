@@ -1,9 +1,6 @@
 package com.ssafy.dubengdublist.service;
 
-import com.ssafy.dubengdublist.dto.contents.ContentsDetailRes;
-import com.ssafy.dubengdublist.dto.contents.ContentsDetailScriptRes;
-import com.ssafy.dubengdublist.dto.contents.ContentsRecommendRes;
-import com.ssafy.dubengdublist.dto.contents.ContentsSearchRes;
+import com.ssafy.dubengdublist.dto.contents.*;
 import com.ssafy.dubengdublist.entity.*;
 import com.ssafy.dubengdublist.exception.NotFoundException;
 import com.ssafy.dubengdublist.repository.*;
@@ -13,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
@@ -76,30 +74,18 @@ public class ContentsServiceImpl implements ContentsService {
         if(!ovideo.isPresent()){
             throw new NotFoundException("존재하지 않는 비디오입니다!");
         }
-        Video video = ovideo.get();
-        // userid와 recordid로 해서 찾은 recordlike 값
-        VideoBookmark videoBookmark = videoRepository.findByVideoBookmark(videoId, userId);
-        // 만약 아예 없다면
-        if (videoBookmark == null){
-            videoBookmarkRepository.save(new VideoBookmark(user, video, true));
-        }else {
-            videoBookmark.updateVideoBookmark(videoBookmark.getIsActive());
+        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
+        String key = "scrap_userId::"+userId;
+        String videoStr = Long.toString(videoId);
+        if(setOperations.add(key, videoStr)==1){ // 스크랩 완료
+            return 1;
+        }else{ // 이미 좋아요를 눌렀음.
+            setOperations.remove(key, videoStr); // 스크랩 취소
         }
+        return 0;
+    }
 
-        return 200;
-    }
-    public Integer addPlayCntToRedis(Long recordId){
-        String key = "recordPlayCnt::"+recordId;
-        ValueOperations valueOperations = redisTemplate.opsForValue();
-        if(valueOperations.get(key)==null){
-            Long newCnt = recordRepository.findPlayCount(recordId)+1;
-            valueOperations.set(key,Long.toString(newCnt), Duration.ofHours(2));
-        }
-        else{
-            valueOperations.increment(key);
-        }
-        log.info("add play count to redis : {} ", valueOperations.get(key));
-        return 200;
-    }
+
+
 
 }

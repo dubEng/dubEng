@@ -1,6 +1,7 @@
 package com.ssafy.dubengdublist.service;
 
 import com.ssafy.dubengdublist.dto.community.*;
+import com.ssafy.dubengdublist.dto.contents.ContentsPlayCountRes;
 import com.ssafy.dubengdublist.entity.*;
 import com.ssafy.dubengdublist.exception.NotFoundException;
 import com.ssafy.dubengdublist.repository.*;
@@ -10,10 +11,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -31,15 +36,27 @@ public class CommunityServiceImpl implements CommunityService{
     private final RedisTemplate<String, Object> redisTemplate;
 
 
-    public CommunityDubKingRes findDubKing(String langType, String userId) {
+    public Map<String, Object> findDubKing(String langType, String userId) {
         Optional<User> ouser = userRepository.findById(userId);
         if(!ouser.isPresent()) {
             throw new NotFoundException("존재하지 않는 유저입니다!");
-        }else if(ouser.get().getIsVoted() >= 3){
-            throw new NotFoundException("하루 3번 투표가 끝났습니다.");
         }
-        return videoRepository.findByOneDubKing(langType, userId);
+        Map<String, Object> result = new HashMap<>();
+        // 하루 3번 투표 여부 확인
+        String key = "vote_userId::"+userId;
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        Object ovalue = valueOperations.get(key);
+        Long cnt;
+        if(ovalue==null) cnt = 0L;
+        else cnt = Long.parseLong((String) ovalue);
+        if(cnt>=3L){
+            result.put("message", "하루 3번 투표가 끝났습니다.");
+        }else{
+            result.put("result", videoRepository.findByOneDubKing(langType, userId));
+        }
+        return result;
     }
+
 
     @Transactional
     public Integer addDubKing(String userId,String votedId) {
@@ -52,19 +69,32 @@ public class CommunityServiceImpl implements CommunityService{
         if(!voted.isPresent()){
             throw new NotFoundException("존재하지 않는 유저입니다!");
         }
-        User user1 = user.get();
-        User voted1 = voted.get();
 
-        DubKing dubKing = dubKingRepository.findByVotedId(votedId);
-        // 이미 존재한거라면
-        if(dubKing != null){
-            dubKing.updateDubKing(dubKing.getTotalVote());
-        }else { // 처음 만들어야 한다면
-            dubKingRepository.save(new DubKing(voted1, new Long(0), false));
+        // 투표 하는 사람.
+        String key = "vote_userId::"+userId;
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        Object ovalue = valueOperations.get(key);
+        if(ovalue==null){
+            valueOperations.set(key,Long.toString(1L));
         }
-        user1.updateDubKingUser(user1.getIsVoted() + 1);
+        else{
+            valueOperations.increment(key);
+        }
+        log.info("add vote counts to redis : {} ", valueOperations.get(key));
+
+        // 투표 받는 사람.
+        String key2 = "dubKing_userId::"+votedId;
+        if(valueOperations.get(key2)==null){
+            valueOperations.set(key2,Long.toString(1L));
+        }
+        else{
+            valueOperations.increment(key2);
+        }
+        log.info("add king counts to redis : {} ", valueOperations.get(key2));
+
         return 200;
     }
+
 
     public Page<CommunitySearchRes> findCommunitySearch(String langType, String  title, Pageable pageable, List<Long> contentsSearch) {
         return videoRepository.findByCategoryCommunity(langType, title, pageable, contentsSearch);
@@ -154,36 +184,63 @@ public class CommunityServiceImpl implements CommunityService{
         if(!orecord.isPresent()){
             throw new NotFoundException("존재하지 않는 녹음입니다!");
         }
-        Record record = orecord.get();
-        // userid와 recordid로 해서 찾은 recordlike 값
-        RecordLike recordLike = videoRepository.findByRecordLike(recordId, userId);
-
-        // 만약 아예 없다면
-        if (recordLike == null){
-            recordLikeRepository.save(new RecordLike(user, record, true));
-            record.updateLikeCount(true, record.getLikeCount());
-        }else {
-            recordLike.updateRecordLike(recordLike.getIsActive());
-            record.updateLikeCount(recordLike.getIsActive(), record.getLikeCount());
+        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
+        String key = "like_userId::"+userId;
+        String cntKey = "recordLikeCnt::"+Long.toString(recordId);
+        String recordStr = Long.toString(recordId);
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        if(valueOperations.get(cntKey)==null){
+            valueOperations.set(cntKey,"0");
         }
 
+        if(setOperations.add(key, recordStr)==1){ // 좋아요 완료
+            valueOperations.increment(cntKey);
+
+            return 1;
+        }else{ // 이미 좋아요를 눌렀음.
+            setOperations.remove(key, recordStr); // 좋아요 취소
+            valueOperations.decrement(cntKey);
+
+        }
+        return 0;
+    }
+    public Integer addPlayCntToRedis(Long recordId){
+        String key = "recordPlayCnt::"+recordId;
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+
+        if(valueOperations.get(key)==null){
+            Long newCnt = recordRepository.findPlayCount(recordId)+1;
+            valueOperations.set(key,Long.toString(newCnt), Duration.ofHours(2));
+        }
+        else{
+            valueOperations.increment(key);
+        }
+        log.info("add play count to redis : {} ", valueOperations.get(key));
         return 200;
     }
 
-    public void setLikeToRedis(String userId, Long recordId){
-        Optional<User> ouser = userRepository.findById(userId);
-        if(!ouser.isPresent()){
-            throw new NotFoundException("존재하지 않는 유저입니다!");
-        }
-        User user = ouser.get();
-        Optional<Record> orecord = recordRepository.findById(recordId);
-        if(!orecord.isPresent()){
-            throw new NotFoundException("존재하지 않는 녹음입니다!");
-        }
+    public ContentsPlayCountRes findPlayCounts(Long recordId, String userId){
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
-        String key = "like_recordId::"+Long.toString(recordId);
-        setOperations.add(key, userId); // 좋아요 완료
+        ValueOperations valueOperations = redisTemplate.opsForValue();
 
-        log.info("like set : {}", recordId);
+        String key = "like_userId::"+userId;
+        String key2 = "recordPlayCnt::"+recordId;
+        String key3 = "recordLikeCnt::"+recordId;
+
+        boolean isLike = setOperations.isMember(key, Long.toString(recordId)); // 1: 있음, 0: 없음
+
+        String o = (String) valueOperations.get(key2);
+        Long playCount = 0L;
+        if(o!=null){
+            playCount = Long.parseLong(o);
+        }
+
+        String o2 = (String) valueOperations.get(key3);
+        Long likeCount = 0L;
+        if(o2!=null){
+            likeCount = Long.parseLong(o2);
+        }
+
+        return new ContentsPlayCountRes(playCount, likeCount, isLike);
     }
 }

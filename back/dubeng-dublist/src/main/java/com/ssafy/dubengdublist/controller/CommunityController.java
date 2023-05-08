@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,8 +26,8 @@ public class CommunityController {
     @ApiOperation(value = "더빙왕 컨텐츠")
     @GetMapping("/dubking/{langType}")
     public ResponseEntity<?> DubKingList(@PathVariable("langType") String  langType, @RequestParam String userId){
-        CommunityDubKingRes communityDubKingRes = communityService.findDubKing(langType, userId);
-        return new ResponseEntity(communityDubKingRes, HttpStatus.ACCEPTED);
+        Map<String, Object> result = communityService.findDubKing(langType, userId);
+        return new ResponseEntity(result, HttpStatus.ACCEPTED);
     }
 
     @ApiOperation(value = "더빙왕 컨텐츠 투표")
@@ -77,5 +78,12 @@ public class CommunityController {
     public ResponseEntity<?> CommunityLikeAdd(@RequestParam String userId, @PathVariable("recordId") Long recordId){
         return new ResponseEntity<Integer>(communityService.addCommunityLike(userId, recordId), HttpStatus.ACCEPTED);
     }
-
+    @ApiOperation(value = "선택한 영상 콘텐츠 조회수 증가")
+    @GetMapping("/playCount/{recordId}")
+    public ResponseEntity<?> ContentPlayCount(@PathVariable("recordId") Long recordId, @RequestParam String userId){
+        // 1. 레디스에 조회수 증가
+        communityService.addPlayCntToRedis(recordId);
+        // 2. 리턴으로 캐시에서 조회수, 좋아요 수, 좋아요 여부
+        return new ResponseEntity<>(communityService.findPlayCounts(recordId, userId), HttpStatus.ACCEPTED);
+    }
 }

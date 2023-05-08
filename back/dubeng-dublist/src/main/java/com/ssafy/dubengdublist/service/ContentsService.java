@@ -4,6 +4,7 @@ package com.ssafy.dubengdublist.service;
 
 import com.ssafy.dubengdublist.dto.contents.ContentsDetailRes;
 import com.ssafy.dubengdublist.dto.contents.ContentsDetailScriptRes;
+import com.ssafy.dubengdublist.dto.contents.ContentsPlayCountRes;
 import com.ssafy.dubengdublist.dto.contents.ContentsSearchRes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,5 @@ public interface ContentsService {
     public Page<ContentsSearchRes> findContentsSearch(String langType, String title,Pageable pageable, List<Long> contentsSearch);
     public Page<ContentsDetailScriptRes> findContentsDetails(String langType, Pageable pageable, Long videoId);
     public Integer addContentsScrap(String userId, Long videoId);
-    public Integer addPlayCntToRedis(Long recordId);
 
 }
