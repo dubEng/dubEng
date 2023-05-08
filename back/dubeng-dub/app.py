@@ -22,7 +22,6 @@ DB_HOST = f_conn.readline().strip()
 DB_USER = f_conn.readline().strip()
 DB_DATABASE_NAME = f_conn.readline().strip()
 DB_CHARSET = "utf8mb4"
-# CURSORCLASS = pymysql.cursors.Cursor
 BUCKET_NAME = f_conn.readline().strip()
 AWS_ACCESS_KEY_ID = f_conn.readline().strip()
 AWS_SECRET_ACCESS_KEY = f_conn.readline().strip()
@@ -148,10 +147,10 @@ def uploadToBucket(target, uploadName):
     audio_bytesio = BytesIO()
 
     # AudioSegment 객체 생성
-    audio_segment = AudioSegment.from_file(target, format="mp3")
+    audio_segment = AudioSegment.from_file(target, format="wav")
 
     # AudioSegment 객체를 BytesIO에 기록
-    audio_segment.export(audio_bytesio, format="mp3")
+    audio_segment.export(audio_bytesio, format="wav")
 
     # BytesIO에서 바이트 스트림 읽어오기
     audio_bytes = audio_bytesio.getvalue()
@@ -173,7 +172,6 @@ def maekPreviewAudio():
     
     #request에서 정보 가져오기
     videoId = request.get_json()["videoId"]
-    originalVoicePath = request.get_json()["originalPath"]
     userId = request.get_json()["userId"]
     userVoiceList = request.files["files"]
     
@@ -184,7 +182,7 @@ def maekPreviewAudio():
     scripts = getScriptInfo(videoId)
 
     #원본 음성 파일 중 상대역 부분만 잘라서 리스트로 만들기
-    original = AudioSegment.from_file(originalVoicePath, format="mp3")
+    original = AudioSegment.from_file(videoInfo.voicePath, format="wav")
     oppositeAudioList = getOppositList(original, scripts, videoInfo.runtime)
 
     #사용자가 녹음한 음성파일 리스트를 AudioSegment 객체로 만든 후 리스트에 담기
@@ -194,7 +192,7 @@ def maekPreviewAudio():
         userAudioList.append(user)
     
     #두 녹음 파일과 배경음악 합치기
-    bgAudio = AudioSegment.from_file(videoInfo.bgPath, format="mp3")
+    bgAudio = AudioSegment.from_file(videoInfo.bgPath, format="wav")
     finalAudio = AudioSegment.empty()
     if (scripts[0].startTime == 0): #사용자가 먼저 시작할 경우
         finalAudio = mergeAudio(userAudioList, oppositeAudioList, bgAudio)
@@ -202,7 +200,7 @@ def maekPreviewAudio():
         finalAudio = mergeAudio(oppositeAudioList, userAudioList, bgAudio)
     
     #s3 버킷에 업로드하기
-    keyStr = userId + videoInfo.title + ".mp3"
+    keyStr = userId + videoInfo.title + ".wav"
     resultUrl = uploadToBucket(finalAudio, keyStr)
 
     return resultUrl
