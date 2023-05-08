@@ -4,7 +4,6 @@ import ListenButton from "../atoms/ListenButton";
 import PlayButton from "../atoms/PlayButton";
 import RecordButton from "../atoms/RecordButton";
 import { SoundType } from "../../../enum/statusType";
-import { useDispatch } from 'react-redux';
 
 import { useEffect, useRef, useState } from "react";
 
@@ -31,7 +30,6 @@ export default function DubBox({
   addRecordingBlobList
 }: Script) {
   // const swiperSlide = useSwiperSlide();
-  const dispatch = useDispatch();
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
