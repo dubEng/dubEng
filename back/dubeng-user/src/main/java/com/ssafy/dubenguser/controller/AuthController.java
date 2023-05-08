@@ -40,7 +40,7 @@ public class AuthController {
     @Value("${auth.redirectUrl}")
     private String SEND_REDIRECT_URL;
 
-    @Value("${auth.redirectUrl}")
+    @Value("${auth.baseUrl}")
     private String BASE_URL;
 
     @GetMapping("/kakao/callback")
