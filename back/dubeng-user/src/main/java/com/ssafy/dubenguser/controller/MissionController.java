@@ -10,13 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -24,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Api("도전과제 페이지 API")
 public class MissionController {
-    private final UserMissionServiceImpl userMissionService;
+    private final UserMissionService userMissionService;
 
     @ApiOperation(value="도전과제 미션 목록 조회")
     @GetMapping()
@@ -39,6 +38,14 @@ public class MissionController {
     public ResponseEntity<List<String>>  userAssetList(HttpServletRequest httpServletRequest){
         User user = (User) httpServletRequest.getAttribute("user");
         List<String> result = userMissionService.findAssets(user.getId());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @ApiOperation(value="도전과제 완료 여부 확인")
+    @GetMapping("/complete/{videoId}")
+    public ResponseEntity<HashMap<String, Object>>  userAssetList(@RequestParam String userId, @PathVariable Long videoId){
+//        User user = (User) httpServletRequest.getAttribute("user");
+        HashMap<String, Object> result = userMissionService.findMissionComplete(userId, videoId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

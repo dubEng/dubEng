@@ -32,4 +32,7 @@ public class UserMission extends Time{
         this.mission = mission;
         this.isComplete = isComplete;
     }
+    public void updateUserMissionComplete(){
+        this.isComplete = true;
+    }
 }
