@@ -18,7 +18,7 @@ CORS(app)
 #env.txt 파일에서 정보 읽어오기
 f_conn = open("./env.txt")
 
-DB_HSOT = f_conn.readline().strip()
+DB_HOST = f_conn.readline().strip()
 DB_USER = f_conn.readline().strip()
 DB_DATABASE_NAME = f_conn.readline().strip()
 DB_CHARSET = "utf8mb4"
@@ -34,8 +34,9 @@ f_conn.close()
 def getVideoInfo(videoId):
     video = videoClass.video() #DB에서 가져온 정보를 저장할 video 객체
 
-     #DB 연결
-    connection = pymysql.connect(host=DB_HSOT, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=CURSORCLASS)
+    #DB 연결
+    cursorclass = pymysql.cursors.Cursor
+    connection = pymysql.connect(host=DB_HOST, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
 
     #video 테이블에서 정보 얻어오기
@@ -55,7 +56,8 @@ def getScriptInfo(videoId):
     scriptList = [] #DB에서 가져온 정보를 저장할 script 객체를 담을 리스트 
 
     #DB 연결
-    connection = pymysql.connect(host=DB_HSOT, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=CURSORCLASS)
+    cursorclass = pymysql.cursors.Cursor
+    connection = pymysql.connect(host=DB_HOST, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
 
     #video 테이블에서 정보 얻어오기
@@ -154,10 +156,10 @@ def uploadToBucket(target, uploadName):
     # BytesIO에서 바이트 스트림 읽어오기
     audio_bytes = audio_bytesio.getvalue()
     client = boto3.client('s3',
-                      aws_access_key_id=AWS_ACCESS_KEY_ID,
-                      aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-                      region_name=AWS_DEFAULT_REGION
-                      )
+                    aws_access_key_id=AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                    region_name=AWS_DEFAULT_REGION
+                    )
     
     client.upload_fileobj(BytesIO(audio_bytes), BUCKET_NAME, key)
 
@@ -172,8 +174,8 @@ def maekPreviewAudio():
     #request에서 정보 가져오기
     videoId = request.get_json()["videoId"]
     originalVoicePath = request.get_json()["originalPath"]
-    userVoiceList = request.files.getlist("userVoiceList")
-    userId = request.request.headers.get('Authorization')
+    userId = request.get_json()["userId"]
+    userVoiceList = request.files["files"]
     
     #videoId로 DB에서 해당 video 정보 가져오기
     videoInfo = getVideoInfo(videoId)
@@ -210,13 +212,13 @@ def maekPreviewAudio():
 def save():
     #request에서 정보 가져오기
     videoId = request.get_json()["videoId"]
-    userId = request.headers.get('Authorization')
+    userId = request.get_json()["userId"]
     url = request.get_json()["url"]
     date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     #DB 연결
     cursorclass = pymysql.cursors.Cursor
-    connection = pymysql.connect(host=DB_HSOT, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
+    connection = pymysql.connect(host=DB_HOST, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
 
     #video 테이블에서 정보 얻어오기
