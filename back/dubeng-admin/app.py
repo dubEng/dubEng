@@ -27,6 +27,7 @@ f_conn = open("./env.txt")
 DB_HSOT = f_conn.readline().strip()
 DB_USER = f_conn.readline().strip()
 DB_DATABASE_NAME = f_conn.readline().strip()
+DB_PASSWORD = f_conn.readline().strip()
 DB_CHARSET = "utf8mb4"
 # CURSORCLASS = pymysql.cursors.Cursor
 BUCKET_NAME = f_conn.readline().strip()
@@ -76,7 +77,7 @@ def getCategories():
     # DB 연결
     cursorclass = pymysql.cursors.Cursor
     connection = pymysql.connect(
-        host=DB_HSOT, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
+        host=DB_HSOT, user=DB_USER, database=DB_DATABASE_NAME, password=DB_PASSWORD, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
 
     # 카테고리 테이블에서 정보 얻어오기
@@ -125,51 +126,56 @@ def uploadToBucket(filePath, uploadName):
 # 비디오 및 스크립트 Table에 저장하는 함수
 def saveVideoAndScript(video, scripts, userId, categories, file_exist):
     # DB 연결
-    cursorclass = pymysql.cursors.Cursor
-    connection = pymysql.connect(
-        host=DB_HSOT, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
-    cursor = connection.cursor()
-    duration = int(video['endTime'])-int(video['startTime'])
-    sql = "INSERT INTO video (title, runtime, video_path, thumbnail, start_time, end_time, producer, gender, lang_type) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    values = (video['title'], str(duration), video['videoPath'], video['thumbnail'], video['startTime'],
-              video['endTime'], video['producer'], video['gender'], video['lang'])
-    cursor.execute(sql, values)
-
-    videoId = cursor.lastrowid
-
-    for cate in categories:
-        sql = "insert into video_category (video_id, category_id) values (%s, %s)"
-        values = (videoId, cate)
+    try:
+        cursorclass = pymysql.cursors.Cursor
+        connection = pymysql.connect(
+            host=DB_HSOT, user=DB_USER, database=DB_DATABASE_NAME, password=DB_PASSWORD, charset=DB_CHARSET, cursorclass=cursorclass)
+        cursor = connection.cursor()
+        duration = int(video['endTime'])-int(video['startTime'])
+        sql = "INSERT INTO video (title, runtime, video_path, thumbnail, start_time, end_time, producer, gender, lang_type) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        values = (video['title'], str(duration), video['videoPath'], video['thumbnail'], video['startTime'],
+                  video['endTime'], video['producer'], video['gender'], video['lang'])
         cursor.execute(sql, values)
 
-    data = seperateMp3(video['videoPath'], userId, video['title'], file_exist)
-    if data is not None:
-        sql = "UPDATE video SET background_path=%s, voice_path=%s, pitch=%s WHERE id=%s"
-        cursor.execute(
-            sql, (data['backUrl'], data['vocalUrl'], data['pitch'], videoId))
-    else:
-        return False
-    pitch = json.loads(data['pitch'])
-    standard = data['standard']
-    for sc in scripts:
-        sql = "INSERT INTO script (start_time, duration, content, translate_content, video_id, is_dub, pitch) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-        temp = list()
-        start = sc['startTime'] * standard
-        end = start+sc['duration'] * standard
-        for idx in range(int(start), int(end)):
-            if np.isnan(pitch[idx]):
-                temp.append(0)
-            else:
-                temp.append(int(pitch[idx]))
+        videoId = cursor.lastrowid
 
-        pitch_text = json.dumps(temp)
+        for cate in categories:
+            sql = "insert into video_category (video_id, category_id) values (%s, %s)"
+            values = (videoId, cate)
+            cursor.execute(sql, values)
 
-        values = (sc['startTime']*1000, sc['duration']*1000, sc['content'],
-                  sc['translateContent'], videoId, sc['isDub'], pitch_text)
-        cursor.execute(sql, values)
+        data = seperateMp3(video['videoPath'], userId,
+                           video['title'], file_exist)
+        if data is not None:
+            sql = "UPDATE video SET background_path=%s, voice_path=%s, pitch=%s WHERE id=%s"
+            cursor.execute(
+                sql, (data['backUrl'], data['vocalUrl'], data['pitch'], videoId))
+        else:
+            return False
+        pitch = json.loads(data['pitch'])
+        standard = data['standard']
+        for sc in scripts:
+            sql = "INSERT INTO script (start_time, duration, content, translate_content, video_id, is_dub, pitch) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            temp = list()
+            start = sc['startTime'] * standard
+            end = start+sc['duration'] * standard
+            for idx in range(int(start), int(end)):
+                if np.isnan(pitch[idx]):
+                    temp.append(0)
+                else:
+                    temp.append(int(pitch[idx]))
 
-    connection.commit()
-    connection.close()
+            pitch_text = json.dumps(temp)
+            pitch_text = pitch_text.replace('[', '').replace(']', '')
+
+            values = (sc['startTime']*1000, sc['duration']*1000, sc['content'],
+                      sc['translateContent'], videoId, sc['isDub'], pitch_text)
+            cursor.execute(sql, values)
+
+        connection.commit()
+        connection.close()
+    except Exception as e:    # 모든 예외의 에러 메시지를 출력할 때는 Exception을 사용
+        print(e)
     return True
 
 
