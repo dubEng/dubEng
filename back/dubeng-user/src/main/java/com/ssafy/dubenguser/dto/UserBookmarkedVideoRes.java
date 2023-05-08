@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class VideoBookmarkRes {
+public class UserBookmarkedVideoRes {
     private String title;
     private String thumbnail;
 
     @Builder
     @QueryProjection
-    public VideoBookmarkRes(String title, String thumbnail) {
+    public UserBookmarkedVideoRes(String title, String thumbnail) {
         this.title = title;
         this.thumbnail = thumbnail;
     }

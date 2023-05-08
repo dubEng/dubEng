@@ -1,15 +1,19 @@
 package com.ssafy.dubenguser.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.dubenguser.dto.*;
 import com.ssafy.dubenguser.entity.Category;
+import com.ssafy.dubenguser.entity.QVideo;
 import com.ssafy.dubenguser.entity.UserCalender;
+import com.ssafy.dubenguser.entity.Video;
 import com.ssafy.dubenguser.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManager;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.ssafy.dubenguser.entity.QCategory.category;
@@ -29,7 +33,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         this.jpaQueryFactory = new JPAQueryFactory(em);
     }
     @Override
-    public List<Category> findCategoriesByUserId(String userId) {
+    public List<Category> findCategoriesByUserId(Long userId) {
         List<Category> categories = jpaQueryFactory
                 .select(category)
                 .from(user)
@@ -45,7 +49,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<UserCalender> findCalenderByUserId(String userId, ZonedDateTime start, ZonedDateTime end) {
+    public List<UserCalender> findCalenderByUserId(Long userId, ZonedDateTime start, ZonedDateTime end) {
         List<UserCalender> userCalendars = jpaQueryFactory
                 .selectFrom(userCalender)
                 .where(userCalender.user.id.eq(userId).and(userCalender.calDate.between(start, end)))
@@ -58,7 +62,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<UserRecordRes> findRecordByUserId(String userId, Boolean isPublic, Boolean isLimit, String lanType) {
+    public List<UserRecordRes> findRecordByUserId(Long userId, Boolean isPublic, Boolean isLimit, String lanType) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(record.user.id.eq(userId));
 
@@ -100,13 +104,13 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<RecordLikeRes> findLikedRecordByUserId(String userId, Boolean isLimit) {
+    public List<UserLikedRecordRes> findLikedRecordByUserId(Long userId, Boolean isLimit) {
 
-        List<RecordLikeRes> result;
+        List<UserLikedRecordRes> result;
 
         if(isLimit){
             result = jpaQueryFactory
-                    .select(new QRecordLikeRes(video.title, video.thumbnail, user.nickname, record.playCount, recordLike.updatedDate))
+                    .select(new QUserLikedRecordRes(video.title, video.thumbnail, user.nickname, record.playCount, recordLike.updatedDate))
                     .from(recordLike)
                     .innerJoin(record).on(recordLike.record.id.eq(record.id))
                     .innerJoin(video).on(record.video.id.eq(video.id))
@@ -116,7 +120,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                     .fetch();
         } else {
             result = jpaQueryFactory
-                    .select(new QRecordLikeRes(video.title, video.thumbnail, user.nickname, record.playCount, recordLike.updatedDate))
+                    .select(new QUserLikedRecordRes(video.title, video.thumbnail, user.nickname, record.playCount, recordLike.updatedDate))
                     .from(recordLike)
                     .innerJoin(record).on(recordLike.record.id.eq(record.id))
                     .innerJoin(video).on(record.video.id.eq(video.id))
@@ -129,13 +133,13 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<VideoBookmarkRes> findBookmarkedVideoByUserId(String userId, Boolean isLimit) {
+    public List<UserBookmarkedVideoRes> findBookmarkedVideoByUserId(Long userId, Boolean isLimit) {
 
-        List<VideoBookmarkRes> result;
+        List<UserBookmarkedVideoRes> result;
 
         if(isLimit) {
             result = jpaQueryFactory
-                    .select(new QVideoBookmarkRes(video.title, video.thumbnail))
+                    .select(new QUserBookmarkedVideoRes(video.title, video.thumbnail))
                     .from(videoBookmark)
                     .innerJoin(video)
                     .on(videoBookmark.video.id.eq(video.id))
@@ -144,7 +148,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                     .fetch();
         }else {
             result = jpaQueryFactory
-                    .select(new QVideoBookmarkRes(video.title, video.thumbnail))
+                    .select(new QUserBookmarkedVideoRes(video.title, video.thumbnail))
                     .from(videoBookmark)
                     .innerJoin(video)
                     .on(videoBookmark.video.id.eq(video.id))
