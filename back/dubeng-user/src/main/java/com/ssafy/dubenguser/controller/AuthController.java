@@ -60,9 +60,9 @@ public class AuthController {
         response.addCookie(cookie);
 
         //회원 가입 여부 체크
-        String redirectUri = "/front/signup";
+        String redirectUri = "/signup";
         if(userService.checkEnrolledMember((String) result.get("userId"))){
-            redirectUri = "/front/login/success";
+            redirectUri = "/login/success";
             response.sendRedirect(SEND_REDIRECT_URL + redirectUri);
             return;
         }
