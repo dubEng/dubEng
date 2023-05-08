@@ -23,6 +23,7 @@ public interface UserMissionRepository extends JpaRepository<UserMission, Long> 
             "left join Mission m on m.id = um.mission.id" +
             " where um.user=:user and um.isComplete=true")
     public List<String> findAssetsByUser(User user);
+    @Query("select um from UserMission um where um.user=:user and um.mission.video=:video")
     public Optional<UserMission> findByUserAndVideo(User user, Video video);
 
 }
