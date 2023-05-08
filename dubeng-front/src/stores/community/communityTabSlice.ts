@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { DubType } from "@/enum/statusType";
+import { DubType } from "../../enum/statusType";
 
 interface communityTabState {
   dubType: DubType.DUB_VIDEO | DubType.DUB_PRODUCT;

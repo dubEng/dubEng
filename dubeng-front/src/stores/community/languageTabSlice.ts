@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { LangType } from "@/enum/statusType";
+import { LangType } from "../../enum/statusType";
 
 interface LanguageTabState {
   langType: LangType.ENGLISH | LangType.KOREAN;
