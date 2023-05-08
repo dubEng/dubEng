@@ -22,6 +22,7 @@ f_conn = open("./env.txt")
 DB_HOST = f_conn.readline().strip()
 DB_USER = f_conn.readline().strip()
 DB_DATABASE_NAME = f_conn.readline().strip()
+DB_PASSWORD = f_conn.readline().strip()
 DB_CHARSET = "utf8mb4"
 BUCKET_NAME = f_conn.readline().strip()
 AWS_ACCESS_KEY_ID = f_conn.readline().strip()
@@ -36,7 +37,7 @@ def getVideoInfo(videoId):
 
     #DB 연결
     cursorclass = pymysql.cursors.Cursor
-    connection = pymysql.connect(host=DB_HOST, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
+    connection = pymysql.connect(host=DB_HOST, user=DB_USER, passwd=DB_PASSWORD, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
 
     #video 테이블에서 정보 얻어오기
@@ -57,7 +58,7 @@ def getScriptInfo(videoId):
 
     #DB 연결
     cursorclass = pymysql.cursors.Cursor
-    connection = pymysql.connect(host=DB_HOST, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
+    connection = pymysql.connect(host=DB_HOST, user=DB_USER, passwd=DB_PASSWORD, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
 
     #video 테이블에서 정보 얻어오기
@@ -172,10 +173,9 @@ def uploadToBucket(target, uploadName):
 def maekPreviewAudio():
     
     #request에서 정보 가져오기
-    userVoiceList = request.files["files"]
-    return "done"
     videoId = request.get_json()["videoId"]
     userId = request.get_json()["userId"]
+    userVoiceList = request.files["files"]
 
     
     #videoId로 DB에서 해당 video 정보 가져오기
@@ -219,7 +219,7 @@ def save():
 
     #DB 연결
     cursorclass = pymysql.cursors.Cursor
-    connection = pymysql.connect(host=DB_HOST, user=DB_USER, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
+    connection = pymysql.connect(host=DB_HOST, user=DB_USER, passwd=DB_PASSWORD, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
 
     #video 테이블에서 정보 얻어오기
