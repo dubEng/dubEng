@@ -3,7 +3,7 @@ import { LangType } from "../../../enum/statusType";
 import {
   setTabEnglish,
   setTabKorean,
-} from "@/stores/community/languageTabSlice";
+} from "../../../stores/community/languageTabSlice";
 interface Iprops {
   langType: string;
 }

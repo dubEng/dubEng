@@ -1,7 +1,7 @@
 import {
   setTabDubProduct,
   setTabDubVideo,
-} from "@/stores/community/communityTabSlice";
+} from "../../../stores/community/communityTabSlice";
 import { DubType } from "../../../enum/statusType";
 import { useDispatch } from "react-redux";
 import LanguageSelectTap from "./LanguageSelectTap";
