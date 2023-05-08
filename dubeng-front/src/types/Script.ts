@@ -1,4 +1,5 @@
 import { YouTubePlayer } from "react-youtube";
+import React from "react";
 
 export interface Script{
     id: number;
@@ -10,4 +11,8 @@ export interface Script{
     scriptIndex: number;
     scriptLength: number;
     youtubePlayer: YouTubePlayer;
+    speechToText: string;
+    setSpeechToText: React.Dispatch<React.SetStateAction<string>>;
+    timerId: number;
+    setTimerId: React.Dispatch<React.SetStateAction<number>>;
 }
