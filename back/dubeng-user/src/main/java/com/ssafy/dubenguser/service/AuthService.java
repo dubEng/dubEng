@@ -4,6 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.dubenguser.dto.Token;
+import com.ssafy.dubenguser.dto.UserLoginReq;
+import com.ssafy.dubenguser.dto.UserLoginRes;
+import com.ssafy.dubenguser.entity.User;
+import com.ssafy.dubenguser.exception.UnAuthorizedException;
+import com.ssafy.dubenguser.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
@@ -17,9 +23,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AuthService {
     @Value("${kakao.clientId}")
     private String KAKAO_CLIENT_ID;
@@ -27,6 +35,8 @@ public class AuthService {
     @Value("${kakao.redirectUri}")
     private String REDIRECT_URI;
 
+    private final UserRepository userRepository;
+    
     public HashMap<String, Object> findAccessToken(String code){
 
         // 인가 코드를 통해 access-token 요청
@@ -86,6 +96,31 @@ public class AuthService {
         }
         return (String) result.get("thumbnail_image");
     }
+    public UserLoginRes findUser(UserLoginReq request){
+        //토큰파싱
+        String userId = parseToken(request.getAccessToken());
+
+        log.debug("userId : {}", userId);
+        // 회원 정보 가져오기
+        Optional<User> findUser = userRepository.findById(userId);
+        if(!findUser.isPresent()) throw new UnAuthorizedException();
+
+        User loginUser = findUser.get();
+
+        // imageUrl 가져오기
+        String kakaoImageUrl = getKakaoImageUrl(request.getAccessToken());
+
+        UserLoginRes userLoginRes = UserLoginRes.builder()
+                .userId(userId)
+                .accessToken(request.getAccessToken())
+                .refreshToken(request.getRefreshToken())
+                .nickname(loginUser.getNickname())
+                .imageUrl(kakaoImageUrl)
+                .build();
+
+        return userLoginRes;
+    }
+
     /**
      * accessToken을 받아
      * kakao Auth 서버에 parse 요청
