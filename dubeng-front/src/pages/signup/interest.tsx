@@ -3,19 +3,23 @@ import { useRouter } from "next/navigation";
 import TagButton from "@/components/atoms/TagButton";
 import SignUpButton from "@/features/signup/atoms/SignUpButton";
 import userGetInterestList from "@/apis/signup/queries/useGetInterestList";
-
-interface interest{
+import { useDispatch } from "react-redux";
+import { saveInterest } from "@/stores/user/signupSlice";
+export interface Interest{
     id : number;
     name : string;
 }
 export default function interestPage(){
     const route = useRouter();
+    const dispatch = useDispatch();
     const {refetch, error} = userGetInterestList();
-    const [interestList, setInterestList] = useState<interest[]>([])
+    const [interestList, setInterestList] = useState<Interest[]>([])
     const [nextBtnStatus, setNextBtnStatus] = useState<boolean>(false);
     const [selectedTag, setSelectedTag] = useState<number[]>([]);    // 선택한 카테고리 태그
+
     useEffect(()=>{
         getInterestList();
+        
     },[]);
     const getInterestList = useCallback(
         async () =>{
@@ -44,7 +48,9 @@ export default function interestPage(){
     const singupNextHandler = () =>{
         // 저장
         console.log(selectedTag);
-
+        
+        // Redux 저장
+        dispatch(saveInterest(selectedTag));
         route.push('/signup/kitchen');
 
     }
