@@ -1,8 +1,7 @@
-import {useEffect, useState} from "react";
+import {useEffect,useRef, useState} from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
-import LoginImage from "../../../public/images/login/noone.png";
 import { saveSignupInfo } from "../../stores/user/signupSlice";
 import CommonInputBox from "@/components/atoms/CommonInputBox";
 import { CheckMessageStatus } from "@/enum/statusType";
@@ -14,6 +13,8 @@ import userGetNicknameCheck from "@/apis/signup/queries/useGetNicknameCheck";
 import cookie from 'react-cookies';
 
 export default function SignUpPage(){
+  const nicknameMounted = useRef(false);
+  const introdeuceMounted = useRef(false);
   const [nickname, setNickname] = useState<string>('');
   const [introduce, setIntroduce] = useState<string>('');
   const [nextBtnStatus, setNextBtnStatus] = useState<boolean>(false);
@@ -21,8 +22,8 @@ export default function SignUpPage(){
   const [checkintroduceMsg, setcheckintroduceMsg] = useState<CheckMessageStatus>(CheckMessageStatus.INIT);
   
   const [profileImage, setProfileImage] = useState<string | null>(null); // 기본 이미지
-  const {refetch, error} = userGetNicknameCheck(nickname);
-
+  const { refetch } = userGetNicknameCheck(nickname);
+  
   const nicknameLimitSize = 6;
   const introduceLimitSize = 15;
 
@@ -31,43 +32,72 @@ export default function SignUpPage(){
   
   useEffect(()=>{
     // null 처리 해야함
-    setProfileImage(cookie.load("imageUrl"));
-
+    const kakaoImageUrl = cookie.load("imageUrl");
+    if(kakaoImageUrl){
+      setProfileImage(kakaoImageUrl);
+    }
+    
   },[]);
 
-  const nicknameChange = async (e : React.ChangeEvent<HTMLInputElement>) =>{
-    const nickname = e.target.value;
-    setNickname(nickname);
+  const check_kor = /^[가-힣]+$/;  // 한글 체크
+  useEffect(()=>{
+    checkNickname(nickname);
+  },[nickname])
 
-    //유효성 체크
+  const checkNickname = async (nickname:string) =>{
+    // 첫 렌더링시 호출 막기
+    if(!nicknameMounted.current){
+      nicknameMounted.current = true;
+      return;
+    }
+    //닉네임 유효성 체크
     if(!nickname || nickname.length > nicknameLimitSize || nickname.length <= 1){
       setchecknicknameMsg(CheckMessageStatus.NICKNAME_LIMIT_SIX);
       setNextBtnStatus(false);
       return;
     }
-    setchecknicknameMsg(CheckMessageStatus.ISVALID);
-    
-    //back과 통신
-    await refetch();
-    
-    if(error){
-      // 닉네임 중복
+    // 문법 체크
+    if(!check_kor.test(nickname)){
+      setchecknicknameMsg(CheckMessageStatus.NICKNAME_INVALID_SYNTAX);
+      setNextBtnStatus(false);
+      return;
+    }
+    const {data} = await refetch();
+    if(data){
+      // 닉네임 중복체크
       setchecknicknameMsg(CheckMessageStatus.NICKNAME_DUPLICATION);
       setNextBtnStatus(false);
+      return;
     }
+    setchecknicknameMsg(CheckMessageStatus.NICKNAME_ISVALID);
   }
-  const introduceChange = (e : React.ChangeEvent<HTMLInputElement>) =>{
-    setIntroduce(e.target.value);
-    
-    //유효성 체크
+  useEffect(()=>{
+    // 첫 렌더링시 호출 막기
+    if(!introdeuceMounted.current){
+      introdeuceMounted.current = true;
+      return;
+    }
+    // 한줄 소개 유효성 체크
     if(!introduce || introduce.length > introduceLimitSize || introduce.length <= 1){
       setcheckintroduceMsg(CheckMessageStatus.INTRODUCE_LIMIT_FIFTEEN);
       setNextBtnStatus(false);
       return;
     }
-    setcheckintroduceMsg(CheckMessageStatus.INIT);
+    setcheckintroduceMsg(CheckMessageStatus.INTRODUCE_ISVALID);
 
-    setNextBtnStatus(true);
+  },[introduce]);
+
+  useEffect(()=>{
+    if(checknicknameMsg === CheckMessageStatus.NICKNAME_ISVALID && checkintroduceMsg === CheckMessageStatus.INTRODUCE_ISVALID){
+      setNextBtnStatus(true);
+    }
+  },[checknicknameMsg, checkintroduceMsg])
+  const nicknameChange = async (e : React.ChangeEvent<HTMLInputElement>) =>{
+    const nickname = e.target.value;
+    setNickname(nickname);
+  }
+  const introduceChange = (e : React.ChangeEvent<HTMLInputElement>) =>{
+    setIntroduce(e.target.value);
   }
   const singupNextHandler = () =>{
     // 리덕스 저장
@@ -87,7 +117,7 @@ export default function SignUpPage(){
         <div className="my-40 grid">
           <div className="mx-auto relative">
             {profileImage && <Image className="rounded-full" src={profileImage} alt="dubLogoImg" width={140} height={140}></Image>}
-            <button className="absolute right-12 bottom-4 z-2 rounded-full bg-white"><MdChangeCircle size={30}/></button>
+            {profileImage && <button className="absolute right-12 bottom-4 z-2 rounded-full bg-white"><MdChangeCircle size={30}/></button>}
           </div>
 
           
@@ -114,3 +144,4 @@ export default function SignUpPage(){
     </div>
   );
 }
+
