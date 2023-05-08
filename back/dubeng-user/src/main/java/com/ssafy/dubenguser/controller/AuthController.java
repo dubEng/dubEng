@@ -2,6 +2,8 @@ package com.ssafy.dubenguser.controller;
 
 import com.ssafy.dubenguser.dto.Token;
 import com.ssafy.dubenguser.dto.UserJoinReq;
+import com.ssafy.dubenguser.dto.UserLoginReq;
+import com.ssafy.dubenguser.dto.UserLoginRes;
 import com.ssafy.dubenguser.exception.DuplicateException;
 import com.ssafy.dubenguser.exception.NotFoundException;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
@@ -38,6 +40,9 @@ public class AuthController {
     @Value("${auth.redirectUrl}")
     private String SEND_REDIRECT_URL;
 
+    @Value("${auth.redirectUrl}")
+    private String BASE_URL;
+
     @GetMapping("/kakao/callback")
     public void authCodeDetails(@RequestParam String code, HttpServletResponse response, RedirectAttributes attributes) throws IOException {
         log.debug("auth code : {}", code);
@@ -49,7 +54,7 @@ public class AuthController {
 
         Cookie cookie = new Cookie("accessToken", (String) result.get("access_token"));
         cookie.setMaxAge(3600);
-        cookie.setDomain("localhost");
+        cookie.setDomain(BASE_URL);
         cookie.setPath("/");
 
         response.addCookie(cookie);
@@ -65,7 +70,7 @@ public class AuthController {
         //토큰 쿠키 방식 적재
         Cookie cookie2 = new Cookie("imageUrl", imageUrl);
         cookie2.setMaxAge(3600);
-        cookie2.setDomain("localhost");
+        cookie2.setDomain(BASE_URL);
         cookie2.setPath("/");
         response.addCookie(cookie2);
 
@@ -109,6 +114,19 @@ public class AuthController {
         userService.addUser(request, userId);
 
         return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+    }
+    @PostMapping("/login")
+    @ApiOperation(value = "회원정보 가져오기")
+    public ResponseEntity<UserLoginRes> getLoginInfo(@RequestBody UserLoginReq request){
+        log.debug("===로그인===");
+
+        log.debug("ATK : {}", request);
+
+        //ATK을 이용하여 회원정보 요청
+        UserLoginRes user = authService.findUser(request);
+
+        log.debug("loginUser : {}", user);
+        return new ResponseEntity<UserLoginRes>(user, HttpStatus.OK);
     }
     @GetMapping("/check/{nickname}")
     @ApiOperation(value = "닉네임 중복체크")
