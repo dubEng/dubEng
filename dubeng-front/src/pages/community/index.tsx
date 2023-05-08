@@ -174,6 +174,7 @@ export default function CommunityPage() {
       {categoryList.data?.map((category: { id: any; name: string }) => {
         return (
           <CategoryButton
+            key={category.id}
             id={category.id}
             name={category.name}
             isSelected={selectedCategory.includes(category.id) ? true : false}
@@ -185,6 +186,7 @@ export default function CommunityPage() {
         {data?.data.ContentsRecommendList.map(
           (dubVideo: { id: number; title: string; thumbnail: string }) => (
             <DubVideoListItem
+              key={dubVideo.id}
               id={dubVideo.id}
               title={dubVideo.title}
               thumbnail={"https://i.ytimg.com/vi/YXOUOOtfTBs/maxresdefault.jpg"}
