@@ -41,31 +41,30 @@ public class RedisService {
         }
     }
 
-//    @Scheduled(fixedDelay = 5000)
     @Scheduled(fixedDelay = 3600000)
     @Transactional
     public void updateLikeFromRedis(){
         recordLikeRepository.deleteAll();
-        Set<String> redisKeys = redisTemplate.keys("like_recordId*");
+        Set<String> redisKeys = redisTemplate.keys("like_userId*");
         Iterator<String> it = redisKeys.iterator();
         while(it.hasNext()){
             String data = it.next();
-            Long recordId = Long.parseLong(data.split("::")[1]); // 레코드 아이디
-            Set<Object> users = redisTemplate.opsForSet().members(data);
+            String userId = data.split("::")[1]; // 유저 아이디들
+            Set<Object> records = redisTemplate.opsForSet().members(data);
 
-            Optional<Record> orecord = recordRepository.findById(recordId);
-            if(!orecord.isPresent()){
-                throw new NotFoundException("존재하지 않는 녹음입니다!");
+            Optional<User> ouser = userRepository.findById(userId);
+            if(!ouser.isPresent()){
+                throw new NotFoundException("존재하지 않는 유저입니다!");
             }
-            Record record = orecord.get();
-            for(Object user : users){
-                String userId = (String) user;
-                Optional<User> ouser = userRepository.findById(userId);
-                if(!ouser.isPresent()){
-                    throw new NotFoundException("존재하지 않는 유저입니다!");
+            User user = ouser.get();
+            for(Object record : records){
+                Long recordId = Long.parseLong((String) record);
+                Optional<Record> orecord = recordRepository.findById(recordId);
+                if(!orecord.isPresent()){
+                    throw new NotFoundException("존재하지 않는 녹음입니다!");
                 }
-                User u = ouser.get();
-                recordLikeRepository.save(new RecordLike(u, record, true));
+                Record record1 = orecord.get();
+                recordLikeRepository.save(new RecordLike(user, record1, true));
             }
         }
     }
@@ -73,27 +72,27 @@ public class RedisService {
     @Transactional
     public void updateScrapFromRedis(){
         videoBookmarkRepository.deleteAll();
-        Set<String> redisKeys = redisTemplate.keys("scrap_videoId*");
+        Set<String> redisKeys = redisTemplate.keys("scrap_userId*");
         Iterator<String> it = redisKeys.iterator();
         while(it.hasNext()){
             String data = it.next();
-            Long videoId = Long.parseLong(data.split("::")[1]); // 영상 아이디
-            log.info("heeeeeeeeeeeeeeeeeeeeeeer: {} ", videoId);
-            Set<Object> users = redisTemplate.opsForSet().members(data);
+            String userId = data.split("::")[1]; // 유저 아이디들
+            log.info("heeeeeeeeeeeeeeeeeeeeeeer: {} ", userId);
+            Set<Object> videos = redisTemplate.opsForSet().members(data);
 
-            Optional<Video> ovideo = videoRepository.findById(videoId);
-            if(!ovideo.isPresent()){
-                throw new NotFoundException("존재하지 않는 비디오입니다!");
+            Optional<User> ouser = userRepository.findById(userId);
+            if(!ouser.isPresent()){
+                throw new NotFoundException("존재하지 않는 유저입니다!");
             }
-            Video video = ovideo.get();
-            for(Object user : users){
-                String userId = (String) user;
-                Optional<User> ouser = userRepository.findById(userId);
+            User user = ouser.get();
+            for(Object ovideo : videos){
+                Long videoId = Long.parseLong((String) ovideo);
+                Optional<Video> video1 = videoRepository.findById(videoId);
                 if(!ouser.isPresent()){
-                    throw new NotFoundException("존재하지 않는 유저입니다!");
+                    throw new NotFoundException("존재하지 않는 비디오입니다!");
                 }
-                User u = ouser.get();
-                videoBookmarkRepository.save(new VideoBookmark(u, video, true));
+                Video video = video1.get();
+                videoBookmarkRepository.save(new VideoBookmark(user, video, true));
             }
         }
     }

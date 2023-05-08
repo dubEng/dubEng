@@ -66,12 +66,4 @@ public class ContentsController {
         return new ResponseEntity<Integer>(contentsService.addContentsScrap(userId, videoId), HttpStatus.ACCEPTED);
     }
 
-    @ApiOperation(value = "선택한 영상 콘텐츠 조회수 증가")
-    @GetMapping("/playCount/{recordId}")
-    public ResponseEntity<?> ContentPlayCount(@PathVariable("recordId") Long recordId, @RequestParam String userId){
-        // 1. 레디스에 조회수 증가
-        contentsService.addPlayCntToRedis(recordId);
-        // 2. 리턴으로 캐시에서 조회수, 좋아요 수, 좋아요 여부
-        return new ResponseEntity<>(contentsService.findPlayCounts(recordId, userId), HttpStatus.ACCEPTED);
-    }
 }

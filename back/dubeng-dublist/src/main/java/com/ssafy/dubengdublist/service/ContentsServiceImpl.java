@@ -75,40 +75,17 @@ public class ContentsServiceImpl implements ContentsService {
             throw new NotFoundException("존재하지 않는 비디오입니다!");
         }
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
-        String key = "scrap_videoId::"+Long.toString(videoId);
-        if(setOperations.add(key, userId)==1){ // 스크랩 완료
+        String key = "scrap_userId::"+userId;
+        String videoStr = Long.toString(videoId);
+        if(setOperations.add(key, videoStr)==1){ // 스크랩 완료
             return 1;
         }else{ // 이미 좋아요를 눌렀음.
-            setOperations.remove(key, userId); // 스크랩 취소
+            setOperations.remove(key, videoStr); // 스크랩 취소
         }
         return 0;
     }
-    public Integer addPlayCntToRedis(Long recordId){
-        String key = "recordPlayCnt::"+recordId;
-        ValueOperations valueOperations = redisTemplate.opsForValue();
-        if(valueOperations.get(key)==null){
-            Long newCnt = recordRepository.findPlayCount(recordId)+1;
-            valueOperations.set(key,Long.toString(newCnt), Duration.ofHours(2));
-        }
-        else{
-            valueOperations.increment(key);
-        }
-        log.info("add play count to redis : {} ", valueOperations.get(key));
-        return 200;
-    }
 
-    public ContentsPlayCountRes findPlayCounts(Long recordId, String userId){
-        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
-        ValueOperations valueOperations = redisTemplate.opsForValue();
 
-        String key = "like_recordId::"+Long.toString(recordId);
-        String key2 = "recordPlayCnt::"+recordId;
 
-        boolean isLike = setOperations.isMember(key, userId); // 1: 있음, 0: 없음
-        Long likeCount = setOperations.size(key);
-        String o = (String) valueOperations.get(key2);
-        Long playCount = Long.parseLong(o);
-        return new ContentsPlayCountRes(playCount, likeCount, isLike);
-    }
 
 }

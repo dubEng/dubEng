@@ -1,6 +1,7 @@
 package com.ssafy.dubengdublist.service;
 
 import com.ssafy.dubengdublist.dto.community.*;
+import com.ssafy.dubengdublist.dto.contents.ContentsPlayCountRes;
 import com.ssafy.dubengdublist.entity.*;
 import com.ssafy.dubengdublist.exception.NotFoundException;
 import com.ssafy.dubengdublist.repository.*;
@@ -184,13 +185,62 @@ public class CommunityServiceImpl implements CommunityService{
             throw new NotFoundException("존재하지 않는 녹음입니다!");
         }
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
-        String key = "like_recordId::"+Long.toString(recordId);
-        if(setOperations.add(key, userId)==1){ // 좋아요 완료
+        String key = "like_userId::"+userId;
+        String cntKey = "recordLikeCnt::"+Long.toString(recordId);
+        String recordStr = Long.toString(recordId);
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        if(valueOperations.get(cntKey)==null){
+            valueOperations.set(cntKey,"0");
+        }
+
+        if(setOperations.add(key, recordStr)==1){ // 좋아요 완료
+            valueOperations.increment(cntKey);
+
             return 1;
         }else{ // 이미 좋아요를 눌렀음.
-            setOperations.remove(key, userId); // 좋아요 취소
+            setOperations.remove(key, recordStr); // 좋아요 취소
+            valueOperations.decrement(cntKey);
+
         }
         return 0;
     }
+    public Integer addPlayCntToRedis(Long recordId){
+        String key = "recordPlayCnt::"+recordId;
+        ValueOperations valueOperations = redisTemplate.opsForValue();
 
+        if(valueOperations.get(key)==null){
+            Long newCnt = recordRepository.findPlayCount(recordId)+1;
+            valueOperations.set(key,Long.toString(newCnt), Duration.ofHours(2));
+        }
+        else{
+            valueOperations.increment(key);
+        }
+        log.info("add play count to redis : {} ", valueOperations.get(key));
+        return 200;
+    }
+
+    public ContentsPlayCountRes findPlayCounts(Long recordId, String userId){
+        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+
+        String key = "like_userId::"+userId;
+        String key2 = "recordPlayCnt::"+recordId;
+        String key3 = "recordLikeCnt::"+recordId;
+
+        boolean isLike = setOperations.isMember(key, Long.toString(recordId)); // 1: 있음, 0: 없음
+
+        String o = (String) valueOperations.get(key2);
+        Long playCount = 0L;
+        if(o!=null){
+            playCount = Long.parseLong(o);
+        }
+
+        String o2 = (String) valueOperations.get(key3);
+        Long likeCount = 0L;
+        if(o2!=null){
+            likeCount = Long.parseLong(o2);
+        }
+
+        return new ContentsPlayCountRes(playCount, likeCount, isLike);
+    }
 }
