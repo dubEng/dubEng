@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect,useRef, useState} from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
@@ -13,6 +13,8 @@ import userGetNicknameCheck from "@/apis/signup/queries/useGetNicknameCheck";
 import cookie from 'react-cookies';
 
 export default function SignUpPage(){
+  const nicknameMounted = useRef(false);
+  const introdeuceMounted = useRef(false);
   const [nickname, setNickname] = useState<string>('');
   const [introduce, setIntroduce] = useState<string>('');
   const [nextBtnStatus, setNextBtnStatus] = useState<boolean>(false);
@@ -20,7 +22,7 @@ export default function SignUpPage(){
   const [checkintroduceMsg, setcheckintroduceMsg] = useState<CheckMessageStatus>(CheckMessageStatus.INIT);
   
   const [profileImage, setProfileImage] = useState<string | null>(null); // 기본 이미지
-  const {data, error} = userGetNicknameCheck(nickname);
+  const { refetch } = userGetNicknameCheck(nickname);
   
   const nicknameLimitSize = 6;
   const introduceLimitSize = 15;
@@ -34,36 +36,62 @@ export default function SignUpPage(){
     if(kakaoImageUrl){
       setProfileImage(kakaoImageUrl);
     }
-  
+    
   },[]);
+
+  const check_kor = /^[가-힣]+$/;  // 한글 체크
   useEffect(()=>{
-    //유효성 체크
+    checkNickname(nickname);
+  },[nickname])
+
+  const checkNickname = async (nickname:string) =>{
+    // 첫 렌더링시 호출 막기
+    if(!nicknameMounted.current){
+      nicknameMounted.current = true;
+      return;
+    }
+    //닉네임 유효성 체크
     if(!nickname || nickname.length > nicknameLimitSize || nickname.length <= 1){
       setchecknicknameMsg(CheckMessageStatus.NICKNAME_LIMIT_SIX);
       setNextBtnStatus(false);
       return;
     }
-
+    // 문법 체크
+    if(!check_kor.test(nickname)){
+      setchecknicknameMsg(CheckMessageStatus.NICKNAME_INVALID_SYNTAX);
+      setNextBtnStatus(false);
+      return;
+    }
+    const {data} = await refetch();
     if(data){
-      // 닉네임 중복
+      // 닉네임 중복체크
       setchecknicknameMsg(CheckMessageStatus.NICKNAME_DUPLICATION);
       setNextBtnStatus(false);
       return;
     }
-    setchecknicknameMsg(CheckMessageStatus.ISVALID);
-  },[data,nickname])
+    setchecknicknameMsg(CheckMessageStatus.NICKNAME_ISVALID);
+  }
   useEffect(()=>{
-    //유효성 체크
+    // 첫 렌더링시 호출 막기
+    if(!introdeuceMounted.current){
+      introdeuceMounted.current = true;
+      return;
+    }
+    // 한줄 소개 유효성 체크
     if(!introduce || introduce.length > introduceLimitSize || introduce.length <= 1){
       setcheckintroduceMsg(CheckMessageStatus.INTRODUCE_LIMIT_FIFTEEN);
       setNextBtnStatus(false);
       return;
     }
-    setcheckintroduceMsg(CheckMessageStatus.INIT);
+    setcheckintroduceMsg(CheckMessageStatus.INTRODUCE_ISVALID);
 
-    setNextBtnStatus(true);
   },[introduce]);
 
+  useEffect(()=>{
+    if(checknicknameMsg === CheckMessageStatus.NICKNAME_ISVALID && checkintroduceMsg === CheckMessageStatus.INTRODUCE_ISVALID){
+      setNextBtnStatus(true);
+    }
+  },[checknicknameMsg, checkintroduceMsg])
   const nicknameChange = async (e : React.ChangeEvent<HTMLInputElement>) =>{
     const nickname = e.target.value;
     setNickname(nickname);
@@ -116,3 +144,4 @@ export default function SignUpPage(){
     </div>
   );
 }
+

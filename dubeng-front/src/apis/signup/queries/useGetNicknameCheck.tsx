@@ -15,7 +15,7 @@ const userGetNicknameCheck = (
   return useQuery(
     [queryKeys.NICKNAME, nickname],
     () => fetcher(nickname),
-    { enabled: !!nickname }
+    { enabled: false }
   );
 };
 

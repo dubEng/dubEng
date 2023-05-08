@@ -20,9 +20,10 @@ export default function interestPage(){
     useEffect(()=>{
         if(selectedTag.length < 1){
             setNextBtnStatus(false);
-        } else {
-            setNextBtnStatus(true);
+            return;
         }
+        setNextBtnStatus(true);
+        
     },[selectedTag]);
 
     // 태그 선택
