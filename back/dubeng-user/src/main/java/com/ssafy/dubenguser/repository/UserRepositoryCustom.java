@@ -8,9 +8,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 public interface UserRepositoryCustom {
-    public List<Category> findCategoriesByUserId(Long userId);
-    public List<UserCalender> findCalenderByUserId(Long userId, ZonedDateTime start, ZonedDateTime end);
-    public List<UserRecordRes> findRecordByUserId(Long userId, Boolean isPublic, Boolean isLimit, String lanType);
-    public List<UserLikedRecordRes> findLikedRecordByUserId(Long userId, Boolean isLimit);
-    public List<UserBookmarkedVideoRes> findBookmarkedVideoByUserId(Long userId, Boolean isLimit);
+    public List<Category> findCategoriesByUserId(String userId);
+    public List<UserCalender> findCalenderByUserId(String userId, ZonedDateTime start, ZonedDateTime end);
+    public List<UserRecordRes> findRecordByUserId(String userId, Boolean isPublic, Boolean isLimit, String lanType);
+    public List<RecordLikeRes> findLikedRecordByUserId(String userId, Boolean isLimit);
+    public List<VideoBookmarkRes> findBookmarkedVideoByUserId(String userId, Boolean isLimit);
 }
