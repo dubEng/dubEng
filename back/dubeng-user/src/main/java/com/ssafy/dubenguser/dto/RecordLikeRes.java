@@ -13,15 +13,15 @@ public class RecordLikeRes {
     private String thumbnail;
     private String nickname;
     private Long playCount;
-    private ZonedDateTime updatedDate;
+//    private ZonedDateTime updatedDate;
 
     @Builder
     @QueryProjection
-    public RecordLikeRes(String title, String thumbnail, String nickname, Long playCount, ZonedDateTime updatedDate) {
+    public RecordLikeRes(String title, String thumbnail, String nickname, Long playCount) {
         this.title = title;
         this.thumbnail = thumbnail;
         this.nickname = nickname;
         this.playCount = playCount;
-        this.updatedDate = updatedDate;
+//        this.updatedDate = updatedDate;
     }
 }

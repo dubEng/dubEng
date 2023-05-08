@@ -8,6 +8,8 @@ import com.ssafy.dubenguser.exception.NotFoundException;
 import com.ssafy.dubenguser.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,6 +17,8 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,6 +29,7 @@ public class UserServiceImpl implements UserService {
     private final CategoryRepository categoryRepository;
     private final MissionRepository missionRepository;
     private final UserMissionRepository userMissionRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      *
@@ -154,13 +159,28 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public List<RecordLikeRes> findRecordLike(String userId, Boolean isLimit) {
-        List<RecordLikeRes> result = userRepository.findLikedRecordByUserId(userId, isLimit);
+
+        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
+        String key = "like_userId::"+userId;
+        Set<Object> rmembers = setOperations.members(key);
+        List<Long> recordIds = rmembers.stream()
+                .map(String::valueOf)
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+        List<RecordLikeRes> result = userRepository.findLikedRecordByUserId(userId, isLimit,recordIds);
         return result;
     }
 
     @Transactional
     public List<VideoBookmarkRes> findVideoBookmark(String userId, Boolean isLimit) {
-        List<VideoBookmarkRes> result = userRepository.findBookmarkedVideoByUserId(userId, isLimit);
+        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
+        String key = "scrap_userId::"+userId;
+        Set<Object> rmembers = setOperations.members(key);
+        List<Long> videoIds = rmembers.stream()
+                .map(String::valueOf)
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+        List<VideoBookmarkRes> result = userRepository.findBookmarkedVideoByUserId(userId, isLimit, videoIds);
         return result;
     }
 
