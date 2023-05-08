@@ -24,6 +24,10 @@ export default function DubbingPage() {
 
   const [selectedScript, setSelectedScript] = useState<number>(0);
 
+  const [speechToText, setSpeechToText] = useState<string>("");
+
+  const [timerId, setTimerId] = useState<number>(0);
+
   const [scriptList, setScriptList] = useState<any[]>([
     {
       id: 1,
@@ -146,7 +150,6 @@ export default function DubbingPage() {
   // 1초마다 영상 실행 시간 가져오기
   useEffect(() => {
     const watchTime = setInterval(() => {
-
       // 영상이 재생중일 때만 실행
       if (nowPlaying) {
         const time = Math.floor(Number(youtubePlayer?.getCurrentTime()));
@@ -242,11 +245,13 @@ export default function DubbingPage() {
   }
 
   const handleSlideChange = (swiper: any) => {
+    setSpeechToText("");
+    window.clearTimeout(timerId);
+
     const activeIndex = swiper.activeIndex;
     const seekTo = scriptList[activeIndex].startTime;
     youtubePlayer.pauseVideo();
     youtubePlayer.seekTo(seekTo);
-
   };
 
   // const sendRecording = async (blob: Blob) => {
@@ -267,7 +272,7 @@ export default function DubbingPage() {
   }
 
   if (!speechRecognitionSupported) {
-    console.log('스피치 인식을 지원하지 않는 브라우저 입니다.');
+    console.log("스피치 인식을 지원하지 않는 브라우저 입니다.");
     return <span>스피치 인식을 지원하지 않는 브라우저 입니다.</span>;
   }
 
@@ -306,6 +311,10 @@ export default function DubbingPage() {
                   scriptIndex={index + 1}
                   scriptLength={scriptList.length}
                   youtubePlayer={youtubePlayer}
+                  speechToText={speechToText}
+                  setSpeechToText={setSpeechToText}
+                  timerId={timerId}
+                  setTimerId={setTimerId}
                 />
               </SwiperSlide>
             ))}

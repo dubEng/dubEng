@@ -23,14 +23,16 @@ export default function DubBox({
   scriptLength,
   scriptIndex,
   youtubePlayer,
+  speechToText,
+  setSpeechToText,
+  setTimerId,
+  timerId,
 }: Script) {
   // const swiperSlide = useSwiperSlide();
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [soundStatus, setSoundStatus] = useState<SoundType>(SoundType.DISABLE);
-
-  const [speechToText, setSpeechToText] = useState<string>("");
 
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
 
@@ -74,21 +76,28 @@ export default function DubBox({
   useEffect(() => {
     setSpeechToText(transcript);
     onMatching(transcript);
+
+    // 스크립트 리셋
+    resetTranscript();
   }, [listening]);
 
   function handleScriptPlayButton() {
     setIsPlaying(true);
-
     youtubePlayer.playVideo();
 
-    setTimeout(() => {
+    const timerId = window.setTimeout(() => {
       youtubePlayer.pauseVideo();
       setIsPlaying(false);
     }, duration);
+
+    setTimerId(timerId);
   }
 
   function handleScriptStopButton() {
     setIsPlaying(false);
+
+    // 기존에 타이머가 동작중이었을 경우 clear
+    window.clearTimeout(timerId);
     youtubePlayer.pauseVideo();
   }
 
@@ -119,9 +128,6 @@ export default function DubBox({
   }
 
   function startRecording(recordingTime: number) {
-    // 스크립트 리셋
-    resetTranscript();
-
     // STT 시작
     SpeechRecognition.startListening({ continuous: true, language: "en-US" });
 
@@ -162,9 +168,6 @@ export default function DubBox({
       .replace(reg, "")
       .toLowerCase()
       .split(" ");
-
-    console.log("answer", answer);
-    console.log("myAnswer", myAnswer);
 
     // 정답 매칭
     let flag = true;
