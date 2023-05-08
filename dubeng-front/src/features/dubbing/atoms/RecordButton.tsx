@@ -4,14 +4,31 @@ import RecordingIcon from "../../../../public/icons/dubbing-icon/recording.svg";
 
 interface Iprops {
   isRecording: boolean;
-  onClick: () => void;
+  startRecording: () => void;
+  disable: boolean;
 }
 
-
-export default function RecordButton({isRecording, onClick}:Iprops ) {
+export default function RecordButton({
+  isRecording,
+  startRecording,
+  disable,
+}: Iprops) {
   if (isRecording) {
-    return <Image src={RecordingIcon} alt={"RecordingButton"} width={44} height={44} onClick={onClick} />;
+    return (
+      <button disabled={disable}>
+        <Image
+          src={RecordingIcon}
+          alt={"RecordingButton"}
+          width={44}
+          height={44}
+        />
+      </button>
+    )
   } else {
-    return <Image src={RecordIcon} alt={"RecordButton"} width={44} height={44} onClick={onClick} />;
+    return (
+      <button onClick={startRecording} disabled={disable}>
+        <Image src={RecordIcon} alt={"RecordButton"} width={44} height={44} />
+      </button>
+    )
   }
 }
