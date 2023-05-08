@@ -100,27 +100,25 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<RecordLikeRes> findLikedRecordByUserId(String userId, Boolean isLimit) {
+    public List<RecordLikeRes> findLikedRecordByUserId(String userId, Boolean isLimit, List<Long> recordIds) {
 
         List<RecordLikeRes> result;
 
         if(isLimit){
             result = jpaQueryFactory
-                    .select(new QRecordLikeRes(video.title, video.thumbnail, user.nickname, record.playCount, recordLike.updatedDate))
-                    .from(recordLike)
-                    .innerJoin(record).on(recordLike.record.id.eq(record.id))
+                    .select(new QRecordLikeRes(video.title, video.thumbnail, record.user.nickname, record.playCount))
+                    .from(record)
                     .innerJoin(video).on(record.video.id.eq(video.id))
-                    .innerJoin(user).on(recordLike.user.id.eq(userId))
+                    .where(record.id.in(recordIds))
                     .orderBy(record.updatedDate.desc())
                     .limit(5)
                     .fetch();
         } else {
             result = jpaQueryFactory
-                    .select(new QRecordLikeRes(video.title, video.thumbnail, user.nickname, record.playCount, recordLike.updatedDate))
-                    .from(recordLike)
-                    .innerJoin(record).on(recordLike.record.id.eq(record.id))
+                    .select(new QRecordLikeRes(video.title, video.thumbnail, record.user.nickname, record.playCount))
+                    .from(record)
                     .innerJoin(video).on(record.video.id.eq(video.id))
-                    .innerJoin(user).on(recordLike.user.id.eq(userId))
+                    .where(record.id.in(recordIds))
                     .orderBy(record.updatedDate.desc())
                     .fetch();
         }
@@ -129,29 +127,25 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<VideoBookmarkRes> findBookmarkedVideoByUserId(String userId, Boolean isLimit) {
+    public List<VideoBookmarkRes> findBookmarkedVideoByUserId(String userId, Boolean isLimit, List<Long> videoIds) {
 
         List<VideoBookmarkRes> result;
-
         if(isLimit) {
             result = jpaQueryFactory
                     .select(new QVideoBookmarkRes(video.title, video.thumbnail))
-                    .from(videoBookmark)
-                    .innerJoin(video)
-                    .on(videoBookmark.video.id.eq(video.id))
+                    .from(video)
+                    .where(video.id.in(videoIds))
                     .orderBy(video.updatedDate.desc())
                     .limit(5)
                     .fetch();
         }else {
             result = jpaQueryFactory
                     .select(new QVideoBookmarkRes(video.title, video.thumbnail))
-                    .from(videoBookmark)
-                    .innerJoin(video)
-                    .on(videoBookmark.video.id.eq(video.id))
+                    .from(video)
+                    .where(video.id.in(videoIds))
                     .orderBy(video.updatedDate.desc())
                     .fetch();
         }
-
         return result;
     }
 }

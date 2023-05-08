@@ -11,6 +11,6 @@ public interface UserRepositoryCustom {
     public List<Category> findCategoriesByUserId(String userId);
     public List<UserCalender> findCalenderByUserId(String userId, ZonedDateTime start, ZonedDateTime end);
     public List<UserRecordRes> findRecordByUserId(String userId, Boolean isPublic, Boolean isLimit, String lanType);
-    public List<RecordLikeRes> findLikedRecordByUserId(String userId, Boolean isLimit);
-    public List<VideoBookmarkRes> findBookmarkedVideoByUserId(String userId, Boolean isLimit);
+    public List<RecordLikeRes> findLikedRecordByUserId(String userId, Boolean isLimit, List<Long> recordIds);
+    public List<VideoBookmarkRes> findBookmarkedVideoByUserId(String userId, Boolean isLimit, List<Long> videoIds);
 }

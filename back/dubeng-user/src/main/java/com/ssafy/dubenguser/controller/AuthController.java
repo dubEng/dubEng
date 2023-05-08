@@ -8,6 +8,7 @@ import com.ssafy.dubenguser.exception.DuplicateException;
 import com.ssafy.dubenguser.exception.NotFoundException;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
 import com.ssafy.dubenguser.service.AuthService;
+import com.ssafy.dubenguser.service.UserService;
 import com.ssafy.dubenguser.service.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,7 +33,7 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 @Api("회원 API")
 public class AuthController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final AuthService authService;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";

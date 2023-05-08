@@ -34,6 +34,8 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.7.11'
 
     // annotationProcessor
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
