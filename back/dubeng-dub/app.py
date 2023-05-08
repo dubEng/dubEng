@@ -13,7 +13,8 @@ import videoClass
 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
+
 
 #env.txt 파일에서 정보 읽어오기
 f_conn = open("./env.txt")
@@ -171,9 +172,11 @@ def uploadToBucket(target, uploadName):
 def maekPreviewAudio():
     
     #request에서 정보 가져오기
+    userVoiceList = request.files["files"]
+    return "done"
     videoId = request.get_json()["videoId"]
     userId = request.get_json()["userId"]
-    userVoiceList = request.files["files"]
+
     
     #videoId로 DB에서 해당 video 정보 가져오기
     videoInfo = getVideoInfo(videoId)
