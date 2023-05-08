@@ -9,6 +9,7 @@ import com.ssafy.dubengdublist.dto.contents.ContentsSearchRes;
 import com.ssafy.dubengdublist.dto.home.HomeDubKingRes;
 import com.ssafy.dubengdublist.dto.home.HomePopularityRes;
 import com.ssafy.dubengdublist.dto.home.HomeRankRes;
+import com.ssafy.dubengdublist.dto.record.RecordScriptPitchRes;
 import com.ssafy.dubengdublist.dto.record.RecordScriptRes;
 import com.ssafy.dubengdublist.entity.RecordLike;
 import com.ssafy.dubengdublist.entity.VideoBookmark;
@@ -30,7 +31,7 @@ public interface VideoRepositoryCustom {
 
     // 여기는 녹음 상세 페이지     
 //    public RecordVideo selectRecordVideo(Long videoId);
-    List<RecordScriptRes> findByRecordScript(Long videoId);
+    List<RecordScriptPitchRes> findByRecordScript(Long videoId);
     
     // 여기는 홈 화면들
     List<HomePopularityRes> findAllHomePopularity();

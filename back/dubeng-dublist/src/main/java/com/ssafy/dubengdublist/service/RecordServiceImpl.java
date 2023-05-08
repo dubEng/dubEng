@@ -1,5 +1,6 @@
 package com.ssafy.dubengdublist.service;
 
+import com.ssafy.dubengdublist.dto.record.RecordScriptPitchRes;
 import com.ssafy.dubengdublist.dto.record.RecordScriptRes;
 import com.ssafy.dubengdublist.dto.record.RecordVideoRes;
 import com.ssafy.dubengdublist.entity.Video;
@@ -34,12 +35,12 @@ public class RecordServiceImpl implements RecordService{
         return recordVideoRes;
     }
 
-    public List<RecordScriptRes> findRecordScript(Long videoId){
+    public List<RecordScriptPitchRes> findRecordScript(Long videoId){
         Optional<Video> optionalVideo = videoRepository.findById(videoId);
         if(!optionalVideo.isPresent()){
             throw new NotFoundException("존재하지 않는 비디오입니다!");
         }
-        List<RecordScriptRes> recordScriptRes = videoRepository.findByRecordScript(videoId);
+        List<RecordScriptPitchRes> recordScriptRes = videoRepository.findByRecordScript(videoId);
         return recordScriptRes;
     }
 

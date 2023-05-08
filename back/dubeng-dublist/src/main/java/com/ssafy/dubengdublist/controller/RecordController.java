@@ -1,6 +1,6 @@
 package com.ssafy.dubengdublist.controller;
 
-import com.ssafy.dubengdublist.dto.record.RecordScriptRes;
+import com.ssafy.dubengdublist.dto.record.RecordScriptPitchRes;
 import com.ssafy.dubengdublist.dto.record.RecordVideoRes;
 import com.ssafy.dubengdublist.service.RecordService;
 import io.swagger.annotations.Api;
@@ -33,7 +33,7 @@ public class RecordController {
     @ApiOperation(value = "더빙하기 자막 보여주기")
     @GetMapping("/script/{videoId}")
     public ResponseEntity<?> RecordScriptList(@PathVariable("videoId") Long  videoId){
-        List<RecordScriptRes> recordScriptRes = recordService.findRecordScript(videoId);
+        List<RecordScriptPitchRes> recordScriptRes = recordService.findRecordScript(videoId);
         return new ResponseEntity(recordScriptRes, HttpStatus.ACCEPTED);
     }
 
