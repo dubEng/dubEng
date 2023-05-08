@@ -10,6 +10,7 @@ import com.ssafy.dubengdublist.dto.community.*;
 import com.ssafy.dubengdublist.dto.contents.*;
 import com.ssafy.dubengdublist.dto.home.*;
 import com.ssafy.dubengdublist.dto.record.QRecordScriptRes;
+import com.ssafy.dubengdublist.dto.record.RecordScriptPitchRes;
 import com.ssafy.dubengdublist.dto.record.RecordScriptRes;
 import com.ssafy.dubengdublist.entity.*;
 import org.springframework.data.domain.Page;
@@ -20,7 +21,9 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.ssafy.dubengdublist.entity.QDubKing.dubKing;
 import static com.ssafy.dubengdublist.entity.QRecordComment.recordComment;
@@ -258,7 +261,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
     }
 
     // 녹음 상세 페이지
-    public List<RecordScriptRes> findByRecordScript(Long videoId){
+    public List<RecordScriptPitchRes> findByRecordScript(Long videoId){
         List<RecordScriptRes> recordScriptRes = queryFactory
                 .select(new QRecordScriptRes(script.id, script.startTime, script.duration, script.content,script.translateContent, script.pitch))
                 .from(script)
@@ -266,7 +269,24 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .on(video.id.eq(script.video.id))
                 .where(video.id.eq(videoId))
                 .fetch();
-        return recordScriptRes;
+
+        List<RecordScriptPitchRes> recordScriptPitchRes = new ArrayList<>();
+        for(RecordScriptRes r : recordScriptRes){
+            if (r.getPitch().equals("[]")) {
+                List<Integer> newList = new ArrayList<>();
+                RecordScriptPitchRes res = new RecordScriptPitchRes(r.getId(), r.getStartTime(), r.getDuration(), r.getContent(),r.getTranslateContent(), newList);
+                recordScriptPitchRes.add(res);
+            }else {
+                String[] pl =  r.getPitch().split(", ");
+                List<String> pitchList = Arrays.asList(pl);
+                List<Integer> newList = pitchList.stream()
+                        .map(s -> Integer.parseInt(s))
+                        .collect(Collectors.toList());
+                RecordScriptPitchRes res = new RecordScriptPitchRes(r.getId(), r.getStartTime(), r.getDuration(), r.getContent(),r.getTranslateContent(), newList);
+                recordScriptPitchRes.add(res);
+            }
+        }
+        return recordScriptPitchRes;
     }
 
     
