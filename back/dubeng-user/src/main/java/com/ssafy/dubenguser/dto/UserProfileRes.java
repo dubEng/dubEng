@@ -9,18 +9,12 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class UserProfileRes {
-    private String nickname;
-    private String description;
-    private String profileImage;
     private Long totalRecTime;
     private Long recordCount;
     private List<UserCategoryRes> category;
 
     @Builder
-    public UserProfileRes(String nickname, String description, String profileImage, Long totalRecTime, Long recordCount, List<UserCategoryRes> category) {
-        this.nickname = nickname;
-        this.description = description;
-        this.profileImage = profileImage;
+    public UserProfileRes(Long totalRecTime, Long recordCount, List<UserCategoryRes> category) {
         this.totalRecTime = totalRecTime;
         this.recordCount = recordCount;
         this.category = category;

@@ -1,7 +1,6 @@
 package com.ssafy.dubenguser.entity;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,11 +24,4 @@ public class UserMission extends Time{
     private Mission mission;
 
     private Boolean isComplete;
-    @Builder
-    public UserMission(Long id, User user, Mission mission, Boolean isComplete) {
-        this.id = id;
-        this.user = user;
-        this.mission = mission;
-        this.isComplete = isComplete;
-    }
 }
