@@ -11,7 +11,6 @@ import glob
 from pytube import YouTube
 import pymysql
 import time
-import re
 import os
 import json
 import logging
@@ -64,9 +63,9 @@ def cleanDownloadFolder(userId):
 
 def deletIllegalSymbols(name):
     # 허용되지 않는 문자 제거
-    name = re.sub(r'[^\w\s-]', '', name).strip()
+    name = name.replace(r'[^\w\s-]', '').strip()
     # 공백을 언더바로 변경
-    name = re.sub(r'\s+', '_', name)
+    name = name.replace(r'\s+', '_')
     return name
 
 
@@ -145,7 +144,7 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
             cursor.execute(sql, values)
 
         data = seperateMp3(video['videoPath'], userId,
-                           video['title'], file_exist)
+                           video['title'], file_exist, videoId)
         if data is not None:
             sql = "UPDATE video SET background_path=%s, voice_path=%s, pitch=%s WHERE id=%s"
             cursor.execute(
@@ -180,7 +179,7 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
 
 
 # 음원 추출 및 분리하는 함수
-def seperateMp3(url, userId, videoTitle, file_exist):
+def seperateMp3(url, userId, videoTitle, file_exist, videoId):
     import os
     cnt = 0
     newname = userId+'.mp3'
@@ -217,11 +216,12 @@ def seperateMp3(url, userId, videoTitle, file_exist):
     pitch_result = getPitches(userId)
 
     # 로컬 음원 S3 버킷 업로드
-    videoTitle = deletIllegalSymbols(videoTitle)
+    # videoTitle = deletIllegalSymbols(videoTitle)
+    videoIdStr = str(videoId)
     backgroundPath = "./download/output/"+userId+"/accompaniment.wav"
-    backgroundName = userId+"_"+videoTitle+"_accompaniment.wav"
+    backgroundName = userId+"_"+videoIdStr+"_accompaniment.wav"
     vocalPath = "./download/output/"+userId+"/vocals.wav"
-    vocalName = userId+"_"+videoTitle+"_vocals.wav"
+    vocalName = userId+"_"+videoIdStr+"_vocals.wav"
 
     backUrl = uploadToBucket(backgroundPath, backgroundName)
     vocalUrl = uploadToBucket(vocalPath, vocalName)
