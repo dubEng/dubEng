@@ -2,9 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["i.ytimg.com"],
+    domains: ["i.ytimg.com", "k.kakaocdn.net"]
   },
-  basePath: "/front",
 };
 
 module.exports = nextConfig;

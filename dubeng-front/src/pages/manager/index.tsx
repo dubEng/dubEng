@@ -171,19 +171,18 @@ export default function ManagerPage() {
     if (audioFile) {
       formData.append(`file`, audioFile[0]);
     }
-
-    console.log("!!! audioFile 붙인 formData", formData);
-
-    return formData;
   }
 
   async function saveDubVideo() {
     const formData = makeFormData();
-    console.log("!!!!formData는 여기", formData);
 
-    try {
-      const videoPostResult = await mutation.mutateAsync(formData);
-    } catch (error) {}
+    if (formData) {
+      console.log("!!!!formData는 여기", formData);
+
+      try {
+        const videoPostResult = await mutation.mutateAsync(formData);
+      } catch (error) {}
+    }
   }
 
   return (
@@ -213,13 +212,6 @@ export default function ManagerPage() {
             value={start}
             placeholder="시작 시간"
           />
-          {/* <CommonInputBox
-            type="number"
-            name="start"
-            value={start}
-            placeholder="시작 시간"
-            onChange={onChangeValue}
-          /> */}
           -
           <input
             className="text-16 rounded-5 font-normal placeholder-dubgray text-dubblack outline-none h-43 w-100 border border-[#E9ECEF] pl-16 py-12"
@@ -229,13 +221,6 @@ export default function ManagerPage() {
             value={end}
             placeholder="종료 시간"
           />
-          {/* <CommonInputBox
-            type="number"
-            name="end"
-            value={end}
-            placeholder="종료 시간"
-            onChange={onChangeValue}
-          /> */}
         </div>
         <div>
           <label htmlFor="lang">콘텐츠 언어</label>
