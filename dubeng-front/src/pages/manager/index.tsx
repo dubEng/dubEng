@@ -142,38 +142,34 @@ export default function ManagerPage() {
   const scriptsData = useSelector((state: RootState) => state.scriptsPostInfo);
 
   function makeFormData() {
-    if (videoInfo) {
-      const originalUrl = videoInfo.url;
-      const splitUrl = originalUrl.split("watch?v=");
-      const videoPath = splitUrl[1];
+    const formData = new FormData();
 
-      const formData = new FormData();
+    const video = {
+      videoPath: videoInfo?.url,
+      title: customTitle,
+      thumbnail: videoInfo?.thumbnails,
+      startTime: start,
+      endTime: end,
+      producer: videoInfo?.channelTitle,
+      gender: gender,
+      lang: lang,
+    };
 
-      const video = {
-        videoPath: videoPath,
-        title: customTitle,
-        thumbnail: videoInfo?.thumbnails,
-        startTime: start,
-        endTime: end,
-        producer: videoInfo?.channelTitle,
-        gender: gender,
-        lang: lang,
-      };
+    const postData = {
+      video: video,
+      userId: "2763952293",
+      scripts: scriptsData,
+      categories: selectedTag,
+    };
 
-      const postData = {
-        video: video,
-        userId: userIdData,
-        scripts: scriptsData,
-        categories: selectedTag,
-      };
+    console.log("!!! postData", JSON.stringify(postData));
 
-      formData.append("data", JSON.stringify(postData));
+    formData.append("data", JSON.stringify(postData));
 
-      if (audioFile) {
-        formData.append(`file`, audioFile[0]);
-      }
+    console.log("~~~ postData를 붙인 formData", formData);
 
-      return formData;
+    if (audioFile) {
+      formData.append(`file`, audioFile[0]);
     }
   }
 
