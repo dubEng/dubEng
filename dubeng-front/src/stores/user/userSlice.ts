@@ -1,14 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-interface UserState {
+export interface UserState {
   userId: string;
-  roleType: string;
+  accessToken: string;
+  refreshToken: string;
+  nickname: string;
+  imageUrl: string;
 }
 
 const initialState: UserState = {
-  userId: "1",
-  roleType: "",
+  userId: "",
+  accessToken: "",
+  refreshToken: "",
+  nickname: "",
+  imageUrl: "",
 };
 
 export const userSlice = createSlice({
@@ -17,7 +23,10 @@ export const userSlice = createSlice({
   reducers: {
     saveUserInfo: (state, action) => {
       state.userId = action.payload.userId;
-      state.roleType = action.payload.roleType;
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
+      state.nickname = action.payload.nickname;
+      state.imageUrl = action.payload.imageUrl;
     },
   },
 });

@@ -1,11 +1,27 @@
-import {useState, useEffect} from "react";
+import {useState} from "react";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "../../stores/store";
+
 import SignUpButton from "@/features/signup/atoms/SignUpButton";
-
 import CommonInputBox from "@/components/atoms/CommonInputBox";
-
+import useSignupPost from "@/apis/signup/mutations/useSignupPost";
+export interface SignupInfo{
+    accessToken : string;
+    nickname : string;
+    categories : number[];
+    introduce: string;
+    kitchenName : string;
+    gender : boolean;
+}
 export default function kitchen(){
     const [nextBtnStatus, setNextBtnStatus] = useState<boolean>(false);
     const [kitchenName, setKitchenName] = useState<string>("");
+
+    const mutation = useSignupPost();
+    const route = useRouter();
+    //Redux
+    const { nickname, accessToken, interest, introduce } = useSelector((state: RootState) => state.signupInfo);
 
     const kitchenInputHandler = (e : React.ChangeEvent<HTMLInputElement>) =>{
         setKitchenName(e.target.value);
@@ -18,9 +34,33 @@ export default function kitchen(){
         setNextBtnStatus(true);
     }
 
-    const singupNextHandler = () =>{
+    const singupNextHandler = async () =>{
         
         //회원가입 고고싱
+        console.log(`nickname : ${nickname}`);
+        console.log(`accessToken : ${accessToken}`);
+        console.log(`interest : ${interest}`);
+        console.log(`introduce : ${introduce}`);
+        
+        const signupInfo:SignupInfo = {
+            nickname : nickname,
+            accessToken : accessToken,
+            categories : interest,
+            introduce : introduce,
+            kitchenName : kitchenName,
+            gender : true
+        }
+        // POST 요청
+        try{
+            const result = await mutation.mutateAsync(signupInfo);
+            console.log(result);
+            if(result === 'success'){
+                route.push('/login/success');
+            }
+            
+        }catch(error){
+            route.push('/login');
+        }
     }
     return (
         <div className="container mx-auto">

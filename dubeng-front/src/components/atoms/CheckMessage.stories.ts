@@ -14,7 +14,7 @@ type Story = StoryObj<typeof CheckMessage>;
 
 export const ISVALID: Story = {
   args: {
-    status: CheckMessageStatus.ISVALID
+    status: CheckMessageStatus.NICKNAME_ISVALID
   },
 };
 export const NICKNAME_DUPLICATION: Story = {
