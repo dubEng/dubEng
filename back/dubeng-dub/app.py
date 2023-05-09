@@ -141,7 +141,7 @@ def mergeAudio(firstList, lastList, bgAudio):
 
     result = AudioSegment.empty()
     for chunk in bgm_chunks:
-        result += chunk.overlay(mergeAudio)
+        result += chunk.overlay(mergedAudio)
 
     return result
 
@@ -151,11 +151,8 @@ def uploadToBucket(target, uploadName):
     # 음원 데이터를 메모리 내에서 처리하기 위해 BytesIO 객체 생성
     audio_bytesio = BytesIO()
 
-    # AudioSegment 객체 생성
-    audio_segment = AudioSegment.from_file(target, format="wav")
-
     # AudioSegment 객체를 BytesIO에 기록
-    audio_segment.export(audio_bytesio, format="wav")
+    target.export(audio_bytesio, format="wav")
 
     # BytesIO에서 바이트 스트림 읽어오기
     audio_bytes = audio_bytesio.getvalue()
@@ -213,7 +210,7 @@ def maekPreviewAudio():
         finalAudio = mergeAudio(oppositeAudioList, userAudioList, bgAudio)
     
     #s3 버킷에 업로드하기
-    keyStr = userId + videoInfo.title + ".wav"
+    keyStr = str(userId) + videoInfo.title + ".wav"
     resultUrl = uploadToBucket(finalAudio, keyStr)
 
     return resultUrl
