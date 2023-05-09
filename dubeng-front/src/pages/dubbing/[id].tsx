@@ -199,7 +199,10 @@ export default function DubbingPage() {
           onReady={onPlayerReady}
           onEnd={(e) => {
             console.log("onEnd");
-            e.target.stopVideo();
+
+            youtubePlayer.pauseVideo();
+            youtubePlayer.seekTo(data.startTime);
+
             setSelectedScript(0);
           }}
           onPlay={onPlay}
