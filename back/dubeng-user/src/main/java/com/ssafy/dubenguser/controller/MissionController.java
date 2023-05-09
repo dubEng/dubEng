@@ -43,9 +43,9 @@ public class MissionController {
 
     @ApiOperation(value="도전과제 완료 여부 확인")
     @GetMapping("/complete/{videoId}")
-    public ResponseEntity<HashMap<String, Object>>  userAssetList(@RequestParam String userId, @PathVariable Long videoId){
-//        User user = (User) httpServletRequest.getAttribute("user");
-        HashMap<String, Object> result = userMissionService.findMissionComplete(userId, videoId);
+    public ResponseEntity<HashMap<String, Object>>  userAssetList(HttpServletRequest httpServletRequest, @PathVariable Long videoId){
+        User user = (User) httpServletRequest.getAttribute("user");
+        HashMap<String, Object> result = userMissionService.findMissionComplete(user.getId(), videoId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
