@@ -171,6 +171,8 @@ export default function ManagerPage() {
     if (audioFile) {
       formData.append(`file`, audioFile[0]);
     }
+
+    return formData;
   }
 
   async function saveDubVideo() {
