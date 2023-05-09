@@ -10,7 +10,6 @@ import DubSituation from "@/features/community/molecules/DubSituation";
 import SearchInputBox from "@/features/community/atoms/SearchInputBox";
 import { useState } from "react";
 import useRecommendDubVideoQuery from "@/apis/community/queries/useRecommendDubVideoQuery";
-import CategoryList from "@/features/community/organism/CategoryList";
 import DubVideoListItem from "@/components/molecules/DubVideoListItem";
 import useCategoryQuery from "@/apis/manager/queries/useCategoryQuery";
 import DubProductList from "@/features/home/organism/DubProductList";
@@ -198,21 +197,33 @@ export default function CommunityPage() {
       </p>
       <DubSituation />
       <div className="mt-24"></div>
-      <SearchInputBox
-        type="text"
-        name="searchInputBox"
-        value={searchValue}
-        placeholder="더빙할 콘텐츠를 검색해보세요."
-        onChange={handleSearchInputChange}
-        onKeyDown={handleSearchInputKeyDown}
-      />
+      {tabIndex === DubType.DUB_VIDEO ? (
+        <SearchInputBox
+          type="text"
+          name="searchInputBox"
+          value={searchValue}
+          placeholder="더빙할 콘텐츠를 검색해보세요."
+          onChange={handleSearchInputChange}
+          onKeyDown={handleSearchInputKeyDown}
+        />
+      ) : (
+        <SearchInputBox
+          type="text"
+          name="searchInputBox"
+          value={searchValue}
+          placeholder="더빙 작품을 검색해보세요."
+          onChange={handleSearchInputChange}
+          onKeyDown={handleSearchInputKeyDown}
+        />
+      )}
+
       <div className="flex mt-16">
         <Swiper
 
         // freeMode={true} modules={[FreeMode]}
         >
           <SwiperSlide>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 justify-center">
               {dividedCategoryList[0].map(
                 (category: { id: any; name: string }) => {
                   return (
@@ -252,17 +263,6 @@ export default function CommunityPage() {
           </SwiperSlide>
         </Swiper>
       </div>
-      {/* {categoryList.data?.map((category: { id: any; name: string }) => {
-        return (
-          <CategoryButton
-            key={category.id}
-            id={category.id}
-            name={category.name}
-            isSelected={selectedCategory.includes(category.id) ? true : false}
-            onClick={() => handleClickCategory(category.id)}
-          />
-        );
-      })} */}
       <div className="space-y-16 mt-16">
         {data?.data.ContentsRecommendList.map(
           (dubVideo: { id: number; title: string; thumbnail: string }) => (

@@ -17,7 +17,7 @@ export default function SearchInputBox({
   value,
   onChange,
   onKeyDown,
-  placeholder = "더빙할 콘텐츠를 검색해보세요.",
+  placeholder,
 }: Iprops) {
   // const [value, setValue] = useState(value);
 
