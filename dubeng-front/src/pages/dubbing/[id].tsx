@@ -1,4 +1,3 @@
-import { Script } from "@/types/Script";
 import { useState, useEffect } from "react";
 import YouTube, { YouTubePlayer, YouTubeProps } from "react-youtube";
 import { useSpeechRecognition } from "react-speech-recognition";
@@ -89,22 +88,16 @@ export default function DubbingPage() {
           setSelectedScript(0);
         }
 
-        // console.log("현재 선택된 스크립트", selectedScript);
-        // console.log("time", time);
+        if(time > data.endTime){
+          youtubePlayer.stopVideo();
+          setSelectedScript(0);
+        }
 
         /* 실시간 하이라이팅 */
         // flag가 false이거나 선택된 스크립트의 idx값이 전체 스크립트의 길이보다 작으면 실행
         if (selectedScript < scriptListTemp.data.length && time > 0) {
           // 해당 스크립트 리스트의 startTime이 undefined가 아니라면
           if (scriptListTemp.data[selectedScript]?.startTime != undefined) {
-            // console.log(
-            //   "현재 스크립트 startTime",
-            //   scriptList[selectedScript]?.startTime
-            // );
-            // console.log(
-            //   "다음 startTime",
-            //   scriptList[selectedScript + 1]?.startTime
-            // );
             // 현재 재생되고 있는 영상의 시간이 현재 스크립트의 시작 시간보다 크거나 같고
             // 현재 재생되고 있는 영상의 시간이 다음 스크립트의 시작 시간보다 작거나 같다면
             // selectedScript를 증가하지 않고 넘어간다.
@@ -192,7 +185,7 @@ export default function DubbingPage() {
           onReady={onPlayerReady}
           onEnd={(e) => {
             console.log("onEnd");
-            e.target.stopVideo(0);
+            e.target.stopVideo();
             setSelectedScript(0);
           }}
           onPlay={onPlay}
