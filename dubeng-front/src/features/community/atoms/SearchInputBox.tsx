@@ -1,6 +1,7 @@
 import Image from "next/image";
 import searchIcon from "../../../../public/icons/search-icon/search 1.svg";
 import { AiFillCloseCircle } from "react-icons/ai";
+import { useState } from "react";
 interface Iprops {
   type: string;
   name: string;
@@ -16,8 +17,13 @@ export default function SearchInputBox({
   value,
   onChange,
   onKeyDown,
-  placeholder = "더빙할 콘텐츠를 검색해보세요.",
+  placeholder,
 }: Iprops) {
+  // const [value, setValue] = useState(value);
+
+  // const handleSearchInputClear = () => {
+  //   setValue("");
+  // };
   if (value) {
     return (
       <div className="flex relative items-center w-358 h-43">
@@ -38,6 +44,7 @@ export default function SearchInputBox({
         <AiFillCloseCircle
           className="absolute right-11 text-dubgray"
           size={20}
+          // onClick={handleSearchInputClear}
         />
       </div>
     );

@@ -8,14 +8,14 @@ export default function DubSituationCard({ type }: Iprops) {
   if (type === SituationType.PLACE_1) {
     return (
       <div className="flex flex-col justify-center items-center rounded-8 w-175 h-80 bg-dubcoral text-white">
-        <p className="font-bold text-14">🍽식당에서</p>
+        <p className="font-bold text-14">🍕식당에서</p>
         <p className="text-10">식당에서 쓸 수 있는 유용한 표현</p>
       </div>
     );
   } else if (type === SituationType.PLACE_2) {
     return (
       <div className="flex flex-col justify-center items-center rounded-8 w-175 h-80 bg-dubivory">
-        <p className="font-bold text-14 text-dubblack">🏙회사에서</p>
+        <p className="font-bold text-14 text-dubblack">💻회사에서</p>
         <p className="text-10 text-dubgray">
           직장 상사에게 영어로 어떻게 말하지?
         </p>
