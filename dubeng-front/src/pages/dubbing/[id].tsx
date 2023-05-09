@@ -36,11 +36,6 @@ export default function DubbingPage() {
 
   const userId = useSelector((state: RootState) => state.user.userId);
 
-  console.log("scriptListTemp", scriptListTemp);
-  console.log("data", data);
-  console.log("isLoading", isLoading);
-  console.log("isError", isError);
-
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
   const [nowPlaying, setNowPlaying] = useState<boolean>(false);
@@ -50,93 +45,6 @@ export default function DubbingPage() {
   const [speechToText, setSpeechToText] = useState<string>("");
 
   const [timerId, setTimerId] = useState<number>(0);
-
-  const [scriptList, setScriptList] = useState<any[]>([
-    {
-      id: 1,
-      startTime: 1,
-      duration: 2000,
-      content: "Oh, my God. He's..",
-      translateContent: "오, 맙소사. 그는..",
-      pitch: [
-        31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
-        40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
-        28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
-      ],
-    },
-    {
-      id: 2,
-      startTime: 8,
-      duration: 7000,
-      content: "Look at the way he's just staring at me.",
-      translateContent: "그가 나를 쳐다보는 것 좀 봐",
-      pitch: [
-        31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
-        40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
-        28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
-      ],
-    },
-    {
-      id: 3,
-      startTime: 16,
-      duration: 6000,
-      content: "I think he's tryin' to mouth something at me",
-      translateContent: "그가 나에게 뭔가를 말하려고 하는 것 같아",
-      pitch: [
-        31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
-        40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
-        28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
-      ],
-    },
-    {
-      id: 4,
-      startTime: 23,
-      duration: 5000,
-      content: "but I can't make it out.",
-      translateContent: "하지만 이해할 수가 없어",
-      pitch: [
-        31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
-        40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
-        28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
-      ],
-    },
-    {
-      id: 5,
-      startTime: 29,
-      duration: 6000,
-      content: "Okay, dinner's ready.",
-      translateContent: "좋아요, 저녁 준비됐어요.",
-      pitch: [
-        31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
-        40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
-        28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
-      ],
-    },
-    {
-      id: 6,
-      startTime: 36,
-      duration: 7000,
-      content: "Good game.",
-      translateContent: "좋은 게임입니다",
-      pitch: [
-        31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
-        40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
-        28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
-      ],
-    },
-    {
-      id: 7,
-      startTime: 44,
-      duration: 6000,
-      content: "Yeah, solid effort, solid effort",
-      translateContent: "그래, 노력이 가상하지.",
-      pitch: [
-        31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
-        40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
-        28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
-      ],
-    },
-  ]);
 
   function transferYoutube(videoPath: string) {
     const originalUrl = videoPath;
@@ -186,9 +94,9 @@ export default function DubbingPage() {
 
         /* 실시간 하이라이팅 */
         // flag가 false이거나 선택된 스크립트의 idx값이 전체 스크립트의 길이보다 작으면 실행
-        if (selectedScript < scriptList.length && time > 0) {
+        if (selectedScript < scriptListTemp.data.length && time > 0) {
           // 해당 스크립트 리스트의 startTime이 undefined가 아니라면
-          if (scriptList[selectedScript]?.startTime != undefined) {
+          if (scriptListTemp.data[selectedScript]?.startTime != undefined) {
             // console.log(
             //   "현재 스크립트 startTime",
             //   scriptList[selectedScript]?.startTime
@@ -201,8 +109,8 @@ export default function DubbingPage() {
             // 현재 재생되고 있는 영상의 시간이 다음 스크립트의 시작 시간보다 작거나 같다면
             // selectedScript를 증가하지 않고 넘어간다.
             if (
-              scriptList[selectedScript]?.startTime <= time &&
-              time <= scriptList[selectedScript + 1]?.startTime
+              scriptListTemp.data[selectedScript]?.startTime <= time &&
+              time <= scriptListTemp.data[selectedScript + 1]?.startTime
             ) {
               // console.log("현재 스크립트가 재생중인 영상과 일치합니다.");
             } else {
@@ -251,7 +159,7 @@ export default function DubbingPage() {
     window.clearTimeout(timerId);
 
     const activeIndex = swiper.activeIndex;
-    const seekTo = scriptList[activeIndex].startTime;
+    const seekTo = scriptListTemp.data[activeIndex].startTime;
     youtubePlayer.pauseVideo();
     youtubePlayer.seekTo(seekTo);
   };
@@ -299,8 +207,8 @@ export default function DubbingPage() {
           onSwiper={(swiper) => console.log(swiper)}
           centeredSlides
         >
-          {scriptList &&
-            scriptList.map((item, index) => (
+          {scriptListTemp.data &&
+            scriptListTemp.data.map((item: any, index: number) => (
               <SwiperSlide key={item.id}>
                 <DubBox
                   id={item.id}
@@ -310,7 +218,7 @@ export default function DubbingPage() {
                   translateContent={item.translateContent}
                   pitchList={item.pitch}
                   scriptIndex={index + 1}
-                  scriptLength={scriptList.length}
+                  scriptLength={scriptListTemp.data.length}
                   youtubePlayer={youtubePlayer}
                   speechToText={speechToText}
                   setSpeechToText={setSpeechToText}
@@ -326,7 +234,7 @@ export default function DubbingPage() {
           전체 스크립트
         </p>
 
-        {scriptList.map((item: Script) => {
+        {scriptListTemp.data && scriptListTemp.data.map((item: any) => {
           if (item.id === selectedScript) {
             return (
               <div
