@@ -42,12 +42,12 @@ public class SwaggerConfig {
                 .alternateTypeRules(AlternateTypeRules
                         .newRule(typeResolver.resolve(Pageable.class), typeResolver.resolve(Page.class)))
                 .groupName("list")
-                .useDefaultResponseMessages(true)
-                .apiInfo(commonInfo())
+                .useDefaultResponseMessages(false)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.ssafy.dubengdublist"))
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .apiInfo(commonInfo());
     }
 
     @Getter
@@ -60,7 +60,5 @@ public class SwaggerConfig {
         @ApiModelProperty(value = "페이지 크기", allowableValues="range[0, 100]")
         private String size;
 
-        @ApiModelProperty(value = "정렬(사용법: 컬럼명,ASC|DESC)")
-        private List<String> sort;
     }
 }

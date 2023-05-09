@@ -17,9 +17,6 @@ public class HomeServiceImpl implements HomeService{
 
     public List<HomePopularityRes> findHomePopularity(){
         List<HomePopularityRes> homePopularityRes = videoRepository.findAllHomePopularity();
-//        if(homePopularity.size() == 0){
-//            throw new NotFoundException("데이터가 없습니다.");
-//        }
         return homePopularityRes;
     }
 
