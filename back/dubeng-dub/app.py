@@ -142,7 +142,7 @@ def mergeAudio(firstList, lastList, bgAudio):
 
     result = AudioSegment.empty()
     for chunk in bgm_chunks:
-        result += chunk.overlay(mergeAudio)
+        result += chunk.overlay(mergedAudio)
 
     return result
 
