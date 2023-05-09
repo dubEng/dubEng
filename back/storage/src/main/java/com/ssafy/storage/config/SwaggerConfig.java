@@ -23,12 +23,13 @@ public class SwaggerConfig {
     @Bean
     public Docket restAPI(){
         Server serverLocal = new Server("local", "http://localhost:9001", "for local useages", Collections.emptyList(), Collections.emptyList());
-        Server serverDev = new Server("dev", "https:k8b208.p.ssafy.io", "for Production useages", Collections.emptyList(), Collections.emptyList());
+        Server serverDev = new Server("dev", "https://k8b208.p.ssafy.io", "for dev useages", Collections.emptyList(), Collections.emptyList());
+        Server serverProduction = new Server("production", "https://dub-eng.com", "for Production useages", Collections.emptyList(), Collections.emptyList());
 
 
         return new Docket(DocumentationType.OAS_30)
                 .useDefaultResponseMessages(true)
-                .servers(serverLocal, serverDev)
+                .servers(serverLocal, serverDev, serverProduction)
                 .apiInfo(getApiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.ssafy.storage"))
