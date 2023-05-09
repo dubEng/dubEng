@@ -17,6 +17,14 @@ import DubProductList from "@/features/home/organism/DubProductList";
 import LanguageSelectTap from "@/features/community/atoms/LanguageSelectTap";
 import CategoryButton from "@/features/community/atoms/CategoryButton";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+// import "swiper/css/free-mode";
+
+// import { FreeMode } from "swiper";
+
+import { list } from "postcss";
+
 export default function CommunityPage() {
   // 전역에서 들고오는 state
   const tabIndex = useSelector((state: RootState) => {
@@ -117,6 +125,22 @@ export default function CommunityPage() {
         id: 12,
         name: "공포",
       },
+      {
+        id: 13,
+        name: "공포",
+      },
+      {
+        id: 14,
+        name: "공포",
+      },
+      {
+        id: 15,
+        name: "공포",
+      },
+      {
+        id: 16,
+        name: "공포",
+      },
     ],
   };
 
@@ -146,6 +170,18 @@ export default function CommunityPage() {
       setSelectedCategory([...selectedCategory, id]);
     }
   };
+  const division = (arr: any[], cnt: number) => {
+    const length = arr.length;
+    const divide =
+      Math.floor(length / cnt) + (Math.floor(length % cnt) > 0 ? 1 : 0);
+    const newArray = [];
+
+    for (let i = 0; i <= divide; i++) {
+      newArray.push(arr.splice(0, cnt));
+    }
+    return newArray;
+  };
+  const dividedCategoryList = division(categoryList.data, 8);
 
   return (
     <div className="static mx-16">
@@ -170,8 +206,53 @@ export default function CommunityPage() {
         onChange={handleSearchInputChange}
         onKeyDown={handleSearchInputKeyDown}
       />
-      <CategoryList></CategoryList>
-      {categoryList.data?.map((category: { id: any; name: string }) => {
+      <div className="flex mt-16">
+        <Swiper
+
+        // freeMode={true} modules={[FreeMode]}
+        >
+          <SwiperSlide>
+            <div className="flex flex-wrap gap-4">
+              {dividedCategoryList[0].map(
+                (category: { id: any; name: string }) => {
+                  return (
+                    <CategoryButton
+                      key={category.id}
+                      id={category.id}
+                      name={category.name}
+                      isSelected={
+                        selectedCategory.includes(category.id) ? true : false
+                      }
+                      onClick={() => handleClickCategory(category.id)}
+                    />
+                  );
+                }
+              )}
+            </div>
+          </SwiperSlide>
+
+          <SwiperSlide>
+            <div className="flex flex-wrap gap-4">
+              {dividedCategoryList[1].map(
+                (category: { id: any; name: string }) => {
+                  return (
+                    <CategoryButton
+                      key={category.id}
+                      id={category.id}
+                      name={category.name}
+                      isSelected={
+                        selectedCategory.includes(category.id) ? true : false
+                      }
+                      onClick={() => handleClickCategory(category.id)}
+                    />
+                  );
+                }
+              )}
+            </div>
+          </SwiperSlide>
+        </Swiper>
+      </div>
+      {/* {categoryList.data?.map((category: { id: any; name: string }) => {
         return (
           <CategoryButton
             key={category.id}
@@ -181,8 +262,8 @@ export default function CommunityPage() {
             onClick={() => handleClickCategory(category.id)}
           />
         );
-      })}
-      <div className="space-y-16 mt-24">
+      })} */}
+      <div className="space-y-16 mt-16">
         {data?.data.ContentsRecommendList.map(
           (dubVideo: { id: number; title: string; thumbnail: string }) => (
             <DubVideoListItem
