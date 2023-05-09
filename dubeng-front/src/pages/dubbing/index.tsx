@@ -8,6 +8,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import PlayBar from "@/features/dubbing/atoms/PlayBar";
 import CommonButton from "@/components/atoms/CommonButton";
+import useDubRecordVideoInfoQuery from "@/apis/dubbing/queries/useDubRecordVideoInfoQuery";
+import useDubRecordScriptQuery from "@/apis/dubbing/queries/useDubRecordScriptQuery";
+
+import { useSelector } from "react-redux";
+import { RootState } from "../../stores/store";
 
 interface Iprops {
   id: number;
@@ -18,6 +23,17 @@ interface Iprops {
 }
 
 export default function DubbingPage() {
+  const { isLoading, isError, data } = useDubRecordVideoInfoQuery(117);
+
+  const scriptListTemp = useDubRecordScriptQuery(117);
+
+  const userId = useSelector((state: RootState) => state.user.userId);
+
+  // console.log("scriptListTemp", scriptListTemp);
+  // console.log("data", data);
+  // console.log("isLoading", isLoading);
+  // console.log("isError", isError);
+
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
   const [nowPlaying, setNowPlaying] = useState<boolean>(false);
@@ -32,10 +48,10 @@ export default function DubbingPage() {
     {
       id: 1,
       startTime: 1,
-      duration: 6000,
+      duration: 2000,
       content: "Oh, my God. He's..",
       translateContent: "오, 맙소사. 그는..",
-      pitchList: [
+      pitch: [
         31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
         40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
         28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
@@ -47,7 +63,7 @@ export default function DubbingPage() {
       duration: 7000,
       content: "Look at the way he's just staring at me.",
       translateContent: "그가 나를 쳐다보는 것 좀 봐",
-      pitchList: [
+      pitch: [
         31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
         40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
         28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
@@ -59,7 +75,7 @@ export default function DubbingPage() {
       duration: 6000,
       content: "I think he's tryin' to mouth something at me",
       translateContent: "그가 나에게 뭔가를 말하려고 하는 것 같아",
-      pitchList: [
+      pitch: [
         31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
         40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
         28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
@@ -71,7 +87,7 @@ export default function DubbingPage() {
       duration: 5000,
       content: "but I can't make it out.",
       translateContent: "하지만 이해할 수가 없어",
-      pitchList: [
+      pitch: [
         31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
         40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
         28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
@@ -83,7 +99,7 @@ export default function DubbingPage() {
       duration: 6000,
       content: "Okay, dinner's ready.",
       translateContent: "좋아요, 저녁 준비됐어요.",
-      pitchList: [
+      pitch: [
         31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
         40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
         28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
@@ -95,7 +111,7 @@ export default function DubbingPage() {
       duration: 7000,
       content: "Good game.",
       translateContent: "좋은 게임입니다",
-      pitchList: [
+      pitch: [
         31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
         40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
         28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
@@ -107,7 +123,7 @@ export default function DubbingPage() {
       duration: 6000,
       content: "Yeah, solid effort, solid effort",
       translateContent: "그래, 노력이 가상하지.",
-      pitchList: [
+      pitch: [
         31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
         40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
         28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
@@ -115,27 +131,12 @@ export default function DubbingPage() {
     },
   ]);
 
-  const [videoInfo, setVideoInfo] = useState<Iprops>({
-    id: 0,
-    startTime: 10,
-    endTime: 50,
-    title: "타이틀입니다.",
-    videoPath: "YXOUOOtfTBs",
-  });
-
-  const [recordingBlobList, setRecordingBlobList] = useState<Blob[]>([]);
-
   // 브라우저 호환성 체크
   const [speechRecognitionSupported, setSpeechRecognitionSupported] = useState<
     boolean | null
   >(null);
 
   const { browserSupportsSpeechRecognition } = useSpeechRecognition();
-
-  useEffect(() => {
-    const initialBlobs: Blob[] = Array.from({ length: scriptList.length }, () => new Blob());
-    setRecordingBlobList(initialBlobs);
-  }, [scriptList]);
 
   useEffect(() => {
     // sets to true or false after component has been mounted
@@ -205,20 +206,6 @@ export default function DubbingPage() {
     };
   });
 
-  const opts: YouTubeProps["opts"] = {
-    height: "218",
-    width: "390",
-    playerVars: {
-      start: videoInfo.startTime,
-      end: videoInfo.endTime,
-      // https://developers.google.com/youtube/player_parameters
-      autoplay: 0,
-      rel: 0, //관련 동영상 표시하지 않음 (근데 별로 쓸모 없는듯..)
-      modestbranding: 0, // 컨트롤 바에 youtube 로고를 표시하지 않음
-      controls: 0,
-    },
-  };
-
   // player 준비시 실행
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
     const player = event.target;
@@ -245,12 +232,6 @@ export default function DubbingPage() {
     }
   };
 
-  function moveVideoTime() {
-    youtubePlayer.pauseVideo();
-    youtubePlayer.seekTo(30);
-    youtubePlayer.playVideo();
-  }
-
   const handleSlideChange = (swiper: any) => {
     setSpeechToText("");
     window.clearTimeout(timerId);
@@ -260,30 +241,6 @@ export default function DubbingPage() {
     youtubePlayer.pauseVideo();
     youtubePlayer.seekTo(seekTo);
   };
-
-  function addRecordingBlobList(index: number ,blob: Blob) {
-    setRecordingBlobList(prevArray => {
-      const newArray = [...prevArray];
-      console.log('newArray', newArray);
-      const transferIndex = index-1;
-
-      newArray[transferIndex] = blob;
-      return newArray;
-    });
-  }
-
-  // const sendRecording = async (blob: Blob) => {
-  //   const formData = new FormData();
-  //   formData.append("recording", blob, "recording.wav");
-
-  //   const response = await fetch("/api/recordings", {
-  //     method: "POST",
-  //     body: formData,
-  //   });
-
-  //   const data = await response.json();
-  //   console.log(data);
-  // };
 
   if (speechRecognitionSupported === null) {
     return null; // return null on first render, can be a loading indicator
@@ -296,18 +253,30 @@ export default function DubbingPage() {
 
   return (
     <>
-      <YouTube
-        videoId={videoInfo.videoPath}
-        opts={opts}
-        onReady={onPlayerReady}
-        onEnd={(e) => {
-          console.log("onEnd");
-          e.target.stopVideo(0);
-          setSelectedScript(0);
-        }}
-        onPlay={onPlay}
-        onStateChange={onStateChange}
-      />
+      {data && (
+        <YouTube
+          videoId={data.videoPath}
+          opts={{
+            height: "218",
+            width: "390",
+            playerVars: {
+              start: data.startTime,
+              end: data.endTime,
+              autoplay: 0,
+              modestbranding: 0, // 컨트롤 바에 youtube 로고를 표시하지 않음
+              controls: 0,
+            },
+          }}
+          onReady={onPlayerReady}
+          onEnd={(e) => {
+            console.log("onEnd");
+            e.target.stopVideo(0);
+            setSelectedScript(0);
+          }}
+          onPlay={onPlay}
+          onStateChange={onStateChange}
+        />
+      )}
       <PlayBar />
       <div className="w-391 h-390 bg-dubgraylight flex justify-center items-center">
         <Swiper
@@ -325,7 +294,7 @@ export default function DubbingPage() {
                   duration={item.duration}
                   startTime={item.startTime}
                   translateContent={item.translateContent}
-                  pitchList={item.pitchList}
+                  pitchList={item.pitch}
                   scriptIndex={index + 1}
                   scriptLength={scriptList.length}
                   youtubePlayer={youtubePlayer}
@@ -333,8 +302,6 @@ export default function DubbingPage() {
                   setSpeechToText={setSpeechToText}
                   timerId={timerId}
                   setTimerId={setTimerId}
-                  addRecordingBlobList={addRecordingBlobList}
-                  
                 />
               </SwiperSlide>
             ))}
@@ -370,7 +337,7 @@ export default function DubbingPage() {
         })}
       </div>
       <div className="flex justify-center w-391 mb-16">
-        <CommonButton children="저장하기" isDisabled />
+        <CommonButton children="저장하기" isDisabled onClick={() => {}} />
       </div>
     </>
   );

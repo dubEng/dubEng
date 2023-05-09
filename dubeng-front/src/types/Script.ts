@@ -15,5 +15,4 @@ export interface Script{
     setSpeechToText: React.Dispatch<React.SetStateAction<string>>;
     timerId: number;
     setTimerId: React.Dispatch<React.SetStateAction<number>>;
-    addRecordingBlobList: (index: number, blob: Blob) => void;
 }

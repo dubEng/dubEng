@@ -4,13 +4,18 @@ interface Iprops {
   // fontSize: number;
   children: string;
   isDisabled: boolean;
+  onClick: () => void;
 }
 
-export default function CommonButton({ children, isDisabled }: Iprops) {
+export default function CommonButton({
+  children,
+  isDisabled,
+  onClick,
+}: Iprops) {
   if (isDisabled) {
     return (
       <button
-        disabled={true}
+        onClick={onClick}
         className="rounded-8 border-1 border-dubblue bg-dubblue text-white text-16 px-48 py-8"
       >
         {children}
@@ -18,7 +23,11 @@ export default function CommonButton({ children, isDisabled }: Iprops) {
     );
   }
   return (
-    <button className="rounded-8 border-1 border-dubgraydeep bg-white text-dubgraydeep text-16 px-48 py-8">
+    <button
+      disabled
+      className="rounded-8 border-1 border-dubgraydeep bg-white text-dubgraydeep text-16 px-48 py-8"
+      onClick={onClick}
+    >
       {children}
     </button>
   );
