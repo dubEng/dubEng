@@ -101,9 +101,9 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     public Page<CommunityDetailScriptRes> findCommunityDetail(String langType, Pageable pageable, Long recordId) {
-        Optional<Video> ovideo = videoRepository.findById(recordId);
-        if(!ovideo.isPresent()){
-            throw new NotFoundException("존재하지 않는 비디오입니다!");
+        Optional<Record> orecord = recordRepository.findById(recordId);
+        if(!orecord.isPresent()){
+            throw new NotFoundException("존재하지 않는 오디오입니다!");
         }
         return videoRepository.findByAllCommunity(langType, pageable, recordId);
 
