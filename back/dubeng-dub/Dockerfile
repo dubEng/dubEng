@@ -4,6 +4,10 @@ COPY requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
 
+RUN apt-get --allow-releaseinfo-change update
+
+RUN apt-get install -y ffmpeg
+
 COPY . /app
 
 WORKDIR /app
