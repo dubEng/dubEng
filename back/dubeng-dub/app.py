@@ -7,17 +7,18 @@ import pymysql
 import boto3
 from io import BytesIO
 from datetime import datetime
-
+import requests
 import json
+
 from urllib.request import urlopen
+
 
 #커스텀 객체 클래스 import
 import videoClass
 
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True)
-
+CORS(app)
 
 #env.txt 파일에서 정보 읽어오기
 f_conn = open("./env.txt")
@@ -40,7 +41,7 @@ def getVideoInfo(videoId):
 
     #DB 연결
     cursorclass = pymysql.cursors.Cursor
-    connection = pymysql.connect(host=DB_HOST, user=DB_USER, passwd=DB_PASSWORD, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
+    connection = pymysql.connect(host=DB_HOST, user=DB_USER,passwd=DB_PASSWORD, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
 
     #video 테이블에서 정보 얻어오기
@@ -61,7 +62,7 @@ def getScriptInfo(videoId):
 
     #DB 연결
     cursorclass = pymysql.cursors.Cursor
-    connection = pymysql.connect(host=DB_HOST, user=DB_USER, passwd=DB_PASSWORD, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
+    connection = pymysql.connect(host=DB_HOST, user=DB_USER,passwd=DB_PASSWORD, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
 
     #video 테이블에서 정보 얻어오기
@@ -141,7 +142,7 @@ def mergeAudio(firstList, lastList, bgAudio):
 
     result = AudioSegment.empty()
     for chunk in bgm_chunks:
-        result += chunk.overlay(mergedAudio)
+        result += chunk.overlay(mergeAudio)
 
     return result
 
@@ -168,14 +169,23 @@ def uploadToBucket(target, uploadName):
 
     return url
 
+def getFile(videoId,nickname):
+    request_url = f"https://k8b208.p.ssafy.io/recode/dublist?videoId={videoId}&nickname={nickname}"
+    response = requests.get(request_url)
+
+    data = json.loads(response.content)
+    return data
+
 
 @app.route('/record/preview', methods=['POST'])
 def maekPreviewAudio():
     
     #request에서 정보 가져오기
-    req = json.loads(request.form['data'])
-    videoId = req.get("videoId")
-    userId = req.get("userId")
+    videoId = request.get_json()["videoId"]
+    nickname = request.get_json()["nickname"]
+    userId = request.get_json()["userId"]
+
+    userVoiceList = getFile(videoId, nickname)
     
     #videoId로 DB에서 해당 video 정보 가져오기
     videoInfo = getVideoInfo(videoId)
@@ -183,22 +193,19 @@ def maekPreviewAudio():
     #videoId로 DB에서 script 정보 가져오기
     scripts = getScriptInfo(videoId)
 
-    #사용자가 녹음한 음성파일 리스트를 AudioSegment 객체로 만든 후 리스트에 담기
-    userAudioList = []
-    files = request.files.getlist('file')
-
-    for file in files:
-        wav_data = file.read()
-        audio_segment = AudioSegment.from_wav(BytesIO(wav_data))
-        userAudioList.append(audio_segment)
-
     #원본 음성 파일 중 상대역 부분만 잘라서 리스트로 만들기
     response = urlopen(videoInfo.voicePath)
     wav_data = response.read()
     original = AudioSegment.from_file(BytesIO(wav_data), format="wav")
     oppositeAudioList = getOppositList(original, scripts, videoInfo.runtime)
 
-
+    #사용자가 녹음한 음성파일 리스트를 AudioSegment 객체로 만든 후 리스트에 담기
+    userAudioList = []
+    for userVoice in userVoiceList:
+        print("링크: ",userVoice)
+        user = AudioSegment.from_file(userVoice)
+        userAudioList.append(user)
+    
     #두 녹음 파일과 배경음악 합치기
     response = urlopen(videoInfo.bgPath)
     wav_data = response.read()
@@ -210,7 +217,7 @@ def maekPreviewAudio():
         finalAudio = mergeAudio(oppositeAudioList, userAudioList, bgAudio)
     
     #s3 버킷에 업로드하기
-    keyStr = str(userId) + videoInfo.title + ".wav"
+    keyStr = userId + videoInfo.title + ".wav"
     resultUrl = uploadToBucket(finalAudio, keyStr)
 
     return resultUrl
@@ -226,7 +233,7 @@ def save():
 
     #DB 연결
     cursorclass = pymysql.cursors.Cursor
-    connection = pymysql.connect(host=DB_HOST, user=DB_USER, passwd=DB_PASSWORD, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
+    connection = pymysql.connect(host=DB_HOST, user=DB_USER,passwd=DB_PASSWORD, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
 
     #video 테이블에서 정보 얻어오기
