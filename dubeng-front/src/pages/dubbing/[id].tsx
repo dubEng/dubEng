@@ -13,6 +13,7 @@ import useDubRecordScriptQuery from "@/apis/dubbing/queries/useDubRecordScriptQu
 
 import { useSelector } from "react-redux";
 import { RootState } from "../../stores/store";
+import { useRouter } from "next/router";
 
 interface Iprops {
   id: number;
@@ -23,16 +24,22 @@ interface Iprops {
 }
 
 export default function DubbingPage() {
-  const { isLoading, isError, data } = useDubRecordVideoInfoQuery(117);
+  const router = useRouter();
 
-  const scriptListTemp = useDubRecordScriptQuery(117);
+  const { isLoading, isError, data } = useDubRecordVideoInfoQuery(
+    parseInt(router.query.id as string)
+  );
+
+  const scriptListTemp = useDubRecordScriptQuery(
+    parseInt(router.query.id as string)
+  );
 
   const userId = useSelector((state: RootState) => state.user.userId);
 
-  // console.log("scriptListTemp", scriptListTemp);
-  // console.log("data", data);
-  // console.log("isLoading", isLoading);
-  // console.log("isError", isError);
+  console.log("scriptListTemp", scriptListTemp);
+  console.log("data", data);
+  console.log("isLoading", isLoading);
+  console.log("isError", isError);
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
@@ -130,6 +137,13 @@ export default function DubbingPage() {
       ],
     },
   ]);
+
+  function transferYoutube(videoPath: string) {
+    const originalUrl = videoPath;
+    const splitUrl = originalUrl.split("watch?v=");
+    const transferVideoPath = splitUrl[1];
+    return transferVideoPath;
+  }
 
   // 브라우저 호환성 체크
   const [speechRecognitionSupported, setSpeechRecognitionSupported] = useState<
@@ -255,7 +269,7 @@ export default function DubbingPage() {
     <>
       {data && (
         <YouTube
-          videoId={data.videoPath}
+          videoId={transferYoutube(data.videoPath)}
           opts={{
             height: "218",
             width: "390",
