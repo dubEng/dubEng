@@ -2,6 +2,7 @@ import { YouTubePlayer } from "react-youtube";
 import React from "react";
 
 export interface Script{
+    videoId: string;
     id: number;
     startTime: number;
     duration: number;

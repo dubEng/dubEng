@@ -83,14 +83,17 @@ export default function DubbingPage() {
     const watchTime = setInterval(() => {
       // 영상이 재생중일 때만 실행
       if (nowPlaying) {
-        
         const time = Math.floor(Number(youtubePlayer?.getCurrentTime()));
 
-        const progress = Math.floor(youtubePlayer?.getCurrentTime()*100 / youtubePlayer?.getDuration()) + "%";
+        const progress =
+          Math.floor(
+            (youtubePlayer?.getCurrentTime() * 100) /
+              youtubePlayer?.getDuration()
+          ) + "%";
 
-        console.log('time');
+        console.log("time");
 
-        console.log('progress', progress);
+        console.log("progress", progress);
 
         setProgressBarWidth(progress);
 
@@ -99,7 +102,7 @@ export default function DubbingPage() {
           setSelectedScript(0);
         }
 
-        if(time > data.endTime){
+        if (time > data.endTime) {
           youtubePlayer.stopVideo();
           setSelectedScript(0);
         }
@@ -203,7 +206,7 @@ export default function DubbingPage() {
           onStateChange={onStateChange}
         />
       )}
-      <PlayBar width={progressBarWidth}  />
+      <PlayBar width={progressBarWidth} />
       <div className="w-391 h-390 bg-dubgraylight flex justify-center items-center">
         <Swiper
           spaceBetween={4}
@@ -215,6 +218,7 @@ export default function DubbingPage() {
             scriptListTemp.data.map((item: any, index: number) => (
               <SwiperSlide key={item.id}>
                 <DubBox
+                  videoId={router.query.id as string}
                   id={item.id}
                   content={item.content}
                   duration={item.duration}
@@ -238,29 +242,34 @@ export default function DubbingPage() {
           전체 스크립트
         </p>
 
-        {scriptListTemp.data && scriptListTemp.data.map((item: any) => {
-          if (item.id === selectedScript) {
-            return (
-              <div
-                className={`script-element-${item.id} mb-8 mx-20 bg-dubblue`}
-                key={item.id}
-              >
-                <p className="text-14 text-dubblack">{item.content}</p>
-                <p className="text-14 text-dubgray">{item.translateContent}</p>
-              </div>
-            );
-          } else {
-            return (
-              <div
-                className={`script-element-${item.id} mb-8 mx-20`}
-                key={item.id}
-              >
-                <p className="text-14 text-dubblack">{item.content}</p>
-                <p className="text-14 text-dubgray">{item.translateContent}</p>
-              </div>
-            );
-          }
-        })}
+        {scriptListTemp.data &&
+          scriptListTemp.data.map((item: any) => {
+            if (item.id === selectedScript) {
+              return (
+                <div
+                  className={`script-element-${item.id} mb-8 mx-20 bg-dubblue`}
+                  key={item.id}
+                >
+                  <p className="text-14 text-dubblack">{item.content}</p>
+                  <p className="text-14 text-dubgray">
+                    {item.translateContent}
+                  </p>
+                </div>
+              );
+            } else {
+              return (
+                <div
+                  className={`script-element-${item.id} mb-8 mx-20`}
+                  key={item.id}
+                >
+                  <p className="text-14 text-dubblack">{item.content}</p>
+                  <p className="text-14 text-dubgray">
+                    {item.translateContent}
+                  </p>
+                </div>
+              );
+            }
+          })}
       </div>
       <div className="flex justify-center w-391 mb-16">
         <CommonButton children="저장하기" isDisabled onClick={() => {}} />

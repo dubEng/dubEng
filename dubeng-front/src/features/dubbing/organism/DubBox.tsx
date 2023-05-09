@@ -17,10 +17,13 @@ import useRecordPreviewPost from "@/apis/dubbing/mutations/useRecordPreviewPost"
 
 import Switch from "@mui/material/Switch";
 import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../stores/store";
 
 // import { useSwiperSlide } from "swiper/react";
 
 export default function DubBox({
+  videoId,
   duration,
   content,
   translateContent,
@@ -33,6 +36,7 @@ export default function DubBox({
   setTimerId,
   timerId,
 }: Script) {
+  const nickname = useSelector((state: RootState) => state.user.nickname);
   // const swiperSlide = useSwiperSlide();
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -85,9 +89,9 @@ export default function DubBox({
 
         const formData = new FormData();
 
-        formData.append("recodeInfo.nickname", "aaaa");
-        formData.append("recodeInfo.recodeNum", "122");
-        formData.append("recodeInfo.videoId", "122");
+        formData.append("recodeInfo.nickname", nickname);
+        formData.append("recodeInfo.recodeNum", scriptIndex.toString());
+        formData.append("recodeInfo.videoId", videoId);
 
         const file = new File([audioBlob], "myRecordingFile.wav", {
           type: "audio/wav",
