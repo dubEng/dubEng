@@ -13,7 +13,7 @@ import SpeechRecognition, {
 import { Script } from "@/types/Script";
 import PitchGraph from "../atoms/PitchGraph";
 import PlayBar from "../atoms/PlayBar";
-import useRecordPreviewPost from "@/apis/dubbing/mutations/useRecordPreviewPost";
+import useRecodeUploadPost from "@/apis/dubbing/mutations/useRecodeUploadPost";
 
 import Switch from "@mui/material/Switch";
 import React from "react";
@@ -63,7 +63,7 @@ export default function DubBox({
 
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
 
-  const { mutate } = useRecordPreviewPost();
+  const { mutate } = useRecodeUploadPost();
 
   useEffect(() => {
     (async () => {
