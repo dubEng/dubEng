@@ -18,11 +18,13 @@ import CategoryButton from "@/features/community/atoms/CategoryButton";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+
 // import "swiper/css/free-mode";
 
 // import { FreeMode } from "swiper";
 
 import { list } from "postcss";
+import Vote from "@/features/community/organism/Vote";
 
 export default function CommunityPage() {
   // 전역에서 들고오는 state
@@ -192,6 +194,12 @@ export default function CommunityPage() {
         김언도님이 좋아하실 영상
       </p>
       <DubProductList />
+
+      <p className="flex justify-start text-19 font-bold mt-24 mb-16">
+        오늘의 더빙왕은?
+      </p>
+      <Vote />
+
       <p className="flex justify-start text-19 font-bold mt-24 mb-16">
         상황별로 더빙해봐요
       </p>
