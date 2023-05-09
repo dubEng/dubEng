@@ -186,6 +186,8 @@ def maekPreviewAudio():
     #사용자가 녹음한 음성파일 리스트를 AudioSegment 객체로 만든 후 리스트에 담기
     userAudioList = []
     files = request.files.getlist('file')
+    print("files length : " + len(files))
+    print("files : ", files)
 
     for file in files:
         wav_data = file.read()
