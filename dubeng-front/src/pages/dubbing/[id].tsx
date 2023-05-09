@@ -45,6 +45,8 @@ export default function DubbingPage() {
 
   const [timerId, setTimerId] = useState<number>(0);
 
+  const [progressBarWidth, setProgressBarWidth] = useState<string>("0%");
+
   function transferYoutube(videoPath: string) {
     const originalUrl = videoPath;
     const splitUrl = originalUrl.split("watch?v=");
@@ -81,7 +83,16 @@ export default function DubbingPage() {
     const watchTime = setInterval(() => {
       // 영상이 재생중일 때만 실행
       if (nowPlaying) {
+        
         const time = Math.floor(Number(youtubePlayer?.getCurrentTime()));
+
+        const progress = Math.floor(youtubePlayer?.getCurrentTime()*100 / youtubePlayer?.getDuration()) + "%";
+
+        console.log('time');
+
+        console.log('progress', progress);
+
+        setProgressBarWidth(progress);
 
         //TODO: 21 -> endTime
         if (time == 0) {
@@ -192,7 +203,7 @@ export default function DubbingPage() {
           onStateChange={onStateChange}
         />
       )}
-      <PlayBar />
+      <PlayBar width={progressBarWidth}  />
       <div className="w-391 h-390 bg-dubgraylight flex justify-center items-center">
         <Swiper
           spaceBetween={4}

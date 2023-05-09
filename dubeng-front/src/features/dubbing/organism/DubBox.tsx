@@ -286,7 +286,7 @@ export default function DubBox({
         {duration / 1000}초
       </p>
       <div className="mb-16 mx-16">
-        <PlayBar />
+        <PlayBar width={"0%"} />
       </div>
       <div className="flex justify-evenly">
         <PlayButton
