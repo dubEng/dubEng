@@ -10,7 +10,6 @@ import PlayBar from "@/features/dubbing/atoms/PlayBar";
 import CommonButton from "@/components/atoms/CommonButton";
 import useDubRecordVideoInfoQuery from "@/apis/dubbing/queries/useDubRecordVideoInfoQuery";
 import useDubRecordScriptQuery from "@/apis/dubbing/queries/useDubRecordScriptQuery";
-import useRecordPreviewPost from "@/apis/dubbing/mutations/useRecordPreviewPost";
 
 import { useSelector } from "react-redux";
 import { RootState } from "../../stores/store";
@@ -29,8 +28,6 @@ export default function DubbingPage() {
   const scriptListTemp = useDubRecordScriptQuery(117);
 
   const userId = useSelector((state: RootState) => state.user.userId);
-
-  const { mutateAsync } = useRecordPreviewPost();
 
   // console.log("scriptListTemp", scriptListTemp);
   // console.log("data", data);
@@ -51,7 +48,7 @@ export default function DubbingPage() {
     {
       id: 1,
       startTime: 1,
-      duration: 6000,
+      duration: 2000,
       content: "Oh, my God. He's..",
       translateContent: "오, 맙소사. 그는..",
       pitch: [
@@ -134,30 +131,12 @@ export default function DubbingPage() {
     },
   ]);
 
-  // const [videoInfo, setVideoInfo] = useState<Iprops>({
-  //   id: 1,
-  //   startTime: 10,
-  //   endTime: 50,
-  //   title: "타이틀입니다.",
-  //   videoPath: "YXOUOOtfTBs",
-  // });
-
-  const [recordingBlobList, setRecordingBlobList] = useState<Blob[]>([]);
-
   // 브라우저 호환성 체크
   const [speechRecognitionSupported, setSpeechRecognitionSupported] = useState<
     boolean | null
   >(null);
 
   const { browserSupportsSpeechRecognition } = useSpeechRecognition();
-
-  useEffect(() => {
-    const initialBlobs: Blob[] = Array.from(
-      { length: scriptList.length },
-      () => new Blob()
-    );
-    setRecordingBlobList(initialBlobs);
-  }, [scriptList]);
 
   useEffect(() => {
     // sets to true or false after component has been mounted
@@ -227,20 +206,6 @@ export default function DubbingPage() {
     };
   });
 
-  // const opts: YouTubeProps["opts"] = {
-  //   height: "218",
-  //   width: "390",
-  //   playerVars: {
-  //     start: videoInfo.startTime,
-  //     end: videoInfo.endTime,
-  //     // https://developers.google.com/youtube/player_parameters
-  //     autoplay: 0,
-  //     rel: 0, //관련 동영상 표시하지 않음 (근데 별로 쓸모 없는듯..)
-  //     modestbranding: 0, // 컨트롤 바에 youtube 로고를 표시하지 않음
-  //     controls: 0,
-  //   },
-  // };
-
   // player 준비시 실행
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
     const player = event.target;
@@ -267,12 +232,6 @@ export default function DubbingPage() {
     }
   };
 
-  function moveVideoTime() {
-    youtubePlayer.pauseVideo();
-    youtubePlayer.seekTo(30);
-    youtubePlayer.playVideo();
-  }
-
   const handleSlideChange = (swiper: any) => {
     setSpeechToText("");
     window.clearTimeout(timerId);
@@ -282,70 +241,6 @@ export default function DubbingPage() {
     youtubePlayer.pauseVideo();
     youtubePlayer.seekTo(seekTo);
   };
-
-  function addRecordingBlobList(index: number, blob: Blob) {
-    setRecordingBlobList((prevArray) => {
-      const newArray = [...prevArray];
-      console.log("newArray", newArray);
-      const transferIndex = index - 1;
-
-      newArray[transferIndex] = blob;
-      return newArray;
-    });
-  }
-
-  async function handleSaveButton() {
-    const formData = new FormData();
-
-    const postData = {
-      videoId: data.id,
-      userId: "2780662529",
-    };
-
-    console.log("!!! postData", JSON.stringify(postData));
-
-    formData.append("data", JSON.stringify(postData));
-
-    // formData.append("videoId", data.id);
-    // formData.append("userId", "2780662529");
-    // const newBlob: Blob = new Blob([recordingBlobList[0]], {
-    //   type: "audio/wav",
-    // });
-
-    // const newList: Blob[] = [recordingBlobList[0], recordingBlobList[1]];
-    // const newBlob: Blob = new Blob(newList, {
-    //   type: "audio/wav",
-    // });
-
-    // console.log('videoId', data.id);
-    // // console.log("newBlob", newBlob);
-    // console.log("newBlob", newBlob);
-    const file = new File([recordingBlobList[0]], "jeongon.wav"); // File 객체 생성
-
-    console.log('file', file);
-
-    formData.append("files", file);
-
-    try {
-      const response = await mutateAsync(formData);
-      console.log("response", response);
-    } catch (e) {
-      console.log("error", e);
-    }
-  }
-
-  // const sendRecording = async (blob: Blob) => {
-  //   const formData = new FormData();
-  //   formData.append("recording", blob, "recording.wav");
-
-  //   const response = await fetch("/api/recordings", {
-  //     method: "POST",
-  //     body: formData,
-  //   });
-
-  //   const data = await response.json();
-  //   console.log(data);
-  // };
 
   if (speechRecognitionSupported === null) {
     return null; // return null on first render, can be a loading indicator
@@ -367,9 +262,7 @@ export default function DubbingPage() {
             playerVars: {
               start: data.startTime,
               end: data.endTime,
-              // https://developers.google.com/youtube/player_parameters
               autoplay: 0,
-              rel: 0, //관련 동영상 표시하지 않음 (근데 별로 쓸모 없는듯..)
               modestbranding: 0, // 컨트롤 바에 youtube 로고를 표시하지 않음
               controls: 0,
             },
@@ -409,7 +302,6 @@ export default function DubbingPage() {
                   setSpeechToText={setSpeechToText}
                   timerId={timerId}
                   setTimerId={setTimerId}
-                  addRecordingBlobList={addRecordingBlobList}
                 />
               </SwiperSlide>
             ))}
@@ -445,11 +337,7 @@ export default function DubbingPage() {
         })}
       </div>
       <div className="flex justify-center w-391 mb-16">
-        <CommonButton
-          children="저장하기"
-          isDisabled
-          onClick={handleSaveButton}
-        />
+        <CommonButton children="저장하기" isDisabled onClick={() => {}} />
       </div>
     </>
   );

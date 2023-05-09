@@ -13,6 +13,8 @@ import SpeechRecognition, {
 import { Script } from "@/types/Script";
 import PitchGraph from "../atoms/PitchGraph";
 import PlayBar from "../atoms/PlayBar";
+import useRecordPreviewPost from "@/apis/dubbing/mutations/useRecordPreviewPost";
+
 // import { useSwiperSlide } from "swiper/react";
 
 export default function DubBox({
@@ -27,7 +29,6 @@ export default function DubBox({
   setSpeechToText,
   setTimerId,
   timerId,
-  addRecordingBlobList
 }: Script) {
   // const swiperSlide = useSwiperSlide();
 
@@ -46,6 +47,8 @@ export default function DubBox({
   const [myPitchList, setMyPitchList] = useState<number[]>([]);
 
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
+
+  const { mutate } = useRecordPreviewPost();
 
   useEffect(() => {
     (async () => {
@@ -67,9 +70,19 @@ export default function DubBox({
           type: "audio/wav",
         });
 
-        addRecordingBlobList(scriptIndex, audioBlob);
-
         SpeechRecognition.stopListening();
+
+        const formData = new FormData();
+
+        formData.append("recodeInfo.nickname", "aaaa");
+        formData.append("recodeInfo.recodeNum", "122");
+        formData.append("recodeInfo.videoId", "122");
+
+        const file = new File([audioBlob], "myRecordingFile.wav", { type: 'audio/wav' }); // File 객체 생성
+    
+        formData.append("audioFile", file);
+
+        mutate(formData);
       };
     })();
   }, []);
