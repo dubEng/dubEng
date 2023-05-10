@@ -267,7 +267,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .from(script)
                 .join(video)
                 .on(video.id.eq(script.video.id))
-                .where(video.id.eq(videoId))
+                .where(video.id.eq(videoId), script.isDub.eq(true))
                 .fetch();
 
         List<RecordScriptPitchRes> recordScriptPitchRes = new ArrayList<>();

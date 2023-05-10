@@ -30,6 +30,7 @@ public class RecordServiceImpl implements RecordService{
                 .videoPath(video.getVideoPath())
                 .startTime(video.getStartTime())
                 .endTime(video.getEndTime())
+                .langType(video.getLangType())
                 .build();
 
         return recordVideoRes;
