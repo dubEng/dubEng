@@ -2,7 +2,6 @@ package com.ssafy.dubenguser.controller;
 
 import com.ssafy.dubenguser.dto.*;
 import com.ssafy.dubenguser.entity.User;
-import com.ssafy.dubenguser.exception.InvalidInputException;
 import com.ssafy.dubenguser.service.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
