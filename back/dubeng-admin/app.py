@@ -85,9 +85,8 @@ def getCategories():
     rows = cursor.fetchall()
 
     for r in rows:
-        id = r[0]
         cate = {
-            "id": id,
+            "id": r[0],
             "name": r[1]
         }
         categories.append(cate)
@@ -130,21 +129,24 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
         connection = pymysql.connect(
             host=DB_HSOT, user=DB_USER, database=DB_DATABASE_NAME, password=DB_PASSWORD, charset=DB_CHARSET, cursorclass=cursorclass)
         cursor = connection.cursor()
+        # 비디오 지속시간 계산
         duration = int(video['endTime'])-int(video['startTime'])
+        # 비디오 테이블에 데이터 삽입
         sql = "INSERT INTO video (title, runtime, video_path, thumbnail, start_time, end_time, producer, gender, lang_type) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
         values = (video['title'], str(duration), video['videoPath'], video['thumbnail'], str(video['startTime']),
                   str(video['endTime']), video['producer'], str(video['gender']), video['lang'])
         cursor.execute(sql, values)
 
         videoId = cursor.lastrowid
-
+        # 비디오 카테고리 테이블에 데이터 삽입
         for cate in categories:
             sql = "insert into video_category (video_id, category_id) values (%s, %s)"
             values = (videoId, cate)
             cursor.execute(sql, values)
-
+        # 영상 음원 배경음, 보컬 분리, 주파수 계산
         data = seperateMp3(video['videoPath'], userId,
                            video['title'], file_exist, videoId)
+        # 음원 저장 경로 테이블에 저장
         if data is not None:
             sql = "UPDATE video SET background_path=%s, voice_path=%s, pitch=%s WHERE id=%s"
             cursor.execute(
@@ -153,13 +155,14 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
             return False
         pitch = json.loads(data['pitch'])
         standard = data['standard']
+        # 스크립트 저장
         for sc in scripts:
             sql = "INSERT INTO script (start_time, duration, content, translate_content, video_id, is_dub, pitch) VALUES (%s, %s, %s, %s, %s, %s, %s)"
             temp = list()
+            # 프론트에서 startTime, duration 값이 스트링으로 넘어오는 경우 대비 형변환 ---- (1)
             start = float(sc['startTime']) * standard
-            print(type(start))
             end = float(start)+float(sc['duration']) * standard
-            print(end)
+            # 피치 데이터 찾기
             for idx in range(int(start), int(end)):
                 if np.isnan(pitch[idx]):
                     temp.append(0)
@@ -168,6 +171,7 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
 
             pitch_text = json.dumps(temp)
             pitch_text = pitch_text.replace('[', '').replace(']', '')
+            # (1)과 동일한 이유로 형변환
             dur = float(sc['duration'])*1000
             st = float(sc['startTime'])*1000
             values = (str(st), str(dur), sc['content'],
@@ -222,22 +226,19 @@ def seperateMp3(url, userId, videoTitle, file_exist, videoId):
 
     # 로컬 음원 S3 버킷 업로드
     videoTitle = deletIllegalSymbols(videoTitle)
-    print(type(videoId))
-    print("위에는 비디오 아이디 user!!!")
-    print(type(userId))
     videoIdStr = str(videoId)
     backgroundPath = "./download/output/"+userId+"/accompaniment.wav"
-    backgroundName = userId+"_"+videoTitle+"_accompaniment.wav"
+    backgroundName = userId+"_"+videoIdStr+"_"+videoTitle+"_accompaniment.wav"
     vocalPath = "./download/output/"+userId+"/vocals.wav"
-    vocalName = userId+"_"+videoTitle+"_vocals.wav"
+    vocalName = userId+"_"+videoIdStr+"_"+videoTitle+"_vocals.wav"
 
     backUrl = uploadToBucket(backgroundPath, backgroundName)
     vocalUrl = uploadToBucket(vocalPath, vocalName)
     result = {
-        "backUrl": backUrl,
-        "vocalUrl": vocalUrl,
-        "pitch": pitch_result['pitch'],
-        "standard": pitch_result['standard']
+        "backUrl": backUrl,  # 배경음원 저장 주소
+        "vocalUrl": vocalUrl,  # 보컬 음원 저장 주소
+        "pitch": pitch_result['pitch'],  # 피치 데이터
+        "standard": pitch_result['standard']  # 초당 데이터 수
     }
 
     return result
@@ -276,6 +277,7 @@ def sendInfo(start, end):
         }
     except Exception as e:    # 모든 예외의 에러 메시지를 출력할 때는 Exception을 사용
         print(e)
+        print(traceback.format_exc())
         return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
     return response
 
@@ -308,6 +310,8 @@ def saveApi():
             return json.dumps({'success': "False, Tried too many. Save again."}), 405, {'ContentType': 'application/json'}
     except Exception as e:    # 모든 예외의 에러 메시지를 출력할 때는 Exception을 사용
         print('예외가 발생했습니다.', e)
+        print(traceback.format_exc())
+
     return json.dumps({'success': False}), 400, {'ContentType': 'application/json'}
 
 
