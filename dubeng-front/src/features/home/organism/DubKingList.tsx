@@ -1,7 +1,7 @@
 import ScaleLoader from "react-spinners/ScaleLoader";
 import DubKingItem from "../molecules/DubKingItem";
 import useHomeDubKingQuery from "@/apis/home/queries/useHomeDubKingQuery";
-import ErrorComponent from "@/components/atoms/ErrorComponent";
+import ErrorComponent from "../../../components/atoms/ErrorComponent";
 
 export default function DubKingList() {
   const dubKing = useHomeDubKingQuery();

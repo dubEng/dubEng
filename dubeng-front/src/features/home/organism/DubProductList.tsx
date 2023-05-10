@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import useHomePopularityQuery from "@/apis/home/queries/useHomePopularityQuery";
 import ScaleLoader from "react-spinners/ScaleLoader";
-import ErrorComponent from "@/components/atoms/ErrorComponent";
+import ErrorComponent from "../../../components/atoms/ErrorComponent";
 
 export default function DubProductList() {
   const popularity = useHomePopularityQuery();

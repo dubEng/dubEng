@@ -1,7 +1,7 @@
 import ScaleLoader from "react-spinners/ScaleLoader";
 import UserRankingListItem from "../molecules/UserRankingListItem";
 import useHomeRankQuery from "@/apis/home/queries/useHomeRankQuery";
-import ErrorComponent from "@/components/atoms/ErrorComponent";
+import ErrorComponent from "../../../components/atoms/ErrorComponent";
 
 export default function UserRankingList() {
   const rank = useHomeRankQuery();
