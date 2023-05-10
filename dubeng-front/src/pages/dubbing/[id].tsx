@@ -105,10 +105,8 @@ export default function DubbingPage() {
         const time = Math.floor(Number(youtubePlayer?.getCurrentTime()));
 
         const progress =
-          Math.floor(
-            (youtubePlayer?.getCurrentTime() * 100) /
-              youtubePlayer?.getDuration()
-          ) + "%";
+          ((time - data.startTime) / (data.endTime - data.startTime)) * 100 +
+          "%";
 
         setProgressBarWidth(progress);
 
@@ -202,9 +200,7 @@ export default function DubbingPage() {
   }
 
   if (isError) {
-    return (
-        <ErrorComponent onClick={() => {}} retry={false} />
-    );
+    return <ErrorComponent onClick={() => {}} retry={false} />;
   }
 
   return (
