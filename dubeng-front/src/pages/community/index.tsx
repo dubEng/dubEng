@@ -9,7 +9,7 @@ import { DubType } from "@/enum/statusType";
 import DubSituation from "@/features/community/molecules/DubSituation";
 import SearchInputBox from "@/features/community/atoms/SearchInputBox";
 import { useState } from "react";
-import useRecommendDubVideoQuery from "@/apis/community/queries/useRecommendDubVideoQuery";
+import useRecommendDubVideoListQuery from "@/apis/community/queries/useRecommendDubVideoListQuery";
 import DubVideoListItem from "@/components/molecules/DubVideoListItem";
 import useCategoryQuery from "@/apis/manager/queries/useCategoryQuery";
 import DubProductList from "@/features/home/organism/DubProductList";
@@ -18,13 +18,11 @@ import CategoryButton from "@/features/community/atoms/CategoryButton";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-
-// import "swiper/css/free-mode";
-
+// import "swiper/css/free-mode"
 // import { FreeMode } from "swiper";
 
-import { list } from "postcss";
 import Vote from "@/features/community/organism/Vote";
+import useSearchDubVideoQuery from "@/apis/community/queries/useSearchDubVideoQuery";
 
 export default function CommunityPage() {
   // 전역에서 들고오는 state
@@ -35,14 +33,36 @@ export default function CommunityPage() {
     return state.languageTab.langType;
   });
 
-  // 현재 페이지에서 관리하는 state
+  /** 현재 페이지에서 관리하는 state **/
   const [searchValue, setSearchValue] = useState("");
   const [keyword, setKeyword] = useState("");
 
-  // API 호출 response로 들어오는 state
-  const { data } = useRecommendDubVideoQuery("english");
-  console.log("recommendDubVideoList", data?.data.ContentsRecommendList);
+  // 선택한 카테고리 태그
+  const [selectedCategory, setSelectedCategory] = useState<number[]>([]);
 
+  // 태그 선택
+  const handleClickCategory = (id: number) => {
+    if (selectedCategory.includes(id)) {
+      setSelectedCategory(selectedCategory.filter((tagId) => tagId !== id));
+    } else {
+      setSelectedCategory([...selectedCategory, id]);
+    }
+  };
+
+  // API 호출 response로 들어오는 state
+  // 1. ㅇㅇ님이 좋아하실 영상
+  const { data } = useRecommendDubVideoListQuery(languageIndex);
+  console.log("recommendDubVideoList", data?.data.ContentsRecommendList);
+  // 2. 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
+  const searchResultList = useSearchDubVideoQuery(
+    selectedCategory,
+    languageIndex,
+    "10",
+    keyword
+  );
+  console.log("searchResultList", searchResultList);
+
+  // 더미 데이터
   const recommendDubVideoList = {
     hasNextPage: true,
     ContentsRecommendList: [
@@ -160,17 +180,6 @@ export default function CommunityPage() {
     }
   };
 
-  // 선택한 카테고리 태그
-  const [selectedCategory, setSelectedCategory] = useState<number[]>([]);
-
-  // 태그 선택
-  const handleClickCategory = (id: number) => {
-    if (selectedCategory.includes(id)) {
-      setSelectedCategory(selectedCategory.filter((tagId) => tagId !== id));
-    } else {
-      setSelectedCategory([...selectedCategory, id]);
-    }
-  };
   const division = (arr: any[], cnt: number) => {
     const length = arr.length;
     const divide =
@@ -190,20 +199,27 @@ export default function CommunityPage() {
       <div className="flex sticky top-0">
         <DubTypeTap dubType={tabIndex} langType={languageIndex} />
       </div>
-      <p className="flex justify-start text-19 font-bold mt-24 mb-16">
-        김언도님이 좋아하실 영상
-      </p>
-      <DubProductList />
+      {tabIndex === DubType.DUB_VIDEO ? (
+        <div>
+          <p className="flex justify-start text-19 font-bold mt-24 mb-16">
+            김언도님이 좋아하실 영상
+          </p>
+          <DubProductList />
 
-      <p className="flex justify-start text-19 font-bold mt-24 mb-16">
-        오늘의 더빙왕은?
-      </p>
-      <Vote />
+          <p className="flex justify-start text-19 font-bold mt-24 mb-16">
+            상황별로 더빙해봐요
+          </p>
+          <DubSituation />
+        </div>
+      ) : (
+        <div>
+          <p className="flex justify-start text-19 font-bold mt-24 mb-16">
+            오늘의 더빙왕은?
+          </p>
+          <Vote />
+        </div>
+      )}
 
-      <p className="flex justify-start text-19 font-bold mt-24 mb-16">
-        상황별로 더빙해봐요
-      </p>
-      <DubSituation />
       <div className="mt-24"></div>
       {tabIndex === DubType.DUB_VIDEO ? (
         <SearchInputBox
