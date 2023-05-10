@@ -20,6 +20,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../stores/store";
 import PlayBarSound from "../atoms/PlayBarSound";
+import PlayBarRecording from "../atoms/PlayBarRecording";
 
 // import { useSwiperSlide } from "swiper/react";
 
@@ -42,6 +43,8 @@ export default function DubBox({
   //오디오 현재 시간
   const [currentTime, setCurrentTime] = useState(0);
   const [progressSoundBarWidth, setProgressSoundBarWidth] =
+    useState<string>("0%");
+  const [progressRecordBarWidth, setProgressRecordBarWidth] =
     useState<string>("0%");
 
   const nickname = useSelector((state: RootState) => state.user.nickname);
@@ -71,8 +74,6 @@ export default function DubBox({
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
 
   const { mutate } = useFileUploadPost();
-
-  console.log("videoId", videoId);
 
   useEffect(() => {
     (async () => {
@@ -117,7 +118,36 @@ export default function DubBox({
     })();
   }, []);
 
-  //오디오 시간 업데이트
+  useEffect(() => {
+    let timer: any = null;
+    let startTime: number | null = null;
+
+    if (isRecording) {
+      startTime = performance.now();
+      setProgressRecordBarWidth("0%");
+      timer = setInterval(() => {
+        const elapsedTime = performance.now() - startTime!;
+        const progress =
+          Math.floor(Math.min((elapsedTime / duration) * 100, 100)) + "%";
+
+        console.log("progress", progress);
+        setProgressRecordBarWidth(progress);
+
+        if (elapsedTime >= duration) {
+          setProgressRecordBarWidth("0%");
+          clearInterval(timer);
+        }
+      }, 100);
+    }
+
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    };
+  }, [isRecording]);
+
+  //내 녹음 다시 듣기 ProgressBar 업데이트를 위한 시간 로직
   useEffect(() => {
     const audio = audioRef.current!;
     const handleTimeUpdate = () => {
@@ -127,11 +157,13 @@ export default function DubBox({
     return () => audio.removeEventListener("timeupdate", handleTimeUpdate);
   }, []);
 
+  //내 녹음 다시 듣기 ProgressBar 업데이트
   useEffect(() => {
     const progress = Math.floor((currentTime * 100) / (duration / 1000)) + "%";
     setProgressSoundBarWidth(progress);
   }, [currentTime]);
 
+  //STT listening 상태 변경 시 작동
   useEffect(() => {
     setSpeechToText(transcript);
     onMatching(transcript);
@@ -321,6 +353,9 @@ export default function DubBox({
         <PlayBar width={"0%"} />
         {soundStatus === SoundType.PLAYING ? (
           <PlayBarSound width={progressSoundBarWidth} />
+        ) : null}
+        {isRecording ? (
+          <PlayBarRecording width={progressRecordBarWidth} />
         ) : null}
       </div>
       <div className="flex justify-evenly">

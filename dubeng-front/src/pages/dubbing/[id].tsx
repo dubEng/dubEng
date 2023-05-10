@@ -41,8 +41,6 @@ export default function DubbingPage() {
 
   const userId = useSelector((state: RootState) => state.user.userId);
   const nickname = useSelector((state: RootState) => state.user.nickname);
-  console.log("userId", userId);
-  console.log("nickname", nickname);
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
@@ -112,10 +110,6 @@ export default function DubbingPage() {
               youtubePlayer?.getDuration()
           ) + "%";
 
-        console.log("time");
-
-        console.log("progress", progress);
-
         setProgressBarWidth(progress);
 
         //TODO: 21 -> endTime
@@ -147,7 +141,6 @@ export default function DubbingPage() {
             }
           }
         }
-        // console.log("-------------------------------------------");
       }
     }, 1000);
 
