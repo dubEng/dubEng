@@ -59,10 +59,10 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         }
 
         List<ContentsSearchRes> content = queryFactory
-                .select(new QContentsSearchRes(video.id, video.title, video.thumbnail, video.runtime))
+                .selectDistinct(new QContentsSearchRes(video.id, video.title, video.thumbnail, video.runtime))
                 .from(video)
                 .where(builder)
-                .leftJoin(videoCategory)
+                .join(videoCategory)
                 .on(videoCategory.video.id.eq(video.id))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
