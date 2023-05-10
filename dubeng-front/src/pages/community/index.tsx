@@ -23,6 +23,7 @@ import "swiper/css";
 
 import Vote from "@/features/community/organism/Vote";
 import useSearchDubVideoQuery from "@/apis/community/queries/useSearchDubVideoQuery";
+import DubVideoList from "@/features/community/organism/DubVideoList";
 
 export default function CommunityPage() {
   // 전역에서 들고오는 state
@@ -47,12 +48,14 @@ export default function CommunityPage() {
     } else {
       setSelectedCategory([...selectedCategory, id]);
     }
+    console.log("선택한 카테고리 리스트", selectedCategory);
   };
 
   // API 호출 response로 들어오는 state
-  // 1. ㅇㅇ님이 좋아하실 영상
-  const { data } = useRecommendDubVideoListQuery(languageIndex);
-  console.log("recommendDubVideoList", data?.data.ContentsRecommendList);
+  // // 1. ㅇㅇ님이 좋아하실 영상
+  // const { data } = useRecommendDubVideoListQuery(languageIndex);
+  // console.log("recommendDubVideoList", data?.data.ContentsRecommendList);
+
   // 2. 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
   const searchResultList = useSearchDubVideoQuery(
     selectedCategory,
@@ -204,7 +207,7 @@ export default function CommunityPage() {
           <p className="flex justify-start text-19 font-bold mt-24 mb-16">
             김언도님이 좋아하실 영상
           </p>
-          <DubProductList />
+          <DubVideoList />
 
           <p className="flex justify-start text-19 font-bold mt-24 mb-16">
             상황별로 더빙해봐요
@@ -288,7 +291,7 @@ export default function CommunityPage() {
         </Swiper>
       </div>
       <div className="space-y-16 mt-16">
-        {data?.data.ContentsRecommendList.map(
+        {/* {searchResultList.data.content.map(
           (dubVideo: { id: number; title: string; thumbnail: string }) => (
             <DubVideoListItem
               key={dubVideo.id}
@@ -298,7 +301,7 @@ export default function CommunityPage() {
               runtime={"2분 10초"}
             />
           )
-        )}
+        )} */}
       </div>
     </div>
   );
