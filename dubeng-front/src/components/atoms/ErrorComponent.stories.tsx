@@ -12,5 +12,5 @@ export default meta;
 type Story = StoryObj<typeof ErrorComponent>;
 
 export const Default: Story = {
-  render: () => <ErrorComponent onClick={() => {}} retry={false} />,
+  render: () => <ErrorComponent onClick={() => {}} retry={true} />,
 };

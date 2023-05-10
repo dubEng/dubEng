@@ -1,9 +1,12 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
+const withTwin = require("./withTwin.js");
+
+/**
+ * @type {import('next').NextConfig}
+ */
+module.exports = withTwin({
+  reactStrictMode: false,
   images: {
     domains: ["i.ytimg.com", "k.kakaocdn.net"]
   },
-};
+});
 
-module.exports = nextConfig;

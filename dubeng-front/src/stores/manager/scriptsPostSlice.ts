@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-interface ScriptPostState {
+export interface ScriptsListItem {
   duration: number;
   startTime: number;
   content: string;
@@ -9,18 +9,27 @@ interface ScriptPostState {
   isDub: number;
 }
 
-const initialState: ScriptPostState[] = [];
+interface ScriptsList {
+  scriptsList: ScriptsListItem[];
+}
+
+const initialState: ScriptsList = {
+  scriptsList: [],
+};
 
 export const scriptsPostSlice = createSlice({
   name: "scriptsPost",
   initialState,
   reducers: {
     addScriptsInfo: (state, action) => {
-      state.push(action.payload);
+      state.scriptsList.push(action.payload);
+    },
+    clearScriptsInfo: (state) => {
+      state.scriptsList = [];
     },
   },
 });
 
-export const { addScriptsInfo } = scriptsPostSlice.actions;
+export const { addScriptsInfo, clearScriptsInfo } = scriptsPostSlice.actions;
 
 export default scriptsPostSlice.reducer;
