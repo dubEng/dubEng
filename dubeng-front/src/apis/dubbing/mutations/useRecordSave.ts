@@ -4,7 +4,7 @@ import { RecordSave } from "@/types/RecordSave";
 
 const fetcher = (payload: RecordSave) =>
   axios
-    .patch(process.env.NEXT_PUBLIC_BASE_URL + `/recode/save`, {
+    .post(process.env.NEXT_PUBLIC_BASE_URL + `/record/save`, {
       videoId: payload.videoId,
       userId: payload.userId,
       url: payload.url,

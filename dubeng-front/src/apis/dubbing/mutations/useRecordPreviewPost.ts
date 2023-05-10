@@ -4,7 +4,7 @@ import { RecordPreview } from "@/types/RecordPreview";
 
 const fetcher = (payload: RecordPreview) =>
   axios
-    .patch(process.env.NEXT_PUBLIC_BASE_URL + `/recode/preview`, {
+    .post(process.env.NEXT_PUBLIC_BASE_URL + `/record/preview`, {
       videoId: payload.videoId,
       userId: payload.userId,
       nickname: payload.nickname,

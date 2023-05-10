@@ -7,10 +7,10 @@ const config = {
 
 const fetcher = (formData: FormData) =>
   axios
-    .post(process.env.NEXT_PUBLIC_BASE_URL + `/recode/upload`, formData, config)
+    .post(process.env.NEXT_PUBLIC_BASE_URL + `/file/upload`, formData, config)
     .then(({ data }) => data);
 
-const useRecodeUploadPost = () => {
+const useFileUploadPost = () => {
   return useMutation(fetcher, {
     onSuccess: () => {
       console.log('녹음 파일 저장 성공');
@@ -21,4 +21,4 @@ const useRecodeUploadPost = () => {
   });
 };
 
-export default useRecodeUploadPost;
+export default useFileUploadPost;

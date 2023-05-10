@@ -13,7 +13,7 @@ import SpeechRecognition, {
 import { Script } from "@/types/Script";
 import PitchGraph from "../atoms/PitchGraph";
 import PlayBar from "../atoms/PlayBar";
-import useRecodeUploadPost from "@/apis/dubbing/mutations/useRecodeUploadPost";
+import useFileUploadPost from "@/apis/dubbing/mutations/useFileUploadPost";
 
 import Switch from "@mui/material/Switch";
 import React from "react";
@@ -36,8 +36,10 @@ export default function DubBox({
   setTimerId,
   timerId,
 }: Script) {
-  const nickname = useSelector((state: RootState) => state.user.nickname);
   // const swiperSlide = useSwiperSlide();
+
+  
+  const nickname = useSelector((state: RootState) => state.user.nickname);
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
@@ -63,7 +65,9 @@ export default function DubBox({
 
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
 
-  const { mutate } = useRecodeUploadPost();
+  const { mutate } = useFileUploadPost();
+
+  console.log('videoId', videoId);
 
   useEffect(() => {
     (async () => {
@@ -88,6 +92,10 @@ export default function DubBox({
         SpeechRecognition.stopListening();
 
         const formData = new FormData();
+
+        console.log('scriptIndex', scriptIndex);
+
+        console.log('videoId', videoId);
 
         formData.append("recodeInfo.nickname", nickname);
         formData.append("recodeInfo.recodeNum", scriptIndex.toString());
