@@ -4,7 +4,7 @@ import * as queryKeys from "@/constants/queryKeys";
 
 const fetcher = (videoId: number) =>
   axios
-    .get("https://k8b208.p.ssafy.io" + `/dub/record/script/${videoId}`)
+    .get(process.env.NEXT_PUBLIC_BASE_URL + `/dub/record/script/${videoId}`)
     .then(({data}) => data);
 
 const useDubRecordScriptQuery = (videoId: number) => {

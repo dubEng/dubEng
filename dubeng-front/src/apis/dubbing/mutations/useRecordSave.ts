@@ -1,17 +1,17 @@
 import { useMutation } from "react-query";
 import axios from "axios";
-import { RecordPreview } from "@/types/RecordPreview";
+import { RecordSave } from "@/types/RecordSave";
 
-const fetcher = (payload: RecordPreview) =>
+const fetcher = (payload: RecordSave) =>
   axios
-    .patch(process.env.NEXT_PUBLIC_BASE_URL + `/recode/preview`, {
+    .patch(process.env.NEXT_PUBLIC_BASE_URL + `/recode/save`, {
       videoId: payload.videoId,
       userId: payload.userId,
-      nickname: payload.nickname,
+      url: payload.url,
     })
     .then(({ data }) => data);
 
-const useRecordPreviewPost = () => {
+const useRecordSave = () => {
   return useMutation(fetcher, {
     onSuccess: (response) => {
       console.log('response', response);
@@ -22,4 +22,4 @@ const useRecordPreviewPost = () => {
   });
 };
 
-export default useRecordPreviewPost;
+export default useRecordSave;

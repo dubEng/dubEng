@@ -7,7 +7,9 @@ import { store } from "../stores/store";
 import { QueryClientProvider, QueryClient } from "react-query";
 import NavigationBar from "@/components/atoms/NavigationBar";
 import Header from "@/components/atoms/Header";
-import 'regenerator-runtime/runtime';
+import "regenerator-runtime/runtime";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
 
 const pretendard = localFont({
   src: [
@@ -57,11 +59,13 @@ export default function App({ Component, pageProps }: AppProps) {
     <main className={pretendard.className}>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
-          <Header />
-          <NavigationBar />
-          <div className="mt-57 mb-61">
-            <Component {...pageProps} />
-          </div>
+          <PersistGate loading={null} persistor={persistStore(store)}>
+            <Header />
+            <NavigationBar />
+            <div className="mt-57 mb-61">
+              <Component {...pageProps} />
+            </div>
+          </PersistGate>
         </Provider>
       </QueryClientProvider>
     </main>

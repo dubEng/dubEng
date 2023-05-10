@@ -1,4 +1,3 @@
-import { Script } from "@/types/Script";
 import { useState, useEffect } from "react";
 import YouTube, { YouTubePlayer, YouTubeProps } from "react-youtube";
 import { useSpeechRecognition } from "react-speech-recognition";
@@ -13,6 +12,9 @@ import useDubRecordScriptQuery from "@/apis/dubbing/queries/useDubRecordScriptQu
 
 import { useSelector } from "react-redux";
 import { RootState } from "../../stores/store";
+import { useRouter } from "next/router";
+import useRecordPreviewPost from "@/apis/dubbing/mutations/useRecordPreviewPost";
+import { RecordPreview } from "@/types/RecordPreview";
 
 interface Iprops {
   id: number;
@@ -23,16 +25,21 @@ interface Iprops {
 }
 
 export default function DubbingPage() {
-  const { isLoading, isError, data } = useDubRecordVideoInfoQuery(117);
+  const router = useRouter();
 
-  const scriptListTemp = useDubRecordScriptQuery(117);
+  const { isLoading, isError, data } = useDubRecordVideoInfoQuery(
+    parseInt(router.query.id as string)
+  );
+
+  const scriptListTemp = useDubRecordScriptQuery(
+    parseInt(router.query.id as string)
+  );
+
+  const mutation = useRecordPreviewPost();
 
   const userId = useSelector((state: RootState) => state.user.userId);
-
-  // console.log("scriptListTemp", scriptListTemp);
-  // console.log("data", data);
-  // console.log("isLoading", isLoading);
-  // console.log("isError", isError);
+  const nickname = useSelector((state: RootState) => state.user.nickname);
+  console.log('userId', userId);
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
@@ -44,92 +51,26 @@ export default function DubbingPage() {
 
   const [timerId, setTimerId] = useState<number>(0);
 
-  const [scriptList, setScriptList] = useState<any[]>([
-    {
-      id: 1,
-      startTime: 1,
-      duration: 2000,
-      content: "Oh, my God. He's..",
-      translateContent: "오, 맙소사. 그는..",
-      pitch: [
-        31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
-        40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
-        28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
-      ],
-    },
-    {
-      id: 2,
-      startTime: 8,
-      duration: 7000,
-      content: "Look at the way he's just staring at me.",
-      translateContent: "그가 나를 쳐다보는 것 좀 봐",
-      pitch: [
-        31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
-        40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
-        28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
-      ],
-    },
-    {
-      id: 3,
-      startTime: 16,
-      duration: 6000,
-      content: "I think he's tryin' to mouth something at me",
-      translateContent: "그가 나에게 뭔가를 말하려고 하는 것 같아",
-      pitch: [
-        31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
-        40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
-        28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
-      ],
-    },
-    {
-      id: 4,
-      startTime: 23,
-      duration: 5000,
-      content: "but I can't make it out.",
-      translateContent: "하지만 이해할 수가 없어",
-      pitch: [
-        31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
-        40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
-        28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
-      ],
-    },
-    {
-      id: 5,
-      startTime: 29,
-      duration: 6000,
-      content: "Okay, dinner's ready.",
-      translateContent: "좋아요, 저녁 준비됐어요.",
-      pitch: [
-        31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
-        40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
-        28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
-      ],
-    },
-    {
-      id: 6,
-      startTime: 36,
-      duration: 7000,
-      content: "Good game.",
-      translateContent: "좋은 게임입니다",
-      pitch: [
-        31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
-        40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
-        28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
-      ],
-    },
-    {
-      id: 7,
-      startTime: 44,
-      duration: 6000,
-      content: "Yeah, solid effort, solid effort",
-      translateContent: "그래, 노력이 가상하지.",
-      pitch: [
-        31, 40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31,
-        40, 28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 40,
-        28, 51, 42, 109, 100, 50, 31, 40, 28, 51, 42, 109, 100, 50, 31, 50,
-      ],
-    },
-  ]);
+  const [progressBarWidth, setProgressBarWidth] = useState<string>("0%");
+
+  function transferYoutube(videoPath: string) {
+    const originalUrl = videoPath;
+    const splitUrl = originalUrl.split("watch?v=");
+    const transferVideoPath = splitUrl[1];
+    return transferVideoPath;
+  }
+
+  async function handleSaveButton() {
+    if (router.query.id) {
+      const payload: RecordPreview = {
+        nickname: nickname,
+        userId: userId,
+        videoId: parseInt(router.query.id as string),
+      };
+
+      await mutation.mutateAsync(payload);
+    }
+  }
 
   // 브라우저 호환성 체크
   const [speechRecognitionSupported, setSpeechRecognitionSupported] = useState<
@@ -162,33 +103,39 @@ export default function DubbingPage() {
       if (nowPlaying) {
         const time = Math.floor(Number(youtubePlayer?.getCurrentTime()));
 
+        const progress =
+          Math.floor(
+            (youtubePlayer?.getCurrentTime() * 100) /
+              youtubePlayer?.getDuration()
+          ) + "%";
+
+        console.log("time");
+
+        console.log("progress", progress);
+
+        setProgressBarWidth(progress);
+
         //TODO: 21 -> endTime
         if (time == 0) {
           setSelectedScript(0);
         }
 
-        // console.log("현재 선택된 스크립트", selectedScript);
-        // console.log("time", time);
+        if (time > data.endTime) {
+          youtubePlayer.stopVideo();
+          setSelectedScript(0);
+        }
 
         /* 실시간 하이라이팅 */
         // flag가 false이거나 선택된 스크립트의 idx값이 전체 스크립트의 길이보다 작으면 실행
-        if (selectedScript < scriptList.length && time > 0) {
+        if (selectedScript < scriptListTemp.data.length && time > 0) {
           // 해당 스크립트 리스트의 startTime이 undefined가 아니라면
-          if (scriptList[selectedScript]?.startTime != undefined) {
-            // console.log(
-            //   "현재 스크립트 startTime",
-            //   scriptList[selectedScript]?.startTime
-            // );
-            // console.log(
-            //   "다음 startTime",
-            //   scriptList[selectedScript + 1]?.startTime
-            // );
+          if (scriptListTemp.data[selectedScript]?.startTime != undefined) {
             // 현재 재생되고 있는 영상의 시간이 현재 스크립트의 시작 시간보다 크거나 같고
             // 현재 재생되고 있는 영상의 시간이 다음 스크립트의 시작 시간보다 작거나 같다면
             // selectedScript를 증가하지 않고 넘어간다.
             if (
-              scriptList[selectedScript]?.startTime <= time &&
-              time <= scriptList[selectedScript + 1]?.startTime
+              scriptListTemp.data[selectedScript]?.startTime <= time &&
+              time <= scriptListTemp.data[selectedScript + 1]?.startTime
             ) {
               // console.log("현재 스크립트가 재생중인 영상과 일치합니다.");
             } else {
@@ -237,7 +184,7 @@ export default function DubbingPage() {
     window.clearTimeout(timerId);
 
     const activeIndex = swiper.activeIndex;
-    const seekTo = scriptList[activeIndex].startTime;
+    const seekTo = scriptListTemp.data[activeIndex].startTime;
     youtubePlayer.pauseVideo();
     youtubePlayer.seekTo(seekTo);
   };
@@ -255,7 +202,7 @@ export default function DubbingPage() {
     <>
       {data && (
         <YouTube
-          videoId={data.videoPath}
+          videoId={transferYoutube(data.videoPath)}
           opts={{
             height: "218",
             width: "390",
@@ -270,14 +217,17 @@ export default function DubbingPage() {
           onReady={onPlayerReady}
           onEnd={(e) => {
             console.log("onEnd");
-            e.target.stopVideo(0);
+
+            youtubePlayer.pauseVideo();
+            youtubePlayer.seekTo(data.startTime);
+
             setSelectedScript(0);
           }}
           onPlay={onPlay}
           onStateChange={onStateChange}
         />
       )}
-      <PlayBar />
+      <PlayBar width={progressBarWidth} />
       <div className="w-391 h-390 bg-dubgraylight flex justify-center items-center">
         <Swiper
           spaceBetween={4}
@@ -285,10 +235,11 @@ export default function DubbingPage() {
           onSwiper={(swiper) => console.log(swiper)}
           centeredSlides
         >
-          {scriptList &&
-            scriptList.map((item, index) => (
+          {scriptListTemp.data &&
+            scriptListTemp.data.map((item: any, index: number) => (
               <SwiperSlide key={item.id}>
                 <DubBox
+                  videoId={router.query.id as string}
                   id={item.id}
                   content={item.content}
                   duration={item.duration}
@@ -296,7 +247,7 @@ export default function DubbingPage() {
                   translateContent={item.translateContent}
                   pitchList={item.pitch}
                   scriptIndex={index + 1}
-                  scriptLength={scriptList.length}
+                  scriptLength={scriptListTemp.data.length}
                   youtubePlayer={youtubePlayer}
                   speechToText={speechToText}
                   setSpeechToText={setSpeechToText}
@@ -312,32 +263,37 @@ export default function DubbingPage() {
           전체 스크립트
         </p>
 
-        {scriptList.map((item: Script) => {
-          if (item.id === selectedScript) {
-            return (
-              <div
-                className={`script-element-${item.id} mb-8 mx-20 bg-dubblue`}
-                key={item.id}
-              >
-                <p className="text-14 text-dubblack">{item.content}</p>
-                <p className="text-14 text-dubgray">{item.translateContent}</p>
-              </div>
-            );
-          } else {
-            return (
-              <div
-                className={`script-element-${item.id} mb-8 mx-20`}
-                key={item.id}
-              >
-                <p className="text-14 text-dubblack">{item.content}</p>
-                <p className="text-14 text-dubgray">{item.translateContent}</p>
-              </div>
-            );
-          }
-        })}
+        {scriptListTemp.data &&
+          scriptListTemp.data.map((item: any) => {
+            if (item.id === selectedScript) {
+              return (
+                <div
+                  className={`script-element-${item.id} mb-8 mx-20 bg-dubblue`}
+                  key={item.id}
+                >
+                  <p className="text-14 text-dubblack">{item.content}</p>
+                  <p className="text-14 text-dubgray">
+                    {item.translateContent}
+                  </p>
+                </div>
+              );
+            } else {
+              return (
+                <div
+                  className={`script-element-${item.id} mb-8 mx-20`}
+                  key={item.id}
+                >
+                  <p className="text-14 text-dubblack">{item.content}</p>
+                  <p className="text-14 text-dubgray">
+                    {item.translateContent}
+                  </p>
+                </div>
+              );
+            }
+          })}
       </div>
       <div className="flex justify-center w-391 mb-16">
-        <CommonButton children="저장하기" isDisabled onClick={() => {}} />
+        <CommonButton children="저장하기" isDisabled onClick={handleSaveButton} />
       </div>
     </>
   );

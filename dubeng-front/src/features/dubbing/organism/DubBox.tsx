@@ -13,11 +13,17 @@ import SpeechRecognition, {
 import { Script } from "@/types/Script";
 import PitchGraph from "../atoms/PitchGraph";
 import PlayBar from "../atoms/PlayBar";
-import useRecordPreviewPost from "@/apis/dubbing/mutations/useRecordPreviewPost";
+import useRecodeUploadPost from "@/apis/dubbing/mutations/useRecodeUploadPost";
+
+import Switch from "@mui/material/Switch";
+import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../stores/store";
 
 // import { useSwiperSlide } from "swiper/react";
 
 export default function DubBox({
+  videoId,
   duration,
   content,
   translateContent,
@@ -30,6 +36,7 @@ export default function DubBox({
   setTimerId,
   timerId,
 }: Script) {
+  const nickname = useSelector((state: RootState) => state.user.nickname);
   // const swiperSlide = useSwiperSlide();
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -37,6 +44,14 @@ export default function DubBox({
   const [soundStatus, setSoundStatus] = useState<SoundType>(SoundType.DISABLE);
 
   const [answer, setAnswer] = useState<boolean>(false);
+
+  const [koSubTitle, setKoSubTitle] = useState(true);
+
+  const handleSubTitleSwitchChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setKoSubTitle(event.target.checked);
+  };
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const mediaStreamRef = useRef<any>(null);
@@ -48,7 +63,7 @@ export default function DubBox({
 
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
 
-  const { mutate } = useRecordPreviewPost();
+  const { mutate } = useRecodeUploadPost();
 
   useEffect(() => {
     (async () => {
@@ -74,12 +89,14 @@ export default function DubBox({
 
         const formData = new FormData();
 
-        formData.append("recodeInfo.nickname", "aaaa");
-        formData.append("recodeInfo.recodeNum", "122");
-        formData.append("recodeInfo.videoId", "122");
+        formData.append("recodeInfo.nickname", nickname);
+        formData.append("recodeInfo.recodeNum", scriptIndex.toString());
+        formData.append("recodeInfo.videoId", videoId);
 
-        const file = new File([audioBlob], "myRecordingFile.wav", { type: 'audio/wav' }); // File 객체 생성
-    
+        const file = new File([audioBlob], "myRecordingFile.wav", {
+          type: "audio/wav",
+        }); // File 객체 생성
+
         formData.append("audioFile", file);
 
         mutate(formData);
@@ -228,9 +245,13 @@ export default function DubBox({
   return (
     <div className="w-359 h-370 bg-white rounded-20 container mx-auto p-16">
       <div className="flex justify-between">
-        <p className="text-12 text-dubblack font-normal">
+        <p className="text-12 text-dubblack font-normal h-25">
           {scriptIndex}/{scriptLength}
         </p>
+        <div className="flex justify-end items-center h-25">
+          <span className="text-12 text-dubblack font-normal">번역</span>
+          <Switch checked={koSubTitle} onChange={handleSubTitleSwitchChange} />
+        </div>
       </div>
       <div className="flex justify-center">
         <PitchGraph moviePitchList={pitchList} myPitchList={myPitchList} />
@@ -238,9 +259,15 @@ export default function DubBox({
       <p className="text-14 text-dubblack font-normal flex justify-start mx-16">
         {content}
       </p>
-      <p className="text-14 text-dubgray font-normal flex justify-start mx-16">
-        {translateContent}
-      </p>
+      {koSubTitle ? (
+        <p className="text-14 text-dubgray font-normal flex justify-start mx-16">
+          {translateContent}
+        </p>
+      ) : (
+        <p className="text-14 text-dubgray font-normal flex justify-start mx-16 invisible">
+          {translateContent}
+        </p>
+      )}
       {listening ? (
         <p className="text-14 text-dubblue font-normal flex justify-start h-34 mx-16 mb-16">
           {transcript}
@@ -263,7 +290,7 @@ export default function DubBox({
         {duration / 1000}초
       </p>
       <div className="mb-16 mx-16">
-        <PlayBar />
+        <PlayBar width={"0%"} />
       </div>
       <div className="flex justify-evenly">
         <PlayButton
