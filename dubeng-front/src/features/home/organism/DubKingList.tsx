@@ -9,7 +9,7 @@ export default function DubKingList() {
   if (dubKing.isLoading) {
     return (
       <div className="container mx-auto">
-        <ScaleLoader color="#FF6D60" />;
+        <ScaleLoader color="#FF6D60" />
       </div>
     );
   }
@@ -17,9 +17,9 @@ export default function DubKingList() {
   if (dubKing.isError) {
     return (
       <div className="container mx-auto">
-        <ErrorComponent />;
+        <ErrorComponent onClick={() => dubKing.refetch} retry={true} />
       </div>
-    );
+    )
   }
 
   return (

@@ -211,7 +211,7 @@ export default function DubbingPage() {
   if (isError) {
     return (
       <div className="container mx-auto">
-        <ErrorComponent />;
+        <ErrorComponent onClick={() => {}} retry={false} />;
       </div>
     );
   }
