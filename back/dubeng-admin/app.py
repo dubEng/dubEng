@@ -217,15 +217,15 @@ def seperateMp3(url, userId, videoTitle, file_exist, videoId):
     pitch_result = getPitches(userId)
 
     # 로컬 음원 S3 버킷 업로드
-    # videoTitle = deletIllegalSymbols(videoTitle)
+    videoTitle = deletIllegalSymbols(videoTitle)
     print(type(videoId))
     print("위에는 비디오 아이디 user!!!")
     print(type(userId))
     videoIdStr = str(videoId)
     backgroundPath = "./download/output/"+userId+"/accompaniment.wav"
-    backgroundName = userId+"_"+videoIdStr+"_accompaniment.wav"
+    backgroundName = userId+"_"+videoTitle+"_accompaniment.wav"
     vocalPath = "./download/output/"+userId+"/vocals.wav"
-    vocalName = userId+"_"+videoIdStr+"_vocals.wav"
+    vocalName = userId+"_"+videoTitle+"_vocals.wav"
 
     backUrl = uploadToBucket(backgroundPath, backgroundName)
     vocalUrl = uploadToBucket(vocalPath, vocalName)
