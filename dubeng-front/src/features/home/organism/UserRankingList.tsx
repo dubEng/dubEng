@@ -1,25 +1,21 @@
 import ScaleLoader from "react-spinners/ScaleLoader";
 import UserRankingListItem from "../molecules/UserRankingListItem";
 import useHomeRankQuery from "@/apis/home/queries/useHomeRankQuery";
-import ErrorComponent from "@/components/atoms/ErrorComponent";
+import ErrorComponent from "../../../components/atoms/ErrorComponent";
 
 export default function UserRankingList() {
   const rank = useHomeRankQuery();
 
   if (rank.isLoading) {
     return (
-      <div className="container mx-auto">
+      <div className="flex justify-center items-center my-16">
         <ScaleLoader color="#FF6D60" />
       </div>
     );
   }
 
   if (rank.isError) {
-    return (
-      <div className="container mx-auto">
-        <ErrorComponent onClick={() => rank.refetch} retry={true} />
-      </div>
-    );
+    return <ErrorComponent onClick={() => rank.refetch} retry={true} />;
   }
 
   return (
