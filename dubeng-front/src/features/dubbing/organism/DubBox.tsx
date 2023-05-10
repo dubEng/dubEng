@@ -19,6 +19,7 @@ import Switch from "@mui/material/Switch";
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../stores/store";
+import PlayBarSound from "../atoms/PlayBarSound";
 
 // import { useSwiperSlide } from "swiper/react";
 
@@ -38,7 +39,11 @@ export default function DubBox({
 }: Script) {
   // const swiperSlide = useSwiperSlide();
 
-  
+  //오디오 현재 시간
+  const [currentTime, setCurrentTime] = useState(0);
+  const [progressSoundBarWidth, setProgressSoundBarWidth] =
+    useState<string>("0%");
+
   const nickname = useSelector((state: RootState) => state.user.nickname);
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -67,7 +72,7 @@ export default function DubBox({
 
   const { mutate } = useFileUploadPost();
 
-  console.log('videoId', videoId);
+  console.log("videoId", videoId);
 
   useEffect(() => {
     (async () => {
@@ -93,9 +98,9 @@ export default function DubBox({
 
         const formData = new FormData();
 
-        console.log('scriptIndex', scriptIndex);
+        console.log("scriptIndex", scriptIndex);
 
-        console.log('videoId', videoId);
+        console.log("videoId", videoId);
 
         formData.append("recodeInfo.nickname", nickname);
         formData.append("recodeInfo.recodeNum", scriptIndex.toString());
@@ -111,6 +116,21 @@ export default function DubBox({
       };
     })();
   }, []);
+
+  //오디오 시간 업데이트
+  useEffect(() => {
+    const audio = audioRef.current!;
+    const handleTimeUpdate = () => {
+      setCurrentTime(audio.currentTime);
+    };
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    return () => audio.removeEventListener("timeupdate", handleTimeUpdate);
+  }, []);
+
+  useEffect(() => {
+    const progress = Math.floor((currentTime * 100) / (duration / 1000)) + "%";
+    setProgressSoundBarWidth(progress);
+  }, [currentTime]);
 
   useEffect(() => {
     setSpeechToText(transcript);
@@ -299,6 +319,9 @@ export default function DubBox({
       </p>
       <div className="mb-16 mx-16">
         <PlayBar width={"0%"} />
+        {soundStatus === SoundType.PLAYING ? (
+          <PlayBarSound width={progressSoundBarWidth} />
+        ) : null}
       </div>
       <div className="flex justify-evenly">
         <PlayButton
