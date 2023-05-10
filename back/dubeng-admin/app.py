@@ -16,7 +16,7 @@ import json
 import logging
 from pitch import getPitches
 import numpy as np
-
+import traceback
 
 app = Flask(__name__)
 
@@ -157,7 +157,9 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
             sql = "INSERT INTO script (start_time, duration, content, translate_content, video_id, is_dub, pitch) VALUES (%s, %s, %s, %s, %s, %s, %s)"
             temp = list()
             start = sc['startTime'] * standard
+            print(type(start))
             end = start+sc['duration'] * standard
+            print(end)
             for idx in range(int(start), int(end)):
                 if np.isnan(pitch[idx]):
                     temp.append(0)
@@ -175,6 +177,7 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
         connection.close()
     except Exception as e:    # 모든 예외의 에러 메시지를 출력할 때는 Exception을 사용
         print(e)
+        print(traceback.format_exc())
         return False
     return True
 
@@ -264,7 +267,7 @@ def sendInfo(start, end):
                 if float(s['start']) >= float(start) and float(s['start']) <= float(end):
                     s['translation'] = t['text']
                     result.append(s)
-                elif s['start'] > float(end):
+                elif float(s['start']) > float(end):
                     break
         response = {
             "videoInfo": data,
