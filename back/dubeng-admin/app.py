@@ -132,8 +132,8 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
         cursor = connection.cursor()
         duration = int(video['endTime'])-int(video['startTime'])
         sql = "INSERT INTO video (title, runtime, video_path, thumbnail, start_time, end_time, producer, gender, lang_type) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-        values = (video['title'], str(duration), video['videoPath'], video['thumbnail'], video['startTime'],
-                  video['endTime'], video['producer'], video['gender'], video['lang'])
+        values = (video['title'], str(duration), video['videoPath'], video['thumbnail'], str(video['startTime']),
+                  str(video['endTime']), video['producer'], str(video['gender']), video['lang'])
         cursor.execute(sql, values)
 
         videoId = cursor.lastrowid
