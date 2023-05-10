@@ -4,32 +4,36 @@ import com.ssafy.dubenguser.dto.MissionCompleteRes;
 import com.ssafy.dubenguser.dto.UserMissionRes;
 import com.ssafy.dubenguser.entity.*;
 import com.ssafy.dubenguser.exception.NotFoundException;
+import com.ssafy.dubenguser.exception.UnAuthorizedException;
 import com.ssafy.dubenguser.repository.MissionRepository;
 import com.ssafy.dubenguser.repository.UserMissionRepository;
 import com.ssafy.dubenguser.repository.UserRepository;
 import com.ssafy.dubenguser.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserMissionServiceImpl implements UserMissionService{
+    private final AuthServiceImpl authService;
     private final UserRepository userRepository;
     private final UserMissionRepository userMissionRepository;
     private final VideoRepository videoRepository;
     private final MissionRepository missionRepository;
 
     @Override
-    public List<UserMissionRes> findUserMissions(String userId) {
+    public List<UserMissionRes> findUserMissions(String accessToken) {
+        //Token parsing
+        String userId = authService.parseToken(accessToken);
+        if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");
+
         Optional<User> user = userRepository.findById(userId);
 
         if(!user.isPresent()) {
@@ -41,7 +45,11 @@ public class UserMissionServiceImpl implements UserMissionService{
     }
 
     @Override
-    public List<String> findAssets(String userId) {
+    public List<String> findAssets(String accessToken) {
+        //Token parsing
+        String userId = authService.parseToken(accessToken);
+        if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");
+
         Optional<User> user = userRepository.findById(userId);
 
         if(!user.isPresent()) {
@@ -53,7 +61,11 @@ public class UserMissionServiceImpl implements UserMissionService{
 
     @Override
     @Transactional
-    public HashMap<String, Object> findMissionComplete(String userId, Long videoId) {
+    public HashMap<String, Object> findMissionComplete(String accessToken, Long videoId) {
+        //Token parsing
+        String userId = authService.parseToken(accessToken);
+        if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");
+
         Optional<User> user = userRepository.findById(userId);
 
         if(!user.isPresent()) {
