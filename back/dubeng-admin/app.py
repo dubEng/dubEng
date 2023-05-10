@@ -156,9 +156,9 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
         for sc in scripts:
             sql = "INSERT INTO script (start_time, duration, content, translate_content, video_id, is_dub, pitch) VALUES (%s, %s, %s, %s, %s, %s, %s)"
             temp = list()
-            start = sc['startTime'] * standard
+            start = float(sc['startTime']) * standard
             print(type(start))
-            end = start+float(sc['duration']) * standard
+            end = float(start)+float(sc['duration']) * standard
             print(end)
             for idx in range(int(start), int(end)):
                 if np.isnan(pitch[idx]):
