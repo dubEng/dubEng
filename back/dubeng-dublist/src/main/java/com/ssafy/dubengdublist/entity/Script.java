@@ -25,4 +25,5 @@ public class Script {
     private String content;
     private String translateContent;
     private String pitch;
+    private Boolean isDub;
 }

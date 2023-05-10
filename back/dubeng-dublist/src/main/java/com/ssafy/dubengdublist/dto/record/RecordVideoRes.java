@@ -13,14 +13,16 @@ public class RecordVideoRes {
     private String videoPath;
     private Long startTime;
     private Long endTime;
+    private String langType;
 
     @Builder
-    public RecordVideoRes(Long id, String title, String videoPath, Long startTime, Long endTime) {
+    public RecordVideoRes(Long id, String title, String videoPath, Long startTime, Long endTime, String langType) {
         this.id = id;
         this.title = title;
         this.videoPath = videoPath;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.langType = langType;
     }
 
 }
