@@ -12,6 +12,21 @@ import { clearScriptsInfo } from "@/stores/manager/scriptsPostSlice";
 
 import { ScriptsListItem } from "../../stores/manager/scriptsPostSlice";
 
+import Modal from "react-modal";
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
+};
+
+Modal.setAppElement("#root");
+
 interface getVideoInfoType {
   channelTitle: string;
   thumbnails: string;
@@ -43,13 +58,22 @@ export default function ManagerPage() {
   const [videoInfo, setVideoInfo] = useState<getVideoInfoType>();
   const dispatch = useDispatch();
 
+  const [modalIsOpen, setIsOpen] = useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
   interface scriptsType {
     duration: number | string;
     start: number | string;
     text: string;
     translation: string;
   }
-
 
   // script 정보 관리하는 useState
   const [scripts, setScripts] = useState<scriptsType[]>([]);
@@ -151,6 +175,21 @@ export default function ManagerPage() {
     saveDubVideo();
   }
 
+  // function convertToFloatOrKeep(value: any) {
+  //   if (typeof value === "string") {
+  //     return parseFloat(value);
+  //   } else if (typeof value === "number") {
+  //     return value;
+  //   } else {
+  //     return value; // 혹은 다른 처리를 수행하고자 하는 경우에 원하는 로직을 추가해주세요.
+  //   }
+  // }
+
+  function handlePreviewButton() {
+    makeFormData();
+    openModal();
+  }
+
   const userIdData = useSelector((state: RootState) => state.user.userId);
   const scriptsData = useSelector(
     (state: RootState) => state.scriptsPostInfo.scriptsList
@@ -170,62 +209,42 @@ export default function ManagerPage() {
       lang: lang,
     };
 
-    const transferToFloat: ScriptsListItem[] = [];
 
-    scriptsData.forEach((item) => {
-      transferToFloat.push({
-        duration:
-          typeof item.duration === "string"
-            ? parseFloat(item.duration)
-            : item.duration,
-        startTime:
-          typeof item.startTime === "string"
-            ? parseFloat(item.startTime)
-            : item.duration,
-        content: item.content,
-        translateContent: item.translateContent,
-        isDub: item.isDub,
-      });
-    });
+    if (scriptsData) {
+      const postData = {
+        video: video,
+        userId: userId,
+        scripts: scriptsData,
+        categories: selectedTag,
+      };
 
-    const postData = {
-      video: video,
-      userId: userId,
-      scripts: scriptsData,
-      categories: selectedTag,
-    };
-    console.log(`userId : ${userId}`);
-    
-    console.log("!!! postData", JSON.stringify(postData));
+      console.log(`userId : ${userId}`);
 
-    formData.append("data", JSON.stringify(postData));
+      console.log("전송할 데이터", JSON.stringify(postData));
 
-    if (audioFile) {
-      formData.append(`file`, audioFile[0]);
+      formData.append("data", JSON.stringify(postData));
+
+      if (audioFile) {
+        formData.append(`file`, audioFile[0]);
+      }
+
+      return formData;
     }
-
-    return formData;
   }
 
   async function saveDubVideo() {
     const formData = makeFormData();
 
     if (formData) {
-      console.log("!!!!formData는 여기", formData);
-
       try {
         const videoPostResult = await mutation.mutateAsync(formData);
+        // 스크립트 초기화
+        dispatch(clearScriptsInfo());
       } catch (error) {}
+    } else {
+      console.log("formData가 존재하지 않습니다.");
     }
-    // 스크립트 초기화
-    dispatch(clearScriptsInfo());
   }
-
-  // function handleClear() {
-  //   console.log("clear 전", scriptsData);
-  //   dispatch(clearScriptsInfo());
-  //   console.log("전역에 있는 script 정보 확인");
-  // }
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -315,7 +334,7 @@ export default function ManagerPage() {
                 <input
                   className="text-16 rounded-5 font-normal placeholder-dubgray text-dubblack outline-none h-43 w-full border border-[#E9ECEF] pl-16 py-12"
                   type="text"
-                  value={videoInfo!.title}
+                  defaultValue={videoInfo!.title}
                 />
               </div>
               <div>
@@ -324,7 +343,7 @@ export default function ManagerPage() {
                 <input
                   className="text-16 rounded-5 font-normal placeholder-dubgray text-dubblack outline-none h-43 w-100 border border-[#E9ECEF] pl-16 py-12"
                   type="number"
-                  value={end - start}
+                  defaultValue={end - start}
                 />
               </div>
               <div>
@@ -333,7 +352,7 @@ export default function ManagerPage() {
                 <input
                   className="text-16 rounded-5 font-normal placeholder-dubgray text-dubblack outline-none h-43 w-100 border border-[#E9ECEF] pl-16 py-12"
                   type="text"
-                  value={videoInfo!.channelTitle}
+                  defaultValue={videoInfo!.channelTitle}
                 />
               </div>
             </div>
@@ -414,11 +433,41 @@ export default function ManagerPage() {
         />
       </div>
       <button
-        className="rounded-[8px] bg-dubblue px-16 h-43 pb-0 text-white mt-23"
+        className="rounded-[8px] bg-dubblue px-16 h-43 pb-0 text-white mt-23 mr-16"
         onClick={handleSaveVideoButton}
       >
         등록하기
       </button>
+      <button
+        className="rounded-[8px] bg-dubblue px-16 h-43 pb-0 text-white mt-23"
+        onClick={handlePreviewButton}
+      >
+        확정된 스크립트 보기
+      </button>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="미리보기 Modal"
+      >
+        {/* <button onClick={closeModal}>close</button> */}
+        <div>
+          {scriptsData &&
+            scriptsData.map((item, index) => {
+              return (
+                <div className="m-16 text-dubblack" key={index}>
+                  <h3>스크립트 {index+1}</h3>
+                  <p>content: {item.content}</p>
+                  <p>translateContent: {item.translateContent}</p>
+                  <p>startTime: {item.startTime}</p>
+                  <p>duration: {item.duration}</p>
+                  <p>isDub: {item.isDub}</p>
+                  <p>-----------------------------------------</p>
+                </div>
+              );
+            })}
+        </div>
+      </Modal>
     </div>
   );
 }
