@@ -1,11 +1,10 @@
 import DubVideoThumbnail from "../../../components/atoms/DubVideoThumbnail";
 
-import { DubProduct } from "@/types/DubProduct";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import useHomePopularityQuery from "@/apis/home/queries/useHomePopularityQuery";
+import useHomePopularityQuery from "../../../apis/home/queries/useHomePopularityQuery";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import ErrorComponent from "../../../components/atoms/ErrorComponent";
+import "swiper/css";
 
 export default function DubProductList() {
   const popularity = useHomePopularityQuery();
