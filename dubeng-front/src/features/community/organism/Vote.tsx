@@ -6,6 +6,8 @@ import YouTube, { YouTubePlayer, YouTubeProps } from "react-youtube";
 import { useRef, useState } from "react";
 
 export default function Vote() {
+  // useQuery들로 가져오는 것들
+
   // VoteCard마다 현재 재생 중인지 알기 위한 변수
   // const [isPlayingUser1, setIsPlayingUser1] = useState(false);
   // const [isPlayingUser2, setIsPlayingUser2] = useState(false);
@@ -44,6 +46,7 @@ export default function Vote() {
   // 유저2 플레이 함수
   function handlePlayUser2Button() {
     console.log("user2 플레이 버튼 눌렀다!");
+    // 중간에 누르면 상대방 current을 paused로 만들어버리는 로직 필요
 
     if (audioRef2.current && audioRef2.current.paused) {
       audioRef1.current?.pause();
