@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../stores/store";
 import PlayBarSound from "../atoms/PlayBarSound";
 import PlayBarRecording from "../atoms/PlayBarRecording";
+import PlayBarOrigin from "../atoms/PlayBarOrigin";
 
 // import { useSwiperSlide } from "swiper/react";
 
@@ -42,6 +43,8 @@ export default function DubBox({
 
   //오디오 현재 시간
   const [currentTime, setCurrentTime] = useState(0);
+  const [progressOriginBarWidth, setProgressOriginBarWidth] =
+    useState<string>("0%");
   const [progressSoundBarWidth, setProgressSoundBarWidth] =
     useState<string>("0%");
   const [progressRecordBarWidth, setProgressRecordBarWidth] =
@@ -99,10 +102,6 @@ export default function DubBox({
 
         const formData = new FormData();
 
-        console.log("scriptIndex", scriptIndex);
-
-        console.log("videoId", videoId);
-
         formData.append("recodeInfo.nickname", nickname);
         formData.append("recodeInfo.recodeNum", scriptIndex.toString());
         formData.append("recodeInfo.videoId", videoId);
@@ -118,6 +117,36 @@ export default function DubBox({
     })();
   }, []);
 
+  // 원본듣기 ProgressBar 업데이트를 위한 로직
+  useEffect(() => {
+    let timer: any = null;
+    let startTime: number | null = null;
+
+    if (isPlaying) {
+      startTime = performance.now();
+      setProgressOriginBarWidth("0%");
+      timer = setInterval(() => {
+        const elapsedTime = performance.now() - startTime!;
+        const progress =
+          Math.floor(Math.min((elapsedTime / duration) * 100, 100)) + "%";
+
+        setProgressOriginBarWidth(progress);
+
+        if (elapsedTime >= duration) {
+          setProgressOriginBarWidth("0%");
+          clearInterval(timer);
+        }
+      }, 100);
+    }
+
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    };
+  }, [isPlaying]);
+
+  // 녹음하기 ProgressBar 업데이트를 위한 로직
   useEffect(() => {
     let timer: any = null;
     let startTime: number | null = null;
@@ -130,7 +159,6 @@ export default function DubBox({
         const progress =
           Math.floor(Math.min((elapsedTime / duration) * 100, 100)) + "%";
 
-        console.log("progress", progress);
         setProgressRecordBarWidth(progress);
 
         if (elapsedTime >= duration) {
@@ -184,13 +212,13 @@ export default function DubBox({
     setTimerId(timerId);
   }
 
-  function handleScriptStopButton() {
-    setIsPlaying(false);
+  // function handleScriptStopButton() {
+  //   setIsPlaying(false);
 
-    // 기존에 타이머가 동작중이었을 경우 clear
-    window.clearTimeout(timerId);
-    youtubePlayer.pauseVideo();
-  }
+  //   // 기존에 타이머가 동작중이었을 경우 clear
+  //   window.clearTimeout(timerId);
+  //   youtubePlayer.pauseVideo();
+  // }
 
   function handleRecordButton() {
     setIsRecording(true);
@@ -350,7 +378,12 @@ export default function DubBox({
         {duration / 1000}초
       </p>
       <div className="mb-16 mx-16">
-        <PlayBar width={"0%"} />
+        {isPlaying ||
+        soundStatus === SoundType.PLAYING ||
+        isRecording ? null : (
+          <PlayBarOrigin width={"0%"} />
+        )}
+        {isPlaying ? <PlayBarOrigin width={progressOriginBarWidth} /> : null}
         {soundStatus === SoundType.PLAYING ? (
           <PlayBarSound width={progressSoundBarWidth} />
         ) : null}
@@ -362,7 +395,7 @@ export default function DubBox({
         <PlayButton
           isPlaying={isPlaying}
           playVideo={handleScriptPlayButton}
-          stopVideo={handleScriptStopButton}
+          stopVideo={() => {}}
           disable={isRecording || soundStatus == SoundType.PLAYING}
         />
         <RecordButton
