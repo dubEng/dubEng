@@ -9,6 +9,23 @@ import TagButton from "@/components/atoms/TagButton";
 import { RootState } from "@/stores/store";
 
 export default function ManagerPage() {
+  // // 스크립트 추가 버튼용 로직
+  // function handleAddScript(index: number) {
+  //   setScripts((prevScripts) => {
+  //     const newScripts = [...prevScripts];
+  //     newScripts.splice(index + 1, 0, {
+  //       duration: 0,
+  //       start: 0,
+  //       text: "",
+  //       translation: "",
+  //       handleAddScript: handleAddScript,
+  //     });
+
+  //     console.log("추가 함수 실행됐다", newScripts);
+  //     return newScripts;
+  //   });
+  // }
+
   const [inputs, setInputs] = useState({
     url: "",
     start: 0,
@@ -31,6 +48,7 @@ export default function ManagerPage() {
     start: number;
     text: string;
     translation: string;
+    handleAddScript: (index: number) => void;
   }
 
   interface categoryType {
@@ -94,6 +112,8 @@ export default function ManagerPage() {
     setCustomTitle(e.target.value);
     console.log(customTitle);
   };
+
+  useEffect(() => {}, [scripts]);
 
   // getVideoInfo 쿼리 호출 파트
   async function getVideoInfo() {
@@ -171,6 +191,8 @@ export default function ManagerPage() {
     if (audioFile) {
       formData.append(`file`, audioFile[0]);
     }
+
+    return formData;
   }
 
   async function saveDubVideo() {
@@ -298,8 +320,16 @@ export default function ManagerPage() {
           </div>
 
           <p className="text-24 font-bold mt-32 mb-16">스크립트</p>
-          {scripts.map((script, idx) => (
-            <ScriptListItem {...script} key={idx} />
+          {scripts.map((script, index) => (
+            <ScriptListItem
+              // index={index}
+              start={script.start}
+              duration={script.duration}
+              text={script.text}
+              translation={script.translation}
+              key={index}
+              // handleAddScript={handleAddScript}
+            />
           ))}
         </div>
       )}
