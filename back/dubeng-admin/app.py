@@ -158,7 +158,7 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
             temp = list()
             start = sc['startTime'] * standard
             print(type(start))
-            end = start+sc['duration'] * standard
+            end = start+float(sc['duration']) * standard
             print(end)
             for idx in range(int(start), int(end)):
                 if np.isnan(pitch[idx]):
@@ -168,8 +168,8 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
 
             pitch_text = json.dumps(temp)
             pitch_text = pitch_text.replace('[', '').replace(']', '')
-
-            values = (str(sc['startTime']*1000), str(sc['duration']*1000), sc['content'],
+            dur = float(sc['duration'])*1000
+            values = (str(sc['startTime']*1000), str(dur), sc['content'],
                       sc['translateContent'], str(videoId), sc['isDub'], pitch_text)
             cursor.execute(sql, values)
 
