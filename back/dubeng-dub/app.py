@@ -170,7 +170,7 @@ def uploadToBucket(target, uploadName):
     return url
 
 def getFile(videoId,nickname):
-    request_url = f"https://k8b208.p.ssafy.io/recode/dublist?videoId={videoId}&nickname={nickname}"
+    request_url = f"https://k8b208.p.ssafy.io/file/dublist?videoId={videoId}&nickname={nickname}"
     response = requests.get(request_url)
 
     data = json.loads(response.content)
