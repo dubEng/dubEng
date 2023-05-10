@@ -12,7 +12,6 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import { Script } from "@/types/Script";
 import PitchGraph from "../atoms/PitchGraph";
-import PlayBar from "../atoms/PlayBar";
 import useFileUploadPost from "@/apis/dubbing/mutations/useFileUploadPost";
 
 import Switch from "@mui/material/Switch";
@@ -32,6 +31,7 @@ export default function DubBox({
   translateContent,
   pitchList,
   scriptLength,
+  startTime,
   scriptIndex,
   youtubePlayer,
   speechToText,
@@ -202,6 +202,16 @@ export default function DubBox({
 
   function handleScriptPlayButton() {
     setIsPlaying(true);
+
+    const time = youtubePlayer.getCurrentTime();
+    // console.log('time', time);
+    // console.log('startTime', startTime/1000);
+
+    // if (time != startTime) {
+    //   youtubePlayer.seekTo(startTime);
+    //   await setTimeout(() => {}, 800);
+    // }
+
     youtubePlayer.playVideo();
 
     const timerId = window.setTimeout(() => {
@@ -375,7 +385,7 @@ export default function DubBox({
         onEnded={handleAudioEnded}
       />
       <p className="text-12 text-dubblack font-normal flex justify-end mx-16 mb-4">
-        {duration / 1000}초
+        {(duration / 1000).toFixed(2)}초
       </p>
       <div className="mb-16 mx-16">
         {isPlaying ||
