@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import useGetVideoInfoQuery from "@/apis/manager/queries/useGetVideoInfoQuery";
 import ScriptListItem from "@/features/manager/organism/ScriptListItem";
@@ -12,6 +12,23 @@ import { clearScriptsInfo } from "@/stores/manager/scriptsPostSlice";
 
 import { ScriptsListItem } from "../../stores/manager/scriptsPostSlice";
 
+interface getVideoInfoType {
+  channelTitle: string;
+  thumbnails: string;
+  title: string;
+  url: string;
+}
+interface scriptsType {
+  duration: number;
+  start: number;
+  text: string;
+  translation: string;
+}
+
+interface categoryType {
+  id: number;
+}
+
 export default function ManagerPage() {
   const [inputs, setInputs] = useState({
     url: "",
@@ -19,13 +36,8 @@ export default function ManagerPage() {
     end: 0,
     lang: "",
   });
-
-  interface getVideoInfoType {
-    channelTitle: string;
-    thumbnails: string;
-    title: string;
-    url: string;
-  }
+  //Redux
+  const { userId } = useSelector((state: RootState) => state.user);
 
   // 채워넣기 용 비디오 info
   const [videoInfo, setVideoInfo] = useState<getVideoInfoType>();
@@ -38,9 +50,6 @@ export default function ManagerPage() {
     translation: string;
   }
 
-  interface categoryType {
-    id: number;
-  }
 
   // script 정보 관리하는 useState
   const [scripts, setScripts] = useState<scriptsType[]>([]);
@@ -79,7 +88,6 @@ export default function ManagerPage() {
 
   const [audioFile, setAudioFile] = useState<FileList | null>(null);
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log(e.target.files);
     setAudioFile(e.target.files);
   };
 
@@ -182,10 +190,13 @@ export default function ManagerPage() {
 
     const postData = {
       video: video,
-      userId: "2763952293",
-      scripts: transferToFloat,
+      userId: userId,
+      scripts: scriptsData,
       categories: selectedTag,
     };
+    console.log(`userId : ${userId}`);
+    
+    console.log("!!! postData", JSON.stringify(postData));
 
     formData.append("data", JSON.stringify(postData));
 
