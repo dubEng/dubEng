@@ -3,16 +3,28 @@ import DubVideoThumbnail from "../../../components/atoms/DubVideoThumbnail";
 import { DubProduct } from "@/types/DubProduct";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import useHomePopularityQuery from "@/apis/home/queries/useHomePopularityQuery";
+import ScaleLoader from "react-spinners/ScaleLoader";
+import ErrorComponent from "@/components/atoms/ErrorComponent";
 
 export default function DubProductList() {
-  const dubProductList: DubProduct[] = [
-    { videoId: 0, title: "New Year, New Bears | We Bare Bears", url: "0" },
-    { videoId: 1, title: "겨울 왕국", url: "1" },
-    { videoId: 2, title: "라이언킹", url: "2" },
-    { videoId: 3, title: "워킹데드", url: "3" },
-    { videoId: 4, title: "해리포터", url: "4" },
-    { videoId: 5, title: "아따맘마", url: "5" },
-  ];
+  const popularity =  useHomePopularityQuery();
+
+  if (popularity.isLoading) {
+    return (
+      <div className="container mx-auto">
+        <ScaleLoader color="#FF6D60" />;
+      </div>
+    );
+  }
+
+  if (popularity.isError) {
+    return (
+      <div className="container mx-auto">
+        <ErrorComponent />;
+      </div>
+    );
+  }
 
   return (
     <Swiper
@@ -43,8 +55,8 @@ export default function DubProductList() {
         },
       }}
     >
-      {dubProductList &&
-        dubProductList.map((item, index) => (
+      {popularity.data &&
+        popularity.data.map((item: any, index: number) => (
           <SwiperSlide key={item.videoId}>
             <DubVideoThumbnail
               title={item.title}
