@@ -148,7 +148,7 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
         if data is not None:
             sql = "UPDATE video SET background_path=%s, voice_path=%s, pitch=%s WHERE id=%s"
             cursor.execute(
-                sql, (data['backUrl'], data['vocalUrl'], data['pitch'], videoId))
+                sql, (data['backUrl'], data['vocalUrl'], data['pitch'], str(videoId)))
         else:
             return False
         pitch = json.loads(data['pitch'])
@@ -167,14 +167,15 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
             pitch_text = json.dumps(temp)
             pitch_text = pitch_text.replace('[', '').replace(']', '')
 
-            values = (sc['startTime']*1000, sc['duration']*1000, sc['content'],
-                      sc['translateContent'], videoId, sc['isDub'], pitch_text)
+            values = (str(sc['startTime']*1000), str(sc['duration']*1000), sc['content'],
+                      sc['translateContent'], str(videoId), sc['isDub'], pitch_text)
             cursor.execute(sql, values)
 
         connection.commit()
         connection.close()
     except Exception as e:    # 모든 예외의 에러 메시지를 출력할 때는 Exception을 사용
         print(e)
+        return False
     return True
 
 
@@ -217,6 +218,9 @@ def seperateMp3(url, userId, videoTitle, file_exist, videoId):
 
     # 로컬 음원 S3 버킷 업로드
     # videoTitle = deletIllegalSymbols(videoTitle)
+    print(type(videoId))
+    print("위에는 비디오 아이디 user!!!")
+    print(type(userId))
     videoIdStr = str(videoId)
     backgroundPath = "./download/output/"+userId+"/accompaniment.wav"
     backgroundName = userId+"_"+videoIdStr+"_accompaniment.wav"
