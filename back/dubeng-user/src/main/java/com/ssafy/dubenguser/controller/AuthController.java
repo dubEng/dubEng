@@ -5,17 +5,14 @@ import com.ssafy.dubenguser.dto.UserJoinReq;
 import com.ssafy.dubenguser.dto.UserLoginReq;
 import com.ssafy.dubenguser.dto.UserLoginRes;
 import com.ssafy.dubenguser.exception.DuplicateException;
-import com.ssafy.dubenguser.exception.NotFoundException;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
-import com.ssafy.dubenguser.service.AuthService;
+import com.ssafy.dubenguser.service.AuthServiceImpl;
 import com.ssafy.dubenguser.service.UserService;
-import com.ssafy.dubenguser.service.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +21,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URI;
 import java.util.HashMap;
 
 @Slf4j
@@ -34,7 +30,7 @@ import java.util.HashMap;
 @Api("회원 API")
 public class AuthController {
     private final UserService userService;
-    private final AuthService authService;
+    private final AuthServiceImpl authService;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 

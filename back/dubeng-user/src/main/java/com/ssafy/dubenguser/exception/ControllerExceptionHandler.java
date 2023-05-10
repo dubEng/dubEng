@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Slf4j
 @ControllerAdvice
@@ -41,5 +42,11 @@ public class ControllerExceptionHandler {
         log.error(e.getMessage());
         return ErrorRes.make(e.getMessage());
     }
-
+    @ExceptionHandler(WebClientResponseException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ErrorRes handleWebClientResponseException(WebClientResponseException e){
+        log.error(e.getMessage());
+        return ErrorRes.make(e.getMessage());
+    }
 }

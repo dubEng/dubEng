@@ -5,6 +5,7 @@ import com.ssafy.dubenguser.entity.*;
 import com.ssafy.dubenguser.exception.DuplicateException;
 import com.ssafy.dubenguser.exception.InvalidInputException;
 import com.ssafy.dubenguser.exception.NotFoundException;
+import com.ssafy.dubenguser.exception.UnAuthorizedException;
 import com.ssafy.dubenguser.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final AuthServiceImpl authService;
+
     private final UserCategoryRepository userCategoryRepository;
     private final CategoryRepository categoryRepository;
     private final MissionRepository missionRepository;
@@ -96,11 +99,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public UserProfileRes findProfile(UserProfileReq request) {
-        if(request.getUserId() == null)
-            throw new InvalidInputException("유저 아이디가 없습니다!");
+    public UserProfileRes findProfile(String accessToken) {
+        //Token Parsing
+        String userId = authService.parseToken(accessToken);
+        if(userId == null) throw new UnAuthorizedException("유저 아이디가 없습니다!");
 
-        Optional<User> findUser = userRepository.findById(request.getUserId());
+        Optional<User> findUser = userRepository.findById(userId);
 
         if(!findUser.isPresent()) 
             throw new NotFoundException("존재하지 않는 유저입니다!");
@@ -130,7 +134,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public UserCalendarRes findCalendar(String userId) {
+    public UserCalendarRes findCalendar(String accessToken) {
+        //Token parsing
+        String userId = authService.parseToken(accessToken);
+        if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");
+
         ZonedDateTime today = ZonedDateTime.now();
         ZonedDateTime startDate = today.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
         ZonedDateTime endDate = today.withDayOfMonth(today.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59).withNano(999_999_999);
@@ -149,17 +157,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public List<UserRecordRes> findRecord(String userId, UserRecordReq request) {
+    public List<UserRecordRes> findRecord(String accessToken, UserRecordReq request) {
         if(request.getIsPublic()==null || request.getIsLimit()==null || request.getLanType()==null)
             throw new InvalidInputException("모든 값을 채워주세요!");
 
+        //Token Parsing
+        String userId = authService.parseToken(accessToken);
+        if(userId == null) throw new UnAuthorizedException("유저 아이디가 없습니다!");
+
+        //JPA
         List<UserRecordRes> result = userRepository.findRecordByUserId(userId, request.getIsPublic(), request.getIsLimit(), request.getLanType());
         return result;
     }
 
     @Transactional
-    public List<RecordLikeRes> findRecordLike(String userId, Boolean isLimit) {
+    public List<RecordLikeRes> findRecordLike(String accessToken, Boolean isLimit) {
+        //Token Parsing
+        String userId = authService.parseToken(accessToken);
+        if(userId == null) throw new UnAuthorizedException("유저 아이디가 없습니다!");
 
+        // Redis Set
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
         String key = "like_userId::"+userId;
         Set<Object> rmembers = setOperations.members(key);
@@ -172,7 +189,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public List<VideoBookmarkRes> findVideoBookmark(String userId, Boolean isLimit) {
+    public List<VideoBookmarkRes> findVideoBookmark(String accessToken, Boolean isLimit) {
+        //Token Parsing
+        String userId = authService.parseToken(accessToken);
+        if(userId == null) throw new UnAuthorizedException("유저 아이디가 없습니다!");
+
+        // Redis Set
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
         String key = "scrap_userId::"+userId;
         Set<Object> rmembers = setOperations.members(key);
