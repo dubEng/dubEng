@@ -18,8 +18,8 @@ const fetcher = (
         title: title,
       },
     })
-    .then((res) => {
-      return res;
+    .then(({ data }) => {
+      return data;
     });
 
 const useSearchDubVideoQuery = (
@@ -31,7 +31,7 @@ const useSearchDubVideoQuery = (
   return useQuery(
     [queryKeys.SEARCH_DUB_VIDEO, contentsSearch, langType, size, title],
     ({ pageParam = 0 }) =>
-      fetcher(contentsSearch, langType, title, size, pageParam)
+      fetcher(contentsSearch, langType, pageParam, size, title)
   );
 };
 

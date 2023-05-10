@@ -10,8 +10,8 @@ const fetcher = (langType: string) =>
         size: 10,
       },
     })
-    .then((res) => {
-      return res;
+    .then(({ data }) => {
+      return data;
     });
 
 const useRecommendDubVideoListQuery = (langType: string) => {
