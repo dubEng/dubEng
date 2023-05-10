@@ -1,11 +1,31 @@
+// import storage from "redux-persist/lib/storage";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import storage from "redux-persist/lib/storage";
 import { persistReducer } from "redux-persist";
 import userReducer from "../stores/user/userSlice";
 import scriptsPostSlice from "./manager/scriptsPostSlice";
 import communityTabSlice from "./community/communityTabSlice";
 import languageTabSlice from "./community/languageTabSlice";
 import signupSlice from "./user/signupSlice";
+import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
+
+const createNoopStorage = () => {
+  return {
+    getItem(_key: any) {
+      return Promise.resolve(null);
+    },
+    setItem(_key: any, value: any) {
+      return Promise.resolve(value);
+    },
+    removeItem(_key: any) {
+      return Promise.resolve();
+    },
+  };
+};
+
+const storage =
+  typeof window === 'undefined'
+    ? createNoopStorage()
+    : createWebStorage('local');
 
 const reducers = combineReducers({
   user: userReducer,
