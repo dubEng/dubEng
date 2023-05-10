@@ -33,7 +33,7 @@ export default function DubbingPage() {
     parseInt(router.query.id as string)
   );
 
-  const scriptListTemp = useDubRecordScriptQuery(
+  const scriptList = useDubRecordScriptQuery(
     parseInt(router.query.id as string)
   );
 
@@ -41,8 +41,6 @@ export default function DubbingPage() {
 
   const userId = useSelector((state: RootState) => state.user.userId);
   const nickname = useSelector((state: RootState) => state.user.nickname);
-  console.log("userId", userId);
-  console.log("nickname", nickname);
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
@@ -107,14 +105,8 @@ export default function DubbingPage() {
         const time = Math.floor(Number(youtubePlayer?.getCurrentTime()));
 
         const progress =
-          Math.floor(
-            (youtubePlayer?.getCurrentTime() * 100) /
-              youtubePlayer?.getDuration()
-          ) + "%";
-
-        console.log("time");
-
-        console.log("progress", progress);
+          ((time - data.startTime) / (data.endTime - data.startTime)) * 100 +
+          "%";
 
         setProgressBarWidth(progress);
 
@@ -130,15 +122,15 @@ export default function DubbingPage() {
 
         /* 실시간 하이라이팅 */
         // flag가 false이거나 선택된 스크립트의 idx값이 전체 스크립트의 길이보다 작으면 실행
-        if (selectedScript < scriptListTemp.data.length && time > 0) {
+        if (selectedScript < scriptList.data.length && time > 0) {
           // 해당 스크립트 리스트의 startTime이 undefined가 아니라면
-          if (scriptListTemp.data[selectedScript]?.startTime != undefined) {
+          if (scriptList.data[selectedScript]?.startTime != undefined) {
             // 현재 재생되고 있는 영상의 시간이 현재 스크립트의 시작 시간보다 크거나 같고
             // 현재 재생되고 있는 영상의 시간이 다음 스크립트의 시작 시간보다 작거나 같다면
             // selectedScript를 증가하지 않고 넘어간다.
             if (
-              scriptListTemp.data[selectedScript]?.startTime <= time &&
-              time <= scriptListTemp.data[selectedScript + 1]?.startTime
+              scriptList.data[selectedScript]?.startTime <= time &&
+              time <= scriptList.data[selectedScript + 1]?.startTime
             ) {
               // console.log("현재 스크립트가 재생중인 영상과 일치합니다.");
             } else {
@@ -147,7 +139,6 @@ export default function DubbingPage() {
             }
           }
         }
-        // console.log("-------------------------------------------");
       }
     }, 1000);
 
@@ -187,7 +178,7 @@ export default function DubbingPage() {
     window.clearTimeout(timerId);
 
     const activeIndex = swiper.activeIndex;
-    const seekTo = scriptListTemp.data[activeIndex].startTime;
+    const seekTo = scriptList.data[activeIndex].startTime;
     youtubePlayer.pauseVideo();
     youtubePlayer.seekTo(seekTo);
   };
@@ -209,9 +200,7 @@ export default function DubbingPage() {
   }
 
   if (isError) {
-    return (
-        <ErrorComponent onClick={() => {}} retry={false} />
-    );
+    return <ErrorComponent onClick={() => {}} retry={false} />;
   }
 
   return (
@@ -251,8 +240,8 @@ export default function DubbingPage() {
           onSwiper={(swiper) => console.log(swiper)}
           centeredSlides
         >
-          {scriptListTemp.data &&
-            scriptListTemp.data.map((item: any, index: number) => (
+          {scriptList.data &&
+            scriptList.data.map((item: any, index: number) => (
               <SwiperSlide key={item.id}>
                 <DubBox
                   videoId={router.query.id as string}
@@ -263,7 +252,7 @@ export default function DubbingPage() {
                   translateContent={item.translateContent}
                   pitchList={item.pitch}
                   scriptIndex={index + 1}
-                  scriptLength={scriptListTemp.data.length}
+                  scriptLength={scriptList.data.length}
                   youtubePlayer={youtubePlayer}
                   speechToText={speechToText}
                   setSpeechToText={setSpeechToText}
@@ -279,8 +268,8 @@ export default function DubbingPage() {
           전체 스크립트
         </p>
 
-        {scriptListTemp.data &&
-          scriptListTemp.data.map((item: any) => {
+        {scriptList.data &&
+          scriptList.data.map((item: any) => {
             if (item.id === selectedScript) {
               return (
                 <div

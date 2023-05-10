@@ -12,13 +12,15 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import { Script } from "@/types/Script";
 import PitchGraph from "../atoms/PitchGraph";
-import PlayBar from "../atoms/PlayBar";
 import useFileUploadPost from "@/apis/dubbing/mutations/useFileUploadPost";
 
 import Switch from "@mui/material/Switch";
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../stores/store";
+import PlayBarSound from "../atoms/PlayBarSound";
+import PlayBarRecording from "../atoms/PlayBarRecording";
+import PlayBarOrigin from "../atoms/PlayBarOrigin";
 
 // import { useSwiperSlide } from "swiper/react";
 
@@ -29,6 +31,7 @@ export default function DubBox({
   translateContent,
   pitchList,
   scriptLength,
+  startTime,
   scriptIndex,
   youtubePlayer,
   speechToText,
@@ -38,7 +41,15 @@ export default function DubBox({
 }: Script) {
   // const swiperSlide = useSwiperSlide();
 
-  
+  //오디오 현재 시간
+  const [currentTime, setCurrentTime] = useState(0);
+  const [progressOriginBarWidth, setProgressOriginBarWidth] =
+    useState<string>("0%");
+  const [progressSoundBarWidth, setProgressSoundBarWidth] =
+    useState<string>("0%");
+  const [progressRecordBarWidth, setProgressRecordBarWidth] =
+    useState<string>("0%");
+
   const nickname = useSelector((state: RootState) => state.user.nickname);
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -67,8 +78,6 @@ export default function DubBox({
 
   const { mutate } = useFileUploadPost();
 
-  console.log('videoId', videoId);
-
   useEffect(() => {
     (async () => {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -93,10 +102,6 @@ export default function DubBox({
 
         const formData = new FormData();
 
-        console.log('scriptIndex', scriptIndex);
-
-        console.log('videoId', videoId);
-
         formData.append("recodeInfo.nickname", nickname);
         formData.append("recodeInfo.recodeNum", scriptIndex.toString());
         formData.append("recodeInfo.videoId", videoId);
@@ -112,6 +117,81 @@ export default function DubBox({
     })();
   }, []);
 
+  // 원본듣기 ProgressBar 업데이트를 위한 로직
+  useEffect(() => {
+    let timer: any = null;
+    let startTime: number | null = null;
+
+    if (isPlaying) {
+      startTime = performance.now();
+      setProgressOriginBarWidth("0%");
+      timer = setInterval(() => {
+        const elapsedTime = performance.now() - startTime!;
+        const progress =
+          Math.floor(Math.min((elapsedTime / duration) * 100, 100)) + "%";
+
+        setProgressOriginBarWidth(progress);
+
+        if (elapsedTime >= duration) {
+          setProgressOriginBarWidth("0%");
+          clearInterval(timer);
+        }
+      }, 100);
+    }
+
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    };
+  }, [isPlaying]);
+
+  // 녹음하기 ProgressBar 업데이트를 위한 로직
+  useEffect(() => {
+    let timer: any = null;
+    let startTime: number | null = null;
+
+    if (isRecording) {
+      startTime = performance.now();
+      setProgressRecordBarWidth("0%");
+      timer = setInterval(() => {
+        const elapsedTime = performance.now() - startTime!;
+        const progress =
+          Math.floor(Math.min((elapsedTime / duration) * 100, 100)) + "%";
+
+        setProgressRecordBarWidth(progress);
+
+        if (elapsedTime >= duration) {
+          setProgressRecordBarWidth("0%");
+          clearInterval(timer);
+        }
+      }, 100);
+    }
+
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    };
+  }, [isRecording]);
+
+  //내 녹음 다시 듣기 ProgressBar 업데이트를 위한 시간 로직
+  useEffect(() => {
+    const audio = audioRef.current!;
+    const handleTimeUpdate = () => {
+      setCurrentTime(audio.currentTime);
+    };
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    return () => audio.removeEventListener("timeupdate", handleTimeUpdate);
+  }, []);
+
+  //내 녹음 다시 듣기 ProgressBar 업데이트
+  useEffect(() => {
+    const progress = Math.floor((currentTime * 100) / (duration / 1000)) + "%";
+    setProgressSoundBarWidth(progress);
+  }, [currentTime]);
+
+  //STT listening 상태 변경 시 작동
   useEffect(() => {
     setSpeechToText(transcript);
     onMatching(transcript);
@@ -122,6 +202,16 @@ export default function DubBox({
 
   function handleScriptPlayButton() {
     setIsPlaying(true);
+
+    const time = youtubePlayer.getCurrentTime();
+    // console.log('time', time);
+    // console.log('startTime', startTime/1000);
+
+    // if (time != startTime) {
+    //   youtubePlayer.seekTo(startTime);
+    //   await setTimeout(() => {}, 800);
+    // }
+
     youtubePlayer.playVideo();
 
     const timerId = window.setTimeout(() => {
@@ -132,13 +222,13 @@ export default function DubBox({
     setTimerId(timerId);
   }
 
-  function handleScriptStopButton() {
-    setIsPlaying(false);
+  // function handleScriptStopButton() {
+  //   setIsPlaying(false);
 
-    // 기존에 타이머가 동작중이었을 경우 clear
-    window.clearTimeout(timerId);
-    youtubePlayer.pauseVideo();
-  }
+  //   // 기존에 타이머가 동작중이었을 경우 clear
+  //   window.clearTimeout(timerId);
+  //   youtubePlayer.pauseVideo();
+  // }
 
   function handleRecordButton() {
     setIsRecording(true);
@@ -295,16 +385,27 @@ export default function DubBox({
         onEnded={handleAudioEnded}
       />
       <p className="text-12 text-dubblack font-normal flex justify-end mx-16 mb-4">
-        {duration / 1000}초
+        {(duration / 1000).toFixed(2)}초
       </p>
       <div className="mb-16 mx-16">
-        <PlayBar width={"0%"} />
+        {isPlaying ||
+        soundStatus === SoundType.PLAYING ||
+        isRecording ? null : (
+          <PlayBarOrigin width={"0%"} />
+        )}
+        {isPlaying ? <PlayBarOrigin width={progressOriginBarWidth} /> : null}
+        {soundStatus === SoundType.PLAYING ? (
+          <PlayBarSound width={progressSoundBarWidth} />
+        ) : null}
+        {isRecording ? (
+          <PlayBarRecording width={progressRecordBarWidth} />
+        ) : null}
       </div>
       <div className="flex justify-evenly">
         <PlayButton
           isPlaying={isPlaying}
           playVideo={handleScriptPlayButton}
-          stopVideo={handleScriptStopButton}
+          stopVideo={() => {}}
           disable={isRecording || soundStatus == SoundType.PLAYING}
         />
         <RecordButton
