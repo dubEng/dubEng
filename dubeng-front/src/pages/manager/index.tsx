@@ -7,6 +7,10 @@ import useVideoPost from "@/apis/manager/mutations/useVideoPost";
 import CommonInputBox from "@/components/atoms/CommonInputBox";
 import TagButton from "@/components/atoms/TagButton";
 import { RootState } from "@/stores/store";
+import { useDispatch } from "react-redux";
+import { clearScriptsInfo } from "@/stores/manager/scriptsPostSlice";
+
+import { ScriptsListItem } from "../../stores/manager/scriptsPostSlice";
 
 interface getVideoInfoType {
   channelTitle: string;
@@ -37,7 +41,14 @@ export default function ManagerPage() {
 
   // 채워넣기 용 비디오 info
   const [videoInfo, setVideoInfo] = useState<getVideoInfoType>();
+  const dispatch = useDispatch();
 
+  interface scriptsType {
+    duration: number | string;
+    start: number | string;
+    text: string;
+    translation: string;
+  }
 
 
   // script 정보 관리하는 useState
@@ -141,7 +152,9 @@ export default function ManagerPage() {
   }
 
   const userIdData = useSelector((state: RootState) => state.user.userId);
-  const scriptsData = useSelector((state: RootState) => state.scriptsPostInfo);
+  const scriptsData = useSelector(
+    (state: RootState) => state.scriptsPostInfo.scriptsList
+  );
 
   function makeFormData() {
     const formData = new FormData();
@@ -157,6 +170,24 @@ export default function ManagerPage() {
       lang: lang,
     };
 
+    const transferToFloat: ScriptsListItem[] = [];
+
+    scriptsData.forEach((item) => {
+      transferToFloat.push({
+        duration:
+          typeof item.duration === "string"
+            ? parseFloat(item.duration)
+            : item.duration,
+        startTime:
+          typeof item.startTime === "string"
+            ? parseFloat(item.startTime)
+            : item.duration,
+        content: item.content,
+        translateContent: item.translateContent,
+        isDub: item.isDub,
+      });
+    });
+
     const postData = {
       video: video,
       userId: userId,
@@ -168,8 +199,6 @@ export default function ManagerPage() {
     console.log("!!! postData", JSON.stringify(postData));
 
     formData.append("data", JSON.stringify(postData));
-
-    console.log("~~~ postData를 붙인 formData", formData);
 
     if (audioFile) {
       formData.append(`file`, audioFile[0]);
@@ -188,7 +217,15 @@ export default function ManagerPage() {
         const videoPostResult = await mutation.mutateAsync(formData);
       } catch (error) {}
     }
+    // 스크립트 초기화
+    dispatch(clearScriptsInfo());
   }
+
+  // function handleClear() {
+  //   console.log("clear 전", scriptsData);
+  //   dispatch(clearScriptsInfo());
+  //   console.log("전역에 있는 script 정보 확인");
+  // }
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -351,7 +388,7 @@ export default function ManagerPage() {
 
       <div className="mt-16">
         <p>카테고리</p>
-        <div className="flex">
+        <div className="flex flex-wrap">
           {data?.map((tag: { id: number; name: string }, idx: number) => (
             <TagButton
               onClick={() => handleClickTag(tag.id)}
