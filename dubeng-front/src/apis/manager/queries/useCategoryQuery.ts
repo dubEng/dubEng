@@ -4,7 +4,7 @@ import * as queryKeys from "@/constants/queryKeys";
 
 const fetcher = () =>
   axios
-    .get("https://k8b208.p.ssafy.io/admin" + `/category`)
+    .get(process.env.NEXT_PUBLIC_BASE_URL + `/admin/category`)
     .then(({ data }) => {
       return data;
     });
