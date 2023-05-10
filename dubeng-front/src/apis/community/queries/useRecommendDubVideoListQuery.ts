@@ -15,7 +15,7 @@ const fetcher = (langType: string) =>
     });
 
 const useRecommendDubVideoListQuery = (langType: string) => {
-  return useQuery(queryKeys.RECOMMEND_DUV_VIDEO, () => fetcher(langType));
+  return useQuery(queryKeys.RECOMMEND_DUB_VIDEO_LIST, () => fetcher(langType));
 };
 
 export default useRecommendDubVideoListQuery;
