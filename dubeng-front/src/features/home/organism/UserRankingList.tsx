@@ -1,65 +1,41 @@
-import { UserRanking } from "@/types/UserRanking";
-import ProfileOne from "../../../../public/images/dump/profile_01.svg";
-import ProfileTwo from "../../../../public/images/dump/profile_02.svg";
-import ProfileThree from "../../../../public/images/dump/profile_03.svg";
-import ProfileFour from "../../../../public/images/dump/profile_04.svg";
-import ProfileFive from "../../../../public/images/dump/profile_05.svg";
+import ScaleLoader from "react-spinners/ScaleLoader";
 import UserRankingListItem from "../molecules/UserRankingListItem";
+import useHomeRankQuery from "@/apis/home/queries/useHomeRankQuery";
+import ErrorComponent from "@/components/atoms/ErrorComponent";
 
 export default function UserRankingList() {
-  const userRankingList: UserRanking[] = [
-    {
-      ranking: 1,
-      imageUrl: ProfileFive,
-      nickname: "김아영",
-      introduce: "8 Team Leader",
-      recordingTime: 100,
-      dubingCount: 531,
-    },
-    {
-      ranking: 2,
-      imageUrl: ProfileTwo,
-      nickname: "김동동",
-      introduce: "FE, BE, DevOps",
-      recordingTime: 9,
-      dubingCount: 453,
-    },
-    {
-      ranking: 3,
-      imageUrl: ProfileThree,
-      nickname: "김언도",
-      introduce: "안녕하세요, 언도입니다.",
-      recordingTime: 8,
-      dubingCount: 333,
-    },
-    {
-      ranking: 4,
-      imageUrl: ProfileFour,
-      nickname: "김지희",
-      introduce: "CA말이 우수워?",
-      recordingTime: 7,
-      dubingCount: 210,
-    },
-    {
-      ranking: 5,
-      imageUrl: ProfileOne,
-      nickname: "김자민",
-      introduce: "안산 꿀주먹",
-      recordingTime: 6,
-      dubingCount: 153,
-    },
-  ];
+  const rank = useHomeRankQuery();
+
+  if (rank.isLoading) {
+    return (
+      <div className="container mx-auto">
+        <ScaleLoader color="#FF6D60" />
+      </div>
+    );
+  }
+
+  if (rank.isError) {
+    return (
+      <div className="container mx-auto">
+        <ErrorComponent onClick={() => rank.refetch} retry={true} />
+      </div>
+    );
+  }
 
   return (
     <section className="mx-16">
       <div className="grid grid-cols-12 mb-8 gap-8">
         <div className="col-span-3"></div>
         <div className="col-span-5 text-13 text-dubblack"> 닉네임</div>
-        <div className="text-13 text-dubblack flex items-center justify-center col-span-2">녹음시간</div>
-        <div className="text-13 text-dubblack flex items-center justify-center col-span-2">더빙 수</div>
+        <div className="text-13 text-dubblack flex items-center justify-center col-span-2">
+          녹음시간
+        </div>
+        <div className="text-13 text-dubblack flex items-center justify-center col-span-2">
+          더빙 수
+        </div>
       </div>
-      {userRankingList &&
-        userRankingList.map((item) => (
+      {rank.data &&
+        rank.data.map((item: any) => (
           <UserRankingListItem
             key={item.ranking}
             imageUrl={item.imageUrl}

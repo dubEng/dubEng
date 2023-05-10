@@ -40,6 +40,7 @@
     "react-query": "^3.39.3",
     "react-redux": "^8.0.5",
     "react-speech-recognition": "^3.10.0",
+    "react-spinners": "^0.13.8",
     "react-youtube": "^10.1.0",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",

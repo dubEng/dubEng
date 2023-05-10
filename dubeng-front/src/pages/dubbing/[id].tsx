@@ -15,6 +15,8 @@ import { RootState } from "../../stores/store";
 import { useRouter } from "next/router";
 import useRecordPreviewPost from "@/apis/dubbing/mutations/useRecordPreviewPost";
 import { RecordPreview } from "@/types/RecordPreview";
+import ErrorComponent from "@/components/atoms/ErrorComponent";
+import ScaleLoader from "react-spinners/ScaleLoader";
 
 interface Iprops {
   id: number;
@@ -39,8 +41,8 @@ export default function DubbingPage() {
 
   const userId = useSelector((state: RootState) => state.user.userId);
   const nickname = useSelector((state: RootState) => state.user.nickname);
-  console.log('userId', userId);
-  console.log('nickname', nickname);
+  console.log("userId", userId);
+  console.log("nickname", nickname);
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
@@ -195,8 +197,23 @@ export default function DubbingPage() {
   }
 
   if (!speechRecognitionSupported) {
-    console.log("스피치 인식을 지원하지 않는 브라우저 입니다.");
     return <span>스피치 인식을 지원하지 않는 브라우저 입니다.</span>;
+  }
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto">
+        <ScaleLoader color="#FF6D60" />;
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="container mx-auto">
+        <ErrorComponent onClick={() => {}} retry={false} />;
+      </div>
+    );
   }
 
   return (
@@ -294,7 +311,11 @@ export default function DubbingPage() {
           })}
       </div>
       <div className="flex justify-center w-391 mb-16">
-        <CommonButton children="저장하기" isDisabled onClick={handleSaveButton} />
+        <CommonButton
+          children="저장하기"
+          isDisabled
+          onClick={handleSaveButton}
+        />
       </div>
     </>
   );
