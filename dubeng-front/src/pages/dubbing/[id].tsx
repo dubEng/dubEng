@@ -202,17 +202,15 @@ export default function DubbingPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto">
-        <ScaleLoader color="#FF6D60" />;
+      <div className="flex justify-center items-center my-16">
+        <ScaleLoader color="#FF6D60" />
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className="container mx-auto">
-        <ErrorComponent onClick={() => {}} retry={false} />;
-      </div>
+        <ErrorComponent onClick={() => {}} retry={false} />
     );
   }
 

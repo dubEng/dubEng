@@ -8,18 +8,14 @@ export default function UserRankingList() {
 
   if (rank.isLoading) {
     return (
-      <div className="container mx-auto">
+      <div className="flex justify-center items-center my-16">
         <ScaleLoader color="#FF6D60" />
       </div>
     );
   }
 
   if (rank.isError) {
-    return (
-      <div className="container mx-auto">
-        <ErrorComponent onClick={() => rank.refetch} retry={true} />
-      </div>
-    );
+    return <ErrorComponent onClick={() => rank.refetch} retry={true} />;
   }
 
   return (

@@ -5,7 +5,7 @@ interface Iprops {
 
 export default function ErrorComponent({ onClick, retry }: Iprops) {
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center my-16">
       <p className="text-dubgray text-14">
         서버에서 요청을 처리하는데 실패하였습니다.
       </p>

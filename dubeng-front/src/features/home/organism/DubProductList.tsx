@@ -12,7 +12,7 @@ export default function DubProductList() {
 
   if (popularity.isLoading) {
     return (
-      <div className="container mx-auto">
+      <div className="flex justify-center items-center my-16">
         <ScaleLoader color="#FF6D60" />
       </div>
     );
@@ -20,9 +20,7 @@ export default function DubProductList() {
 
   if (popularity.isError) {
     return (
-      <div className="container mx-auto">
         <ErrorComponent onClick={() => popularity.refetch} retry={true} />
-      </div>
     );
   }
 
