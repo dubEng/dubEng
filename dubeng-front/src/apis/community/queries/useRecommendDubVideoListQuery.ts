@@ -4,7 +4,7 @@ import * as queryKeys from "@/constants/queryKeys";
 
 const fetcher = (langType: string) =>
   axios
-    .get(process.env.NEXT_PUBLIC_BASE_URL + `/recommand/${langType}`, {
+    .get(process.env.NEXT_PUBLIC_BASE_URL + `/contents/recommand/${langType}`, {
       params: {
         page: 1,
         size: 10,
