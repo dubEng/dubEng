@@ -135,10 +135,10 @@ public class UserServiceImpl implements UserService {
         ZonedDateTime startDate = today.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
         ZonedDateTime endDate = today.withDayOfMonth(today.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59).withNano(999_999_999);
 
-        List<UserCalender> userCalendars = userRepository.findCalenderByUserId(userId, startDate, endDate);
+        List<UserCalendar> userCalendars = userRepository.findCalenderByUserId(userId, startDate, endDate);
         List<ZonedDateTime> res = new ArrayList<>();
 
-        for(UserCalender uc: userCalendars) {
+        for(UserCalendar uc: userCalendars) {
             res.add(uc.getCalDate());
         }
 

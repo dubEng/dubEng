@@ -4,7 +4,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.dubenguser.dto.*;
 import com.ssafy.dubenguser.entity.Category;
-import com.ssafy.dubenguser.entity.UserCalender;
+import com.ssafy.dubenguser.entity.UserCalendar;
 import com.ssafy.dubenguser.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,12 +14,10 @@ import java.util.List;
 
 import static com.ssafy.dubenguser.entity.QCategory.category;
 import static com.ssafy.dubenguser.entity.QRecord.record;
-import static com.ssafy.dubenguser.entity.QRecordLike.recordLike;
 import static com.ssafy.dubenguser.entity.QUser.user;
 import static com.ssafy.dubenguser.entity.QUserCategory.userCategory;
-import static com.ssafy.dubenguser.entity.QUserCalender.userCalender;
+import static com.ssafy.dubenguser.entity.QUserCalendar.userCalendar;
 import static com.ssafy.dubenguser.entity.QVideo.video;
-import static com.ssafy.dubenguser.entity.QVideoBookmark.videoBookmark;
 
 @Slf4j
 public class UserRepositoryImpl implements UserRepositoryCustom {
@@ -45,10 +43,10 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<UserCalender> findCalenderByUserId(String userId, ZonedDateTime start, ZonedDateTime end) {
-        List<UserCalender> userCalendars = jpaQueryFactory
-                .selectFrom(userCalender)
-                .where(userCalender.user.id.eq(userId).and(userCalender.calDate.between(start, end)))
+    public List<UserCalendar> findCalenderByUserId(String userId, ZonedDateTime start, ZonedDateTime end) {
+        List<UserCalendar> userCalendars = jpaQueryFactory
+                .selectFrom(userCalendar)
+                .where(userCalendar.user.id.eq(userId).and(userCalendar.calDate.between(start, end)))
                 .fetch();
 
         if(userCalendars.isEmpty())
@@ -123,6 +121,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                     .fetch();
         }
 
+        if(result.isEmpty())
+            throw new NotFoundException("좋아요를 누른 더빙 작품이 없습니다!");
+
         return result;
     }
 
@@ -146,6 +147,10 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                     .orderBy(video.updatedDate.desc())
                     .fetch();
         }
+
+        if(result.isEmpty())
+            throw new NotFoundException("북마크한 비디오가 없습니다!");
+
         return result;
     }
 }

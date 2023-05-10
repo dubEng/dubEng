@@ -1,7 +1,6 @@
 package com.ssafy.dubenguser.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +12,8 @@ import java.time.ZonedDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user_calender")
-public class UserCalender {
+@Table(name = "user_calendar")
+public class UserCalendar {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
