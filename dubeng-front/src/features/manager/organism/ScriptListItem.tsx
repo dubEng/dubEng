@@ -3,8 +3,8 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 interface Iprops {
-  duration: number;
-  start: number;
+  duration: number | string;
+  start: number | string;
   text: string;
   translation: string;
 }
