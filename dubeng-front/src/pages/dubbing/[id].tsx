@@ -13,6 +13,8 @@ import useDubRecordScriptQuery from "@/apis/dubbing/queries/useDubRecordScriptQu
 import { useSelector } from "react-redux";
 import { RootState } from "../../stores/store";
 import { useRouter } from "next/router";
+import useRecordPreviewPost from "@/apis/dubbing/mutations/useRecordPreviewPost";
+import { RecordPreview } from "@/types/RecordPreview";
 
 interface Iprops {
   id: number;
@@ -33,7 +35,10 @@ export default function DubbingPage() {
     parseInt(router.query.id as string)
   );
 
+  const mutation = useRecordPreviewPost();
+
   const userId = useSelector((state: RootState) => state.user.userId);
+  const nickname = useSelector((state: RootState) => state.user.nickname);
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
@@ -52,6 +57,18 @@ export default function DubbingPage() {
     const splitUrl = originalUrl.split("watch?v=");
     const transferVideoPath = splitUrl[1];
     return transferVideoPath;
+  }
+
+  async function handleSaveButton() {
+    if (router.query.id) {
+      const payload: RecordPreview = {
+        nickname: nickname,
+        userId: userId,
+        videoId: parseInt(router.query.id as string),
+      };
+
+      await mutation.mutateAsync(payload);
+    }
   }
 
   // 브라우저 호환성 체크
@@ -275,7 +292,7 @@ export default function DubbingPage() {
           })}
       </div>
       <div className="flex justify-center w-391 mb-16">
-        <CommonButton children="저장하기" isDisabled onClick={() => {}} />
+        <CommonButton children="저장하기" isDisabled onClick={handleSaveButton} />
       </div>
     </>
   );
