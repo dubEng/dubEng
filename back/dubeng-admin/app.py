@@ -169,7 +169,8 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
             pitch_text = json.dumps(temp)
             pitch_text = pitch_text.replace('[', '').replace(']', '')
             dur = float(sc['duration'])*1000
-            values = (str(sc['startTime']*1000), str(dur), sc['content'],
+            st = float(sc['startTime'])*1000
+            values = (str(st), str(dur), sc['content'],
                       sc['translateContent'], str(videoId), sc['isDub'], pitch_text)
             cursor.execute(sql, values)
 
