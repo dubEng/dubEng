@@ -36,7 +36,9 @@ export default function DubVideoListItem({
       </Link>
       <div className="flex flex-col ml-16 justify-between">
         <div>
-          <p className="text-14 font-semibold text-dubblack">{title}</p>
+          <Link href={`/community/shorts/video/${id}`}>
+            <p className="text-14 font-semibold text-dubblack">{title}</p>
+          </Link>
           {runtimeList[0] === 0 ? (
             <p className="text-dubgray text-12">
               영상 길이 : {runtimeList[1]}초
