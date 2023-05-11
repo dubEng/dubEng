@@ -3,7 +3,7 @@ interface Iprops {
   // height: number;
   // fontSize: number;
   children: string;
-  isDisabled: boolean;
+  isDisabled?: boolean;
   onClick: () => void;
 }
 
