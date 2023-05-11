@@ -12,7 +12,8 @@ const fetcher = (formData: FormData) =>
 
 const useFileUploadPost = () => {
   return useMutation(fetcher, {
-    onSuccess: () => {
+    onSuccess: (response) => {
+      console.log('response', response);
       console.log('녹음 파일 저장 성공');
     },
     onError: (error) => {
