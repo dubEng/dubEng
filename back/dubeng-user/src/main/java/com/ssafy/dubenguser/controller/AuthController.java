@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +56,14 @@ public class AuthController {
         cookie.setPath("/");
 
         response.addCookie(cookie);
+
+        Cookie rtkCookie = new Cookie("refreshToken", (String) result.get("refresh_token"));
+        rtkCookie.setMaxAge(60 * 60 * 24 * 7 * 2);
+        rtkCookie.setDomain(BASE_URL);
+        rtkCookie.setPath("/");
+        rtkCookie.setSecure(true);
+
+        response.addCookie(rtkCookie);
 
         //회원 가입 여부 체크
         String redirectUri = "/signup";
@@ -99,8 +108,15 @@ public class AuthController {
      */
     @PostMapping("/join")
     @ApiOperation(value = "회원가입하기")
-    public ResponseEntity<String> userAdd(@RequestBody UserJoinReq request){
-        log.debug("userAdd : {}", request.toString());
+    public ResponseEntity<String> userAdd(@RequestHeader HttpHeaders headers, @RequestBody UserJoinReq request){
+        String accessToken = headers.getFirst("accessToken");
+        if(accessToken == null){
+            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+        }
+        log.debug("=====회원가입하기=====");
+        log.debug("ATK : {}", accessToken);
+        log.info("userAdd : {}", request.toString());
+
         String userId = authService.parseToken(request.getAccessToken());
         if(userId == null) {
             throw new UnAuthorizedException("토큰을 가져올 수 없습니다!");
@@ -114,7 +130,7 @@ public class AuthController {
     }
     @PostMapping("/login")
     @ApiOperation(value = "회원정보 가져오기")
-    public ResponseEntity<UserLoginRes> getLoginInfo(@RequestBody UserLoginReq request){
+    public ResponseEntity<UserLoginRes> getLoginInfo(@RequestHeader HttpHeaders headers, @RequestBody UserLoginReq request){
         log.debug("===로그인===");
 
         log.debug("ATK : {}", request);
