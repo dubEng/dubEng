@@ -228,9 +228,9 @@ def seperateMp3(url, userId, videoTitle, file_exist, videoId):
     videoTitle = deletIllegalSymbols(videoTitle)
     videoIdStr = str(videoId)
     backgroundPath = "./download/output/"+userId+"/accompaniment.wav"
-    backgroundName = userId+"_"+videoIdStr+"_"+videoTitle+"_accompaniment.wav"
+    backgroundName = userId+"_"+videoIdStr+"_accompaniment.wav"
     vocalPath = "./download/output/"+userId+"/vocals.wav"
-    vocalName = userId+"_"+videoIdStr+"_"+videoTitle+"_vocals.wav"
+    vocalName = userId+"_"+videoIdStr+"_vocals.wav"
 
     backUrl = uploadToBucket(backgroundPath, backgroundName)
     vocalUrl = uploadToBucket(vocalPath, vocalName)
