@@ -28,9 +28,12 @@ export const userSlice = createSlice({
       state.nickname = action.payload.nickname;
       state.imageUrl = action.payload.imageUrl;
     },
+    saveAccessToken: (state, action) =>{
+      state.accessToken = action.payload.accessToken;
+    }
   },
 });
 
-export const { saveUserInfo } = userSlice.actions;
+export const { saveUserInfo, saveAccessToken } = userSlice.actions;
 
 export default userSlice.reducer;
