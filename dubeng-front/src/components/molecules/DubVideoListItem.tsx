@@ -25,13 +25,15 @@ export default function DubVideoListItem({
 
   return (
     <div className="flex p-16 w-358 bg-white rounded-8 border-1 border-dubgraymedium">
-      <Image
-        src={thumbnail}
-        alt={title}
-        width={161}
-        height={96}
-        className="rounded-4"
-      ></Image>
+      <Link href={`/community/shorts/video/${id}`}>
+        <Image
+          src={thumbnail}
+          alt={title}
+          width={161}
+          height={96}
+          className="rounded-4"
+        />
+      </Link>
       <div className="flex flex-col ml-16 justify-between">
         <div>
           <p className="text-14 font-semibold text-dubblack">{title}</p>
