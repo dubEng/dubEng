@@ -94,10 +94,11 @@ def getOppositList(original, scripts, runtime, videoST):
 
     #########상대역 음원 부분을 배열에 저장하기#########
     oppositeTimeList = []
+
     for script in range(startIdx, len(scripts)):
-        time = scripts[script].startTime - videoST - startTime
+        time = scripts[script].startTime - startTime
         oppositeTimeList.append(time)
-        startTime += scripts[script].duration    
+        startTime += scripts[script].duration  
 
     lastTime = scripts[len(scripts)-1].startTime - videoST + scripts[len(scripts)-1].duration
     #script가 끝나고 뒤에 음성이 더 있는 경우
@@ -197,7 +198,7 @@ def maekPreviewAudio():
     response = urlopen(videoInfo.voicePath)
     wav_data = response.read()
     original = AudioSegment.from_file(BytesIO(wav_data), format="wav")
-    oppositeAudioList = getOppositList(original, scripts, videoInfo.runtime, videoInfo.startTime*1000)
+    oppositeAudioList = getOppositList(original, scripts, videoInfo.runtime*1000, videoInfo.startTime*1000)
 
     #사용자가 녹음한 음성파일 리스트를 AudioSegment 객체로 만든 후 리스트에 담기
     userAudioList = []
