@@ -188,7 +188,9 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
 
 def cutWav(startTime, endTime, path) :
     wavSeg = AudioSegment.from_file(path)
-    result = wavSeg[int(startTime):int(endTime)]
+    st = int(startTime) * 1000
+    et = int(endTime) * 1000
+    result = wavSeg[st:et]
 
     # 음원 데이터를 메모리 내에서 처리하기 위해 BytesIO 객체 생성
     audio_bytesio = BytesIO()
