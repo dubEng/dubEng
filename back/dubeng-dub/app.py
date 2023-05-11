@@ -66,29 +66,29 @@ def getScriptInfo(videoId):
     cursor = connection.cursor()
 
     #video 테이블에서 정보 얻어오기
-    sql = "select start_time, duration, content, translate_content from script where video_id = %s"
+    sql = "select start_time, duration, is_dub from script where video_id = %s"
     cursor.execute(sql, [videoId])
     rows = cursor.fetchall()
     
     for r in rows:
-        script = videoClass.script()
-        script.set(r[0], r[1], r[2], r[3])
-        scriptList.append(script)
+        dbScript = videoClass.dbScript()
+        dbScript.set(r[0], r[1], r[2])
+        scriptList.append(dbScript)
     
     connection.commit()
     connection.close()
     
     return scriptList
 
-def getOppositList(original, scripts, runtime, videoST):
+def getOppositList(original, scripts, videoST, videoET):
     #자르기 시작하는 시간(ms)
-    startTime = videoST
+    startTime = 0
     #script 객체 배열 반복문 시작 시점
     startIdx = 0
 
     #첫 script의 시작시간이 video의 startTime과 동일할 경우에는 그 이후부터 음원 자르기 수행
-    if (scripts[0].startTime == startTime):
-        startTime += scripts[0].duration
+    if (scripts[0].startTime == videoST):
+        startTime = scripts[0].startTime + scripts[0].duration
         startIdx = 1
     
 
@@ -97,31 +97,41 @@ def getOppositList(original, scripts, runtime, videoST):
 
     for script in range(startIdx, len(scripts)):
         time = scripts[script].startTime - startTime
-        oppositeTimeList.append(time)
-        startTime += scripts[script].duration  
+        startTime = scripts[script].startTime+scripts[script].duration  
 
-    lastTime = scripts[len(scripts)-1].startTime - videoST + scripts[len(scripts)-1].duration
-    #script가 끝나고 뒤에 음성이 더 있는 경우
-    if (lastTime < runtime):
-        time = runtime - lastTime
+        if(time==0):
+            continue
         oppositeTimeList.append(time)
-    
+
+    lastTime = scripts[len(scripts)-1].startTime + scripts[len(scripts)-1].duration
+    #script가 끝나고 뒤에 음성이 더 있는 경우
+    if (lastTime < videoET):
+        time = videoET - lastTime
+        oppositeTimeList.append(time)
 
     #########상대역 음성파일 잘라서 리스트에 넣기#########
     offset = 0 #상대역이 먼저 시작할 경우
 
     if (startIdx!=0): #유저가 먼저 시작할 경우
-        offset = scripts[0].duration
+        offset = scripts[0].startTime + scripts[0].duration
 
     chunks = []
+    startIdx = 0
     for duration in oppositeTimeList:
         chunk = original[offset:offset+duration]
         chunks.append(chunk)
-        offset+=duration
+
+        if(startIdx == len(scripts)):
+            break
+
+        offset+=(duration+scripts[startIdx].duration)
+        startIdx += 1
+
+
     
     return chunks
 
-def mergeAudio(firstList, lastList, bgAudio):
+def mergeAudio(firstList, lastList, bgAudio, videoST, videoET):
     isSame = False
     if (len(firstList) == len(lastList)): #시작과 끝이 다른 리스트에 있는 경우
         isSame = True
@@ -141,9 +151,11 @@ def mergeAudio(firstList, lastList, bgAudio):
     #음성파일의 길이에 맞춰서 배경음악의 길이 자르기
     bgm_chunks = make_chunks(bgAudio, len(mergedAudio))
 
-    result = AudioSegment.empty()
+    temp = AudioSegment.empty()
     for chunk in bgm_chunks:
-        result += chunk.overlay(mergedAudio)
+        temp += chunk.overlay(mergedAudio)
+
+    result = temp[videoST:videoET]
 
     return result
 
@@ -192,30 +204,40 @@ def maekPreviewAudio():
     videoInfo = getVideoInfo(videoId)
 
     #videoId로 DB에서 script 정보 가져오기
-    scripts = getScriptInfo(videoId)
+    getScripts = getScriptInfo(videoId)
+    scripts = []
+    for sc in getScripts:
+        if(sc.isDub):
+            script = videoClass.script()
+            script.set(sc.startTime, sc.duration)
+            scripts.append(script)
+
 
     #원본 음성 파일 중 상대역 부분만 잘라서 리스트로 만들기
     response = urlopen(videoInfo.voicePath)
     wav_data = response.read()
     original = AudioSegment.from_file(BytesIO(wav_data), format="wav")
-    oppositeAudioList = getOppositList(original, scripts, videoInfo.runtime*1000, videoInfo.startTime*1000)
+    oppositeAudioList = getOppositList(original, scripts, videoInfo.startTime*1000, len(original))
 
     #사용자가 녹음한 음성파일 리스트를 AudioSegment 객체로 만든 후 리스트에 담기
     userAudioList = []
+
     for userVoice in userVoiceList:
         print("링크: ",userVoice)
         user = AudioSegment.from_file(userVoice)
         userAudioList.append(user)
-    
+
+
+
     #두 녹음 파일과 배경음악 합치기
     response = urlopen(videoInfo.bgPath)
     wav_data = response.read()
     bgAudio = AudioSegment.from_file(BytesIO(wav_data), format="wav")
     finalAudio = AudioSegment.empty()
-    if (scripts[0].startTime == 0): #사용자가 먼저 시작할 경우
-        finalAudio = mergeAudio(userAudioList, oppositeAudioList, bgAudio)
+    if (scripts[0].startTime == videoInfo.startTime*1000): #사용자가 먼저 시작할 경우
+        finalAudio = mergeAudio(userAudioList, oppositeAudioList, bgAudio, videoInfo.startTime*1000, videoInfo.endTime*1000)
     else: #상대역이 먼저 시작할 경우
-        finalAudio = mergeAudio(oppositeAudioList, userAudioList, bgAudio)
+        finalAudio = mergeAudio(oppositeAudioList, userAudioList, bgAudio, videoInfo.startTime*1000, videoInfo.endTime*1000)
     
     #s3 버킷에 업로드하기
     keyStr = userId + videoInfo.title + ".wav"
