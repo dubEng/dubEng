@@ -97,24 +97,24 @@ def getCategories():
     return categories
 
 
-def uploadToBucket(filePath, uploadName):
+def uploadToBucket(audio_bytes, uploadName):
     key = uploadName
-   # 음원 데이터를 메모리 내에서 처리하기 위해 BytesIO 객체 생성
-    audio_bytesio = BytesIO()
+#    # 음원 데이터를 메모리 내에서 처리하기 위해 BytesIO 객체 생성
+#     audio_bytesio = BytesIO()
 
-    # AudioSegment 객체 생성
-    audio_segment = AudioSegment.from_file(filePath)
+#     # AudioSegment 객체 생성
+#     audio_segment = AudioSegment.from_file(filePath)
 
-    # AudioSegment 객체를 BytesIO에 기록
-    audio_segment.export(audio_bytesio, format="wav")
+#     # AudioSegment 객체를 BytesIO에 기록
+#     audio_segment.export(audio_bytesio, format="wav")
 
-    # BytesIO에서 바이트 스트림 읽어오기
-    audio_bytes = audio_bytesio.getvalue()
+#     # BytesIO에서 바이트 스트림 읽어오기
+#     audio_bytes = audio_bytesio.getvalue()
 
     client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID,
                           aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_DEFAULT_REGION)
 
-    client.upload_fileobj(BytesIO(audio_bytes), BUCKET_NAME, key)
+    client.put_object(Body=audio_bytes.getvalue(), Bucket=BUCKET_NAME, Key=key)
 
     url = f"https://{BUCKET_NAME}.s3.{AWS_DEFAULT_REGION}.amazonaws.com/{key}"
 
@@ -145,7 +145,7 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
             cursor.execute(sql, values)
         # 영상 음원 배경음, 보컬 분리, 주파수 계산
         data = seperateMp3(video['videoPath'], userId,
-                           video['title'], file_exist, videoId)
+                           video['title'], file_exist, videoId, video['startTime'], video['endTime'])
         # 음원 저장 경로 테이블에 저장
         if data is not None:
             sql = "UPDATE video SET background_path=%s, voice_path=%s, pitch=%s WHERE id=%s"
@@ -186,9 +186,24 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
         return False
     return True
 
+def cutWav(startTime, endTime, path) :
+    wavSeg = AudioSegment.from_file(path)
+    result = wavSeg[startTime:endTime]
+
+    # 음원 데이터를 메모리 내에서 처리하기 위해 BytesIO 객체 생성
+    audio_bytesio = BytesIO()
+
+    # AudioSegment 객체를 BytesIO에 기록
+    result.export(audio_bytesio, format="wav")
+
+    # BytesIO에서 바이트 스트림 읽어오기
+    audio_bytes = audio_bytesio.getvalue()
+
+    return audio_bytes
+
 
 # 음원 추출 및 분리하는 함수
-def seperateMp3(url, userId, videoTitle, file_exist, videoId):
+def seperateMp3(url, userId, videoTitle, file_exist, videoId, startTime, endTime):
     import os
     cnt = 0
     newname = userId+'.mp3'
@@ -232,8 +247,12 @@ def seperateMp3(url, userId, videoTitle, file_exist, videoId):
     vocalPath = "./download/output/"+userId+"/vocals.wav"
     vocalName = userId+"_"+videoIdStr+"_vocals.wav"
 
-    backUrl = uploadToBucket(backgroundPath, backgroundName)
-    vocalUrl = uploadToBucket(vocalPath, vocalName)
+    #로컬에 저장한 음원을 startTime, endTime으로 자르기
+    backgroundBytes = cutWav(startTime, endTime, backgroundPath)
+    vocalBytes = cutWav(startTime, endTime, vocalPath)
+
+    backUrl = uploadToBucket(backgroundBytes, backgroundName)
+    vocalUrl = uploadToBucket(vocalBytes, vocalName)
     result = {
         "backUrl": backUrl,  # 배경음원 저장 주소
         "vocalUrl": vocalUrl,  # 보컬 음원 저장 주소
