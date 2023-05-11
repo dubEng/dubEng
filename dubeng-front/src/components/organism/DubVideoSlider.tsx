@@ -1,42 +1,49 @@
 import Sheet from "react-modal-sheet";
 import DubVideoListItem from "../molecules/DubVideoListItem";
 
+interface videoType {
+  id: number;
+  title: string;
+  thumbnail: string;
+  runtime: number;
+}
 interface Iprops {
+  videoList: videoType[];
   isOpen: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function DubVideoSlider({ isOpen, setOpen }: Iprops) {
+export default function DubVideoSlider({ videoList, isOpen, setOpen }: Iprops) {
   const dumpList = [
     {
       id: 160,
       title: "커리지 | 인사해요",
       thumbnail: "",
-      runtime: "2분 3초",
+      runtime: 100,
     },
     {
       id: 161,
       title: "언도의 모험",
       thumbnail: "",
-      runtime: "2분 2초",
+      runtime: 100,
     },
     {
       id: 162,
       title: "동동이의 세계일주",
       thumbnail: "",
-      runtime: "2분 1초",
+      runtime: 100,
     },
     {
       id: 163,
       title: "아영이의 국내일주",
       thumbnail: "",
-      runtime: "2분 15초",
+      runtime: 100,
     },
     {
       id: 171,
       title: "오! 완전 무대를 뒤집어 놓으셨다.",
       thumbnail: "",
-      runtime: "2분 2초",
+      runtime: 100,
     },
     {
       id: 175,
@@ -48,7 +55,7 @@ export default function DubVideoSlider({ isOpen, setOpen }: Iprops) {
       id: 176,
       title: "[어바웃 타임] - 부모님 오시기 전",
       thumbnail: "",
-      runtime: "2분 3초",
+      runtime: 100,
     },
   ];
 

@@ -6,16 +6,18 @@ const fetcher = (langType: string) =>
   axios
     .get("https://k8b208.p.ssafy.io/dub/contents" + `/recommand/${langType}`, {
       params: {
-        page: 1,
-        size: 5,
+        page: 0,
+        size: 10,
       },
     })
     .then((res) => {
       return res;
     });
 
-const useRecommendDubVideoQuery = (langType: string) => {
-  return useQuery(queryKeys.RECOMMEND_DUV_VIDEO, () => fetcher(langType));
+const useRecommendDubVideoListQuery = (langType: string) => {
+  return useQuery([queryKeys.RECOMMEND_DUB_VIDEO_LIST, langType], () =>
+    fetcher(langType)
+  );
 };
 
-export default useRecommendDubVideoQuery;
+export default useRecommendDubVideoListQuery;

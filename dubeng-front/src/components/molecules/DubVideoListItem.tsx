@@ -6,7 +6,7 @@ interface Iprops {
   id: number;
   title: string;
   thumbnail: string;
-  runtime: string;
+  runtime: number;
 }
 
 export default function DubVideoListItem({
@@ -15,8 +15,16 @@ export default function DubVideoListItem({
   thumbnail,
   runtime,
 }: Iprops) {
+  function secondsToMinutes(runtime: number) {
+    const minutes = Math.floor(runtime / 60);
+    const remainingSeconds = runtime % 60;
+    return [minutes, remainingSeconds];
+  }
+
+  const runtimeList = secondsToMinutes(runtime);
+
   return (
-    <div className="flex p-16 w-358 h-128 bg-white rounded-8 border-1 border-dubgraymedium">
+    <div className="flex p-16 w-358 bg-white rounded-8 border-1 border-dubgraymedium">
       <Image
         src={thumbnail}
         alt={title}
@@ -26,10 +34,16 @@ export default function DubVideoListItem({
       ></Image>
       <div className="flex flex-col ml-16 justify-between">
         <div>
-          <p className="leading-18 break-words text-14 font-semibold text-dubblack line-clamp-2 ">
-            {title}
-          </p>
-          <p className="text-dubgray text-12">영상 길이 : {runtime}</p>
+          <p className="text-14 font-semibold text-dubblack">{title}</p>
+          {runtimeList[0] === 0 ? (
+            <p className="text-dubgray text-12">
+              영상 길이 : {runtimeList[1]}초
+            </p>
+          ) : (
+            <p className="text-dubgray text-12">
+              영상 길이 : {runtimeList[0]}분 {runtimeList[1]}초
+            </p>
+          )}
         </div>
         <Link href={`/dubbing/${id}`}>
           <DubButton page={""} />

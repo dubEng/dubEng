@@ -4,12 +4,15 @@ import * as queryKeys from "../../../constants/queryKeys";
 
 const fetcher = (url: string, start: number, end: number, lang: string) =>
   axios
-    .get("https://k8b208.p.ssafy.io/admin" + `/videoInfo/${start}/${end}`, {
-      params: {
-        url: url,
-        lang: lang,
-      },
-    })
+    .get(
+      process.env.NEXT_PUBLIC_BASE_URL + `/admin/videoInfo/${start}/${end}`,
+      {
+        params: {
+          url: url,
+          lang: lang,
+        },
+      }
+    )
     .then(({ data }) => {
       return data;
     });
