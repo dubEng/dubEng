@@ -23,3 +23,6 @@ export const Home_RANK = "/home/rank";
 
 // original shorts
 export const CONTENTS_DETAIL = "/contents/detail";
+
+// product shorts
+export const COMMUNITY_DETAIL = "/community/detail";
