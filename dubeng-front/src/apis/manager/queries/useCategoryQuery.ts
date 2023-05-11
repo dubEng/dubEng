@@ -6,6 +6,7 @@ const fetcher = () =>
   axios
     .get(process.env.NEXT_PUBLIC_BASE_URL + `/admin/category`)
     .then(({ data }) => {
+      console.log("query안에서 {data} 확인", data);
       return data;
     });
 
