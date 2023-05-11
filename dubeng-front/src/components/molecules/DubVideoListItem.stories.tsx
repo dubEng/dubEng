@@ -16,7 +16,7 @@ export const Default: Story = {
       id={1}
       title={"제목입니다. 길어져서 2줄이 "}
       thumbnail={""}
-      runtime={"2분 11초"}
+      runtime={100}
     />
   ),
 };

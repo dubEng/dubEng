@@ -49,7 +49,7 @@ export default function DubVideoSlider({ videoList, isOpen, setOpen }: Iprops) {
       id: 175,
       title: "[인턴] - 안하는 것보다 늦게 하는 것이 낫다",
       thumbnail: "",
-      runtime: "2분 3초",
+      runtime: 100,
     },
     {
       id: 176,
