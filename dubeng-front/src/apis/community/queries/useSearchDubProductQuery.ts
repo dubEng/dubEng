@@ -7,14 +7,14 @@ import qs from "qs";
 const fetcher = (
   contentsSearch: number[],
   langType: string,
-  pageParam: number,
-  size: number,
+  pageParam: string,
+  size: string,
   title: string
 ) => {
   const queryArray = qs.stringify(contentsSearch, { arrayFormat: "repeat" });
   return axios
     .get(
-      process.env.NEXT_PUBLIC_BASE_URL + `/dub/contents/search/${langType}`,
+      process.env.NEXT_PUBLIC_BASE_URL + `/dub/community/search/${langType}`,
       {
         params: {
           queryArray,
@@ -25,22 +25,22 @@ const fetcher = (
       }
     )
     .then(({ data }) => {
-      console.log("더빙 비디오 쿼리 안!!!!", data);
+      console.log("{ 작품search쿼리data }확인", data);
       return data;
     });
 };
 
-const useSearchDubVideoQuery = (
+const useSearchDubProductQuery = (
   contentsSearch: number[],
   langType: string,
-  size: number,
+  size: string,
   title: string
 ) => {
   return useQuery(
-    [queryKeys.SEARCH_DUB_VIDEO, contentsSearch, langType, size, title],
-    ({ pageParam = 0 }) =>
+    [queryKeys.SEARCH_DUB_PRODUCT, contentsSearch, langType, size, title],
+    ({ pageParam = "0" }) =>
       fetcher(contentsSearch, langType, pageParam, size, title)
   );
 };
 
-export default useSearchDubVideoQuery;
+export default useSearchDubProductQuery;

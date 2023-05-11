@@ -23,7 +23,9 @@ import "swiper/css";
 
 import Vote from "@/features/community/organism/Vote";
 import useSearchDubVideoQuery from "@/apis/community/queries/useSearchDubVideoQuery";
+import useSearchDubProductQuery from "@/apis/community/queries/useSearchDubProductQuery";
 import DubVideoList from "@/features/community/organism/DubVideoList";
+import DubProductListItem from "@/components/molecules/DubProductListItem";
 
 export default function CommunityPage() {
   // 전역에서 들고오는 state
@@ -52,20 +54,15 @@ export default function CommunityPage() {
 
   // API 호출 response로 들어오는 state
 
-  // 2. 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
-  const { data: searchList, isLoading: searchLoading } = useSearchDubVideoQuery(
-    selectedCategory,
-    languageIndex,
-    "10",
-    keyword
-  );
-  // console.log("response", response);
+  // 2. 콘텐츠 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
+  const { data: searchDubVideoList, isLoading: searchDubVideoLoading } =
+    useSearchDubVideoQuery(selectedCategory, languageIndex, 10, keyword);
 
-  // console.log("data!!!!!!", data);
-  // console.log("searchResultList", searchResultList);
-  // console.log("data", searchResultList.data);
+  // 3. 작품 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
+  const { data: searchDubProductList, isLoading: searchDubProductLoading } =
+    useSearchDubProductQuery(selectedCategory, languageIndex, "10", keyword);
 
-  // 3. 카테고리 리스트 가져오기
+  // 4. 카테고리 리스트 가져오기
   const { data, isLoading } = useCategoryListQuery();
 
   // if (isLoading) {
@@ -87,10 +84,15 @@ export default function CommunityPage() {
     }
   };
 
-  if (searchLoading) {
+  if (searchDubVideoLoading) {
     return <>로딩 중</>;
   }
-  console.log("searchlist", searchList);
+
+  if (searchDubProductLoading) {
+    return <>작품 로딩 중</>;
+  }
+  console.log("searchDubProductList", searchDubProductList);
+  console.log("searchDubVideoList", searchDubVideoList);
 
   return (
     <div className="static mx-16">
@@ -218,8 +220,9 @@ export default function CommunityPage() {
         </Swiper>
       </div>
       <div className="space-y-16 mt-16">
-        {searchList.content &&
-          searchList.content.map(
+        {tabIndex === DubType.DUB_VIDEO &&
+          searchDubVideoList.content &&
+          searchDubVideoList.content.map(
             (dubVideo: {
               id: number;
               title: string;
@@ -235,22 +238,32 @@ export default function CommunityPage() {
               />
             )
           )}
-        {/* {data.content.map(
-          (dubVideo: {
-            id: number;
-            title: string;
-            thumbnail: string;
-            runtime: number;
-          }) => (
-            <DubVideoListItem
-              key={dubVideo.id}
-              id={dubVideo.id}
-              title={dubVideo.title}
-              thumbnail={dubVideo.thumbnail}
-              runtime={dubVideo.runtime}
-            />
-          )
-        )} */}
+        {tabIndex === DubType.DUB_PRODUCT &&
+          searchDubProductList.content &&
+          searchDubProductList.content.map(
+            (dubProduct: {
+              id: number;
+              title: string;
+              thumbnail: string;
+              runtime: number;
+              imageUrl: string;
+              nickname: string;
+              playCount: number;
+              createdDate: string;
+            }) => (
+              <DubProductListItem
+                key={dubProduct.id}
+                id={dubProduct.id}
+                title={dubProduct.title}
+                thumbnail={dubProduct.thumbnail}
+                runtime={dubProduct.runtime}
+                imageUrl={dubProduct.imageUrl}
+                nickname={dubProduct.nickname}
+                playCount={dubProduct.playCount}
+                createdDate={dubProduct.createdDate}
+              />
+            )
+          )}
       </div>
     </div>
   );

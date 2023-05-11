@@ -1,23 +1,25 @@
 import Image from "next/image";
 
 interface Iprops {
+  id: number;
   title: string;
   thumbnail: string;
-  runtime: string;
+  runtime: number;
   imageUrl: string;
   nickname: string;
   playCount: number;
-  updatedDate: string;
+  createdDate: string;
 }
 
 export default function DubProductListItem({
+  id,
   title,
   thumbnail,
   runtime,
   imageUrl,
   nickname,
   playCount,
-  updatedDate,
+  createdDate,
 }: Iprops) {
   return (
     <div className="flex p-16 w-358 bg-white rounded-8 border-1 border-dubgraymedium">
@@ -46,7 +48,7 @@ export default function DubProductListItem({
         </div>
 
         <p className="text-dubgray text-12">
-          조회수 {playCount}회 ▪ {updatedDate}전
+          조회수 {playCount}회 ▪ {createdDate}전
         </p>
       </div>
     </div>
