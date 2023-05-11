@@ -12,7 +12,7 @@ export default function CommonButton({
   isDisabled,
   onClick,
 }: Iprops) {
-  if (isDisabled) {
+  if (!isDisabled) {
     return (
       <button
         onClick={onClick}

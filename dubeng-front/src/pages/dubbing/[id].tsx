@@ -82,7 +82,10 @@ export default function DubbingPage() {
         videoId: parseInt(router.query.id as string),
       };
 
-      await mutation.mutateAsync(payload);
+      const response = await mutation.mutateAsync(payload);
+      setPreviewUrl(response);
+
+      openModal();
     }
   }
 
@@ -319,11 +322,7 @@ export default function DubbingPage() {
           })}
       </div>
       <div className="flex justify-center w-391 mb-16">
-        <CommonButton
-          children="저장하기"
-          isDisabled
-          onClick={handleSaveButton}
-        />
+        <CommonButton children="저장하기" onClick={handleSaveButton} />
       </div>
       <DubCompleteModal
         closeModal={closeModal}
@@ -332,6 +331,8 @@ export default function DubbingPage() {
         videoPath={data.videoPath}
         modalIsOpen={modalIsOpen}
         audioUrl={previewUrl}
+        videoId={parseInt(router.query.id as string)}
+        userId={userId}
       />
     </>
   );
