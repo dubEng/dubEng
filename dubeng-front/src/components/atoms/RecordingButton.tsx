@@ -25,7 +25,7 @@ export default function RecordingButton({ page }: Iprops) {
           alt="defaultRecordingIcon"
           onClick={() => setOpen(true)}
         />
-        <DubVideoSlider isOpen={isOpen} setOpen={setOpen} />
+        <DubVideoSlider videoList={[]} isOpen={isOpen} setOpen={setOpen} />
       </>
     );
   }
