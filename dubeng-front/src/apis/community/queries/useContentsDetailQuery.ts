@@ -5,7 +5,8 @@ import * as queryKeys from "@/constants/queryKeys";
 const fetcher = (langType: string, videoId: string) =>
   axios
     .get(
-      process.env.NEXT_PUBLIC_BASE_URL + `/dub/contents/${langType}/${videoId}`,
+      process.env.NEXT_PUBLIC_BASE_URL +
+        `/dub/contents/detail/${langType}/${videoId}`,
       {
         params: {
           page: 0,
@@ -14,7 +15,6 @@ const fetcher = (langType: string, videoId: string) =>
       }
     )
     .then(({ data }) => {
-      console.log("useContentsDetailQuery", data);
       return data;
     });
 
