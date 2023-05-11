@@ -2,11 +2,11 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import * as queryKeys from "@/constants/queryKeys";
 
-const fetcher = (langType: string, videoId: string) =>
+const fetcher = (recordId: string, langType : string) =>
   axios
     .get(
       process.env.NEXT_PUBLIC_BASE_URL +
-        `/dub/contents/detail/${langType}/${videoId}`,
+        `/dub/community/detail/${recordId}/${langType }`,
       {
         params: {
           page: 0,
@@ -18,10 +18,10 @@ const fetcher = (langType: string, videoId: string) =>
       return data.content[0];
     });
 
-const useContentsDetailQuery = (langType: string, videoId: string) => {
-  return useQuery([queryKeys.CONTENTS_DETAIL, langType, videoId], () =>
-    fetcher(langType, videoId)
+const useCommunityDetailQuery = (recordId: string, langType : string) => {
+  return useQuery([queryKeys.COMMUNITY_DETAIL, recordId, langType ], () =>
+    fetcher(recordId, langType )
   );
 };
 
-export default useContentsDetailQuery;
+export default useCommunityDetailQuery;

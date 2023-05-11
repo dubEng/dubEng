@@ -1,15 +1,16 @@
-import useContentsDetailQuery from "@/apis/community/queries/useContentsDetailQuery";
-import DubButton from "@/components/atoms/DubButton";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import YouTube, { YouTubePlayer, YouTubeProps } from "react-youtube";
-import Link from "next/link";
+import useCommunityDetailQuery from "@/apis/community/queries/useCommunityDetailQuery";
 
-export default function ShortsVideoPage() {
+export default function ShortsProductPage() {
   const router = useRouter();
 
   //추후에 languageType도 같이 받아오면 좋을 듯!
-  const { data } = useContentsDetailQuery("english", router.query.id as string);
+  const { data } = useCommunityDetailQuery(
+    router.query.id as string,
+    "english"
+  );
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
@@ -108,11 +109,6 @@ export default function ShortsVideoPage() {
           />
           <div className="flex flex-row justify-between mt-16 mb-16 items-center w-390">
             <p className="text-16 text-white">{data.title}</p>
-            <Link href={`/dubbing/${data.id}`}>
-              <div>
-                <DubButton page={"/community/shorts"} />
-              </div>
-            </Link>
           </div>
           <div className="h-260 pt-32 overflow-y-scroll bg-black container mx-auto mb-16 w-391">
             {data.scriptList &&
