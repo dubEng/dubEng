@@ -8,14 +8,17 @@ import "swiper/css";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 import UserProfile from "@/components/atoms/UserProfile";
+import axios from "axios";
 
-export default function DubProductList() {
+export default function DubVideoList() {
   const languageIndex = useSelector((state: RootState) => {
     return state.languageTab.langType;
   });
-  const recommendList = useRecommendDubVideoListQuery(languageIndex);
 
-  if (recommendList.isLoading) {
+  const { data, isLoading, isError, refetch } =
+    useRecommendDubVideoListQuery(languageIndex);
+
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center my-16">
         {/* <ScaleLoader color="#FF6D60" /> */}
@@ -24,10 +27,8 @@ export default function DubProductList() {
     );
   }
 
-  if (recommendList.isError) {
-    return (
-      <ErrorComponent onClick={() => recommendList.refetch} retry={true} />
-    );
+  if (isError) {
+    return <ErrorComponent onClick={() => refetch} retry={true} />;
   }
 
   return (
@@ -59,13 +60,13 @@ export default function DubProductList() {
         },
       }}
     >
-      {recommendList.data &&
-        recommendList.data.map((item: any, index: number) => (
+      {data?.data.ContentsRecommendList &&
+        data?.data.ContentsRecommendList.map((item: any, index: number) => (
           <SwiperSlide key={item.videoId}>
             <DubVideoThumbnail
+              id={item.id}
               title={item.title}
-              url={item.url}
-              videoId={item.videoId}
+              thumbnail={item.thumbnail}
             />
           </SwiperSlide>
         ))}
