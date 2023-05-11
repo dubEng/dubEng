@@ -37,9 +37,11 @@ public class UserServiceImpl implements UserService {
     /**
      *
      */
-    public void addUser(UserJoinReq request, String userId){
+    public void addUser(UserJoinReq request, String accessToken){
         if(checkExistNickname(request.getNickname()))
             throw new DuplicateException("이미 등록된 닉네임입니다.");
+
+        String userId = authService.parseToken(accessToken);
 
         User newUser = User.builder()
                 .id(userId)
@@ -158,12 +160,15 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public List<UserRecordRes> findRecord(String accessToken, UserRecordReq request) {
+        String userId = authService.parseToken(accessToken);
+        if(userId == null) {
+            throw new UnAuthorizedException("토큰을 가져올 수 없습니다!");
+        }
+        if(checkEnrolledMember(userId)){
+            throw new DuplicateException("이미 등록된 사용자입니다.");
+        }
         if(request.getIsPublic()==null || request.getIsLimit()==null || request.getLanType()==null)
             throw new InvalidInputException("모든 값을 채워주세요!");
-
-        //Token Parsing
-        String userId = authService.parseToken(accessToken);
-        if(userId == null) throw new UnAuthorizedException("유저 아이디가 없습니다!");
 
         //JPA
         List<UserRecordRes> result = userRepository.findRecordByUserId(userId, request.getIsPublic(), request.getIsLimit(), request.getLanType());

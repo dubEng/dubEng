@@ -2,9 +2,7 @@ package com.ssafy.dubenguser.controller;
 
 import com.ssafy.dubenguser.dto.Token;
 import com.ssafy.dubenguser.dto.UserJoinReq;
-import com.ssafy.dubenguser.dto.UserLoginReq;
 import com.ssafy.dubenguser.dto.UserLoginRes;
-import com.ssafy.dubenguser.exception.DuplicateException;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
 import com.ssafy.dubenguser.service.AuthServiceImpl;
 import com.ssafy.dubenguser.service.UserService;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
@@ -62,6 +61,7 @@ public class AuthController {
         rtkCookie.setDomain(BASE_URL);
         rtkCookie.setPath("/");
         rtkCookie.setSecure(true);
+        rtkCookie.setHttpOnly(true);
 
         response.addCookie(rtkCookie);
 
@@ -109,7 +109,7 @@ public class AuthController {
     @PostMapping("/join")
     @ApiOperation(value = "회원가입하기")
     public ResponseEntity<String> userAdd(@RequestHeader HttpHeaders headers, @RequestBody UserJoinReq request){
-        String accessToken = headers.getFirst("accessToken");
+        String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
             throw new UnAuthorizedException("토큰 전달 방식에 오류");
         }
@@ -117,26 +117,23 @@ public class AuthController {
         log.debug("ATK : {}", accessToken);
         log.info("userAdd : {}", request.toString());
 
-        String userId = authService.parseToken(request.getAccessToken());
-        if(userId == null) {
-            throw new UnAuthorizedException("토큰을 가져올 수 없습니다!");
-        }
-        if(userService.checkEnrolledMember(userId)){
-            throw new DuplicateException("이미 등록된 사용자입니다.");
-        }
-        userService.addUser(request, userId);
+
+        userService.addUser(request, accessToken);
 
         return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
     @PostMapping("/login")
     @ApiOperation(value = "회원정보 가져오기")
-    public ResponseEntity<UserLoginRes> getLoginInfo(@RequestHeader HttpHeaders headers, @RequestBody UserLoginReq request){
-        log.debug("===로그인===");
-
-        log.debug("ATK : {}", request);
+    public ResponseEntity<UserLoginRes> getLoginInfo(HttpServletRequest request, @RequestHeader HttpHeaders headers){
+        log.debug("======로그인======");
+        String accessToken = headers.getFirst("Authorization");
+        if(accessToken == null){
+            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+        }
+        log.debug("ATK : {}", accessToken);
 
         //ATK을 이용하여 회원정보 요청
-        UserLoginRes user = authService.findUser(request);
+        UserLoginRes user = authService.findUser(accessToken);
 
         log.debug("loginUser : {}", user);
         return new ResponseEntity<UserLoginRes>(user, HttpStatus.OK);

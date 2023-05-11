@@ -9,7 +9,7 @@ import java.util.HashMap;
 public interface AuthService {
     HashMap<String, Object> findAccessToken(String code);
     String getKakaoImageUrl(String accessToken);
-    UserLoginRes findUser(UserLoginReq request);
+    UserLoginRes findUser(String accessToken);
     String parseToken(String accessToken);
     Token requestRefresh(Token requestDTO);
 }

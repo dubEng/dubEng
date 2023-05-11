@@ -91,9 +91,9 @@ public class AuthServiceImpl implements AuthService{
         }
         return (String) result.get("thumbnail_image");
     }
-    public UserLoginRes findUser(UserLoginReq request){
+    public UserLoginRes findUser(String accessToken){
         //토큰파싱
-        String userId = parseToken(request.getAccessToken());
+        String userId = parseToken(accessToken);
 
         log.debug("userId : {}", userId);
         // 회원 정보 가져오기
@@ -103,12 +103,11 @@ public class AuthServiceImpl implements AuthService{
         User loginUser = findUser.get();
 
         // imageUrl 가져오기
-        String kakaoImageUrl = getKakaoImageUrl(request.getAccessToken());
+        String kakaoImageUrl = getKakaoImageUrl(accessToken);
 
         UserLoginRes userLoginRes = UserLoginRes.builder()
                 .userId(userId)
-                .accessToken(request.getAccessToken())
-                .refreshToken(request.getRefreshToken())
+                .accessToken(accessToken)
                 .nickname(loginUser.getNickname())
                 .imageUrl(kakaoImageUrl)
                 .build();
