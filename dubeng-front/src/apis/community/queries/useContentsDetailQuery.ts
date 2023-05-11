@@ -15,7 +15,7 @@ const fetcher = (langType: string, videoId: string) =>
       }
     )
     .then(({ data }) => {
-      return data;
+      return data.content[0];
     });
 
 const useContentsDetailQuery = (langType: string, videoId: string) => {
