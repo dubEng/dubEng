@@ -20,3 +20,6 @@ export const DUB_RECORD_SCRIPT = "/dub/record/script";
 export const Home_DUB_KING = "/home/dubking";
 export const Home_POPULARITY = "/home/popularity";
 export const Home_RANK = "/home/rank";
+
+// original shorts
+export const CONTENTS_DETAIL = "/contents/detail";
