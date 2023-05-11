@@ -114,7 +114,7 @@ def uploadToBucket(audio_bytes, uploadName):
     client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID,
                           aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_DEFAULT_REGION)
 
-    client.put_object(Body=audio_bytes.getvalue(), Bucket=BUCKET_NAME, Key=key)
+    client.put_object(Body=audio_bytes, Bucket=BUCKET_NAME, Key=key)
 
     url = f"https://{BUCKET_NAME}.s3.{AWS_DEFAULT_REGION}.amazonaws.com/{key}"
 
