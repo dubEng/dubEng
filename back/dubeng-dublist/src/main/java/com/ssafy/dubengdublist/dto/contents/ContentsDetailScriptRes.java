@@ -16,14 +16,18 @@ public class ContentsDetailScriptRes {
     private String thumbnail;
     private String videoPath;
     private List<ContentsScriptRes> scriptList;
+    private Long startTime;
+    private Long endTime;
 
     @QueryProjection
-    public ContentsDetailScriptRes(Long id, String title, String thumbnail,String videoPath, List<ContentsScriptRes> scriptList) {
+    public ContentsDetailScriptRes(Long id, String title, String thumbnail,String videoPath, List<ContentsScriptRes> scriptList, Long startTime, Long endTime) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
         this.videoPath = videoPath;
         this.scriptList = scriptList;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
 }

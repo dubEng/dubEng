@@ -131,7 +131,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
 
         List<ContentsDetailScriptRes> contentsDetailScriptResList = new ArrayList<>();
         for(ContentsDetailRes c : content){
-            ContentsDetailScriptRes cd = new ContentsDetailScriptRes(c.getId(), c.getTitle(), c.getThumbnail(), c.getVideoPath(), selectAllScript(c.getId()));
+            ContentsDetailScriptRes cd = new ContentsDetailScriptRes(c.getId(), c.getTitle(), c.getThumbnail(), c.getVideoPath(), selectAllScript(c.getId()), c.getStartTime(), c.getEndTime());
             contentsDetailScriptResList.add(cd);
         }
 
