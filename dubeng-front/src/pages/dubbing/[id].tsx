@@ -179,8 +179,14 @@ export default function DubbingPage() {
 
     const activeIndex = swiper.activeIndex;
     const seekTo = scriptList.data[activeIndex].startTime;
+
+    const progress =
+      (((seekTo / 1000) - data.startTime) / (data.endTime - data.startTime)) * 100 + "%";
+
+    setProgressBarWidth(progress);
+
     youtubePlayer.pauseVideo();
-    youtubePlayer.seekTo(seekTo);
+    youtubePlayer.seekTo(seekTo / 1000);
   };
 
   if (speechRecognitionSupported === null) {
