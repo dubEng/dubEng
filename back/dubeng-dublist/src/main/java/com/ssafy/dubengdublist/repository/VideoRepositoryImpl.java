@@ -92,7 +92,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         }
 
         List<CommunitySearchRes> content = queryFactory
-                .select(new QCommunitySearchRes(video.id, video.title,video.thumbnail,video.runtime, user.nickname, QRecord.record.playCount, QRecord.record.createdDate))
+                .select(new QCommunitySearchRes(video.id, video.title,video.thumbnail,video.runtime, user.nickname, user.profileImage, QRecord.record.playCount, QRecord.record.createdDate))
                 .from(video)
                 .where(builder)
                 .leftJoin(videoCategory)
@@ -105,9 +105,9 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Video> countQuery = queryFactory
-                .select(video)
-                .from(video);
+        JPAQuery<Record> countQuery = queryFactory
+                .select(QRecord.record)
+                .from(QRecord.record);
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
@@ -121,7 +121,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .otherwise(2);
 
         List<ContentsDetailRes> content = queryFactory
-                .select(new QContentsDetailRes(video.id, video.title, video.thumbnail, video.videoPath))
+                .select(new QContentsDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.startTime, video.endTime))
                 .from(video)
                 .where(video.langType.eq(langType))
                 .orderBy(roleRankPath.asc())
@@ -192,7 +192,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
     public CommunityDubKingRes findByOneDubKing(String langType, String userId){
 
         ContentsDetailRes content = queryFactory
-                .select(new QContentsDetailRes(video.id, video.title, video.thumbnail, video.videoPath))
+                .select(new QContentsDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.startTime, video.endTime))
                 .from(video)
                 .join(QRecord.record)
                 .on(QRecord.record.video.id.eq(video.id))
