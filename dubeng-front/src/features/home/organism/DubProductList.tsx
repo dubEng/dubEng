@@ -18,9 +18,7 @@ export default function DubProductList() {
   }
 
   if (popularity.isError) {
-    return (
-        <ErrorComponent onClick={() => popularity.refetch} retry={true} />
-    );
+    return <ErrorComponent onClick={() => popularity.refetch} retry={true} />;
   }
 
   return (
@@ -57,8 +55,8 @@ export default function DubProductList() {
           <SwiperSlide key={item.videoId}>
             <DubVideoThumbnail
               title={item.title}
-              url={item.url}
-              videoId={item.videoId}
+              thumbnail={item.thumbnail}
+              id={item.videoId}
             />
           </SwiperSlide>
         ))}
