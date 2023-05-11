@@ -6,10 +6,17 @@ const config = {
   headers: { "Content-Type": "application/json" },
 };
 
-const fetcher = (signupInfo: SignupInfo) =>
-  axios
+const fetcher = async (signupInfo: SignupInfo) => {
+  const accessToken = signupInfo.accessToken;
+  console.log(accessToken);
+
+  axios.defaults.headers.common['Authorization'] = accessToken;
+  const { data } = await axios
     .post(process.env.NEXT_PUBLIC_BASE_URL + `/user/auth/join`, signupInfo, config)
-    .then(({ data }) => data);
+
+    return data;
+}
+
 
 const useSignupPost = () => {
   return useMutation(fetcher, {

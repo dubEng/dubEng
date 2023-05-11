@@ -1,5 +1,7 @@
 import { useRouter } from "next/navigation";
 import {useCallback, useEffect, useState} from "react";
+import { useSelector,useDispatch } from "react-redux";
+import { saveAccessToken } from "@/stores/user/userSlice";
 import cookie from 'react-cookies';
 import useUserInfoPost from "@/apis/login/mutations/useUserInfoPost";
 
@@ -10,12 +12,16 @@ export interface Token{
 
 export default function loginSuccess(){
     const [accessToken, setAccessToken] = useState<string>('');
-    const mutation = useUserInfoPost();
+    const mutation = useUserInfoPost(cookie.load("accessToken"));
+    const dispatch = useDispatch();
     const route = useRouter();
 
-    useEffect(()=>{  
+    useEffect(()=>{
+        console.log(cookie.load("accessToken"));
+        console.log(cookie.load("refreshToken"));
+        
         setAccessToken(cookie.load("accessToken"));
-
+        dispatch(saveAccessToken(cookie.load("accessToken")));
         getUserInfo();
         
       },[]);
