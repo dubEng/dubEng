@@ -30,7 +30,7 @@ public class UserController {
     @ApiOperation(value = "프로필 보여주기")
     @PostMapping("/profile")
     public ResponseEntity<UserProfileRes> userProfileDetails(@RequestHeader HttpHeaders headers) {
-        String accessToken = headers.getFirst("accessToken");
+        String accessToken = headers.getFirst("Authorization");
 
         if(accessToken == null){
             throw new UnAuthorizedException("토큰 전달 방식에 오류");
@@ -42,7 +42,7 @@ public class UserController {
     @ApiOperation(value = "캘린더 날짜 보여주기")
     @GetMapping("/calendar")
     public ResponseEntity<UserCalendarRes> userCalenderDetails(@RequestHeader HttpHeaders headers) {
-        String accessToken = headers.getFirst("accessToken");
+        String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
             throw new UnAuthorizedException("토큰 전달 방식에 오류");
         }
@@ -53,7 +53,7 @@ public class UserController {
     @ApiOperation(value = "더빙 목록 보여주기")
     @PostMapping("/record/list")
     public ResponseEntity<List<UserRecordRes>> userRecordList(@RequestHeader HttpHeaders headers, @RequestBody UserRecordReq request) {
-        String accessToken = headers.getFirst("accessToken");
+        String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
             throw new UnAuthorizedException("토큰 전달 방식에 오류");
         }
@@ -64,7 +64,7 @@ public class UserController {
     @ApiOperation(value = "좋아요 누른 더빙 목록 보여주기")
     @GetMapping("/record/likes")
     public ResponseEntity<List<RecordLikeRes>> userRecordList(@RequestHeader HttpHeaders headers, @RequestParam Boolean isLimit) {
-        String accessToken = headers.getFirst("accessToken");
+        String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
             throw new UnAuthorizedException("토큰 전달 방식에 오류");
         }
@@ -75,7 +75,7 @@ public class UserController {
     @ApiOperation(value = "북마크 비디오 보여주기")
     @GetMapping("/bookmark")
     public ResponseEntity<List<VideoBookmarkRes>> userBookmarkList(@RequestHeader HttpHeaders headers, @RequestParam Boolean isLimit) {
-        String accessToken = headers.getFirst("accessToken");
+        String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
             throw new UnAuthorizedException("토큰 전달 방식에 오류");
         }
