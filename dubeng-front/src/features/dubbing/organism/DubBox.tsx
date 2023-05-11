@@ -211,7 +211,7 @@ export default function DubBox({
     //   youtubePlayer.seekTo(startTime);
     //   await setTimeout(() => {}, 800);
     // }
-
+    youtubePlayer.seekTo(startTime/1000);
     youtubePlayer.playVideo();
 
     const timerId = window.setTimeout(() => {
