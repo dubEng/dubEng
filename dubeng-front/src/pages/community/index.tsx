@@ -8,10 +8,10 @@ import { RootState } from "@/stores/store";
 import { DubType } from "@/enum/statusType";
 import DubSituation from "@/features/community/molecules/DubSituation";
 import SearchInputBox from "@/features/community/atoms/SearchInputBox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useRecommendDubVideoListQuery from "@/apis/community/queries/useRecommendDubVideoListQuery";
 import DubVideoListItem from "@/components/molecules/DubVideoListItem";
-import useCategoryQuery from "@/apis/manager/queries/useCategoryQuery";
+import useCategoryListQuery from "@/apis/community/queries/useCategoryListQuery";
 import DubProductList from "@/features/home/organism/DubProductList";
 import LanguageSelectTap from "@/features/community/atoms/LanguageSelectTap";
 import CategoryButton from "@/features/community/atoms/CategoryButton";
@@ -48,125 +48,29 @@ export default function CommunityPage() {
     } else {
       setSelectedCategory([...selectedCategory, id]);
     }
-    console.log("선택한 카테고리 리스트", selectedCategory);
   };
 
   // API 호출 response로 들어오는 state
-  // // 1. ㅇㅇ님이 좋아하실 영상
-  // const { data } = useRecommendDubVideoListQuery(languageIndex);
-  // console.log("recommendDubVideoList", data?.data.ContentsRecommendList);
 
   // 2. 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
-  const searchResultList = useSearchDubVideoQuery(
+  const { data: searchList, isLoading: searchLoading } = useSearchDubVideoQuery(
     selectedCategory,
     languageIndex,
     "10",
     keyword
   );
-  console.log("searchResultList", searchResultList);
+  // console.log("response", response);
 
-  // 더미 데이터
-  const recommendDubVideoList = {
-    hasNextPage: true,
-    ContentsRecommendList: [
-      {
-        id: 8,
-        title: "영상제목",
-        thumbnail: "썸네일링크",
-      },
-      {
-        id: 31,
-        title: "The “I Hate Rachel” Club (Clip) | Friends | TBS",
-        thumbnail: "https://i.ytimg.com/vi/YXOUOOtfTBs/maxresdefault.jpg",
-      },
-      {
-        id: 37,
-        title: "The “I Hate Rachel” Club (Clip) | Friends | TBS",
-        thumbnail: "https://i.ytimg.com/vi/YXOUOOtfTBs/maxresdefault.jpg",
-      },
-      {
-        id: 38,
-        title: "The “I Hate Rachel” Club (Clip) | Friends | TBS",
-        thumbnail: "https://i.ytimg.com/vi/YXOUOOtfTBs/maxresdefault.jpg",
-      },
-      {
-        id: 40,
-        title: "The “I Hate Rachel” Club (Clip) | Friends | TBS",
-        thumbnail: "https://i.ytimg.com/vi/YXOUOOtfTBs/maxresdefault.jpg",
-      },
-    ],
-  };
+  // console.log("data!!!!!!", data);
+  // console.log("searchResultList", searchResultList);
+  // console.log("data", searchResultList.data);
 
-  // const categoryList = useCategoryQuery();
-  // console.log("categoryList", categoryList);
-  const categoryList = {
-    data: [
-      {
-        id: 1,
-        name: "판타지",
-      },
-      {
-        id: 2,
-        name: "로맨스",
-      },
-      {
-        id: 3,
-        name: "드라마",
-      },
-      {
-        id: 4,
-        name: "애니메이션",
-      },
-      {
-        id: 5,
-        name: "SF",
-      },
-      {
-        id: 6,
-        name: "기쁨",
-      },
-      {
-        id: 7,
-        name: "식당에서",
-      },
-      {
-        id: 8,
-        name: "멜로",
-      },
-      {
-        id: 9,
-        name: "가족영화",
-      },
-      {
-        id: 10,
-        name: "스릴러",
-      },
-      {
-        id: 11,
-        name: "미스테리",
-      },
-      {
-        id: 12,
-        name: "공포",
-      },
-      {
-        id: 13,
-        name: "공포",
-      },
-      {
-        id: 14,
-        name: "공포",
-      },
-      {
-        id: 15,
-        name: "공포",
-      },
-      {
-        id: 16,
-        name: "공포",
-      },
-    ],
-  };
+  // 3. 카테고리 리스트 가져오기
+  const { data, isLoading } = useCategoryListQuery();
+
+  // if (isLoading) {
+  //   return <></>;
+  // }
 
   // 함수
   const handleSearchInputChange = (
@@ -183,18 +87,10 @@ export default function CommunityPage() {
     }
   };
 
-  const division = (arr: any[], cnt: number) => {
-    const length = arr.length;
-    const divide =
-      Math.floor(length / cnt) + (Math.floor(length % cnt) > 0 ? 1 : 0);
-    const newArray = [];
-
-    for (let i = 0; i <= divide; i++) {
-      newArray.push(arr.splice(0, cnt));
-    }
-    return newArray;
-  };
-  const dividedCategoryList = division(categoryList.data, 8);
+  if (searchLoading) {
+    return <>로딩 중</>;
+  }
+  console.log("searchlist", searchList);
 
   return (
     <div className="static mx-16">
@@ -245,14 +141,11 @@ export default function CommunityPage() {
       )}
 
       <div className="flex mt-16">
-        <Swiper
-
-        // freeMode={true} modules={[FreeMode]}
-        >
+        <Swiper>
           <SwiperSlide>
             <div className="flex flex-wrap gap-4 justify-center">
-              {dividedCategoryList[0].map(
-                (category: { id: any; name: string }) => {
+              {data &&
+                data[0].map((category: { id: any; name: string }) => {
                   return (
                     <CategoryButton
                       key={category.id}
@@ -264,15 +157,14 @@ export default function CommunityPage() {
                       onClick={() => handleClickCategory(category.id)}
                     />
                   );
-                }
-              )}
+                })}
             </div>
           </SwiperSlide>
 
           <SwiperSlide>
-            <div className="flex flex-wrap gap-4">
-              {dividedCategoryList[1].map(
-                (category: { id: any; name: string }) => {
+            <div className="flex flex-wrap gap-4 justify-center">
+              {data &&
+                data[1].map((category: { id: any; name: string }) => {
                   return (
                     <CategoryButton
                       key={category.id}
@@ -284,21 +176,78 @@ export default function CommunityPage() {
                       onClick={() => handleClickCategory(category.id)}
                     />
                   );
-                }
-              )}
+                })}
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            <div className="flex flex-wrap gap-4 justify-center">
+              {data &&
+                data[2].map((category: { id: any; name: string }) => {
+                  return (
+                    <CategoryButton
+                      key={category.id}
+                      id={category.id}
+                      name={category.name}
+                      isSelected={
+                        selectedCategory.includes(category.id) ? true : false
+                      }
+                      onClick={() => handleClickCategory(category.id)}
+                    />
+                  );
+                })}
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            <div className="flex flex-wrap gap-4 justify-center">
+              {data &&
+                data[3].map((category: { id: any; name: string }) => {
+                  return (
+                    <CategoryButton
+                      key={category.id}
+                      id={category.id}
+                      name={category.name}
+                      isSelected={
+                        selectedCategory.includes(category.id) ? true : false
+                      }
+                      onClick={() => handleClickCategory(category.id)}
+                    />
+                  );
+                })}
             </div>
           </SwiperSlide>
         </Swiper>
       </div>
       <div className="space-y-16 mt-16">
-        {/* {searchResultList.data.content.map(
-          (dubVideo: { id: number; title: string; thumbnail: string }) => (
+        {searchList.content &&
+          searchList.content.map(
+            (dubVideo: {
+              id: number;
+              title: string;
+              thumbnail: string;
+              runtime: number;
+            }) => (
+              <DubVideoListItem
+                key={dubVideo.id}
+                id={dubVideo.id}
+                title={dubVideo.title}
+                thumbnail={dubVideo.thumbnail}
+                runtime={dubVideo.runtime}
+              />
+            )
+          )}
+        {/* {data.content.map(
+          (dubVideo: {
+            id: number;
+            title: string;
+            thumbnail: string;
+            runtime: number;
+          }) => (
             <DubVideoListItem
               key={dubVideo.id}
               id={dubVideo.id}
               title={dubVideo.title}
-              thumbnail={"https://i.ytimg.com/vi/YXOUOOtfTBs/maxresdefault.jpg"}
-              runtime={"2분 10초"}
+              thumbnail={dubVideo.thumbnail}
+              runtime={dubVideo.runtime}
             />
           )
         )} */}
