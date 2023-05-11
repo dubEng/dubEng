@@ -19,15 +19,22 @@ class video:
         self.startTime = startT
         self.endTime = endT
 
-class script:
+class dbScript:
     def __init__(self):
         self.startTime = 0
         self.duration = 0
-        self.content = ""
-        self.translate = ""
+        self.isDub = False
     
-    def set(self, startTime, duration, content, translate):
+    def set(self, startTime, duration, isDub):
         self.startTime = startTime
         self.duration = duration
-        self.content = content
-        self.translate = translate
+        self.isDub = isDub
+
+class script: 
+    def __init__(self):
+        self.startTime = 0
+        self.duration = 0
+    
+    def set(self, startTime, duration):
+        self.startTime = startTime
+        self.duration = duration
