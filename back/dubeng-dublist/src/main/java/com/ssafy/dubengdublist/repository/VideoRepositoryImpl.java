@@ -213,7 +213,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .fetch();
         CommunityDubKingUserRes users1 = new CommunityDubKingUserRes(users.get(0).getId(), users.get(0).getNickname(), users.get(0).getProfileImage(), users.get(0).getDescription(), users.get(0).getRecordPath());
         CommunityDubKingUserRes users2 = new CommunityDubKingUserRes(users.get(1).getId(), users.get(1).getNickname(), users.get(1).getProfileImage(), users.get(1).getDescription(), users.get(1).getRecordPath());
-        CommunityDubKingRes communityDubKingRes = new CommunityDubKingRes(content.getId(), content.getTitle(), content.getThumbnail(), content.getVideoPath(), users1, users2);
+        CommunityDubKingRes communityDubKingRes = new CommunityDubKingRes(content.getId(), content.getTitle(), content.getThumbnail(), content.getVideoPath(), users1, users2, content.getStartTime(), content.getEndTime());
 
         return communityDubKingRes;
     }
@@ -327,6 +327,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .where(user.isPublic.eq(true))
                 .limit(5)
                 .fetch();
+
         return homeRankRes;
     }
 
