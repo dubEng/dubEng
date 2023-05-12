@@ -95,7 +95,7 @@ export default function CommunityPage() {
   console.log("searchDubVideoList", searchDubVideoList);
 
   return (
-    <div className="static mx-16">
+    <div className="static">
       <Header />
       <div className="flex sticky top-0">
         <DubTypeTap dubType={tabIndex} langType={languageIndex} />
