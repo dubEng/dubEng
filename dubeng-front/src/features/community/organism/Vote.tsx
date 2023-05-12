@@ -71,7 +71,7 @@ export default function Vote() {
   const [nowPlaying, setNowPlaying] = useState<boolean>(false);
 
   // 재생할 Video의 ID값
-  const [videoId, setVideoId] = useState<string>("YXOUOOtfTBs");
+  const [videoId, setVideoId] = useState<string>("1uRBxyPqkh0");
 
   const opts: YouTubeProps["opts"] = {
     height: "174",
@@ -119,12 +119,12 @@ export default function Vote() {
       <audio
         ref={audioRef1}
         // controls
-        src="https://dubingdubing.s3.ap-northeast-2.amazonaws.com/2763952293_154_vocals.wav"
+        src="https://dubingdubing.s3.ap-northeast-2.amazonaws.com/2780795332[인턴] - 안하는 것보다 늦게하는 것이 낫다.wav"
       ></audio>
       <audio
         ref={audioRef2}
         // controls
-        src="https://dubingdubing.s3.ap-northeast-2.amazonaws.com/2763952293_154_vocals.wav"
+        src="https://dubingdubing.s3.ap-northeast-2.amazonaws.com/2780794561[인턴] - 안하는 것보다 늦게하는 것이 낫다.wav"
       ></audio>
       <YouTube
         videoId={videoId}
@@ -140,8 +140,8 @@ export default function Vote() {
       <div className="mt-16 flex justify-between">
         <div className="space-y-16">
           <VoteCard
-            username={"도도도언"}
-            description="김도언의 한 줄 소개 입니다."
+            username={"아영아영"}
+            description="안녕하세요 팀장 김아영입니다."
             userImage=""
             isPlaying={!audioRef1.current?.paused}
             onClick={handlePlayUser1Button}
@@ -151,8 +151,8 @@ export default function Vote() {
         <p className="text-16 font-semibold text-dubgray mt-55 mx-13">vs</p>
         <div className="space-y-16">
           <VoteCard
-            username={"언도더씨"}
-            description="언도입니다."
+            username={"자민자민"}
+            description="안녕하세요 팀원 백자민입니다."
             userImage=""
             isPlaying={!audioRef2.current?.paused}
             onClick={handlePlayUser2Button}
