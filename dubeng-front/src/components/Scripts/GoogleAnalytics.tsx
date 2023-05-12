@@ -4,7 +4,7 @@ const GoogleAnalytics = () =>{
     return (
         <>
             <Script
-                src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GA}`}
+                src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA}`}
                 strategy='afterInteractive'
             />
 
@@ -15,7 +15,7 @@ const GoogleAnalytics = () =>{
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
 
-                    gtag('config', '${process.env.GA}');
+                    gtag('config', '${process.env.NEXT_PUBLIC_GA}');
                     `
                 }
             </Script>
