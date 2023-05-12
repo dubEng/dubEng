@@ -20,6 +20,7 @@ export default function Vote() {
 
   function handleVoteButton() {
     console.log("투표 버튼 눌렀다!");
+    window.alert("투표 기능은 Coming soon!");
   }
 
   // 유저1 플레이 함수
@@ -134,7 +135,10 @@ export default function Vote() {
         style={style}
         onReady={onPlayerReady}
         onEnd={(e) => {
-          e.target.stopVideo(0);
+          console.log("onEnd 발생");
+
+          youtubePlayer.pauseVideo();
+          youtubePlayer.seekTo();
         }}
         onPlay={onPlay}
         onStateChange={onStateChange}

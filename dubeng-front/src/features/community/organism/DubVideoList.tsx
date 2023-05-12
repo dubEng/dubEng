@@ -61,8 +61,8 @@ export default function DubVideoList() {
       //   },
       // }}
     >
-      {data?.data.ContentsRecommendList &&
-        data?.data.ContentsRecommendList.map((item: any, index: number) => (
+      {data?.data.answer &&
+        data?.data.answer.map((item: any, index: number) => (
           <SwiperSlide key={item.id}>
             <Link href={`/community/shorts/video/${item.id}`}>
               <DubVideoThumbnail

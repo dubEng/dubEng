@@ -5,17 +5,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 
 const fetcher = (langType: string) => {
-  const userId = useSelector((state: RootState) => {
-    return state.user.userId;
-  });
-
   return axios
-    .get(process.env.NEXT_PUBLIC_BASE_URL + `recommend/contents/${langType}`, {
-      params: {
-        userId: userId,
-      },
+    .post(process.env.NEXT_PUBLIC_BASE_URL + `/recommend/contents`, {
+      userId: "2780794561",
     })
     .then((res) => {
+      console.log(res);
       return res;
     });
 };
