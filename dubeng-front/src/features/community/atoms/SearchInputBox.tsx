@@ -9,6 +9,7 @@ interface Iprops {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   placeholder: string;
+  onClick?: () => void;
 }
 
 export default function SearchInputBox({
@@ -18,12 +19,15 @@ export default function SearchInputBox({
   onChange,
   onKeyDown,
   placeholder,
+  onClick,
 }: Iprops) {
-  // const [value, setValue] = useState(value);
+  // const [searchValue, setSearchValue] = useState(value);
 
   // const handleSearchInputClear = () => {
-  //   setValue("");
+  //   console.log("검색어 지우기");
+  //   setSearchValue("");
   // };
+
   if (value) {
     return (
       <div className="flex relative items-center w-358 h-43">
@@ -41,11 +45,9 @@ export default function SearchInputBox({
           alt="searchIcon"
           className="absolute ml-11"
         ></Image>
-        <AiFillCloseCircle
-          className="absolute right-11 text-dubgray"
-          size={20}
-          // onClick={handleSearchInputClear}
-        />
+        <button className="absolute right-11" onClick={onClick}>
+          <AiFillCloseCircle className=" text-dubgray" size={20} />
+        </button>
       </div>
     );
   } else {

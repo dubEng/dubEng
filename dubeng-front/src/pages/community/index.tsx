@@ -98,6 +98,10 @@ export default function CommunityPage() {
       setKeyword(searchValue);
     }
   };
+  function handleSearchInputClear() {
+    console.log("검색어 지우기 눌렸다");
+    setSearchValue("");
+  }
 
   // if (searchDubVideoLoading) {
   //   return <>로딩 중</>;
@@ -143,6 +147,7 @@ export default function CommunityPage() {
           placeholder="더빙할 콘텐츠를 검색해보세요."
           onChange={handleSearchInputChange}
           onKeyDown={handleSearchInputKeyDown}
+          onClick={handleSearchInputClear}
         />
       ) : (
         <SearchInputBox
@@ -152,6 +157,7 @@ export default function CommunityPage() {
           placeholder="더빙 작품을 검색해보세요."
           onChange={handleSearchInputChange}
           onKeyDown={handleSearchInputKeyDown}
+          onClick={handleSearchInputClear}
         />
       )}
 

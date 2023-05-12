@@ -18,7 +18,7 @@ export default function DubVideoThumbnail({ id, title, thumbnail }: Iprops) {
         width={272}
         height={152}
       />
-      <p className="absolute bottom-16 left-16 text-white font-semibold text-12">
+      <p className="absolute bottom-16 left-16 right-16 text-white font-semibold text-12 line-clamp-1">
         {title}
       </p>
     </div>

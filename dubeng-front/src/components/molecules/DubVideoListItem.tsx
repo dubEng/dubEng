@@ -24,7 +24,7 @@ export default function DubVideoListItem({
   const runtimeList = secondsToMinutes(runtime);
 
   return (
-    <div className="flex p-16 w-358 bg-white rounded-8 border-1 border-dubgraymedium">
+    <div className="grid grid-cols-2 p-16 w-358 bg-white rounded-8 border-1 border-dubgraymedium">
       <Link href={`/community/shorts/video/${id}`}>
         <Image
           src={thumbnail}
@@ -37,7 +37,9 @@ export default function DubVideoListItem({
       <div className="flex flex-col ml-16 justify-between">
         <div>
           <Link href={`/community/shorts/video/${id}`}>
-            <p className="text-14 font-semibold text-dubblack">{title}</p>
+            <p className="leading-18 break-words text-14 font-semibold text-dubblack line-clamp-2 ">
+              {title}
+            </p>
           </Link>
           {runtimeList[0] === 0 ? (
             <p className="text-dubgray text-12">
