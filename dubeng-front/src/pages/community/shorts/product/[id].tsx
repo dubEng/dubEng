@@ -28,6 +28,7 @@ export default function ShortsProductPage() {
     const player = event.target;
     setYoutubePlayer(player);
     player.pauseVideo();
+    player.mute();
   };
 
   // 선택된 스크롤이 바뀌면 오토 스크롤
@@ -83,7 +84,7 @@ export default function ShortsProductPage() {
   });
 
   return (
-    <div className="w-screen h-screen bg-black flex flex-col items-center mt-32">
+    <div className="w-full h-screen bg-black flex flex-col items-center justify-center">
       {data && (
         <>
           <YouTube

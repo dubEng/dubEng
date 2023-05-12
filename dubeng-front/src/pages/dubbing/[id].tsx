@@ -228,7 +228,7 @@ export default function DubbingPage() {
   }
 
   return (
-    <>
+    <div className="h-full">
       {data && (
         <YouTube
           videoId={transferYoutube(data.videoPath)}
@@ -257,7 +257,7 @@ export default function DubbingPage() {
         />
       )}
       <PlayBar width={progressBarWidth} />
-      <div className="w-391 h-390 bg-dubgraylight flex justify-center items-center">
+      <div className="w-390 my-8 py-8 bg-dubgraylight flex justify-center items-center">
         <Swiper
           spaceBetween={4}
           onSlideChange={handleSlideChange}
@@ -321,7 +321,7 @@ export default function DubbingPage() {
             }
           })}
       </div>
-      <div className="flex justify-center w-391 mb-16">
+      <div className="flex justify-center w-390">
         <CommonButton children="저장하기" onClick={handleSaveButton} />
       </div>
       <DubCompleteModal
@@ -334,6 +334,6 @@ export default function DubbingPage() {
         videoId={parseInt(router.query.id as string)}
         userId={userId}
       />
-    </>
+    </div>
   );
 }

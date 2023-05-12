@@ -8,15 +8,9 @@ export default function MyPage() {
   const nickname = useSelector((state: RootState) => state.user.nickname);
 
   return (
-    <>
+    <div className="h-screen">
       userId: {userId} <br />
       nickname: {nickname}
-      <DubProductCard
-        title="최악의 ui를 위한 한 줄 다 채우기 제목"
-        thumbnail={"https://i.ytimg.com/vi/lu4RHvouJH8/maxresdefault.jpg"}
-        playCount={11}
-        updatedDate="2020"
-      />
-    </>
+    </div>
   );
 }

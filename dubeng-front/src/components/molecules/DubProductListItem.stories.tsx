@@ -15,6 +15,7 @@ type Story = StoryObj<typeof DubProductListItem>;
 export const Default: Story = {
   render: () => (
     <DubProductListItem
+      recordId={0}
       title={"길어져서 2줄이 되면 어떻게 도나요 최대로 "}
       thumbnail={""}
       runtime={10}

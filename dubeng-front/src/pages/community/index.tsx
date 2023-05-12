@@ -98,6 +98,10 @@ export default function CommunityPage() {
       setKeyword(searchValue);
     }
   };
+  function handleSearchInputClear() {
+    console.log("검색어 지우기 눌렸다");
+    setSearchValue("");
+  }
 
   // if (searchDubVideoLoading) {
   //   return <>로딩 중</>;
@@ -106,10 +110,14 @@ export default function CommunityPage() {
   // if (searchDubProductLoading) {
   //   return <>작품 로딩 중</>;
   // }
+  useEffect(() => {
+    setSearchValue("");
+    setKeyword("");
+    setSelectedCategory([]);
+  }, [tabIndex]);
 
   return (
-    <div className="static mx-16">
-      <Header />
+    <div className="static h-full px-16">
       <div className="flex sticky top-0">
         <DubTypeTap dubType={tabIndex} langType={languageIndex} />
       </div>
@@ -143,6 +151,7 @@ export default function CommunityPage() {
           placeholder="더빙할 콘텐츠를 검색해보세요."
           onChange={handleSearchInputChange}
           onKeyDown={handleSearchInputKeyDown}
+          onClick={handleSearchInputClear}
         />
       ) : (
         <SearchInputBox
@@ -152,6 +161,7 @@ export default function CommunityPage() {
           placeholder="더빙 작품을 검색해보세요."
           onChange={handleSearchInputChange}
           onKeyDown={handleSearchInputKeyDown}
+          onClick={handleSearchInputClear}
         />
       )}
 
@@ -254,6 +264,7 @@ export default function CommunityPage() {
           searchDubProductList?.content.map(
             (dubProduct: {
               id: number;
+              recordId: number;
               title: string;
               thumbnail: string;
               runtime: number;
@@ -265,6 +276,7 @@ export default function CommunityPage() {
               <DubProductListItem
                 key={dubProduct.id}
                 id={dubProduct.id}
+                recordId={dubProduct.recordId}
                 title={dubProduct.title}
                 thumbnail={dubProduct.thumbnail}
                 runtime={dubProduct.runtime}

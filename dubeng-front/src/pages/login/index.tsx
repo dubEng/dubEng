@@ -24,7 +24,7 @@ export default function LogInPage(){
   }
 
   return (
-  <div className="container mx-auto">
+  <div className="container mx-auto h-screen">
     <Script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js" defer></Script>
     <div>
       <div>
