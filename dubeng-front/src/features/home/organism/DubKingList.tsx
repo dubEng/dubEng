@@ -20,24 +20,28 @@ export default function DubKingList() {
 
   return (
     <section className="mx-16 flex justify-around">
-      <DubKingItem
-        nickname={dubKing.data[1].nickname}
-        ranking={dubKing.data[1].ranking}
-        dubKingImageUrl={dubKing.data[1].dubKingImageUrl}
-        totalCount={dubKing.data[1].totalCount}
-      />
-      <DubKingItem
-        nickname={dubKing.data[0].nickname}
-        ranking={dubKing.data[0].ranking}
-        dubKingImageUrl={dubKing.data[0].dubKingImageUrl}
-        totalCount={dubKing.data[0].totalCount}
-      />
-      <DubKingItem
-        nickname={dubKing.data[2].nickname}
-        ranking={dubKing.data[2].ranking}
-        dubKingImageUrl={dubKing.data[2].dubKingImageUrl}
-        totalCount={dubKing.data[2].totalCount}
-      />
+      {/* {dubKing.data && (
+        <>
+          <DubKingItem
+            nickname={dubKing.data[1].nickname?? ""}
+            ranking={dubKing.data[1].ranking}
+            dubKingImageUrl={dubKing.data[1].dubKingImageUrl ?? ""}
+            totalCount={dubKing.data[1].totalCount}
+          />
+          <DubKingItem
+            nickname={dubKing.data[0].nickname ?? ""}
+            ranking={dubKing.data[0].ranking}
+            dubKingImageUrl={dubKing.data[0].dubKingImageUrl ?? ""}
+            totalCount={dubKing.data[0].totalCount}
+          />
+          <DubKingItem
+            nickname={dubKing.data[2].nickname ?? ""}
+            ranking={dubKing.data[2].ranking}
+            dubKingImageUrl={dubKing.data[2].dubKingImageUrl ?? ""}
+            totalCount={dubKing.data[2].totalCount}
+          />
+        </>
+      )} */}
     </section>
   );
 }

@@ -12,10 +12,11 @@ export default function UserRankingListItem({
   return (
     <div className="grid grid-cols-12 h-38 gap-8 mb-16">
       <div className="text-14 text-dubblack col-span-2 flex items-center justify-center">
-        {ranking}
+        {ranking+1}
       </div>
       <div className="flex justify-end">
-        <Image src={imageUrl} alt={"profile"} width={38} height={38} className="rounded-md" />
+        {/* <img src={imageUrl} width={38} height={38} className="rounded-md"></img> */}
+        {/* <Image src={imageUrl} alt={"profile"} width={38} height={38} className="rounded-md" /> */}
       </div>
       <div className="col-span-5">
         <div className="text-14 text-dubblack">{nickname}</div>

@@ -334,6 +334,7 @@ export default function DubbingPage() {
         videoId={parseInt(router.query.id as string)}
         userId={userId}
       />
+      <div className="h-150"></div>
     </div>
   );
 }

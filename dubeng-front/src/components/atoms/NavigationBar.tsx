@@ -4,10 +4,14 @@ import { MdHeadphones } from "react-icons/md";
 import { ImBook } from "react-icons/im";
 import { AiOutlineSmile } from "react-icons/ai";
 
-import Link from "next/link";
-
 import { usePathname } from "next/navigation";
 import RecordingButton from "./RecordingButton";
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { useRouter } from "next/navigation";
+
+const MySwal = withReactContent(Swal);
 
 const menu = [
   {
@@ -47,35 +51,47 @@ const menu = [
 
 export default function NavigationBar() {
   const pathName = usePathname();
-  
-  if (pathName === "/manager") { 
-    return <></>
+
+  const route = useRouter();
+
+  // 관리자 페이지에서는 NavBar안보여줌
+
+  if (pathName === "/manager") {
+    return <></>;
+  } else {
+    return (
+      <nav className={getNavigationBarStyle(pathName)}>
+        <ul className="flex justify-around">
+          {menu.map((item) => (
+            <li key={item.href}>
+              {item.isNavigatedButton === false ? (
+                <RecordingButton page={pathName} />
+              ) : (
+                  <button className="flex flex-col justify-center items-center pt-4" onClick={() => handleNavigationButton(item.href)}>
+                    {pathName === item.href ? item.clickedIcon : item.icon}
+                    {pathName === item.href ? (
+                      <p className="text-dubcoral text-12">{item.label}</p>
+                    ) : (
+                      <p className="text-dubgray text-12">{item.label}</p>
+                    )}
+                  </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+    );
   }
 
-  return (
-    <nav className={getNavigationBarStyle(pathName)}>
-      <ul className="flex justify-around">
-        {menu.map((item) => (
-          <li key={item.href}>
-            {item.isNavigatedButton === false ? (
-              <RecordingButton page={pathName} />
-            ) : (
-              <Link href={item.href}>
-                <div className="flex flex-col justify-center items-center pt-4">
-                  {pathName === item.href ? item.clickedIcon : item.icon}
-                  {pathName === item.href ? (
-                    <p className="text-dubcoral text-12">{item.label}</p>
-                  ) : (
-                    <p className="text-dubgray text-12">{item.label}</p>
-                  )}
-                </div>
-              </Link>
-            )}
-          </li>
-        ))}
-      </ul>
-    </nav>
-  );
+  function handleNavigationButton(pathName: string){
+    if (pathName === "/mission") {
+      MySwal.fire("도전과제 페이지는 아직 준비중입니다");
+    } else if(pathName === "/mypage"){
+      MySwal.fire("마이페이지는 아직 준비중입니다");
+    } else {
+      route.push(pathName);
+    }
+  }
 
   function getNavigationBarStyle(pathName: string): string {
     if (pathName === "/community/shorts") {
