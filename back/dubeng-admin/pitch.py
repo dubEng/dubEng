@@ -18,7 +18,7 @@ def getPitches(userId):
 
     # Calculate pitch using pyin
     f0, voiced_flag, voiced_probs = librosa.pyin(
-        y, fmin=librosa.note_to_hz('F2'), fmax=librosa.note_to_hz('C5'))
+        y, fmin=librosa.note_to_hz('E2'), fmax=librosa.note_to_hz('C5'))
 
     with wave.open(path, 'rb') as wav_file:
         framerate = wav_file.getframerate()
