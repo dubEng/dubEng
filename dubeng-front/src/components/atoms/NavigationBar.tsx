@@ -67,14 +67,17 @@ export default function NavigationBar() {
               {item.isNavigatedButton === false ? (
                 <RecordingButton page={pathName} />
               ) : (
-                  <button className="flex flex-col justify-center items-center pt-4" onClick={() => handleNavigationButton(item.href)}>
-                    {pathName === item.href ? item.clickedIcon : item.icon}
-                    {pathName === item.href ? (
-                      <p className="text-dubcoral text-12">{item.label}</p>
-                    ) : (
-                      <p className="text-dubgray text-12">{item.label}</p>
-                    )}
-                  </button>
+                <button
+                  className="flex flex-col justify-center items-center pt-4"
+                  onClick={() => handleNavigationButton(item.href)}
+                >
+                  {pathName === item.href ? item.clickedIcon : item.icon}
+                  {pathName === item.href ? (
+                    <p className="text-dubcoral text-12">{item.label}</p>
+                  ) : (
+                    <p className="text-dubgray text-12">{item.label}</p>
+                  )}
+                </button>
               )}
             </li>
           ))}
@@ -83,11 +86,11 @@ export default function NavigationBar() {
     );
   }
 
-  function handleNavigationButton(pathName: string){
+  function handleNavigationButton(pathName: string) {
     if (pathName === "/mission") {
-      MySwal.fire("도전과제 페이지는 아직 준비중입니다");
-    } else if(pathName === "/mypage"){
-      MySwal.fire("마이페이지는 아직 준비중입니다");
+      MySwal.fire("도전과제 Coming Soon👋");
+    } else if (pathName === "/mypage") {
+      MySwal.fire("마이페이지 Coming Soon😄");
     } else {
       route.push(pathName);
     }
