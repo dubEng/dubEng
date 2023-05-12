@@ -6,6 +6,7 @@ import YouTube, { YouTubePlayer, YouTubeProps } from "react-youtube";
 import { useRef, useState } from "react";
 import profile_01 from "../../../../public/images/dump/profile_01.svg";
 import profile_02 from "../../../../public/images/dump/profile_02.svg";
+import Swal from "sweetalert2";
 
 export default function Vote() {
   // useQuery들로 가져오는 것들
@@ -20,7 +21,7 @@ export default function Vote() {
 
   function handleVoteButton() {
     console.log("투표 버튼 눌렀다!");
-    window.alert("투표 기능은 Coming soon!");
+    Swal.fire("더빙왕 투표 Coming soon 👑");
   }
 
   // 유저1 플레이 함수
@@ -30,6 +31,16 @@ export default function Vote() {
     // 현재 user1에 대한 상태값을 반대로 바꿔주기
     // setIsPlayingUser1(!isPlayingUser1);
     // console.log("set으로 상태값 바뀌어졌나요");
+    if (
+      oncePlayed &&
+      audioRef1.current?.currentTime &&
+      audioRef1.current?.currentTime > opts.start
+    ) {
+      setOncePlayed(false);
+      console.log("1 끝났따");
+      youtubePlayer.seekTo(opts.start);
+      youtubePlayer.playVideo();
+    }
 
     if (audioRef1.current && audioRef1.current.paused) {
       audioRef2.current?.pause();
@@ -49,6 +60,12 @@ export default function Vote() {
   // 유저2 플레이 함수
   function handlePlayUser2Button() {
     console.log("user2 플레이 버튼 눌렀다!");
+
+    if (audioRef2.current && audioRef2.current?.currentTime === opts.start) {
+      console.log("2 끝났따");
+      youtubePlayer.seekTo(opts.start);
+      youtubePlayer.playVideo();
+    }
     // 중간에 누르면 상대방 current을 paused로 만들어버리는 로직 필요
 
     if (audioRef2.current && audioRef2.current.paused) {
@@ -73,6 +90,8 @@ export default function Vote() {
 
   const [nowPlaying, setNowPlaying] = useState<boolean>(false);
 
+  const [oncePlayed, setOncePlayed] = useState(false);
+
   // 재생할 Video의 ID값
   const [videoId, setVideoId] = useState<string>("1uRBxyPqkh0");
 
@@ -81,6 +100,8 @@ export default function Vote() {
     width: "326",
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
+      start: 0,
+      end: 27,
       rel: 0, //관련 동영상 표시하지 않음 (근데 별로 쓸모 없는듯..)
       modestbranding: 0, // 컨트롤 바에 youtube 로고를 표시하지 않음
       controls: 0,
@@ -121,12 +142,12 @@ export default function Vote() {
     <div className="flex flex-col items-center justify-center p-16 bg-[#FFFAFA] rounded-8 border-1 border-[#FFD8D8]">
       <audio
         ref={audioRef1}
-        // controls
+        controls
         src="https://dubingdubing.s3.ap-northeast-2.amazonaws.com/2780795332[인턴] - 안하는 것보다 늦게하는 것이 낫다.wav"
       ></audio>
       <audio
         ref={audioRef2}
-        // controls
+        controls
         src="https://dubingdubing.s3.ap-northeast-2.amazonaws.com/2780794561[인턴] - 안하는 것보다 늦게하는 것이 낫다.wav"
       ></audio>
       <YouTube
@@ -138,7 +159,8 @@ export default function Vote() {
           console.log("onEnd 발생");
 
           youtubePlayer.pauseVideo();
-          youtubePlayer.seekTo();
+          youtubePlayer.seekTo(opts.start);
+          setOncePlayed(true);
         }}
         onPlay={onPlay}
         onStateChange={onStateChange}

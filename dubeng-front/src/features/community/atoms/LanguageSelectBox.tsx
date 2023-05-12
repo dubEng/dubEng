@@ -4,15 +4,22 @@ import {
   setTabEnglish,
   setTabKorean,
 } from "../../../stores/community/languageTabSlice";
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
 interface Iprops {
   langType: string;
 }
 
 export default function LanguageSelectBox({ langType }: Iprops) {
+  const MySwal = withReactContent(Swal);
+
   const dispatch = useDispatch();
 
   function handleKoreanTab() {
     console.log("한국어탭 누름");
+    MySwal.fire("한국어 콘텐츠 Coming Soon👀");
     dispatch(setTabKorean());
   }
   function handleEnglishTab() {

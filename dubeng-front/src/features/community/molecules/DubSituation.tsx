@@ -5,7 +5,12 @@ import DubVideoSlider from "../../../components/organism/DubVideoSlider";
 import useSearchDubVideoQuery from "@/apis/community/queries/useSearchDubVideoQuery";
 import useSearchSituationVideoQuery from "@/apis/community/queries/useSearchSituationVideoQuery";
 
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
 export default function DubSituation() {
+  const MySwal = withReactContent(Swal);
+
   const [isOpen, setOpen] = useState(false);
   const [situationId, setSituationId] = useState("");
 
@@ -45,7 +50,7 @@ export default function DubSituation() {
   function handleSituationCard(id: string) {
     setSituationId(id);
     getSituationVideo();
-    window.alert("상황별 콘텐츠 추천은 Coming soon!");
+    Swal.fire("상황별 콘텐츠 Coming soon😎");
   }
 
   return (

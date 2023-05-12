@@ -29,7 +29,6 @@ export default function DubTypeTap({ dubType, langType }: Iprops) {
   function handleLanguageButton() {
     console.log("언어버튼 눌렀다!");
     setIsLanguageButtonOpen(!isLanguageButtonOpen);
-    window.alert("한국어 콘텐츠는 Coming soon!");
   }
 
   useEffect(() => {
