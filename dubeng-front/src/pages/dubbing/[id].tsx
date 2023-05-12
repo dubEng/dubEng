@@ -228,7 +228,7 @@ export default function DubbingPage() {
   }
 
   return (
-    <div className="h-screen">
+    <div className="h-full">
       {data && (
         <YouTube
           videoId={transferYoutube(data.videoPath)}
@@ -321,7 +321,7 @@ export default function DubbingPage() {
             }
           })}
       </div>
-      <div className="flex justify-center w-391 mb-16">
+      <div className="flex justify-center w-390">
         <CommonButton children="저장하기" onClick={handleSaveButton} />
       </div>
       <DubCompleteModal
