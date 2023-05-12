@@ -26,7 +26,11 @@ import useSearchDubVideoQuery from "@/apis/community/queries/useSearchDubVideoQu
 import useSearchDubProductQuery from "@/apis/community/queries/useSearchDubProductQuery";
 import DubVideoList from "@/features/community/organism/DubVideoList";
 import DubProductListItem from "@/components/molecules/DubProductListItem";
+import { DubVideoSearch } from "@/types/DubVideoSearch";
 
+interface IDubVideoResult {
+  content: DubVideoSearch[];
+}
 export default function CommunityPage() {
   // 전역에서 들고오는 state
   const tabIndex = useSelector((state: RootState) => {
@@ -53,8 +57,9 @@ export default function CommunityPage() {
     }
   };
 
-  //희제
-  const [searchDubVideoList, setSearchDubVideoList] = useState();
+  // query 결과 useState로
+  const [searchDubVideoList, setSearchDubVideoList] =
+    useState<IDubVideoResult>();
 
   // API 호출 response로 들어오는 state
 
