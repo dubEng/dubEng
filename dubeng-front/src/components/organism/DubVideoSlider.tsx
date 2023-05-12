@@ -14,6 +14,9 @@ interface Iprops {
 }
 
 export default function DubVideoSlider({ videoList, isOpen, setOpen }: Iprops) {
+  function handleVideoListDiv() {
+    setOpen(false);
+  }
   // const dumpList = [
   //   {
   //     id: 160,
@@ -71,7 +74,11 @@ export default function DubVideoSlider({ videoList, isOpen, setOpen }: Iprops) {
               </p>
               {videoList &&
                 videoList.map((item, index) => (
-                  <div className="mb-16" key={index}>
+                  <div
+                    className="mb-16"
+                    key={index}
+                    onClick={handleVideoListDiv}
+                  >
                     <DubVideoListItem
                       id={item.id}
                       title={item.title}
