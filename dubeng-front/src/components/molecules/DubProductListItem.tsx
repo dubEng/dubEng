@@ -1,6 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import TimeAgo from "timeago-react";
+import * as timeago from "timeago.js";
+import koLocale from "timeago.js/lib/lang/ko";
+
 interface Iprops {
   id: number;
   recordId: number;
@@ -24,6 +28,8 @@ export default function DubProductListItem({
   playCount,
   createdDate,
 }: Iprops) {
+  timeago.register("ko", koLocale);
+
   function secondsToMinutes(runtime: number) {
     const minutes = Math.floor(runtime / 60);
     const remainingSeconds = runtime % 60;
@@ -67,8 +73,10 @@ export default function DubProductListItem({
             <p className="pl-4 text-dubgray text-12">{nickname}</p>
           </div>
 
-          <p className="text-dubgray text-12">
-            조회수 {playCount}회 ▪ {createdDate}전
+          <p className="flex text-dubgray text-12 space-x-4">
+            <p>조회수 {playCount}회</p>
+            <p className="text-8">▪</p>
+            <TimeAgo datetime={createdDate} locale="ko" />
           </p>
         </div>
       </div>
