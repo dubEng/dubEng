@@ -50,7 +50,7 @@ export default function RecordingButton({ page }: Iprops) {
           onClick={() => setOpen(true)}
         />
         <DubVideoSlider
-          videoList={data?.data.ContentsRecommendList}
+          videoList={data?.data.answer}
           isOpen={isOpen}
           setOpen={setOpen}
         />
