@@ -45,6 +45,7 @@ export default function CommunityPage() {
 
   // 태그 선택
   const handleClickCategory = (id: number) => {
+    console.log("fffff", searchDubVideoList);
     if (selectedCategory.includes(id)) {
       setSelectedCategory(selectedCategory.filter((tagId) => tagId !== id));
     } else {
@@ -52,15 +53,24 @@ export default function CommunityPage() {
     }
   };
 
+  //희제
+  const [searchDubVideoList, setSearchDubVideoList] = useState();
+
   // API 호출 response로 들어오는 state
 
   // 2. 콘텐츠 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
-  const { data: searchDubVideoList, isLoading: searchDubVideoLoading } =
+  const { data: videoData, isLoading: searchDubVideoLoading } =
     useSearchDubVideoQuery(selectedCategory, languageIndex, 10, keyword);
+
+  useEffect(() => {
+    if (videoData) {
+      setSearchDubVideoList(videoData);
+    }
+  }, [videoData]);
 
   // 3. 작품 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
   const { data: searchDubProductList, isLoading: searchDubProductLoading } =
-    useSearchDubProductQuery(selectedCategory, languageIndex, "10", keyword);
+    useSearchDubProductQuery(selectedCategory, languageIndex, 10, keyword);
 
   // 4. 카테고리 리스트 가져오기
   const { data, isLoading } = useCategoryListQuery();
@@ -84,15 +94,13 @@ export default function CommunityPage() {
     }
   };
 
-  if (searchDubVideoLoading) {
-    return <>로딩 중</>;
-  }
+  // if (searchDubVideoLoading) {
+  //   return <>로딩 중</>;
+  // }
 
-  if (searchDubProductLoading) {
-    return <>작품 로딩 중</>;
-  }
-  console.log("searchDubProductList", searchDubProductList);
-  console.log("searchDubVideoList", searchDubVideoList);
+  // if (searchDubProductLoading) {
+  //   return <>작품 로딩 중</>;
+  // }
 
   return (
     <div className="static mx-16">
@@ -221,8 +229,7 @@ export default function CommunityPage() {
       </div>
       <div className="space-y-16 mt-16">
         {tabIndex === DubType.DUB_VIDEO &&
-          searchDubVideoList.content &&
-          searchDubVideoList.content.map(
+          searchDubVideoList?.content.map(
             (dubVideo: {
               id: number;
               title: string;
@@ -239,8 +246,7 @@ export default function CommunityPage() {
             )
           )}
         {tabIndex === DubType.DUB_PRODUCT &&
-          searchDubProductList.content &&
-          searchDubProductList.content.map(
+          searchDubProductList?.content.map(
             (dubProduct: {
               id: number;
               title: string;
