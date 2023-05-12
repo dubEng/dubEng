@@ -4,6 +4,8 @@ import VoteButton from "../atoms/VoteButton";
 
 import YouTube, { YouTubePlayer, YouTubeProps } from "react-youtube";
 import { useRef, useState } from "react";
+import profile_01 from "../../../../public/images/dump/profile_01.svg";
+import profile_02 from "../../../../public/images/dump/profile_02.svg";
 
 export default function Vote() {
   // useQuery들로 가져오는 것들
@@ -142,7 +144,7 @@ export default function Vote() {
           <VoteCard
             username={"아영아영"}
             description="안녕하세요 팀장 김아영입니다."
-            userImage=""
+            userImage={profile_01}
             isPlaying={!audioRef1.current?.paused}
             onClick={handlePlayUser1Button}
           />
@@ -153,7 +155,7 @@ export default function Vote() {
           <VoteCard
             username={"자민자민"}
             description="안녕하세요 팀원 백자민입니다."
-            userImage=""
+            userImage={profile_02}
             isPlaying={!audioRef2.current?.paused}
             onClick={handlePlayUser2Button}
           />
