@@ -41,7 +41,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .alternateTypeRules(AlternateTypeRules
                         .newRule(typeResolver.resolve(Pageable.class), typeResolver.resolve(Page.class)))
-//                .host("k8b208.p.ssafy.io")
+                .host("k8b208.p.ssafy.io")
 
                 .groupName("list")
                 .useDefaultResponseMessages(false)
