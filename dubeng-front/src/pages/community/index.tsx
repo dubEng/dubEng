@@ -260,6 +260,7 @@ export default function CommunityPage() {
           searchDubProductList?.content.map(
             (dubProduct: {
               id: number;
+              recordId: number;
               title: string;
               thumbnail: string;
               runtime: number;
@@ -271,6 +272,7 @@ export default function CommunityPage() {
               <DubProductListItem
                 key={dubProduct.id}
                 id={dubProduct.id}
+                recordId={dubProduct.recordId}
                 title={dubProduct.title}
                 thumbnail={dubProduct.thumbnail}
                 runtime={dubProduct.runtime}
