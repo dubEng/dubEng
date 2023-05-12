@@ -62,7 +62,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <PersistGate loading={null} persistor={persistStore(store)}>
             <Header />
             <NavigationBar />
-            <div className="mt-57 mb-61">
+            <div className="mt-57 mb-61 bg-white">
               <Component {...pageProps} />
             </div>
           </PersistGate>
