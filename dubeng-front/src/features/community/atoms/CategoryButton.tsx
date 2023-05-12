@@ -2,7 +2,7 @@ interface Iprops {
   id: number;
   name: string;
   isSelected: boolean;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 export default function CategoryButton({

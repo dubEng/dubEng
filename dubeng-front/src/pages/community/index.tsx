@@ -26,7 +26,11 @@ import useSearchDubVideoQuery from "@/apis/community/queries/useSearchDubVideoQu
 import useSearchDubProductQuery from "@/apis/community/queries/useSearchDubProductQuery";
 import DubVideoList from "@/features/community/organism/DubVideoList";
 import DubProductListItem from "@/components/molecules/DubProductListItem";
+import { DubVideoSearch } from "@/types/DubVideoSearch";
 
+interface IDubVideoResult {
+  content: DubVideoSearch[];
+}
 export default function CommunityPage() {
   // 전역에서 들고오는 state
   const tabIndex = useSelector((state: RootState) => {
@@ -45,6 +49,7 @@ export default function CommunityPage() {
 
   // 태그 선택
   const handleClickCategory = (id: number) => {
+    console.log("fffff", searchDubVideoList);
     if (selectedCategory.includes(id)) {
       setSelectedCategory(selectedCategory.filter((tagId) => tagId !== id));
     } else {
@@ -52,15 +57,25 @@ export default function CommunityPage() {
     }
   };
 
+  // query 결과 useState로
+  const [searchDubVideoList, setSearchDubVideoList] =
+    useState<IDubVideoResult>();
+
   // API 호출 response로 들어오는 state
 
   // 2. 콘텐츠 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
-  const { data: searchDubVideoList, isLoading: searchDubVideoLoading } =
+  const { data: videoData, isLoading: searchDubVideoLoading } =
     useSearchDubVideoQuery(selectedCategory, languageIndex, 10, keyword);
+
+  useEffect(() => {
+    if (videoData) {
+      setSearchDubVideoList(videoData);
+    }
+  }, [videoData]);
 
   // 3. 작품 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
   const { data: searchDubProductList, isLoading: searchDubProductLoading } =
-    useSearchDubProductQuery(selectedCategory, languageIndex, "10", keyword);
+    useSearchDubProductQuery(selectedCategory, languageIndex, 10, keyword);
 
   // 4. 카테고리 리스트 가져오기
   const { data, isLoading } = useCategoryListQuery();
@@ -83,16 +98,18 @@ export default function CommunityPage() {
       setKeyword(searchValue);
     }
   };
-
-  if (searchDubVideoLoading) {
-    return <>로딩 중</>;
+  function handleSearchInputClear() {
+    console.log("검색어 지우기 눌렸다");
+    setSearchValue("");
   }
 
-  if (searchDubProductLoading) {
-    return <>작품 로딩 중</>;
-  }
-  console.log("searchDubProductList", searchDubProductList);
-  console.log("searchDubVideoList", searchDubVideoList);
+  // if (searchDubVideoLoading) {
+  //   return <>로딩 중</>;
+  // }
+
+  // if (searchDubProductLoading) {
+  //   return <>작품 로딩 중</>;
+  // }
 
   return (
     <div className="static">
@@ -130,6 +147,7 @@ export default function CommunityPage() {
           placeholder="더빙할 콘텐츠를 검색해보세요."
           onChange={handleSearchInputChange}
           onKeyDown={handleSearchInputKeyDown}
+          onClick={handleSearchInputClear}
         />
       ) : (
         <SearchInputBox
@@ -139,6 +157,7 @@ export default function CommunityPage() {
           placeholder="더빙 작품을 검색해보세요."
           onChange={handleSearchInputChange}
           onKeyDown={handleSearchInputKeyDown}
+          onClick={handleSearchInputClear}
         />
       )}
 
@@ -221,8 +240,7 @@ export default function CommunityPage() {
       </div>
       <div className="space-y-16 mt-16">
         {tabIndex === DubType.DUB_VIDEO &&
-          searchDubVideoList.content &&
-          searchDubVideoList.content.map(
+          searchDubVideoList?.content.map(
             (dubVideo: {
               id: number;
               title: string;
@@ -239,8 +257,7 @@ export default function CommunityPage() {
             )
           )}
         {tabIndex === DubType.DUB_PRODUCT &&
-          searchDubProductList.content &&
-          searchDubProductList.content.map(
+          searchDubProductList?.content.map(
             (dubProduct: {
               id: number;
               title: string;

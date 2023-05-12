@@ -18,11 +18,10 @@ const fetcher = (
   return axios
     .get(
       process.env.NEXT_PUBLIC_BASE_URL +
-        `/dub/community/search/${langType}` +
+        `/dub/contents/search/${langType}` +
         `?${queryArray}`,
       {
         params: {
-          // queryArray,
           page: pageParam,
           size: size,
           title: title,
@@ -30,22 +29,24 @@ const fetcher = (
       }
     )
     .then(({ data }) => {
-      console.log("{ 작품search쿼리data }확인", data);
+      console.log("상황 비디오 쿼리 안!!!!", data);
       return data;
     });
 };
 
-const useSearchDubProductQuery = (
+const useSearchSituationVideoQuery = (
   contentsSearch: number[],
   langType: string,
   size: number,
   title: string
 ) => {
+  console.log("useSearchSituation 안", contentsSearch);
   return useQuery(
-    [queryKeys.SEARCH_DUB_PRODUCT, contentsSearch, langType, size, title],
+    [queryKeys.SEARCH_SITUATION_VIDEO, contentsSearch[0]],
     ({ pageParam = 0 }) =>
-      fetcher(contentsSearch, langType, pageParam, size, title)
+      fetcher(contentsSearch, langType, pageParam, size, title),
+    { enabled: false }
   );
 };
 
-export default useSearchDubProductQuery;
+export default useSearchSituationVideoQuery;

@@ -7,6 +7,7 @@ export const CATEGORY_LIST = "/categorylist";
 export const RECOMMEND_DUB_VIDEO_LIST = "/recommand";
 export const SEARCH_DUB_VIDEO = "/search/dub-video";
 export const SEARCH_DUB_PRODUCT = "/search/dub-product";
+export const SEARCH_SITUATION_VIDEO = "/search/situation";
 
 // signup
 export const NICKNAME = "/check";
