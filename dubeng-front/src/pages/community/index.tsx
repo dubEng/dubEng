@@ -275,7 +275,7 @@ export default function CommunityPage() {
               title: string;
               thumbnail: string;
               runtime: number;
-              imageUrl: string;
+              profileImage: string;
               nickname: string;
               playCount: number;
               createdDate: string;
@@ -287,7 +287,7 @@ export default function CommunityPage() {
                 title={dubProduct.title}
                 thumbnail={dubProduct.thumbnail}
                 runtime={dubProduct.runtime}
-                imageUrl={dubProduct.imageUrl}
+                profileImage={dubProduct.profileImage}
                 nickname={dubProduct.nickname}
                 playCount={dubProduct.playCount}
                 createdDate={dubProduct.createdDate}

@@ -11,7 +11,7 @@ interface Iprops {
   title: string;
   thumbnail: string;
   runtime: number;
-  imageUrl: string;
+  profileImage: string;
   nickname: string;
   playCount: number;
   createdDate: string;
@@ -23,7 +23,7 @@ export default function DubProductListItem({
   title,
   thumbnail,
   runtime,
-  imageUrl,
+  profileImage,
   nickname,
   playCount,
   createdDate,
@@ -63,7 +63,7 @@ export default function DubProductListItem({
           <div className="flex items-center">
             <div className="flex justify-end">
               <Image
-                src={imageUrl}
+                src={profileImage}
                 alt={"profile"}
                 width={16}
                 height={16}
