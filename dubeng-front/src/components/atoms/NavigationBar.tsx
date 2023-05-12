@@ -4,13 +4,12 @@ import { MdHeadphones } from "react-icons/md";
 import { ImBook } from "react-icons/im";
 import { AiOutlineSmile } from "react-icons/ai";
 
-import Link from "next/link";
-
 import { usePathname } from "next/navigation";
 import RecordingButton from "./RecordingButton";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useRouter } from "next/navigation";
 
 const MySwal = withReactContent(Swal);
 
@@ -53,13 +52,11 @@ const menu = [
 export default function NavigationBar() {
   const pathName = usePathname();
 
+  const route = useRouter();
+
+  // 관리자 페이지에서는 NavBar안보여줌
+
   if (pathName === "/manager") {
-    return <></>;
-  } else if (pathName === "/mission") {
-    MySwal.fire("도전과제 페이지는 아직 준비중입니다!");
-    return <></>;
-  } else if (pathName === "/mypage") {
-    MySwal.fire("마이페이지는 아직 준비중입니다!");
     return <></>;
   } else {
     return (
@@ -70,22 +67,30 @@ export default function NavigationBar() {
               {item.isNavigatedButton === false ? (
                 <RecordingButton page={pathName} />
               ) : (
-                <Link href={item.href}>
-                  <div className="flex flex-col justify-center items-center pt-4">
+                  <button className="flex flex-col justify-center items-center pt-4" onClick={() => handleNavigationButton(item.href)}>
                     {pathName === item.href ? item.clickedIcon : item.icon}
                     {pathName === item.href ? (
                       <p className="text-dubcoral text-12">{item.label}</p>
                     ) : (
                       <p className="text-dubgray text-12">{item.label}</p>
                     )}
-                  </div>
-                </Link>
+                  </button>
               )}
             </li>
           ))}
         </ul>
       </nav>
     );
+  }
+
+  function handleNavigationButton(pathName: string){
+    if (pathName === "/mission") {
+      MySwal.fire("도전과제 페이지는 아직 준비중입니다");
+    } else if(pathName === "/mypage"){
+      MySwal.fire("마이페이지는 아직 준비중입니다");
+    } else {
+      route.push(pathName);
+    }
   }
 
   function getNavigationBarStyle(pathName: string): string {
