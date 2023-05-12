@@ -3,7 +3,7 @@ interface Iprops {
   // height: number;
   // fontSize: number;
   children: string;
-  isDisabled: boolean;
+  isDisabled?: boolean;
   onClick: () => void;
 }
 
@@ -12,7 +12,7 @@ export default function CommonButton({
   isDisabled,
   onClick,
 }: Iprops) {
-  if (isDisabled) {
+  if (!isDisabled) {
     return (
       <button
         onClick={onClick}

@@ -14,9 +14,11 @@ const fetcher = (payload: RecordSave) =>
 const useRecordSave = () => {
   return useMutation(fetcher, {
     onSuccess: (response) => {
+      console.log('DB 저장 성공');
       console.log('response', response);
     },
     onError: (error) => {
+      console.log('DB 저장 실패');
       console.error('error', error);
     },
   });

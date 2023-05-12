@@ -97,22 +97,25 @@ export default function DubBox({
         const audioBlob = new Blob(audioChunksRef.current, {
           type: "audio/wav",
         });
-
-        SpeechRecognition.stopListening();
-
+        
         const formData = new FormData();
-
+        
         formData.append("recodeInfo.nickname", nickname);
         formData.append("recodeInfo.recodeNum", scriptIndex.toString());
         formData.append("recodeInfo.videoId", videoId);
-
+        
         const file = new File([audioBlob], "myRecordingFile.wav", {
           type: "audio/wav",
         }); // File 객체 생성
-
+        
         formData.append("audioFile", file);
-
+        
         mutate(formData);
+        
+        //녹음 종료 후 1초뒤에 STT 인식 종료
+        setTimeout(()=> {
+          SpeechRecognition.stopListening();
+        }, 1000);
       };
     })();
   }, []);

@@ -17,11 +17,12 @@ export const Default: Story = {
     <DubProductListItem
       title={"길어져서 2줄이 되면 어떻게 도나요 최대로 "}
       thumbnail={""}
-      runtime={"2분 11초"}
+      runtime={10}
       imageUrl={profileImg}
       nickname={"언도"}
       playCount={10}
-      updatedDate={"11분"}
+      createdDate={"11분"}
+      id={0}
     />
   ),
 };

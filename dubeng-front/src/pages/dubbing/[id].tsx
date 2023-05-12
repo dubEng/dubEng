@@ -17,6 +17,7 @@ import useRecordPreviewPost from "@/apis/dubbing/mutations/useRecordPreviewPost"
 import { RecordPreview } from "@/types/RecordPreview";
 import ErrorComponent from "@/components/atoms/ErrorComponent";
 import ScaleLoader from "react-spinners/ScaleLoader";
+import DubCompleteModal from "@/features/dubbing/organism/DubCompleteModal";
 
 interface Iprops {
   id: number;
@@ -42,6 +43,8 @@ export default function DubbingPage() {
   const userId = useSelector((state: RootState) => state.user.userId);
   const nickname = useSelector((state: RootState) => state.user.nickname);
 
+  const [previewUrl, setPreviewUrl] = useState<string>("");
+
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
   const [nowPlaying, setNowPlaying] = useState<boolean>(false);
@@ -53,6 +56,16 @@ export default function DubbingPage() {
   const [timerId, setTimerId] = useState<number>(0);
 
   const [progressBarWidth, setProgressBarWidth] = useState<string>("0%");
+
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
 
   function transferYoutube(videoPath: string) {
     const originalUrl = videoPath;
@@ -69,7 +82,10 @@ export default function DubbingPage() {
         videoId: parseInt(router.query.id as string),
       };
 
-      await mutation.mutateAsync(payload);
+      const response = await mutation.mutateAsync(payload);
+      setPreviewUrl(response);
+
+      openModal();
     }
   }
 
@@ -181,7 +197,9 @@ export default function DubbingPage() {
     const seekTo = scriptList.data[activeIndex].startTime;
 
     const progress =
-      (((seekTo / 1000) - data.startTime) / (data.endTime - data.startTime)) * 100 + "%";
+      ((seekTo / 1000 - data.startTime) / (data.endTime - data.startTime)) *
+        100 +
+      "%";
 
     setProgressBarWidth(progress);
 
@@ -304,12 +322,18 @@ export default function DubbingPage() {
           })}
       </div>
       <div className="flex justify-center w-391 mb-16">
-        <CommonButton
-          children="저장하기"
-          isDisabled
-          onClick={handleSaveButton}
-        />
+        <CommonButton children="저장하기" onClick={handleSaveButton} />
       </div>
+      <DubCompleteModal
+        closeModal={closeModal}
+        startTime={data.startTime}
+        endTime={data.endTime}
+        videoPath={data.videoPath}
+        modalIsOpen={modalIsOpen}
+        audioUrl={previewUrl}
+        videoId={parseInt(router.query.id as string)}
+        userId={userId}
+      />
     </>
   );
 }
