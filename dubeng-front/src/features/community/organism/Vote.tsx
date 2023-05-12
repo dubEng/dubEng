@@ -118,12 +118,12 @@ export default function Vote() {
     <div className="flex flex-col items-center justify-center p-16 bg-[#FFFAFA] rounded-8 border-1 border-[#FFD8D8]">
       <audio
         ref={audioRef1}
-        controls
+        // controls
         src="https://dubingdubing.s3.ap-northeast-2.amazonaws.com/2763952293_154_vocals.wav"
       ></audio>
       <audio
         ref={audioRef2}
-        controls
+        // controls
         src="https://dubingdubing.s3.ap-northeast-2.amazonaws.com/2763952293_154_vocals.wav"
       ></audio>
       <YouTube
@@ -137,10 +137,10 @@ export default function Vote() {
         onPlay={onPlay}
         onStateChange={onStateChange}
       />
-      <div className="flex justify-between">
+      <div className="mt-16 flex justify-between">
         <div className="space-y-16">
           <VoteCard
-            username={"김도언"}
+            username={"도도도언"}
             description="김도언의 한 줄 소개 입니다."
             userImage=""
             isPlaying={!audioRef1.current?.paused}
@@ -148,11 +148,11 @@ export default function Vote() {
           />
           <VoteButton isSelected={false} onClick={handleVoteButton} />
         </div>
-        <p className="text-16 font-semibold text-dubgray mt-55">vs</p>
+        <p className="text-16 font-semibold text-dubgray mt-55 mx-13">vs</p>
         <div className="space-y-16">
           <VoteCard
-            username={"하이하이하이하"}
-            description="언도"
+            username={"언도더씨"}
+            description="언도입니다."
             userImage=""
             isPlaying={!audioRef2.current?.paused}
             onClick={handlePlayUser2Button}
