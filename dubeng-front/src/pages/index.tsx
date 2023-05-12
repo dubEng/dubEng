@@ -5,7 +5,7 @@ import DubProductList from "@/features/home/organism/DubProductList";
 
 export default function HomePage() {
   return (
-    <>
+    <div className="h-screen">
       <div className="m-16">
         <Banner />
       </div>
@@ -23,6 +23,6 @@ export default function HomePage() {
         이주의 더빙왕
       </p>
       <DubKingList />
-    </>
+    </div>
   );
 }

@@ -112,7 +112,7 @@ export default function CommunityPage() {
   // }
 
   return (
-    <div className="static mx-16">
+    <div className="static">
       <Header />
       <div className="flex sticky top-0">
         <DubTypeTap dubType={tabIndex} langType={languageIndex} />

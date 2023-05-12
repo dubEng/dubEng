@@ -228,7 +228,7 @@ export default function DubbingPage() {
   }
 
   return (
-    <>
+    <div className="h-screen">
       {data && (
         <YouTube
           videoId={transferYoutube(data.videoPath)}
@@ -334,6 +334,6 @@ export default function DubbingPage() {
         videoId={parseInt(router.query.id as string)}
         userId={userId}
       />
-    </>
+    </div>
   );
 }
