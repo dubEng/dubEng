@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer, YouTubeProps } from "react-youtube";
 import useCommunityDetailQuery from "@/apis/community/queries/useCommunityDetailQuery";
 
@@ -16,6 +16,8 @@ export default function ShortsProductPage() {
 
   const [selectedScript, setSelectedScript] = useState<number>(0);
 
+  const audioRef = useRef<HTMLAudioElement>(null);
+
   function transferYoutube(videoPath: string) {
     const originalUrl = videoPath;
     const splitUrl = originalUrl.split("watch?v=");
@@ -29,6 +31,32 @@ export default function ShortsProductPage() {
     setYoutubePlayer(player);
     player.pauseVideo();
     player.mute();
+  };
+
+  // const onPlay: YouTubeProps["onPlay"] = (event) => {
+  //   console.log("onPlay");
+  //   console.log("event", event);
+  //   // if (audioRef.current) {
+  //   //   audioRef.current.play();
+  //   // }
+  // };
+
+  const onStateChange: YouTubeProps["onStateChange"] = (event) => {
+    console.log("onStateChange");
+
+    if (event.data === 1) {
+      if (audioRef.current) {
+        audioRef.current.play();
+      }
+      // 재생 중일 때
+      console.log("영상 재생");
+    } else if (event.data === 2) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      //일시 정지 시
+      console.log("일시 정지");
+    }
   };
 
   // 선택된 스크롤이 바뀌면 오토 스크롤
@@ -101,23 +129,35 @@ export default function ShortsProductPage() {
               },
             }}
             onReady={onPlayerReady}
+            // onPlay={onPlay}
+            onStateChange={onStateChange}
             onEnd={(e) => {
               youtubePlayer.pauseVideo();
               youtubePlayer.seekTo(data.startTime);
 
+              if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current.currentTime = 0;
+              }
+
               setSelectedScript(0);
             }}
+          />
+          <audio
+            ref={audioRef}
+            style={{ display: "none" }}
+            src={data.recordPath}
           />
           <div className="flex flex-row justify-between mt-16 mb-16 items-center w-390">
             <p className="text-16 text-white">{data.title}</p>
           </div>
           <div className="h-260 pt-32 overflow-y-scroll bg-black container mx-auto mb-16 w-391">
             {data.scriptList &&
-              data.scriptList.map((item: any) => {
+              data.scriptList.map((item: any, index: number) => {
                 return (
                   <div
-                    className={`script-element-${item.id} mb-8 mx-20 flex flex-col items-center`}
-                    key={item.id}
+                    className={`script-element-${index} mb-8 mx-20 flex flex-col items-center`}
+                    key={index}
                   >
                     <p className="text-16 text-white">{item.content}</p>
                     <p className="text-14 text-[#8E8D8D]">

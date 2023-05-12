@@ -63,7 +63,8 @@ export default function DubCompleteModal({
   const [duration, setDuration] = useState(0);
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<string>("public");
+  // 공개 여부는 나중에 추가하기
+  // const [selectedOption, setSelectedOption] = useState<string>("public");
 
   const [progressBar, setProgressBar] = useState<string>("0%");
 
@@ -105,9 +106,9 @@ export default function DubCompleteModal({
     setProgressBar(progress);
   }, [currentTime]);
 
-  const handleOptionChange = (value: string) => {
-    setSelectedOption(value);
-  };
+  // const handleOptionChange = (value: string) => {
+  //   setSelectedOption(value);
+  // };
 
   function transferYoutube(videoPath: string) {
     const originalUrl = videoPath;
@@ -202,7 +203,7 @@ export default function DubCompleteModal({
               />
             </div>
             <audio ref={audioRef} style={{ display: "none" }} src={audioUrl} />
-            <div className="flex flex-col items-center text-16 mt-8 text-dubblack">
+            {/* <div className="flex flex-col items-center text-16 mt-8 text-dubblack">
               <p className="mb-8 font-semibold">공개여부</p>
               <div className="flex flex-row justify-center mb-16">
                 {options.map((option) => (
@@ -219,7 +220,7 @@ export default function DubCompleteModal({
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
             <CommonButton children={"완료하기"} onClick={handleComplete} />
           </div>
         </div>
