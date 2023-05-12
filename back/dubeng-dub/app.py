@@ -148,6 +148,8 @@ def mergeAudio(firstList, lastList, bgAudio, videoST, videoET):
     #배열에 있는 음원들을 하나의 AudioSegment 객체로 합치기
     mergedAudio = sum(chunks)
 
+    mergedAudio = mergedAudio.apply_gain(-20)
+
     #음성파일의 길이에 맞춰서 배경음악의 길이 자르기
     bgm_chunks = make_chunks(bgAudio, len(mergedAudio))
 
@@ -239,6 +241,9 @@ def maekPreviewAudio():
     else: #상대역이 먼저 시작할 경우
         finalAudio = mergeAudio(oppositeAudioList, userAudioList, bgAudio, videoInfo.startTime*1000, videoInfo.endTime*1000)
     
+
+
+
     #s3 버킷에 업로드하기
     keyStr = userId + videoInfo.title + ".wav"
     resultUrl = uploadToBucket(finalAudio, keyStr)
@@ -259,10 +264,44 @@ def save():
     connection = pymysql.connect(host=DB_HOST, user=DB_USER,passwd=DB_PASSWORD, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
 
-    #video 테이블에서 정보 얻어오기
+    #record 테이블에 녹음 데이터 넣기
     sql = "INSERT INTO record (video_id, user_id, is_public, is_active, play_count, record_path, like_count, vote_count, created_date, updated_date) VALUES (%s, %s, 1, 1, 0, %s, 0, 0, %s, %s)"
     values = (videoId, userId, url, date, date)
     cursor.execute(sql, values)
+
+    #video 정보 가져오기
+    sql = "select start_time, end_time from video where id = %s "
+    cursor.execute(sql, [videoId])
+    rows = cursor.fetchall()
+    
+    recTime = 0
+    for r in rows:
+        recTime = r[1]-r[0]
+    print("녹음시간: ",recTime)
+
+    #user 정보 가져오기
+    sql = "select record_count, total_rec_time from user where id = %s "
+    cursor.execute(sql, [userId])
+    rows = cursor.fetchall()
+
+    recCnt = 0
+    totalTime = 0
+    for r in rows:
+        recCnt = r[0]
+        totalTime = r[1]
+
+    print("가져온 카운트값: ",recCnt)
+    print("가져온 총 녹음시간: ", totalTime)
+    
+    recCnt += 1
+    totalTime += recTime
+
+    print("수정한 카운트값: ",recCnt)
+    print("수정한 총 녹음시간: ", totalTime)
+
+    #user 정보 업데이트
+    sql = "update user set record_count = %s , total_rec_time = %s where id = %s "
+    cursor.execute(sql, [recCnt, totalTime, userId])
 
     connection.commit()
     connection.close()
