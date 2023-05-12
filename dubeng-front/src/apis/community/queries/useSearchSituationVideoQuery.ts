@@ -11,13 +11,17 @@ const fetcher = (
   size: number,
   title: string
 ) => {
-  const queryArray = qs.stringify(contentsSearch, { arrayFormat: "repeat" });
+  const queryArray = qs.stringify(
+    { contentsSearch: contentsSearch },
+    { arrayFormat: "repeat" }
+  );
   return axios
     .get(
-      process.env.NEXT_PUBLIC_BASE_URL + `/dub/contents/search/${langType}`,
+      process.env.NEXT_PUBLIC_BASE_URL +
+        `/dub/contents/search/${langType}` +
+        `?${queryArray}`,
       {
         params: {
-          queryArray,
           page: pageParam,
           size: size,
           title: title,
