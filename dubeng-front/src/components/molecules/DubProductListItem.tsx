@@ -3,6 +3,7 @@ import Link from "next/link";
 
 interface Iprops {
   id: number;
+  recordId: number;
   title: string;
   thumbnail: string;
   runtime: number;
@@ -14,6 +15,7 @@ interface Iprops {
 
 export default function DubProductListItem({
   id,
+  recordId,
   title,
   thumbnail,
   runtime,
@@ -22,9 +24,17 @@ export default function DubProductListItem({
   playCount,
   createdDate,
 }: Iprops) {
+  function secondsToMinutes(runtime: number) {
+    const minutes = Math.floor(runtime / 60);
+    const remainingSeconds = runtime % 60;
+    return [minutes, remainingSeconds];
+  }
+
+  const runtimeList = secondsToMinutes(runtime);
+
   return (
-    <Link href={`/community/shorts/product/${id}`}>
-      <div className="flex p-16 w-358 bg-white rounded-8 border-1 border-dubgraymedium">
+    <Link href={`/community/shorts/product/${recordId}`}>
+      <div className="grid grid-cols-2 p-16 w-358 bg-white rounded-8 border-1 border-dubgraymedium">
         <Image
           src={thumbnail}
           alt={title}
@@ -34,7 +44,15 @@ export default function DubProductListItem({
         ></Image>
         <div className="flex flex-col ml-16 justify-between">
           <p className="text-14 font-semibold text-dubblack">{title}</p>
-          <p className="text-dubgray text-12">영상 길이 : {runtime}</p>
+          {runtimeList[0] === 0 ? (
+            <p className="text-dubgray text-12">
+              영상 길이 : {runtimeList[1]}초
+            </p>
+          ) : (
+            <p className="text-dubgray text-12">
+              영상 길이 : {runtimeList[0]}분 {runtimeList[1]}초
+            </p>
+          )}
 
           <div className="flex items-center">
             <div className="flex justify-end">
