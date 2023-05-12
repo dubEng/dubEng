@@ -261,15 +261,14 @@ def sendInfo(start, end):
             # script 가져오기
             sc = YouTubeTranscriptApi.get_transcript(video_id)
             transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-            transcript = transcript_list.find_transcript(['en'])
-            translated_transcript = transcript.translate(
-                'ko').fetch()  # 한국어 script
+            transcript = transcript_list.find_transcript([data['lang']])
+            translated_transcript = transcript.translate('ko').fetch()  # 한국어 script
 
             for s, t in zip(sc, translated_transcript):
                 if float(s['start']) >= float(start) and float(s['start']) <= float(end):
                     s['translation'] = t['text']
                     result.append(s)
-                elif float(s['start']) > float(end):
+                elif float(s['start']) >= float(end):
                     break
         response = {
             "videoInfo": data,
