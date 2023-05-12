@@ -82,7 +82,7 @@ export default function ShortsVideoPage() {
   });
 
   return (
-    <div className="w-screen h-screen bg-black flex flex-col items-center mt-32">
+    <div className="w-full h-screen bg-black flex flex-col items-center justify-center mt-32">
       {data && (
         <>
           <YouTube

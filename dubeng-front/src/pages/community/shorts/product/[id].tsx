@@ -83,7 +83,7 @@ export default function ShortsProductPage() {
   });
 
   return (
-    <div className="w-screen h-screen bg-black flex flex-col items-center mt-32">
+    <div className="w-full h-screen bg-black flex flex-col items-center justify-center">
       {data && (
         <>
           <YouTube
