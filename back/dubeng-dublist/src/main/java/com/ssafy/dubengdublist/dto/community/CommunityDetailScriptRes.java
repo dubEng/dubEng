@@ -22,10 +22,12 @@ public class CommunityDetailScriptRes {
     private String nickname;
     private Long recordId;
     private List<ContentsScriptRes> scriptList;
+    private Long startTime;
+    private Long endTime;
 
 
     @QueryProjection
-    public CommunityDetailScriptRes(Long id, String title, String thumbnail,String videoPath, ZonedDateTime createdDate, Long recordCommentCount, String userId, String nickname,Long recordId, List<ContentsScriptRes> scriptList) {
+    public CommunityDetailScriptRes(Long id, String title, String thumbnail,String videoPath, ZonedDateTime createdDate, Long recordCommentCount, String userId, String nickname,Long recordId, List<ContentsScriptRes> scriptList,Long startTime, Long endTime) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
@@ -36,6 +38,8 @@ public class CommunityDetailScriptRes {
         this.createdDate = createdDate;
         this.recordId = recordId;
         this.scriptList = scriptList;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
 }

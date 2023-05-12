@@ -150,7 +150,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .otherwise(2);
 
         List<CommunityDetailRes> content = queryFactory
-                .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.id, user.nickname, QRecord.record.id))
+                .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.id, user.nickname, QRecord.record.id, video.startTime, video.endTime))
                 .from(video)
                 .where(video.langType.eq(langType), QRecord.record.isPublic.eq(true))
                 .join(QRecord.record)
@@ -168,7 +168,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         // 스크립트 리스트 가져오기
         List<CommunityDetailScriptRes> communityDetailScriptResList = new ArrayList<>();
         for(CommunityDetailRes c : content){
-            CommunityDetailScriptRes cd = new CommunityDetailScriptRes(c.getId(), c.getTitle(), c.getThumbnail(), c.getVideoPath(), c.getCreatedDate(), c.getRecordCommentCount(),c.getUserId(), c.getNickname(), c.getRecordId(), selectAllScript(c.getId()));
+            CommunityDetailScriptRes cd = new CommunityDetailScriptRes(c.getId(), c.getTitle(), c.getThumbnail(), c.getVideoPath(), c.getCreatedDate(), c.getRecordCommentCount(),c.getUserId(), c.getNickname(), c.getRecordId(), selectAllScript(c.getId()), c.getStartTime(), c.getEndTime());
             communityDetailScriptResList.add(cd);
         }
 
