@@ -55,7 +55,7 @@ export default function DubProductList() {
           <SwiperSlide key={item.videoId}>
             <DubVideoThumbnail
               title={item.title}
-              thumbnail={item.thumbnail}
+              thumbnail={item.thumbnail ?? ""}
               id={item.videoId}
             />
           </SwiperSlide>

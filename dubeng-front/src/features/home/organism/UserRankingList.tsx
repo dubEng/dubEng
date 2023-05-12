@@ -2,6 +2,7 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import UserRankingListItem from "../molecules/UserRankingListItem";
 import useHomeRankQuery from "../../../apis/home/queries/useHomeRankQuery";
 import ErrorComponent from "../../../components/atoms/ErrorComponent";
+import DefaultImage from "../../../../public/images/default/mic_profile.png";
 
 export default function UserRankingList() {
   const rank = useHomeRankQuery();
@@ -31,15 +32,15 @@ export default function UserRankingList() {
         </div>
       </div>
       {rank.data &&
-        rank.data.map((item: any) => (
+        rank.data.map((item: any, index: number) => (
           <UserRankingListItem
-            key={item.ranking}
-            imageUrl={item.imageUrl}
-            introduce={item.introduce}
+            key={item.id}
+            imageUrl={item.profileImage ?? DefaultImage}
+            introduce={item.description}
             nickname={item.nickname}
-            ranking={item.ranking}
-            dubingCount={item.dubingCount}
-            recordingTime={item.recordingTime}
+            ranking={index}
+            dubingCount={item.recordCount}
+            recordingTime={item.totalRecTime}
           />
         ))}
     </section>

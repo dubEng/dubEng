@@ -4,7 +4,7 @@ import * as queryKeys from "../../../constants/queryKeys";
 
 const fetcher = () =>
   axios
-    .get(process.env.NEXT_PUBLIC_BASE_URL + `/home/popularity`)
+    .get(process.env.NEXT_PUBLIC_BASE_URL + `/dub/home/popularity`)
     .then(({ data }) => {
       return data;
     });
