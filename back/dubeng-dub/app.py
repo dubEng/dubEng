@@ -148,8 +148,6 @@ def mergeAudio(firstList, lastList, bgAudio, videoST, videoET):
     #배열에 있는 음원들을 하나의 AudioSegment 객체로 합치기
     mergedAudio = sum(chunks)
 
-    mergedAudio = mergedAudio.apply_gain(-20)
-
     #음성파일의 길이에 맞춰서 배경음악의 길이 자르기
     bgm_chunks = make_chunks(bgAudio, len(mergedAudio))
 
@@ -227,6 +225,7 @@ def maekPreviewAudio():
     for userVoice in userVoiceList:
         print("링크: ",userVoice)
         user = AudioSegment.from_file(userVoice)
+        user = user.apply_gain(-20)
         userAudioList.append(user)
 
 
@@ -277,7 +276,6 @@ def save():
     recTime = 0
     for r in rows:
         recTime = r[1]-r[0]
-    print("녹음시간: ",recTime)
 
     #user 정보 가져오기
     sql = "select record_count, total_rec_time from user where id = %s "
@@ -289,15 +287,9 @@ def save():
     for r in rows:
         recCnt = r[0]
         totalTime = r[1]
-
-    print("가져온 카운트값: ",recCnt)
-    print("가져온 총 녹음시간: ", totalTime)
     
     recCnt += 1
     totalTime += recTime
-
-    print("수정한 카운트값: ",recCnt)
-    print("수정한 총 녹음시간: ", totalTime)
 
     #user 정보 업데이트
     sql = "update user set record_count = %s , total_rec_time = %s where id = %s "
