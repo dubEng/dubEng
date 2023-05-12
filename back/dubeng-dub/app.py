@@ -225,6 +225,7 @@ def maekPreviewAudio():
     for userVoice in userVoiceList:
         print("링크: ",userVoice)
         user = AudioSegment.from_file(userVoice)
+        user = user.apply_gain(-20)
         userAudioList.append(user)
 
 
@@ -239,6 +240,9 @@ def maekPreviewAudio():
     else: #상대역이 먼저 시작할 경우
         finalAudio = mergeAudio(oppositeAudioList, userAudioList, bgAudio, videoInfo.startTime*1000, videoInfo.endTime*1000)
     
+
+
+
     #s3 버킷에 업로드하기
     keyStr = userId + videoInfo.title + ".wav"
     resultUrl = uploadToBucket(finalAudio, keyStr)
@@ -259,10 +263,37 @@ def save():
     connection = pymysql.connect(host=DB_HOST, user=DB_USER,passwd=DB_PASSWORD, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
 
-    #video 테이블에서 정보 얻어오기
+    #record 테이블에 녹음 데이터 넣기
     sql = "INSERT INTO record (video_id, user_id, is_public, is_active, play_count, record_path, like_count, vote_count, created_date, updated_date) VALUES (%s, %s, 1, 1, 0, %s, 0, 0, %s, %s)"
     values = (videoId, userId, url, date, date)
     cursor.execute(sql, values)
+
+    #video 정보 가져오기
+    sql = "select start_time, end_time from video where id = %s "
+    cursor.execute(sql, [videoId])
+    rows = cursor.fetchall()
+    
+    recTime = 0
+    for r in rows:
+        recTime = r[1]-r[0]
+
+    #user 정보 가져오기
+    sql = "select record_count, total_rec_time from user where id = %s "
+    cursor.execute(sql, [userId])
+    rows = cursor.fetchall()
+
+    recCnt = 0
+    totalTime = 0
+    for r in rows:
+        recCnt = r[0]
+        totalTime = r[1]
+    
+    recCnt += 1
+    totalTime += recTime
+
+    #user 정보 업데이트
+    sql = "update user set record_count = %s , total_rec_time = %s where id = %s "
+    cursor.execute(sql, [recCnt, totalTime, userId])
 
     connection.commit()
     connection.close()
