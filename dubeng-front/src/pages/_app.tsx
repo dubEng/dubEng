@@ -10,6 +10,7 @@ import Header from "@/components/atoms/Header";
 import "regenerator-runtime/runtime";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
+import Scripts from '@/components/Scripts';
 
 const pretendard = localFont({
   src: [
@@ -57,6 +58,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
   return (
     <main className={pretendard.className}>
+      <Scripts/>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistStore(store)}>
