@@ -110,6 +110,11 @@ export default function CommunityPage() {
   // if (searchDubProductLoading) {
   //   return <>작품 로딩 중</>;
   // }
+  useEffect(() => {
+    setSearchValue("");
+    setKeyword("");
+    setSelectedCategory([]);
+  }, [tabIndex]);
 
   return (
     <div className="static mx-16">
