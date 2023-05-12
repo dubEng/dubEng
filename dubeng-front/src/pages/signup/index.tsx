@@ -116,8 +116,8 @@ export default function SignUpPage(){
       <div className="m-16 mt-100">
         <div className="my-40 grid">
           <div className="mx-auto relative">
-            {profileImage && <Image className="rounded-full" src={profileImage} alt="dubLogoImg" width={140} height={140}></Image>}
-            {profileImage && <button className="absolute right-12 bottom-4 z-2 rounded-full bg-white"><MdChangeCircle size={30}/></button>}
+            {profileImage && <Image className="rounded-full" src={profileImage} alt="dubLogoImg" width={120} height={120}></Image>}
+            {/*profileImage && <button className="absolute right-12 bottom-4 z-2 rounded-full bg-white"><MdChangeCircle size={30}/></button>*/}
           </div>
 
           
