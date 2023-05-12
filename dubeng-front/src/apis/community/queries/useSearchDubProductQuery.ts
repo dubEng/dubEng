@@ -7,17 +7,22 @@ import qs from "qs";
 const fetcher = (
   contentsSearch: number[],
   langType: string,
-  pageParam: string,
-  size: string,
+  pageParam: number,
+  size: number,
   title: string
 ) => {
-  const queryArray = qs.stringify(contentsSearch, { arrayFormat: "repeat" });
+  const queryArray = qs.stringify(
+    { contentsSearch: contentsSearch },
+    { arrayFormat: "repeat" }
+  );
   return axios
     .get(
-      process.env.NEXT_PUBLIC_BASE_URL + `/dub/community/search/${langType}`,
+      process.env.NEXT_PUBLIC_BASE_URL +
+        `/dub/community/search/${langType}` +
+        `?${queryArray}`,
       {
         params: {
-          queryArray,
+          // queryArray,
           page: pageParam,
           size: size,
           title: title,
@@ -33,12 +38,12 @@ const fetcher = (
 const useSearchDubProductQuery = (
   contentsSearch: number[],
   langType: string,
-  size: string,
+  size: number,
   title: string
 ) => {
   return useQuery(
     [queryKeys.SEARCH_DUB_PRODUCT, contentsSearch, langType, size, title],
-    ({ pageParam = "0" }) =>
+    ({ pageParam = 0 }) =>
       fetcher(contentsSearch, langType, pageParam, size, title)
   );
 };
