@@ -107,6 +107,6 @@ export default function Header() {
   );
 
   function getHeaderBarStyle(): string {
-    return "fixed min-w-390 top-0 z-50 h-57 rounded-2 text-16 font-semibold bg-white";
+    return "fixed min-w-390 top-0 z-50 h-57 p-16 rounded-2 text-16 font-semibold bg-white";
   }
 }
