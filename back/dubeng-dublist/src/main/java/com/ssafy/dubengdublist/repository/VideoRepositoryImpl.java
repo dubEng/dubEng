@@ -92,7 +92,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         }
 
         List<CommunitySearchRes> content = queryFactory
-                .select(new QCommunitySearchRes(video.id, video.title,video.thumbnail,video.runtime, user.nickname, user.profileImage, QRecord.record.playCount, QRecord.record.createdDate, QRecord.record.id))
+                .selectDistinct(new QCommunitySearchRes(video.id, video.title,video.thumbnail,video.runtime, user.nickname, user.profileImage, QRecord.record.playCount, QRecord.record.createdDate, QRecord.record.id))
                 .from(video)
                 .where(builder)
                 .leftJoin(videoCategory)
