@@ -288,6 +288,7 @@ export default function CommunityPage() {
             )
           )}
       </div>
+      <div className="h-150"></div>
     </div>
   );
 }
