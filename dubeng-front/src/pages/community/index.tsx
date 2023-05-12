@@ -267,6 +267,8 @@ export default function CommunityPage() {
               />
             )
           )}
+      </div>
+      <div className="space-y-16 mt-16">
         {tabIndex === DubType.DUB_PRODUCT &&
           searchDubProductList?.content.map(
             (dubProduct: {
