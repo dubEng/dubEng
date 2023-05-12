@@ -1,6 +1,12 @@
 import { useMutation } from "react-query";
 import axios from "axios";
 import { RecordSave } from "@/types/RecordSave";
+import { useRouter } from "next/navigation";
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 const fetcher = (payload: RecordSave) =>
   axios
@@ -12,14 +18,16 @@ const fetcher = (payload: RecordSave) =>
     .then(({ data }) => data);
 
 const useRecordSave = () => {
+  const route = useRouter();
+
   return useMutation(fetcher, {
-    onSuccess: (response) => {
-      console.log('DB 저장 성공');
-      console.log('response', response);
+    onSuccess: async (response) => {
+      await MySwal.fire({icon: 'success',text: "더빙에 성공하였습니다." });
+      route.push("/community");
     },
     onError: (error) => {
-      console.log('DB 저장 실패');
-      console.error('error', error);
+      console.error("error: ", error);
+      MySwal.fire({ icon: "error", text: "더빙에 실패하였습니다." });
     },
   });
 };
