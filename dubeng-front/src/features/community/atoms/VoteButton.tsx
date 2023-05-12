@@ -19,7 +19,7 @@ export default function VoteButton({ isSelected, onClick }: Iprops) {
   } else {
     return (
       <button
-        className="flex justify-center items-center w-140 h-30 px-16 py-8 rounded-8 text-16 text-dubcoral bg-white border-1 border-dubcoral"
+        className="flex justify-center items-center w-140 h-30 px-16 py-8 rounded-8 text-16 text-dubcoral bg-[#ffe7e7] border-1 border-dubcoral"
         onClick={onClick}
       >
         <p className="pb-1">투표</p>

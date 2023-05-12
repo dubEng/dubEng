@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 import UserProfile from "@/components/atoms/UserProfile";
 import axios from "axios";
+import Link from "next/link";
 
 export default function DubVideoList() {
   const languageIndex = useSelector((state: RootState) => {
@@ -60,14 +61,16 @@ export default function DubVideoList() {
       //   },
       // }}
     >
-      {data?.data.ContentsRecommendList &&
-        data?.data.ContentsRecommendList.map((item: any, index: number) => (
-          <SwiperSlide key={item.videoId}>
-            <DubVideoThumbnail
-              id={item.id}
-              title={item.title}
-              thumbnail={item.thumbnail}
-            />
+      {data?.data.answer &&
+        data?.data.answer.map((item: any, index: number) => (
+          <SwiperSlide key={item.id}>
+            <Link href={`/community/shorts/video/${item.id}`}>
+              <DubVideoThumbnail
+                id={item.id}
+                title={item.title}
+                thumbnail={item.thumbnail}
+              />
+            </Link>
           </SwiperSlide>
         ))}
     </Swiper>

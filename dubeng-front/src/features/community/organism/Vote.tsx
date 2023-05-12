@@ -4,6 +4,8 @@ import VoteButton from "../atoms/VoteButton";
 
 import YouTube, { YouTubePlayer, YouTubeProps } from "react-youtube";
 import { useRef, useState } from "react";
+import profile_01 from "../../../../public/images/dump/profile_01.svg";
+import profile_02 from "../../../../public/images/dump/profile_02.svg";
 
 export default function Vote() {
   // useQuery들로 가져오는 것들
@@ -18,6 +20,7 @@ export default function Vote() {
 
   function handleVoteButton() {
     console.log("투표 버튼 눌렀다!");
+    window.alert("투표 기능은 Coming soon!");
   }
 
   // 유저1 플레이 함수
@@ -132,7 +135,10 @@ export default function Vote() {
         style={style}
         onReady={onPlayerReady}
         onEnd={(e) => {
-          e.target.stopVideo(0);
+          console.log("onEnd 발생");
+
+          youtubePlayer.pauseVideo();
+          youtubePlayer.seekTo();
         }}
         onPlay={onPlay}
         onStateChange={onStateChange}
@@ -140,9 +146,9 @@ export default function Vote() {
       <div className="mt-16 flex justify-between">
         <div className="space-y-16">
           <VoteCard
-            username={"아영아영"}
-            description="안녕하세요 팀장 김아영입니다."
-            userImage=""
+            username={"월요일좋아"}
+            description="안녕하세요 월요일 좋아입니다."
+            userImage={profile_01}
             isPlaying={!audioRef1.current?.paused}
             onClick={handlePlayUser1Button}
           />
@@ -151,9 +157,9 @@ export default function Vote() {
         <p className="text-16 font-semibold text-dubgray mt-55 mx-13">vs</p>
         <div className="space-y-16">
           <VoteCard
-            username={"자민자민"}
-            description="안녕하세요 팀원 백자민입니다."
-            userImage=""
+            username={"아이스크림"}
+            description="아이스크림 같이 먹을 사람!"
+            userImage={profile_02}
             isPlaying={!audioRef2.current?.paused}
             onClick={handlePlayUser2Button}
           />

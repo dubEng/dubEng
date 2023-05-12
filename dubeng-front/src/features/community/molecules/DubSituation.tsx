@@ -45,6 +45,7 @@ export default function DubSituation() {
   function handleSituationCard(id: string) {
     setSituationId(id);
     getSituationVideo();
+    window.alert("상황별 콘텐츠 추천은 Coming soon!");
   }
 
   return (

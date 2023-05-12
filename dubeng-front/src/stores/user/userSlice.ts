@@ -13,7 +13,7 @@ const initialState: UserState = {
   userId: "",
   accessToken: "",
   refreshToken: "",
-  nickname: "",
+  nickname: "익명의 게스트",
   imageUrl: "",
 };
 
@@ -28,9 +28,9 @@ export const userSlice = createSlice({
       state.nickname = action.payload.nickname;
       state.imageUrl = action.payload.imageUrl;
     },
-    saveAccessToken: (state, action) =>{
+    saveAccessToken: (state, action) => {
       state.accessToken = action.payload.accessToken;
-    }
+    },
   },
 });
 

@@ -1,18 +1,19 @@
 import axios from "axios";
 import { useQuery } from "react-query";
 import * as queryKeys from "@/constants/queryKeys";
+import { useSelector } from "react-redux";
+import { RootState } from "@/stores/store";
 
-const fetcher = (langType: string) =>
-  axios
-    .get(process.env.NEXT_PUBLIC_BASE_URL + `/dub/contents/recommand/${langType}`, {
-      params: {
-        page: 0,
-        size: 10,
-      },
+const fetcher = (langType: string) => {
+  return axios
+    .post(process.env.NEXT_PUBLIC_BASE_URL + `/recommend/contents`, {
+      userId: "2780794561",
     })
     .then((res) => {
+      console.log(res);
       return res;
     });
+};
 
 const useRecommendDubVideoListQuery = (langType: string) => {
   return useQuery([queryKeys.RECOMMEND_DUB_VIDEO_LIST, langType], () =>

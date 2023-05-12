@@ -39,6 +39,13 @@ export default function CommunityPage() {
   const languageIndex = useSelector((state: RootState) => {
     return state.languageTab.langType;
   });
+  const userNickname = useSelector((state: RootState) => {
+    if (state.user.nickname === "") {
+      return "익명의 게스트";
+    } else {
+      return state.user.nickname;
+    }
+  });
 
   /** 현재 페이지에서 관리하는 state **/
   const [searchValue, setSearchValue] = useState("");
@@ -124,7 +131,7 @@ export default function CommunityPage() {
       {tabIndex === DubType.DUB_VIDEO ? (
         <div>
           <p className="flex justify-start text-19 font-bold mt-24 mb-16">
-            김언도님이 좋아하실 영상
+            {userNickname}님이 좋아하실 영상
           </p>
           <DubVideoList />
 
@@ -268,7 +275,7 @@ export default function CommunityPage() {
               title: string;
               thumbnail: string;
               runtime: number;
-              imageUrl: string;
+              profileImage: string;
               nickname: string;
               playCount: number;
               createdDate: string;
@@ -280,7 +287,7 @@ export default function CommunityPage() {
                 title={dubProduct.title}
                 thumbnail={dubProduct.thumbnail}
                 runtime={dubProduct.runtime}
-                imageUrl={dubProduct.imageUrl}
+                profileImage={dubProduct.profileImage}
                 nickname={dubProduct.nickname}
                 playCount={dubProduct.playCount}
                 createdDate={dubProduct.createdDate}
