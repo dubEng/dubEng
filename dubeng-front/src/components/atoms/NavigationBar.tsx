@@ -9,6 +9,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import RecordingButton from "./RecordingButton";
 
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
+
 const menu = [
   {
     href: "/",
@@ -47,35 +52,41 @@ const menu = [
 
 export default function NavigationBar() {
   const pathName = usePathname();
-  
-  if (pathName === "/manager") { 
-    return <></>
-  }
 
-  return (
-    <nav className={getNavigationBarStyle(pathName)}>
-      <ul className="flex justify-around">
-        {menu.map((item) => (
-          <li key={item.href}>
-            {item.isNavigatedButton === false ? (
-              <RecordingButton page={pathName} />
-            ) : (
-              <Link href={item.href}>
-                <div className="flex flex-col justify-center items-center pt-4">
-                  {pathName === item.href ? item.clickedIcon : item.icon}
-                  {pathName === item.href ? (
-                    <p className="text-dubcoral text-12">{item.label}</p>
-                  ) : (
-                    <p className="text-dubgray text-12">{item.label}</p>
-                  )}
-                </div>
-              </Link>
-            )}
-          </li>
-        ))}
-      </ul>
-    </nav>
-  );
+  if (pathName === "/manager") {
+    return <></>;
+  } else if (pathName === "/mission") {
+    MySwal.fire("도전과제 페이지는 아직 준비중입니다!");
+    return <></>;
+  } else if (pathName === "/mypage") {
+    MySwal.fire("마이페이지는 아직 준비중입니다!");
+    return <></>;
+  } else {
+    return (
+      <nav className={getNavigationBarStyle(pathName)}>
+        <ul className="flex justify-around">
+          {menu.map((item) => (
+            <li key={item.href}>
+              {item.isNavigatedButton === false ? (
+                <RecordingButton page={pathName} />
+              ) : (
+                <Link href={item.href}>
+                  <div className="flex flex-col justify-center items-center pt-4">
+                    {pathName === item.href ? item.clickedIcon : item.icon}
+                    {pathName === item.href ? (
+                      <p className="text-dubcoral text-12">{item.label}</p>
+                    ) : (
+                      <p className="text-dubgray text-12">{item.label}</p>
+                    )}
+                  </div>
+                </Link>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+    );
+  }
 
   function getNavigationBarStyle(pathName: string): string {
     if (pathName === "/community/shorts") {
