@@ -47,6 +47,10 @@ const menu = [
 
 export default function NavigationBar() {
   const pathName = usePathname();
+  
+  if (pathName === "/manager") { 
+    return <></>
+  }
 
   return (
     <nav className={getNavigationBarStyle(pathName)}>

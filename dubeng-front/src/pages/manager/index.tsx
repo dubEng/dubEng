@@ -267,7 +267,7 @@ export default function ManagerPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="w-screen h-full absolute top-57 left-16">
       <p className="text-24 font-bold mt-32 mb-16">더빙 콘텐츠 불러오기</p>
       <div className="flex space-x-32">
         <div>
