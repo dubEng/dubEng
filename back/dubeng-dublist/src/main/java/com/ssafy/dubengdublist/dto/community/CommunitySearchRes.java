@@ -18,9 +18,10 @@ public class CommunitySearchRes {
     private String profileImage;
     private Long playCount;
     private ZonedDateTime createdDate;
+    private Long recordId;
 
     @QueryProjection
-    public CommunitySearchRes(Long id, String title, String thumbnail,Long runtime, String nickname, String profileImage, Long playCount, ZonedDateTime createdDate) {
+    public CommunitySearchRes(Long id, String title, String thumbnail,Long runtime, String nickname, String profileImage, Long playCount, ZonedDateTime createdDate,Long recordId) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
@@ -29,6 +30,7 @@ public class CommunitySearchRes {
         this.profileImage = profileImage;
         this.playCount = playCount;
         this.createdDate = createdDate;
+        this.recordId = recordId;
     }
 
 }
