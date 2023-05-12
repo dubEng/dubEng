@@ -169,7 +169,7 @@ def getVideoFindByCategory(categoryId):
 
 
 # 추천 API
-@app.route('/recommend/contents', methods=['GET'])
+@app.route('/recommend/contents', methods=['POST'])
 def dublistAPI():
     userId = request.get_json()["userId"]
     # 회원 조회해서 회원의 더빙 영상이 있는지 체크
