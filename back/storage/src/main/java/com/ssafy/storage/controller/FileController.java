@@ -22,19 +22,21 @@ public class FileController {
     private final SaveFileService fileService;
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void fileUpload(@ModelAttribute SaveFileRequestDTO requestDTO) throws IOException {
+    public ResponseEntity<Void> fileUpload(@ModelAttribute SaveFileRequestDTO requestDTO) throws IOException {
         log.debug(requestDTO.toString());
 
         fileService.fileSave(requestDTO);
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
     @GetMapping("/dublist")
-    public ResponseEntity<Set<Object>> getfilePath(@RequestParam Long videoId, @RequestParam String nickname){
+    public ResponseEntity<List<String>> getfilePath(@RequestParam Long videoId, @RequestParam String nickname){
         log.debug("videoId : {}, userId : {}", videoId, nickname);
 
         String key = fileService.getKey(videoId, nickname);
 
-        Set<Object> pathList = fileService.getPathInCache(key);
+        List<String> fileList = fileService.getPathInCache(key);
 
-        return new ResponseEntity<Set<Object>>(pathList, HttpStatus.OK);
+        return new ResponseEntity<List<String>>(fileList, HttpStatus.OK);
     }
 }
