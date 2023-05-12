@@ -4,6 +4,7 @@ import Link from "next/link";
 import TimeAgo from "timeago-react";
 import * as timeago from "timeago.js";
 import koLocale from "timeago.js/lib/lang/ko";
+import profile_01 from "../../../public/images/dump/profile_01.svg";
 
 interface Iprops {
   id: number;
@@ -63,7 +64,7 @@ export default function DubProductListItem({
           <div className="flex items-center">
             <div className="flex justify-end">
               <Image
-                src={profileImage}
+                src={profileImage ?? profile_01}
                 alt={"profile"}
                 width={16}
                 height={16}
