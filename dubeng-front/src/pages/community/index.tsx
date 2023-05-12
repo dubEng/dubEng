@@ -39,6 +39,13 @@ export default function CommunityPage() {
   const languageIndex = useSelector((state: RootState) => {
     return state.languageTab.langType;
   });
+  const userNickname = useSelector((state: RootState) => {
+    if (state.user.nickname === "") {
+      return "익명의 게스트";
+    } else {
+      return state.user.nickname;
+    }
+  });
 
   /** 현재 페이지에서 관리하는 state **/
   const [searchValue, setSearchValue] = useState("");
@@ -124,7 +131,7 @@ export default function CommunityPage() {
       {tabIndex === DubType.DUB_VIDEO ? (
         <div>
           <p className="flex justify-start text-19 font-bold mt-24 mb-16">
-            김언도님이 좋아하실 영상
+            {userNickname}님이 좋아하실 영상
           </p>
           <DubVideoList />
 
