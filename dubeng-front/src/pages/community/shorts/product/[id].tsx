@@ -28,6 +28,7 @@ export default function ShortsProductPage() {
     const player = event.target;
     setYoutubePlayer(player);
     player.pauseVideo();
+    player.mute();
   };
 
   // 선택된 스크롤이 바뀌면 오토 스크롤
