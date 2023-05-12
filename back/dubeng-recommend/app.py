@@ -5,7 +5,6 @@ from ast import literal_eval
 import pandas as pd
 import numpy as np
 import warnings
-import requests
 from flask import Flask, request
 from flask_cors import CORS
 import pymysql
