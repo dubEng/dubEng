@@ -7,6 +7,10 @@ import { MdOutlineModeComment } from "react-icons/md";
 import DubProductTaskButton from "./DubProductTaskButton";
 import CommentTaskButton from "./CommentTaskButton";
 
+import TimeAgo from "timeago-react";
+import * as timeago from "timeago.js";
+import koLocale from "timeago.js/lib/lang/ko";
+
 interface Iprops {
   userId: string;
   title: string;
@@ -28,6 +32,8 @@ export default function ShortsTitle({
   isLike,
   isScrap,
 }: Iprops) {
+  timeago.register("ko", koLocale);
+
   const userIdData = useSelector((state: RootState) => state.user.userId);
   const [isTaskButtonOpen, setIsTaskButtonOpen] = useState(false);
 
@@ -60,7 +66,7 @@ export default function ShortsTitle({
         <div className="flex mt-4 text-14 text-dubgray space-x-4">
           <p>조회수 {playCount}회</p>
           <p>▪</p>
-          <p>{createdDate}분 전</p>
+          <TimeAgo datetime={createdDate} locale="ko" />
         </div>
       </div>
     );

@@ -110,6 +110,11 @@ export default function CommunityPage() {
   // if (searchDubProductLoading) {
   //   return <>작품 로딩 중</>;
   // }
+  useEffect(() => {
+    setSearchValue("");
+    setKeyword("");
+    setSelectedCategory([]);
+  }, [tabIndex]);
 
   return (
     <div className="static">
@@ -260,6 +265,7 @@ export default function CommunityPage() {
           searchDubProductList?.content.map(
             (dubProduct: {
               id: number;
+              recordId: number;
               title: string;
               thumbnail: string;
               runtime: number;
@@ -271,6 +277,7 @@ export default function CommunityPage() {
               <DubProductListItem
                 key={dubProduct.id}
                 id={dubProduct.id}
+                recordId={dubProduct.recordId}
                 title={dubProduct.title}
                 thumbnail={dubProduct.thumbnail}
                 runtime={dubProduct.runtime}
