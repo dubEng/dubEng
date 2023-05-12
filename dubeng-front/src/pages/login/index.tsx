@@ -27,11 +27,13 @@ export default function LogInPage(){
   <div className="container mx-auto h-screen">
     <Script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js" defer></Script>
     <div>
-      <Image className="mx-auto" src={DubLogoImage} alt="dubLogoImg"  width={120} height={60}></Image>
-      <p className="text-dubgray text-xs text-center my-5">더빙으로 즐거움이 더블</p>
-    </div>
-    <div onClick={loginHandler}>
-      <Image className="mx-auto" src={LoginBtnImage} alt="kakaoLoginBtn" width={350}></Image>
+      <div>
+        <Image className="mx-auto" src={DubLogoImage} alt="dubLogoImg"  width={120} height={60}></Image>
+        <p className="text-dubgray text-xs text-center my-5">더빙으로 즐거움이 더블</p>
+      </div>
+      <div onClick={loginHandler}>
+        <Image className="mx-auto" src={LoginBtnImage} alt="kakaoLoginBtn" width={350}></Image>
+      </div>
     </div>
   </div>
   );
