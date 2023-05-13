@@ -16,12 +16,8 @@ export default function Header() {
       </div>
     );
   } else if (pathName === "/community") {
-    return (
-      <div className={getHeaderBarStyle()}>
-        더빙목록
-      </div>
-    );
-  }  else if (pathName === "/mypage") {
+    return <div className={getHeaderBarStyle()}>더빙목록</div>;
+  } else if (pathName === "/mypage") {
     return (
       <div className="fixed min-w-390 top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-between px-16 items-center bg-white">
         My
@@ -31,11 +27,7 @@ export default function Header() {
       </div>
     );
   } else if (pathName === "/mission") {
-    return (
-      <div className={getHeaderBarStyle()}>
-        도전과제
-      </div>
-    );
+    return <div className={getHeaderBarStyle()}>도전과제</div>;
   } else if (pathName === "/mypage/myDubbingProduct") {
     return (
       <div className={getHeaderBarStyle()}>
@@ -96,22 +88,23 @@ export default function Header() {
         <button>완료</button>
       </div>
     );
-  } else if (pathName === "/manager") { 
-    return <></>
-  } else if (pathName.includes("shorts")) { 
-    return <></>
+  } else if (pathName === "/manager") {
+    return <></>;
+  } else if (pathName.includes("shorts")) {
+    return <></>;
+  } else if (pathName === "/login") {
+    return <></>;
+  } else {
+    return (
+      <button className={getHeaderBarStyle()} onClick={handleLogoButtonClick}>
+        <Image src={Logo} alt={"logo"} width={98} height={41} />
+      </button>
+    );
   }
-
 
   function handleLogoButtonClick() {
     route.push("/");
   }
-
-  return (
-    <button className={getHeaderBarStyle()} onClick={handleLogoButtonClick}>
-      <Image src={Logo} alt={"logo"} width={98} height={41} />
-    </button>
-  );
 
   function getHeaderBarStyle(): string {
     return "fixed min-w-390 top-0 z-50 h-57 p-16 rounded-2 text-16 font-semibold bg-white";
