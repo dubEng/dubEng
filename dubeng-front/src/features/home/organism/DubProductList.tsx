@@ -5,6 +5,7 @@ import useHomePopularityQuery from "../../../apis/home/queries/useHomePopularity
 import ScaleLoader from "react-spinners/ScaleLoader";
 import ErrorComponent from "../../../components/atoms/ErrorComponent";
 import "swiper/css";
+import Link from "next/link";
 
 export default function DubProductList() {
   const popularity = useHomePopularityQuery();
@@ -25,12 +26,14 @@ export default function DubProductList() {
     <Swiper>
       {popularity.data &&
         popularity.data.map((item: any, index: number) => (
-          <SwiperSlide key={item.videoId}>
-            <DubVideoThumbnail
-              title={item.title}
-              thumbnail={item.thumbnail ?? ""}
-              id={item.videoId}
-            />
+          <SwiperSlide key={item.id}>
+            <Link href={`/community/shorts/product/${item.recordId}`}>
+              <DubVideoThumbnail
+                title={item.title}
+                thumbnail={item.thumbnail ?? ""}
+                id={item.id}
+              />
+            </Link>
           </SwiperSlide>
         ))}
     </Swiper>
