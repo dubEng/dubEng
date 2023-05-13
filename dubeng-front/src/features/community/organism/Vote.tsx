@@ -142,12 +142,12 @@ export default function Vote() {
     <div className="flex flex-col items-center justify-center p-16 bg-[#FFFAFA] rounded-8 border-1 border-[#FFD8D8]">
       <audio
         ref={audioRef1}
-        controls
+        // controls
         src="https://dubingdubing.s3.ap-northeast-2.amazonaws.com/2780795332[인턴] - 안하는 것보다 늦게하는 것이 낫다.wav"
       ></audio>
       <audio
         ref={audioRef2}
-        controls
+        // controls
         src="https://dubingdubing.s3.ap-northeast-2.amazonaws.com/2780794561[인턴] - 안하는 것보다 늦게하는 것이 낫다.wav"
       ></audio>
       <YouTube
