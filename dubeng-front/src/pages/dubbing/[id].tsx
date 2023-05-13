@@ -19,6 +19,11 @@ import ErrorComponent from "@/components/atoms/ErrorComponent";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import DubCompleteModal from "@/features/dubbing/organism/DubCompleteModal";
 
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
+
 interface Iprops {
   id: number;
   title: string;
@@ -206,6 +211,16 @@ export default function DubbingPage() {
     youtubePlayer.pauseVideo();
     youtubePlayer.seekTo(seekTo / 1000);
   };
+
+  //로그인 하지 않은 사용자라면
+  if(userId == ""){
+    MySwal.fire({
+      icon: "info",
+      title: "로그인 후 이용 가능한 서비스입니다.",
+    }).then(() => {
+      router.push("/login");
+    });
+  }
 
   if (speechRecognitionSupported === null) {
     return null; // return null on first render, can be a loading indicator
