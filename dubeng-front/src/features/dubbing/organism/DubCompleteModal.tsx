@@ -11,10 +11,10 @@ import { RecordSave } from "@/types/RecordSave";
 
 const customStyles = {
   overlay: {
-    zIndex: 9999, // 모달의 오버레이(배경)에 대한 z-index 설정
+    zIndex: 900, // 모달의 오버레이(배경)에 대한 z-index 설정
   },
   content: {
-    zIndex: 9999,
+    zIndex: 900,
     top: "50%",
     left: "50%",
     right: "auto",
