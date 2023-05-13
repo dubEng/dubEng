@@ -64,9 +64,7 @@ export default function DubbingPage() {
 
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
 
-  const [dubbingCompleteCheckList, setDubbingCompleteCheckList] = useState<
-    number[]
-  >([]);
+  const [dubbingCompleteCheckList, setDubbingCompleteCheckList] = useState<boolean[]>([]);
 
   function openModal() {
     setIsOpen(true);
@@ -77,9 +75,24 @@ export default function DubbingPage() {
   }
 
   const updateDubbingCompleteCheckList = (newNumber: number) => {
-    console.log("newNumber", newNumber);
-    console.log("dubbingCompleteCheckList", dubbingCompleteCheckList);
-    setDubbingCompleteCheckList((prevNumbers) => [...prevNumbers, newNumber]);
+
+    console.log('dubbingCompleteCheckList', dubbingCompleteCheckList);
+    console.log('newNumber', newNumber);
+    setDubbingCompleteCheckList(prevArray => [...prevArray, false]);
+
+    // if(dubbingCompleteCheckList.length == 0){
+    //   console.log('length 0');
+    //   // const newBooleanArray = Array(scriptList.data.length).fill(false);
+    //   // console.log('newBooleanArray', newBooleanArray);
+    //   setDubbingCompleteCheckList(new Array(scriptList.data.length).fill(false));
+    // } else {
+    //   setDubbingCompleteCheckList((prevArray) => {
+    //     console.log('prevArray', prevArray);
+    //     const newArray = [...prevArray];
+    //     newArray[newNumber] = !newArray[newNumber];
+    //     return newArray;
+    //   });
+    // }
   };
 
   function transferYoutube(videoPath: string) {
@@ -90,33 +103,34 @@ export default function DubbingPage() {
   }
 
   async function handleSaveButton() {
-    saveDubbingFile();
-    // findNoDubbingScripts();
+    // saveDubbingFile();
+    findNoDubbingScripts();
   }
 
   const findNoDubbingScripts = () => {
     let noDubbingStringList = "";
 
-    for (let index = 0; index < scriptList.data.length; index++) {
-      if (!dubbingCompleteCheckList.includes(index + 1)) {
-        if (index == length - 1) {
-          noDubbingStringList += `${index + 1} `;
-        } else {
-          noDubbingStringList += `${index + 1} ,`;
-        }
-      }
-    }
+    // for (let index = 0; index < scriptList.data.length; index++) {
+    //   if (!dubbingCompleteCheckList.includes(index + 1)) {
+    //     if (index == length - 1) {
+    //       noDubbingStringList += `${index + 1} `;
+    //     } else {
+    //       noDubbingStringList += `${index + 1} ,`;
+    //     }
+    //   }
+    // }
 
-    noDubbingStringList += "번 스크립트가 아직 더빙되지 않았습니다.";
+    // noDubbingStringList += "번 스크립트가 아직 더빙되지 않았습니다.";
 
-    if (scriptList.data.length != dubbingCompleteCheckList.length) {
-      MySwal.fire({
-        text: noDubbingStringList,
-        icon: "info",
-      });
-    } else {
-      saveDubbingFile();
-    }
+    // if (scriptList.data.length != dubbingCompleteCheckList.length) {
+    //   MySwal.fire({
+    //     text: noDubbingStringList,
+    //     icon: "info",
+    //   });
+    // } else {
+    //   console.log("저장하기 로직 수행");
+    //   // saveDubbingFile();
+    // }
   };
 
   async function saveDubbingFile() {
@@ -273,7 +287,7 @@ export default function DubbingPage() {
   }
 
   return (
-    <div className="h-full">
+    <div className="h-full mb-61">
       {data && (
         <YouTube
           videoId={transferYoutube(data.videoPath)}

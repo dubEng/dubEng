@@ -5,7 +5,7 @@ import DubProductList from "@/features/home/organism/DubProductList";
 
 export default function HomePage() {
   return (
-    <div className="h-screen">
+    <div className="h-screen bg-white mt-57 mb-61">
       <div className="m-16">
         <Banner />
       </div>

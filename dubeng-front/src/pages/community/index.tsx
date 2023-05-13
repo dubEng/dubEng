@@ -124,7 +124,7 @@ export default function CommunityPage() {
   }, [tabIndex]);
 
   return (
-    <div className="static h-full px-16">
+    <div className="static h-full px-16 bg-white mt-57 mb-61"> 
       <div className="flex sticky top-0">
         <DubTypeTap dubType={tabIndex} langType={languageIndex} />
       </div>

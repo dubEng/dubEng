@@ -8,7 +8,7 @@ export default function MyPage() {
   const nickname = useSelector((state: RootState) => state.user.nickname);
 
   return (
-    <div className="h-screen">
+    <div className="h-screen bg-white mt-57 mb-61">
       userId: {userId} <br />
       nickname: {nickname}
     </div>
