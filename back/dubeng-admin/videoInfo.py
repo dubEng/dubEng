@@ -17,16 +17,19 @@ def get_video_info(video_url):
     response = request.execute()
     info = response['items'][0]['snippet']
     print(info['title']) # 영상 제목
-    print(info['thumbnails']['maxres']['url']) # 썸네일
     print(info['channelTitle'])
     language = 'en'
+    thumbnail = ''
     if 'defaultAudioLanguage' in info:
         language = info['defaultAudioLanguage']
-
+    if 'maxres' in info['thumbnails']:
+        thumbnail = info['thumbnails']['maxres']['url']
+    elif 'standard' in info['thumbnails']:
+       thumbnail = info['thumbnails']['standard']['url']
     data = {
         "url":video_url,
         "title":info['title'],
-        "thumbnails":info['thumbnails']['maxres']['url'],
+        "thumbnails": thumbnail,
         "channelTitle":info['channelTitle'],
         "lang":language
     }
