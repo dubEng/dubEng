@@ -109,7 +109,7 @@ export default function ShortsProductPage() {
           }
         }
       }
-    }, 1000);
+    }, 500);
 
     return () => {
       clearInterval(watchTime);
@@ -162,8 +162,8 @@ export default function ShortsProductPage() {
                 if (index === selectedScript) {
                   return (
                     <div
-                      className={`script-element-${item.index} mb-8 mx-20 flex flex-col items-center bg-dubblue`}
-                      key={item.index}
+                      className={`script-element-${index} mb-8 mx-20 flex flex-col items-center bg-dubblue`}
+                      key={index}
                     >
                       <p className="text-16 text-white">{item.content}</p>
                       <p className="text-14 text-[#8E8D8D]">
@@ -174,8 +174,8 @@ export default function ShortsProductPage() {
                 } else {
                   return (
                     <div
-                      className={`script-element-${item.index} mb-8 mx-20 flex flex-col items-center`}
-                      key={item.index}
+                      className={`script-element-${index} mb-8 mx-20 flex flex-col items-center`}
+                      key={index}
                     >
                       <p className="text-16 text-white">{item.content}</p>
                       <p className="text-14 text-[#8E8D8D]">
