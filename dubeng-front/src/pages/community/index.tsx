@@ -72,7 +72,7 @@ export default function CommunityPage() {
 
   // 2. 콘텐츠 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
   const { data: videoData, isLoading: searchDubVideoLoading } =
-    useSearchDubVideoQuery(selectedCategory, languageIndex, 10, keyword);
+    useSearchDubVideoQuery(selectedCategory, languageIndex, 100, keyword);
 
   useEffect(() => {
     if (videoData) {
@@ -82,7 +82,7 @@ export default function CommunityPage() {
 
   // 3. 작품 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
   const { data: searchDubProductList, isLoading: searchDubProductLoading } =
-    useSearchDubProductQuery(selectedCategory, languageIndex, 10, keyword);
+    useSearchDubProductQuery(selectedCategory, languageIndex, 100, keyword);
 
   // 4. 카테고리 리스트 가져오기
   const { data, isLoading } = useCategoryListQuery();
