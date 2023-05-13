@@ -212,16 +212,6 @@ export default function DubbingPage() {
     youtubePlayer.seekTo(seekTo / 1000);
   };
 
-  //로그인 하지 않은 사용자라면
-  if(userId == ""){
-    MySwal.fire({
-      icon: "info",
-      title: "로그인 후 이용 가능한 서비스입니다.",
-    }).then(() => {
-      router.push("/login");
-    });
-  }
-
   if (speechRecognitionSupported === null) {
     return null; // return null on first render, can be a loading indicator
   }

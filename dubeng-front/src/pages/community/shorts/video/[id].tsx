@@ -3,10 +3,25 @@ import DubButton from "@/components/atoms/DubButton";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import YouTube, { YouTubePlayer, YouTubeProps } from "react-youtube";
-import Link from "next/link";
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../stores/store";
+
+interface Iprops {
+  id: number;
+  title: string;
+  thumbnail: string;
+  runtime: number;
+}
+
+const MySwal = withReactContent(Swal);
 
 export default function ShortsVideoPage() {
   const router = useRouter();
+
+  const userId = useSelector((state: RootState) => state.user.userId);
 
   //추후에 languageType도 같이 받아오면 좋을 듯!
   const { data } = useContentsDetailQuery("english", router.query.id as string);
@@ -81,6 +96,20 @@ export default function ShortsVideoPage() {
     };
   });
 
+  function handleDubButton() {
+    //로그인 하지 않은 사용자라면
+    if (userId == "") {
+      MySwal.fire({
+        icon: "info",
+        title: "로그인 후 이용 가능한 서비스입니다.",
+      }).then(() => {
+        router.push("/login");
+      });
+    } else {
+      router.push(`/dubbing/${data.id}`);
+    }
+  }
+
   return (
     <div className="w-full h-screen bg-black flex flex-col items-center justify-center mt-32">
       {data && (
@@ -108,11 +137,9 @@ export default function ShortsVideoPage() {
           />
           <div className="flex flex-row justify-between mt-16 mb-16 items-center w-390">
             <p className="text-16 text-white">{data.title}</p>
-            <Link href={`/dubbing/${data.id}`}>
               <div>
-                <DubButton page={"/community/shorts"} />
+                <DubButton type={"shorts"} onClick={handleDubButton} />
               </div>
-            </Link>
           </div>
           <div className="h-260 pt-32 overflow-y-scroll bg-black container mx-auto mb-16 w-391">
             {data.scriptList &&
