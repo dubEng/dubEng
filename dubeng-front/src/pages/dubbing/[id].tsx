@@ -78,8 +78,9 @@ export default function DubbingPage() {
 
   const updateDubbingCompleteCheckList = (index: number) => {
     setDubbingCompleteCheckList((prevArray) => {
+      console.log('prevArray', prevArray);
       const newArray = [...prevArray];
-      newArray[index] = !newArray[index];
+      newArray[index] = true;
       return newArray;
     });
   };
