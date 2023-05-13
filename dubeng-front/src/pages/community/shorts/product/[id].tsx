@@ -148,7 +148,7 @@ export default function ShortsProductPage() {
             style={{ display: "none" }}
             src={data.recordPath}
           />
-          <div className="flex flex-row justify-between mt-16 mb-16 items-center w-390">
+          <div className="flex flex-row justify-between mt-16 mb-16 items-center w-390 px-16">
             <p className="text-16 text-white">{data.title}</p>
           </div>
           <div className="h-260 pt-32 overflow-y-scroll bg-black container mx-auto mb-16 w-391">

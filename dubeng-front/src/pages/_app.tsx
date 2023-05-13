@@ -12,6 +12,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import Scripts from '@/components/Scripts';
 import Head from "next/head";
+import { usePathname } from "next/navigation";
 
 const pretendard = localFont({
   src: [
@@ -57,6 +58,9 @@ const pretendard = localFont({
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
+  const pathName = usePathname();
+
+
   return (
     <main className={pretendard.className}>
       <Scripts/>
@@ -94,7 +98,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <PersistGate loading={null} persistor={persistStore(store)}>
             <Header />
             <NavigationBar />
-            <div className="mt-57 mb-61 bg-white">
+            <div className={getMarginStyle(pathName)}>
               <Component {...pageProps} />
             </div>
           </PersistGate>
@@ -102,4 +106,15 @@ export default function App({ Component, pageProps }: AppProps) {
       </QueryClientProvider>
     </main>
   );
+
+  function getMarginStyle(pathName: string): string {
+    if (pathName.includes("shorts")) {
+      return "";
+    } else if(pathName.includes("dubbing")){
+      return "";
+    } else {
+      return "bg-white mt-57 mb-61";
+    }
+  }
+
 }
