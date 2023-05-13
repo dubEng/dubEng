@@ -23,7 +23,9 @@ export default function DubProductList() {
   }
 
   return (
-    <Swiper>
+    <Swiper
+    slidesPerView={1.25}
+    >
       {popularity.data &&
         popularity.data.map((item: any, index: number) => (
           <SwiperSlide key={item.id}>

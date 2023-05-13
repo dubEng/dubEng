@@ -21,6 +21,7 @@ import DubCompleteModal from "@/features/dubbing/organism/DubCompleteModal";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import DubLoadingModal from "@/features/dubbing/organism/DubLoadingModal";
 
 const MySwal = withReactContent(Swal);
 
@@ -64,7 +65,11 @@ export default function DubbingPage() {
 
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
 
-  const [dubbingCompleteCheckList, setDubbingCompleteCheckList] = useState<boolean[]>([]);
+  const [dubbingCompleteCheckList, setDubbingCompleteCheckList] = useState<
+    boolean[]
+  >([]);
+
+  const [opendLoadingModal, setOpendLoadingModal] = useState<boolean>(false);
 
   function openModal() {
     setIsOpen(true);
@@ -74,11 +79,21 @@ export default function DubbingPage() {
     setIsOpen(false);
   }
 
-  const updateDubbingCompleteCheckList = (newNumber: number) => {
+  const errorHandler = (message: string) => {
+    setOpendLoadingModal(false);
+    MySwal.fire({
+      icon: "error",
+      title: "더빙 영상을 저장하는데 실패하였습니다.",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    return;
+  };
 
-    console.log('dubbingCompleteCheckList', dubbingCompleteCheckList);
-    console.log('newNumber', newNumber);
-    setDubbingCompleteCheckList(prevArray => [...prevArray, false]);
+  const updateDubbingCompleteCheckList = (newNumber: number) => {
+    // console.log("dubbingCompleteCheckList", dubbingCompleteCheckList);
+    console.log("newNumber", newNumber);
+    // setDubbingCompleteCheckList((prevArray) => [...prevArray, false]);
 
     // if(dubbingCompleteCheckList.length == 0){
     //   console.log('length 0');
@@ -103,8 +118,8 @@ export default function DubbingPage() {
   }
 
   async function handleSaveButton() {
-    // saveDubbingFile();
-    findNoDubbingScripts();
+    saveDubbingFile();
+    // findNoDubbingScripts();
   }
 
   const findNoDubbingScripts = () => {
@@ -141,10 +156,19 @@ export default function DubbingPage() {
         videoId: parseInt(router.query.id as string),
       };
 
-      const response = await mutation.mutateAsync(payload);
-      setPreviewUrl(response);
+      try{
+        setOpendLoadingModal(true);
+        const response = await mutation.mutateAsync(payload);
+        setPreviewUrl(response);
+        setOpendLoadingModal(false);
+        openModal();
+      } catch (error){
+        let message;
+        if (error instanceof Error) message = error.message;
+        else message = String(error);
+        errorHandler(message);
+      }
 
-      openModal();
     }
   }
 
@@ -386,6 +410,7 @@ export default function DubbingPage() {
       <div className="flex justify-center w-390">
         <CommonButton children="저장하기" onClick={handleSaveButton} />
       </div>
+      {opendLoadingModal && <DubLoadingModal />}
       <DubCompleteModal
         closeModal={closeModal}
         startTime={data.startTime}
@@ -396,7 +421,7 @@ export default function DubbingPage() {
         videoId={parseInt(router.query.id as string)}
         userId={userId}
       />
-      <div className="h-150"></div>
+      <div className="h-80"></div>
     </div>
   );
 }
