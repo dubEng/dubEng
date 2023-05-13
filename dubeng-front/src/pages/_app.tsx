@@ -62,7 +62,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <main className={pretendard.className}>
       <Scripts />
       <Head>
-        <title>덥잉, 더빙으로 영어 학습</title>
+        <title>덥잉, 더빙으로 배우는 영어 쉐도잉 서비스</title>
         <link rel="shortcut icon" href="/favicon.ico" />
         <link
           rel="apple-touch-icon"
