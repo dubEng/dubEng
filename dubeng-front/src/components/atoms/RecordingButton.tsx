@@ -37,7 +37,7 @@ export default function RecordingButton({ page }: Iprops) {
     return <ErrorComponent onClick={() => refetch} retry={true} />;
   }
 
-  if (page === "/dubbing") {
+  if (page.includes("dubbing")) {
     return <Image src={dubbingRecordingIcon} alt="dubbingRecordingIcon" />;
   } else if (page === "/community/shorts") {
     return <Image src={shortsRecordingIcon} alt="shortsRecordingIcon" />;

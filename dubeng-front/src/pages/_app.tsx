@@ -10,9 +10,8 @@ import Header from "@/components/atoms/Header";
 import "regenerator-runtime/runtime";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
-import Scripts from '@/components/Scripts';
+import Scripts from "@/components/Scripts";
 import Head from "next/head";
-import { usePathname } from "next/navigation";
 
 const pretendard = localFont({
   src: [
@@ -58,12 +57,10 @@ const pretendard = localFont({
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
-  const pathName = usePathname();
-
 
   return (
     <main className={pretendard.className}>
-      <Scripts/>
+      <Scripts />
       <Head>
         <title>덥잉, 더빙으로 영어 학습</title>
         <link rel="shortcut icon" href="/favicon.ico" />
@@ -98,23 +95,10 @@ export default function App({ Component, pageProps }: AppProps) {
           <PersistGate loading={null} persistor={persistStore(store)}>
             <Header />
             <NavigationBar />
-            <div className={getMarginStyle(pathName)}>
-              <Component {...pageProps} />
-            </div>
+            <Component {...pageProps} />
           </PersistGate>
         </Provider>
       </QueryClientProvider>
     </main>
   );
-
-  function getMarginStyle(pathName: string): string {
-    if (pathName.includes("shorts")) {
-      return "";
-    } else if(pathName.includes("dubbing")){
-      return "";
-    } else {
-      return "bg-white mt-57 mb-61";
-    }
-  }
-
 }
