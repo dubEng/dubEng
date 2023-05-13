@@ -58,6 +58,10 @@ export default function NavigationBar() {
 
   if (pathName === "/manager") {
     return <></>;
+  } else if (pathName.includes("dubbing")) {
+    return <></>;
+  } else if (pathName === "/login") {
+    return <></>;
   } else {
     return (
       <nav className={getNavigationBarStyle(pathName)}>
@@ -97,7 +101,7 @@ export default function NavigationBar() {
   }
 
   function getNavigationBarStyle(pathName: string): string {
-    if (pathName === "/community/shorts") {
+    if (pathName.includes("shorts")) {
       return "h-61 pt-8 pb-8 fixed min-w-390 bottom-0 z-50 bg-dubblack border-t-1 border-[#DEE2E6]";
     } else {
       return "h-61 pt-8 pb-8 fixed  min-w-390 bottom-0 z-50 bg-white border-t-1 border-[#DEE2E6]";
