@@ -80,7 +80,7 @@ export default function DubbingPage() {
     setDubbingCompleteCheckList((prevArray) => {
       console.log('prevArray', prevArray);
       const newArray = [...prevArray];
-      newArray[index] = true;
+      newArray[index-1] = true;
       return newArray;
     });
   };
@@ -97,19 +97,19 @@ export default function DubbingPage() {
   }
 
   const findNoDubbingScripts = async () => {
-    const noDubbingScriptList: number[] = [];
-    dubbingCompleteCheckList.forEach((value, index) => {
-      if (!value) {
-        noDubbingScriptList.push(index+1);
-      }
-    });
+    let noDubbingStringList = "";
 
-    if (noDubbingScriptList.length > 0) {
-      const message = `${noDubbingScriptList.join(
-        ", "
-      )}번 스크립트들이 아직 더빙되지 않았습니다.`;
+    for (let index = 0; index < dubbingCompleteCheckList.length; index++) {
+      if(!dubbingCompleteCheckList[index]){
+        noDubbingStringList += `${index} ,`
+      }
+    }
+
+    noDubbingStringList += "번 스크립트가 아직 더빙되지 않았습니다."
+
+    if (noDubbingStringList.length != 0) {
       MySwal.fire({
-        text: message,
+        text: noDubbingStringList,
         icon: "info",
       });
     } else {
@@ -136,11 +136,11 @@ export default function DubbingPage() {
   const { browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   useEffect(() => {
-    if (data) {
-      const newDubbingCompleteCheckList = Array(data.length).fill(false);
+    if (scriptList) {
+      const newDubbingCompleteCheckList = Array(scriptList.data.length).fill(false);
       setDubbingCompleteCheckList(newDubbingCompleteCheckList);
     }
-  }, [data]);
+  }, [scriptList]);
 
   useEffect(() => {
     // sets to true or false after component has been mounted
