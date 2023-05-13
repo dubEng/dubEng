@@ -98,12 +98,19 @@ export default function Header() {
     );
   } else if (pathName === "/manager") { 
     return <></>
+  } else if (pathName.includes("shorts")) { 
+    return <></>
+  }
+
+
+  function handleLogoButtonClick() {
+    route.push("/");
   }
 
   return (
-    <div className={getHeaderBarStyle()}>
+    <button className={getHeaderBarStyle()} onClick={handleLogoButtonClick}>
       <Image src={Logo} alt={"logo"} width={98} height={41} />
-    </div>
+    </button>
   );
 
   function getHeaderBarStyle(): string {
