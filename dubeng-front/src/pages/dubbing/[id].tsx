@@ -65,7 +65,7 @@ export default function DubbingPage() {
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
 
   const [dubbingCompleteCheckList, setDubbingCompleteCheckList] = useState<
-    boolean[]
+    number[]
   >([]);
 
   function openModal() {
@@ -76,13 +76,10 @@ export default function DubbingPage() {
     setIsOpen(false);
   }
 
-  const updateDubbingCompleteCheckList = (index: number) => {
-    setDubbingCompleteCheckList((prevArray) => {
-      console.log('prevArray', prevArray);
-      const newArray = [...prevArray];
-      newArray[index-1] = true;
-      return newArray;
-    });
+  const updateDubbingCompleteCheckList = (newNumber: number) => {
+    console.log("newNumber", newNumber);
+    console.log("dubbingCompleteCheckList", dubbingCompleteCheckList);
+    setDubbingCompleteCheckList((prevNumbers) => [...prevNumbers, newNumber]);
   };
 
   function transferYoutube(videoPath: string) {
@@ -93,44 +90,49 @@ export default function DubbingPage() {
   }
 
   async function handleSaveButton() {
-    findNoDubbingScripts();
+    saveDubbingFile();
+    // findNoDubbingScripts();
   }
 
-  const findNoDubbingScripts = async () => {
+  const findNoDubbingScripts = () => {
     let noDubbingStringList = "";
 
-    for (let index = 0; index < dubbingCompleteCheckList.length; index++) {
-      if(!dubbingCompleteCheckList[index]){
-          if(index == (length-1)){
-            noDubbingStringList += `${index+1} `
-          } else{
-            noDubbingStringList += `${index+1} ,`
-          }
+    for (let index = 0; index < scriptList.data.length; index++) {
+      if (!dubbingCompleteCheckList.includes(index + 1)) {
+        if (index == length - 1) {
+          noDubbingStringList += `${index + 1} `;
+        } else {
+          noDubbingStringList += `${index + 1} ,`;
+        }
       }
     }
 
-    noDubbingStringList += "번 스크립트가 아직 더빙되지 않았습니다."
+    noDubbingStringList += "번 스크립트가 아직 더빙되지 않았습니다.";
 
-    if (noDubbingStringList.length != 0) {
+    if (scriptList.data.length != dubbingCompleteCheckList.length) {
       MySwal.fire({
         text: noDubbingStringList,
         icon: "info",
       });
     } else {
-      if (router.query.id) {
-        const payload: RecordPreview = {
-          nickname: nickname,
-          userId: userId,
-          videoId: parseInt(router.query.id as string),
-        };
-
-        const response = await mutation.mutateAsync(payload);
-        setPreviewUrl(response);
-
-        openModal();
-      }
+      saveDubbingFile();
     }
   };
+
+  async function saveDubbingFile() {
+    if (router.query.id) {
+      const payload: RecordPreview = {
+        nickname: nickname,
+        userId: userId,
+        videoId: parseInt(router.query.id as string),
+      };
+
+      const response = await mutation.mutateAsync(payload);
+      setPreviewUrl(response);
+
+      openModal();
+    }
+  }
 
   // 브라우저 호환성 체크
   const [speechRecognitionSupported, setSpeechRecognitionSupported] = useState<
@@ -138,13 +140,6 @@ export default function DubbingPage() {
   >(null);
 
   const { browserSupportsSpeechRecognition } = useSpeechRecognition();
-
-  useEffect(() => {
-    if (Array.isArray(scriptList.data)) {
-      const newDubbingCompleteCheckList = Array(scriptList.data.length).fill(false);
-      setDubbingCompleteCheckList(newDubbingCompleteCheckList);
-    }
-  }, [scriptList]);
 
   useEffect(() => {
     // sets to true or false after component has been mounted
