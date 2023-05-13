@@ -89,6 +89,12 @@ export default function App({ Component, pageProps }: AppProps) {
         />
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
+      
+        <meta property="og:url" content="https://dub-eng.com"/>
+        <meta property="og:title" content="DubEng" />
+        <meta property="og:type" content="website"/>
+        <meta property="og:image" content="https://dubingdubing.s3.ap-northeast-2.amazonaws.com/dub-eng-open-graph.png"/>
+        <meta property="og:description" content="더빙으로 배우는 영어 쉐도잉 서비스"/>
       </Head>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
