@@ -64,6 +64,10 @@ export default function DubbingPage() {
 
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
 
+  const [dubbingCompleteCheckList, setDubbingCompleteCheckList] = useState<
+    boolean[]
+  >([]);
+
   function openModal() {
     setIsOpen(true);
   }
@@ -71,6 +75,14 @@ export default function DubbingPage() {
   function closeModal() {
     setIsOpen(false);
   }
+
+  const updateDubbingCompleteCheckList = (index: number) => {
+    setDubbingCompleteCheckList((prevArray) => {
+      const newArray = [...prevArray];
+      newArray[index] = !newArray[index];
+      return newArray;
+    });
+  };
 
   function transferYoutube(videoPath: string) {
     const originalUrl = videoPath;
@@ -80,19 +92,40 @@ export default function DubbingPage() {
   }
 
   async function handleSaveButton() {
-    if (router.query.id) {
-      const payload: RecordPreview = {
-        nickname: nickname,
-        userId: userId,
-        videoId: parseInt(router.query.id as string),
-      };
-
-      const response = await mutation.mutateAsync(payload);
-      setPreviewUrl(response);
-
-      openModal();
-    }
+    findNoDubbingScripts();
   }
+
+  const findNoDubbingScripts = async () => {
+    const noDubbingScriptList: number[] = [];
+    dubbingCompleteCheckList.forEach((value, index) => {
+      if (!value) {
+        noDubbingScriptList.push(index+1);
+      }
+    });
+
+    if (noDubbingScriptList.length > 0) {
+      const message = `${noDubbingScriptList.join(
+        ", "
+      )}번 스크립트들이 아직 더빙되지 않았습니다.`;
+      MySwal.fire({
+        text: message,
+        icon: "info",
+      });
+    } else {
+      if (router.query.id) {
+        const payload: RecordPreview = {
+          nickname: nickname,
+          userId: userId,
+          videoId: parseInt(router.query.id as string),
+        };
+
+        const response = await mutation.mutateAsync(payload);
+        setPreviewUrl(response);
+
+        openModal();
+      }
+    }
+  };
 
   // 브라우저 호환성 체크
   const [speechRecognitionSupported, setSpeechRecognitionSupported] = useState<
@@ -100,6 +133,13 @@ export default function DubbingPage() {
   >(null);
 
   const { browserSupportsSpeechRecognition } = useSpeechRecognition();
+
+  useEffect(() => {
+    if (data) {
+      const newDubbingCompleteCheckList = Array(data.length).fill(false);
+      setDubbingCompleteCheckList(newDubbingCompleteCheckList);
+    }
+  }, [data]);
 
   useEffect(() => {
     // sets to true or false after component has been mounted
@@ -287,6 +327,9 @@ export default function DubbingPage() {
                   setSpeechToText={setSpeechToText}
                   timerId={timerId}
                   setTimerId={setTimerId}
+                  updateDubbingCompleteCheckList={
+                    updateDubbingCompleteCheckList
+                  }
                 />
               </SwiperSlide>
             ))}
