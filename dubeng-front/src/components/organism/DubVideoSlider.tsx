@@ -60,7 +60,7 @@ export default function DubVideoSlider({ videoList, isOpen, setOpen }: Iprops) {
   //     thumbnail: "",
   //     runtime: 100,
   //   },
-  // ];
+  // ];s
 
   return (
     <>

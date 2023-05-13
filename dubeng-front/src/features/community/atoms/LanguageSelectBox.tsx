@@ -7,6 +7,7 @@ import {
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useRouter } from "next/router";
 
 interface Iprops {
   langType: string;
@@ -14,13 +15,17 @@ interface Iprops {
 
 export default function LanguageSelectBox({ langType }: Iprops) {
   const MySwal = withReactContent(Swal);
+  const router = useRouter();
 
   const dispatch = useDispatch();
 
   function handleKoreanTab() {
     console.log("한국어탭 누름");
     MySwal.fire("한국어 콘텐츠 Coming Soon👀");
-    dispatch(setTabKorean());
+    router.push("/community");
+
+    // // 실제로 작업할 때에는 밑에 주석 풀고 진행해야 함
+    // dispatch(setTabKorean());
   }
   function handleEnglishTab() {
     console.log("영어탭 누름");
