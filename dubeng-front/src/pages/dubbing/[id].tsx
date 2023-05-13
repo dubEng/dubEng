@@ -101,7 +101,11 @@ export default function DubbingPage() {
 
     for (let index = 0; index < dubbingCompleteCheckList.length; index++) {
       if(!dubbingCompleteCheckList[index]){
-        noDubbingStringList += `${index} ,`
+          if(index == (length-1)){
+            noDubbingStringList += `${index+1} `
+          } else{
+            noDubbingStringList += `${index+1} ,`
+          }
       }
     }
 
@@ -136,7 +140,7 @@ export default function DubbingPage() {
   const { browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   useEffect(() => {
-    if (scriptList) {
+    if (Array.isArray(scriptList.data)) {
       const newDubbingCompleteCheckList = Array(scriptList.data.length).fill(false);
       setDubbingCompleteCheckList(newDubbingCompleteCheckList);
     }
