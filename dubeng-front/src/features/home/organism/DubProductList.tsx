@@ -22,34 +22,7 @@ export default function DubProductList() {
   }
 
   return (
-    <Swiper
-      slidesPerView={1.4}
-      spaceBetween={16}
-      onSlideChange={() => console.log("slide change")}
-      onSwiper={(swiper) => console.log(swiper)}
-      breakpoints={{
-        655: {
-          slidesPerView: 1.4,
-          spaceBetween: 16,
-        },
-        1000: {
-          slidesPerView: 2,
-          spaceBetween: 16,
-        },
-        1300: {
-          slidesPerView: 3,
-          spaceBetween: 16,
-        },
-        1650: {
-          slidesPerView: 4,
-          spaceBetween: 16,
-        },
-        3000: {
-          slidesPerView: 5,
-          spaceBetween: 16,
-        },
-      }}
-    >
+    <Swiper>
       {popularity.data &&
         popularity.data.map((item: any, index: number) => (
           <SwiperSlide key={item.videoId}>
