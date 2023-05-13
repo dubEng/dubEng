@@ -111,7 +111,7 @@ export default function ShortsVideoPage() {
   }
 
   return (
-    <div className="w-full h-screen bg-black flex flex-col items-center justify-center mt-32">
+    <div className="w-full h-screen bg-black flex flex-col items-center justify-center">
       {data && (
         <>
           <YouTube
@@ -135,7 +135,7 @@ export default function ShortsVideoPage() {
               setSelectedScript(0);
             }}
           />
-          <div className="flex flex-row justify-between mt-16 mb-16 items-center w-390">
+          <div className="flex flex-row justify-between mt-16 mb-16 items-center w-390 px-8">
             <p className="text-16 text-white">{data.title}</p>
               <div>
                 <DubButton type={"shorts"} onClick={handleDubButton} />

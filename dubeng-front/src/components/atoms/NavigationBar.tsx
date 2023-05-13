@@ -58,8 +58,6 @@ export default function NavigationBar() {
 
   if (pathName === "/manager") {
     return <></>;
-  } else if (pathName.includes("dubbing")) {
-    return <></>;
   } else if (pathName === "/login") {
     return <></>;
   } else {
