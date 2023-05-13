@@ -20,8 +20,8 @@ const customStyles = {
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
-    width: "376px",
-    height: "400px",
+    width: "350px",
+    height: "350px",
     transform: "translate(-50%, -50%)",
   },
 };
@@ -57,7 +57,7 @@ export default function DubCompleteModal({
   videoPath,
   audioUrl,
   videoId,
-  userId
+  userId,
 }: Iprops) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -162,9 +162,9 @@ export default function DubCompleteModal({
         contentLabel="미리보기 Modal"
       >
         <div className="container mx-auto">
-          <div className="flex flex-row justify-end">
+          <div className="flex flex-row justify-end mb-8">
             <button onClick={closeModal}>
-              <MdClose className="my-8 mr-8" size={18} />
+              <MdClose className="my-8 mr-8" size={24} />
             </button>
           </div>
           <div className="flex flex-col justify-center items-center">
@@ -193,7 +193,7 @@ export default function DubCompleteModal({
                 }
               }}
             />
-            <div className="w-261 h-30 border-1 border-dubgraymedium my-8 rounded-lg flex flex-row justify-between items-center px-8">
+            <div className="w-261 h-30 border-1 border-dubgraymedium my-8 rounded-lg flex flex-row justify-between items-center px-8 mb-16">
               <PlayBarPreview width={"50%"} />
               <PlayButtonSmall
                 isPlaying={isPlaying}
@@ -202,26 +202,26 @@ export default function DubCompleteModal({
                 disable={false}
               />
             </div>
-            <audio ref={audioRef} style={{ display: "none" }} src={audioUrl} />
             {/* <div className="flex flex-col items-center text-16 mt-8 text-dubblack">
               <p className="mb-8 font-semibold">공개여부</p>
               <div className="flex flex-row justify-center mb-16">
-                {options.map((option) => (
-                  <div className="mx-4" key={option.value}>
-                    <label key={option.value} className="mr-4">
-                      {option.label}
-                    </label>
-                    <input
-                      type="radio"
-                      value={option.value}
-                      checked={selectedOption === option.value}
-                      onChange={() => handleOptionChange(option.value)}
-                    />
-                  </div>
+              {options.map((option) => (
+                <div className="mx-4" key={option.value}>
+                <label key={option.value} className="mr-4">
+                {option.label}
+                </label>
+                <input
+                type="radio"
+                value={option.value}
+                checked={selectedOption === option.value}
+                onChange={() => handleOptionChange(option.value)}
+                />
+                </div>
                 ))}
-              </div>
-            </div> */}
+                </div>
+              </div> */}
             <CommonButton children={"완료하기"} onClick={handleComplete} />
+            <audio ref={audioRef} style={{ display: "none" }} src={audioUrl} />
           </div>
         </div>
       </Modal>
