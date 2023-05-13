@@ -77,7 +77,9 @@ export default function DubVideoListItem({
             </p>
           )}
         </div>
-        <DubButton onClick={handleDubButton} />
+        <div>
+          <DubButton onClick={handleDubButton} />
+        </div>
       </div>
     </div>
   );
