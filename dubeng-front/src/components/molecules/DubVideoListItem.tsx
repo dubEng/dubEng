@@ -2,12 +2,20 @@ import Image from "next/image";
 import WeBareBears from "../../../public/images/dump/webarebears_image.png";
 import DubButton from "../atoms/DubButton";
 import Link from "next/link";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { useSelector } from "react-redux";
+import { RootState } from "../../stores/store";
+import { useRouter } from "next/router";
+
 interface Iprops {
   id: number;
   title: string;
   thumbnail: string;
   runtime: number;
 }
+
+const MySwal = withReactContent(Swal);
 
 export default function DubVideoListItem({
   id,
@@ -21,7 +29,25 @@ export default function DubVideoListItem({
     return [minutes, remainingSeconds];
   }
 
+  const router = useRouter();
+
   const runtimeList = secondsToMinutes(runtime);
+
+  const userId = useSelector((state: RootState) => state.user.userId);
+
+  function handleDubButton() {
+    //로그인 하지 않은 사용자라면
+    if (userId == "") {
+      MySwal.fire({
+        icon: "info",
+        title: "로그인 후 이용 가능한 서비스입니다.",
+      }).then(() => {
+        router.push("/login");
+      });
+    } else {
+      router.push(`/dubbing/${id}`);
+    }
+  }
 
   return (
     <div className="grid grid-cols-2 p-16 w-358 bg-white rounded-8 border-1 border-dubgraymedium">
@@ -51,9 +77,7 @@ export default function DubVideoListItem({
             </p>
           )}
         </div>
-        <Link href={`/dubbing/${id}`}>
-          <DubButton page={""} />
-        </Link>
+        <DubButton onClick={handleDubButton} />
       </div>
     </div>
   );

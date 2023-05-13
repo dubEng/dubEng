@@ -37,6 +37,7 @@ export default function DubBox({
   speechToText,
   setSpeechToText,
   setTimerId,
+  updateDubbingCompleteCheckList,
   timerId,
 }: Script) {
   // const swiperSlide = useSwiperSlide();
@@ -76,7 +77,7 @@ export default function DubBox({
 
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
 
-  const { mutate } = useFileUploadPost();
+  const { mutateAsync } = useFileUploadPost();
 
   useEffect(() => {
     (async () => {
@@ -97,20 +98,8 @@ export default function DubBox({
         const audioBlob = new Blob(audioChunksRef.current, {
           type: "audio/wav",
         });
-        
-        const formData = new FormData();
-        
-        formData.append("recodeInfo.nickname", nickname);
-        formData.append("recodeInfo.recodeNum", scriptIndex.toString());
-        formData.append("recodeInfo.videoId", videoId);
-        
-        const file = new File([audioBlob], "myRecordingFile.wav", {
-          type: "audio/wav",
-        }); // File 객체 생성
-        
-        formData.append("audioFile", file);
-        
-        mutate(formData);
+
+        saveRecordingFile(audioBlob);
         
         //녹음 종료 후 1초뒤에 STT 인식 종료
         setTimeout(()=> {
@@ -202,6 +191,28 @@ export default function DubBox({
     // 스크립트 리셋
     resetTranscript();
   }, [listening]);
+
+
+  async function saveRecordingFile(audioBlob: Blob) {
+    const formData = new FormData();
+        
+    formData.append("recodeInfo.nickname", nickname);
+    formData.append("recodeInfo.recodeNum", scriptIndex.toString());
+    formData.append("recodeInfo.videoId", videoId);
+    
+    const file = new File([audioBlob], "myRecordingFile.wav", {
+      type: "audio/wav",
+    }); // File 객체 생성
+    
+    formData.append("audioFile", file);
+
+    try{
+      await mutateAsync(formData);
+      updateDubbingCompleteCheckList(scriptIndex);
+    } catch(e){
+      console.error('error:', e);
+    }
+  }
 
   function handleScriptPlayButton() {
     setIsPlaying(true);
