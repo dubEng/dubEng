@@ -22,8 +22,8 @@ export default function HomePage() {
       <p className="flex justify-start mx-16 text-19 font-bold mt-24">
         이주의 더빙왕
       </p>
-      <div className="h-80"></div>
       <DubKingList />
+      <div className="h-80"></div>
     </div>
   );
 }
