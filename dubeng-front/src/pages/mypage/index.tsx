@@ -24,7 +24,7 @@ export default function MyPage() {
         handleMyPageLangIndex={handleMyPageLangIndex}
       />
       <DubProductCard
-        title={"안녕안녕안녕하세요"}
+        title={"안녕안녕안녕"}
         thumbnail={""}
         playCount={11}
         updatedDate={""}

@@ -28,7 +28,9 @@ export default function DubProductCard({
         height={152}
         className="rounded-8 bg-dubgray"
       />
-      <p className="mt-8 text-16 text-dubblack font-semibold">{title}</p>
+      <p className="mt-8 text-16 text-dubblack font-semibold line-clamp-1">
+        {title}
+      </p>
       <div className="flex items-center space-x-4">
         <p className="text-14 text-dubgray">조회수 {playCount}회</p>
         <p className="text-10 text-dubgray"> ▪ </p>
