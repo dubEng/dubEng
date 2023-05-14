@@ -37,7 +37,7 @@ export default function RecordingButton({ page }: Iprops) {
     return <ErrorComponent onClick={() => refetch} retry={true} />;
   }
 
-  if (page.includes("dubbing")) {
+  if (page === "/dubbing") {
     return <Image src={dubbingRecordingIcon} alt="dubbingRecordingIcon" />;
   } else if (page === "/community/shorts") {
     return <Image src={shortsRecordingIcon} alt="shortsRecordingIcon" />;
@@ -49,11 +49,7 @@ export default function RecordingButton({ page }: Iprops) {
           alt="defaultRecordingIcon"
           onClick={() => setOpen(true)}
         />
-        <DubVideoSlider
-          videoList={data?.data.answer}
-          isOpen={isOpen}
-          setOpen={setOpen}
-        />
+        <DubVideoSlider isOpen={isOpen} setOpen={setOpen} />
       </>
     );
   }
