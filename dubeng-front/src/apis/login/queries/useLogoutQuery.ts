@@ -10,7 +10,7 @@ const fetcher = async () =>{
     return data
 }
 
-const useUserInfoPost = () => {
+const useLogoutQuery = () => {
   const dispatch = useDispatch();
 
   return useMutation(() => fetcher(), {
@@ -23,4 +23,4 @@ const useUserInfoPost = () => {
   });
 };
 
-export default useUserInfoPost;
+export default useLogoutQuery;
