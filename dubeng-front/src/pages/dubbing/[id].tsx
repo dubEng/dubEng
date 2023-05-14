@@ -173,15 +173,11 @@ export default function DubbingPage() {
   };
 
   const onStateChange: YouTubeProps["onStateChange"] = (event) => {
-    console.log("onStateChange");
-
     if (event.data === 1) {
       // 재생 중일 때
-      console.log("영상 재생");
       setNowPlaying(true);
     } else if (event.data === 2 || event.data === 0) {
       //영상이 종료되거나, 일시 정지 시
-      console.log("영상 정지");
       setNowPlaying(false);
     }
   };
