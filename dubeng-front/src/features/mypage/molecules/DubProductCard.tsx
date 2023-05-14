@@ -20,15 +20,15 @@ export default function DubProductCard({
   timeago.register("ko", koLocale);
 
   return (
-    <div className="p-16 w-272 h-211 flex flex-col rounded-16 bg-dubgraylight border-1 border-dubgraymedium">
+    <div className="pl-16 pr-16 pt-16 pb-10 w-272 h-211 flex flex-col rounded-16 bg-dubgraylight border-1 border-dubgraymedium">
       <Image
         src={thumbnail}
         alt="thumbnail"
         width={240}
         height={152}
-        className="rounded-8"
+        className="rounded-8 bg-dubgray"
       />
-      <p className="text-16 text-dubblack font-semibold">{title}</p>
+      <p className="mt-8 text-16 text-dubblack font-semibold">{title}</p>
       <div className="flex items-center space-x-4">
         <p className="text-14 text-dubgray">조회수 {playCount}회</p>
         <p className="text-10 text-dubgray"> ▪ </p>
