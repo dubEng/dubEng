@@ -93,7 +93,7 @@ export default function SignUpPage(){
   }
 
   useEffect(()=>{
-    if(checknicknameMsg === CheckMessageStatus.NICKNAME_ISVALID && checkintroduceMsg === CheckMessageStatus.INTRODUCE_ISVALID){
+    if(checknicknameMsg === CheckMessageStatus.NICKNAME_ISVALID){
       setNextBtnStatus(true);
     }
   },[checknicknameMsg, checkintroduceMsg])
