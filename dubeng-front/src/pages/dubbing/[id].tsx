@@ -140,67 +140,25 @@ export default function DubbingPage() {
     setSpeechRecognitionSupported(browserSupportsSpeechRecognition);
   }, [browserSupportsSpeechRecognition]);
 
-  // 선택된 스크롤이 바뀌면 오토 스크롤
-  // useEffect(() => {
-  //   if (
-  //     document.querySelector<HTMLElement>(`.script-element-${selectedScript}`)
-  //   ) {
-  //     const element = document.querySelector<HTMLElement>(
-  //       `.script-element-${selectedScript}`
-  //     );
-  //     element?.scrollIntoView({ behavior: "smooth", block: "center" });
-  //   }
-  // }, [selectedScript]);
-
   // 1초마다 영상 실행 시간 가져오기
-  // useEffect(() => {
-  //   const watchTime = setInterval(() => {
-  //     // 영상이 재생중일 때만 실행
-  //     if (nowPlaying) {
-  //       const time = Math.floor(Number(youtubePlayer?.getCurrentTime()));
+  useEffect(() => {
+    const watchTime = setInterval(() => {
+      // 영상이 재생중일 때만 실행
+      if (nowPlaying) {
+        const time = Math.floor(Number(youtubePlayer?.getCurrentTime()));
 
-  //       const progress =
-  //         ((time - data.startTime) / (data.endTime - data.startTime)) * 100 +
-  //         "%";
+        const progress =
+          ((time - data.startTime) / (data.endTime - data.startTime)) * 100 +
+          "%";
 
-  //       setProgressBarWidth(progress);
+        setProgressBarWidth(progress);
+      }
+    }, 1000);
 
-  //       //TODO: 21 -> endTime
-  //       if (time == 0) {
-  //         setSelectedScript(0);
-  //       }
-
-  //       if (time > data.endTime) {
-  //         youtubePlayer.stopVideo();
-  //         setSelectedScript(0);
-  //       }
-
-  //       /* 실시간 하이라이팅 */
-  //       // flag가 false이거나 선택된 스크립트의 idx값이 전체 스크립트의 길이보다 작으면 실행
-  //       if (selectedScript < scriptList.data.length && time > 0) {
-  //         // 해당 스크립트 리스트의 startTime이 undefined가 아니라면
-  //         if (scriptList.data[selectedScript]?.startTime != undefined) {
-  //           // 현재 재생되고 있는 영상의 시간이 현재 스크립트의 시작 시간보다 크거나 같고
-  //           // 현재 재생되고 있는 영상의 시간이 다음 스크립트의 시작 시간보다 작거나 같다면
-  //           // selectedScript를 증가하지 않고 넘어간다.
-  //           if (
-  //             scriptList.data[selectedScript]?.startTime <= time &&
-  //             time <= scriptList.data[selectedScript + 1]?.startTime
-  //           ) {
-  //             // console.log("현재 스크립트가 재생중인 영상과 일치합니다.");
-  //           } else {
-  //             // console.log("다음 스크립트로 넘어가자");
-  //             setSelectedScript(selectedScript + 1);
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }, 1000);
-
-  //   return () => {
-  //     clearInterval(watchTime);
-  //   };
-  // });
+    return () => {
+      clearInterval(watchTime);
+    };
+  });
 
   // player 준비시 실행
   const onPlayerReady: YouTubeProps["onReady"] = (event) => {
