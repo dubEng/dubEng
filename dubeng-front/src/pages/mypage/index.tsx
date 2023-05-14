@@ -96,6 +96,14 @@ export default function MyPage() {
           <MdArrowForwardIos width={16} height={16} className="text-dubgray" />
         </button>
       </div>
+      <div className="flex items-center justify-between">
+        <p className="flex justify-start text-19 font-bold mt-24 mb-16">
+          로그아웃
+        </p>
+        <button className="mt-24 mb-16 flex justify-center items-center">
+          <MdArrowForwardIos width={16} height={16} className="text-dubgray" />
+        </button>
+      </div>
       <DubProductCard
         title={"안녕안녕안녕"}
         thumbnail={""}
