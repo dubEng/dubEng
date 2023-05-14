@@ -66,9 +66,7 @@ export default function DubbingPage() {
 
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
 
-  const [dubbingCompleteCheckList, setDubbingCompleteCheckList] = useState<
-    boolean[]
-  >([]);
+  const [dubbingCheckList, setDubbingCheckList] = useState<number[]>([]);
 
   const [opendLoadingModal, setOpendLoadingModal] = useState<boolean>(false);
 
@@ -92,23 +90,7 @@ export default function DubbingPage() {
   };
 
   const updateDubbingCompleteCheckList = (newNumber: number) => {
-    // console.log("dubbingCompleteCheckList", dubbingCompleteCheckList);
-    console.log("newNumber", newNumber);
-    // setDubbingCompleteCheckList((prevArray) => [...prevArray, false]);
-
-    // if(dubbingCompleteCheckList.length == 0){
-    //   console.log('length 0');
-    //   // const newBooleanArray = Array(scriptList.data.length).fill(false);
-    //   // console.log('newBooleanArray', newBooleanArray);
-    //   setDubbingCompleteCheckList(new Array(scriptList.data.length).fill(false));
-    // } else {
-    //   setDubbingCompleteCheckList((prevArray) => {
-    //     console.log('prevArray', prevArray);
-    //     const newArray = [...prevArray];
-    //     newArray[newNumber] = !newArray[newNumber];
-    //     return newArray;
-    //   });
-    // }
+    setDubbingCheckList((prevValues) => [...prevValues, newNumber]);
   };
 
   function transferYoutube(videoPath: string) {
@@ -119,35 +101,8 @@ export default function DubbingPage() {
   }
 
   async function handleSaveButton() {
-    saveDubbingFile();
-    // findNoDubbingScripts();
+    findNoDubbingScripts();
   }
-
-  const findNoDubbingScripts = () => {
-    let noDubbingStringList = "";
-
-    // for (let index = 0; index < scriptList.data.length; index++) {
-    //   if (!dubbingCompleteCheckList.includes(index + 1)) {
-    //     if (index == length - 1) {
-    //       noDubbingStringList += `${index + 1} `;
-    //     } else {
-    //       noDubbingStringList += `${index + 1} ,`;
-    //     }
-    //   }
-    // }
-
-    // noDubbingStringList += "번 스크립트가 아직 더빙되지 않았습니다.";
-
-    // if (scriptList.data.length != dubbingCompleteCheckList.length) {
-    //   MySwal.fire({
-    //     text: noDubbingStringList,
-    //     icon: "info",
-    //   });
-    // } else {
-    //   console.log("저장하기 로직 수행");
-    //   // saveDubbingFile();
-    // }
-  };
 
   async function saveDubbingFile() {
     if (router.query.id) {
@@ -155,22 +110,21 @@ export default function DubbingPage() {
         nickname: nickname,
         userId: userId,
         videoId: parseInt(router.query.id as string),
-        accessToken
+        accessToken,
       };
 
-      try{
+      try {
         setOpendLoadingModal(true);
         const response = await mutation.mutateAsync(payload);
         setPreviewUrl(response);
         setOpendLoadingModal(false);
         openModal();
-      } catch (error){
+      } catch (error) {
         let message;
         if (error instanceof Error) message = error.message;
         else message = String(error);
         errorHandler(message);
       }
-
     }
   }
 
@@ -292,6 +246,44 @@ export default function DubbingPage() {
     youtubePlayer.seekTo(seekTo / 1000);
   };
 
+  function findNoDubbingScripts() {
+    const recordingNumberList = [...new Set(dubbingCheckList)];
+
+    const scriptNumberList = Array.from(
+      { length: scriptList.data.length },
+      (_, index) => index + 1
+    );
+
+    const noDubbingScriptList = scriptNumberList.filter(
+      (value) => !recordingNumberList.includes(value)
+    );
+
+    if (
+      noDubbingScriptList.length === 0 &&
+      scriptNumberList.length === recordingNumberList.length
+    ) {
+      saveDubbingFile();
+    } else {
+      const lastIndex = noDubbingScriptList.length - 1;
+
+      let resultString = noDubbingScriptList
+        .map((value, index) => {
+          if (index !== lastIndex) {
+            return value.toString() + ", ";
+          }
+          return value.toString();
+        })
+        .join("");
+
+      resultString += "번 스크립트가 아직 더빙되지 않았습니다.";
+
+      MySwal.fire({
+        text: resultString,
+        icon: "info",
+      });
+    }
+  }
+
   if (speechRecognitionSupported === null) {
     return null; // return null on first render, can be a loading indicator
   }
@@ -341,6 +333,8 @@ export default function DubbingPage() {
           onStateChange={onStateChange}
         />
       )}
+      {dubbingCheckList &&
+        dubbingCheckList.map((value, index) => <li key={index}>{value}</li>)}
       <PlayBar width={progressBarWidth} />
       <div className="w-390 my-8 py-8 bg-dubgraylight flex justify-center items-center">
         <Swiper
