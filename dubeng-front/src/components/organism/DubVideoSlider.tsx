@@ -1,5 +1,9 @@
 import Sheet from "react-modal-sheet";
 import DubVideoListItem from "../molecules/DubVideoListItem";
+import { useSelector } from "react-redux";
+import { RootState } from "@/stores/store";
+import useRecommendDubVideoListQuery from "@/apis/community/queries/useRecommendDubVideoListQuery";
+import ErrorComponent from "../atoms/ErrorComponent";
 
 interface videoType {
   id: number;
@@ -8,12 +12,33 @@ interface videoType {
   runtime: number;
 }
 interface Iprops {
-  videoList: videoType[];
+  // videoList: videoType[];
   isOpen: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function DubVideoSlider({ videoList, isOpen, setOpen }: Iprops) {
+export default function DubVideoSlider({ isOpen, setOpen }: Iprops) {
+  const languageIndex = useSelector((state: RootState) => {
+    return state.languageTab.langType;
+  });
+
+  // const [isOpen, setOpen] = useState(false);
+
+  const { data, isLoading, isError, refetch } =
+    useRecommendDubVideoListQuery(languageIndex);
+
+  // if (isLoading) {
+  //   return (
+  //     <div className="flex justify-center items-center my-16">
+  //       {/* <ScaleLoader color="#FF6D60" /> */}
+  //       {"로딩 중입니다"}
+  //     </div>
+  //   );
+  // }
+
+  // if (isError) {
+  //   return <ErrorComponent onClick={() => refetch} retry={true} />;
+  // }
   function handleVideoListDiv() {
     setOpen(false);
   }
@@ -60,7 +85,7 @@ export default function DubVideoSlider({ videoList, isOpen, setOpen }: Iprops) {
   //     thumbnail: "",
   //     runtime: 100,
   //   },
-  // ];s
+  // ];
 
   return (
     <>
@@ -68,27 +93,36 @@ export default function DubVideoSlider({ videoList, isOpen, setOpen }: Iprops) {
         <Sheet.Container>
           <Sheet.Header />
           <Sheet.Content>
-            <div className="mx-16 h-full">
-              <p className="flex justify-start text-19 font-bold mb-16">
-                이 영상, 지금 더빙 어때요?
-              </p>
-              {videoList &&
-                videoList.map((item, index) => (
-                  <div
-                    className="mb-16"
-                    key={index}
-                    onClick={handleVideoListDiv}
-                  >
-                    <DubVideoListItem
-                      id={item.id}
-                      title={item.title}
-                      thumbnail={item.thumbnail}
-                      runtime={item.runtime}
+            {isLoading ? (
+              <div className="flex justify-center items-center my-16">
+                {/* <ScaleLoader color="#FF6D60" /> */}
+                {"로딩 중입니다"}
+              </div>
+            ) : isError ? (
+              <ErrorComponent onClick={() => refetch} retry={true} />
+            ) : (
+              <div className="mx-16 h-full">
+                <p className="flex justify-start text-19 font-bold mb-16">
+                  이 영상, 지금 더빙 어때요?
+                </p>
+                {data?.data.answer &&
+                  data?.data.answer.map((item: any, index: number) => (
+                    <div
+                      className="mb-16"
                       key={index}
-                    />
-                  </div>
-                ))}
-            </div>
+                      onClick={handleVideoListDiv}
+                    >
+                      <DubVideoListItem
+                        id={item.id}
+                        title={item.title}
+                        thumbnail={item.thumbnail}
+                        runtime={item.runtime}
+                        key={index}
+                      />
+                    </div>
+                  ))}
+              </div>
+            )}
           </Sheet.Content>
         </Sheet.Container>
         <Sheet.Backdrop />
