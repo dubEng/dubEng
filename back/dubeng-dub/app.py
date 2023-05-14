@@ -9,6 +9,7 @@ from io import BytesIO
 from datetime import datetime
 import requests
 import json
+import logging
 
 from urllib.request import urlopen
 
@@ -34,6 +35,14 @@ AWS_SECRET_ACCESS_KEY = f_conn.readline().strip()
 AWS_DEFAULT_REGION = 'ap-northeast-2'
 
 f_conn.close()
+
+# 로깅 설정
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
 
 #videoId를 이용하여 해당 영상 정보를 DB에서 가져오는 함수
 def getVideoInfo(videoId):
@@ -135,6 +144,9 @@ def mergeAudio(firstList, lastList, bgAudio, videoST, videoET):
     isSame = False
     if (len(firstList) == len(lastList)): #시작과 끝이 다른 리스트에 있는 경우
         isSame = True
+
+    logging.info(f"This is fristList length: {len(firstList)}")
+    logging.info(f"This is lastList length: {len(lastList)}")
     
     #두 음원 파일을 번갈아가면서 붙이기
     chunks = []
@@ -223,12 +235,12 @@ def maekPreviewAudio():
     userAudioList = []
 
     for userVoice in userVoiceList:
-        print("링크: ",userVoice)
+        logging.info(f"링크: {userVoice}")
         user = AudioSegment.from_file(userVoice)
         user = user.apply_gain(-20)
         userAudioList.append(user)
 
-
+    logging.info(f"userAudioList length: {len(userAudioList)}")
 
     #두 녹음 파일과 배경음악 합치기
     response = urlopen(videoInfo.bgPath)
@@ -236,8 +248,10 @@ def maekPreviewAudio():
     bgAudio = AudioSegment.from_file(BytesIO(wav_data), format="wav")
     finalAudio = AudioSegment.empty()
     if (scripts[0].startTime == videoInfo.startTime*1000): #사용자가 먼저 시작할 경우
+        logging.info(f"User First")
         finalAudio = mergeAudio(userAudioList, oppositeAudioList, bgAudio, videoInfo.startTime*1000, videoInfo.endTime*1000)
     else: #상대역이 먼저 시작할 경우
+        logging.info(f"Opposite First")
         finalAudio = mergeAudio(oppositeAudioList, userAudioList, bgAudio, videoInfo.startTime*1000, videoInfo.endTime*1000)
     
 
