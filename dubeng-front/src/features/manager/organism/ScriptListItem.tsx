@@ -7,6 +7,7 @@ interface Iprops {
   start: number | string;
   text: string;
   translation: string;
+  handleListenScript: (e: number | string, s: number | string) => void;
 }
 
 export default function ScriptListItem({
@@ -14,6 +15,7 @@ export default function ScriptListItem({
   start,
   text,
   translation,
+  handleListenScript,
 }: Iprops) {
   const [newScript, setNewScript] = useState({
     content: text,
@@ -104,6 +106,17 @@ export default function ScriptListItem({
               value={newScript.duration}
               placeholder="지속 시간"
             />
+          </div>
+          <div>
+            <p>구간 확인</p>
+            <button
+              className="rounded-8 border-1 border-dubblue p-8"
+              onClick={() =>
+                handleListenScript(newScript.startTime, newScript.duration)
+              }
+            >
+              미리듣기
+            </button>
           </div>
         </div>
         <p className="col-span-1 text-20 font-semibold">더빙 여부 선택</p>
