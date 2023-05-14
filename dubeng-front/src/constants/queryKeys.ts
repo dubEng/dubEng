@@ -27,3 +27,10 @@ export const CONTENTS_DETAIL = "/contents/detail";
 
 // product shorts
 export const COMMUNITY_DETAIL = "/community/detail";
+
+// mypage
+export const PROFILE = "/mypage/profile";
+export const CALENDAR = "mypage/calendar";
+export const MY_DUB_PRODUCT_LIST = "/mypage/my-product-list";
+export const LIKE_DUB_PRODUCT_LIST = "mypage/like-product-list";
+export const SCRAP_DUB_VIDEO_LIST = "mypage/scrap-video-list";
