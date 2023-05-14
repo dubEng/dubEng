@@ -68,15 +68,13 @@ export default function ManagerPage() {
   // 대사마다 플레이어 미리듣기
   const handleListenScript = (start: number | string, end: number | string) => {
     let startSecond = start;
-    let endSecond = 0;
+    let endSecond = end;
 
     if (typeof start === "string") {
       startSecond = parseFloat(start);
     }
     if (typeof end === "string") {
-      endSecond = parseInt(end);
-    } else if (typeof end === "number") {
-      endSecond = Math.ceil(end);
+      endSecond = parseFloat(end);
     }
 
     // let startSecond = start;
@@ -96,7 +94,7 @@ export default function ManagerPage() {
     setTimeout(() => {
       console.log("setTimeOut으로 왔다");
       youtubePlayer.pauseVideo();
-    }, endSecond * 1000);
+    }, (endSecond as number) * 1000);
     console.log("여기까지 온아");
     // if (youtubePlayer.currentTime === startSecond + endSecond)
   };
