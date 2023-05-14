@@ -76,11 +76,13 @@ export default function SignUpPage(){
     checkIntroduce(introduce);
 
   },[introduce]);
-  const checkIntroduce = (introduce: string) =>{
+  const checkIntroduce = async (introduce: string) =>{
     if(!introdeuceMounted.current){
       introdeuceMounted.current = true;
       return;
     }
+    console.log("한줄 소개 : ", introduce);
+    
     // 한줄 소개 유효성 체크
     if(!introduce || introduce.length > introduceLimitSize || introduce.length <= 1){
       setcheckintroduceMsg(CheckMessageStatus.INTRODUCE_LIMIT_FIFTEEN);
@@ -100,7 +102,8 @@ export default function SignUpPage(){
     setNickname(nickname);
   }
   const introduceChange = (e : React.ChangeEvent<HTMLInputElement>) =>{
-    setIntroduce(e.target.value);
+    const introduce = e.target.value;
+    setIntroduce(introduce);
   }
   const singupNextHandler = () =>{
     // 리덕스 저장
@@ -129,7 +132,7 @@ export default function SignUpPage(){
           {/* 닉네임 입력 */}
           <div className="my-20">
             <p className="font-bold mb-6">닉네임</p>
-            <CommonInputBox type="text" placeholder="닉네임을 입력하세요." name="" value={nickname} onChange={nicknameChange} />
+            <CommonInputBox type="text" placeholder="한글 닉네임을 입력하세요." name="" value={nickname} onChange={nicknameChange} />
             <p className="text-right text-xs text-dubgray">{nickname.length}/{nicknameLimitSize}</p>
             <CheckMessage status={checknicknameMsg}/>
           </div>
