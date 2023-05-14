@@ -71,11 +71,11 @@ export default function SignUpPage(){
     }
     setchecknicknameMsg(CheckMessageStatus.NICKNAME_ISVALID);
   }
-  useEffect(()=>{
-    // 첫 렌더링시 호출 막기
-    checkIntroduce(introduce);
+  // useEffect(()=>{
+  //   // 첫 렌더링시 호출 막기
+  //   checkIntroduce(introduce);
 
-  },[introduce]);
+  // },[introduce]);
   const checkIntroduce = async (introduce: string) =>{
     if(!introdeuceMounted.current){
       introdeuceMounted.current = true;
