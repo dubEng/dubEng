@@ -12,7 +12,10 @@ import { clearScriptsInfo } from "@/stores/manager/scriptsPostSlice";
 
 import { ScriptsListItem } from "../../stores/manager/scriptsPostSlice";
 
+import YouTube, { YouTubePlayer, YouTubeProps } from "react-youtube";
+
 import Modal from "react-modal";
+import PlayBarRecording from "@/features/dubbing/atoms/PlayBarRecording";
 
 const customStyles = {
   content: {
@@ -62,6 +65,42 @@ export default function ManagerPage() {
   //   });
   // }
 
+  // 대사마다 플레이어 미리듣기
+  const handleListenScript = (start: number | string, end: number | string) => {
+    let startSecond = start;
+    let endSecond = 0;
+
+    if (typeof start === "string") {
+      startSecond = parseFloat(start);
+    }
+    if (typeof end === "string") {
+      endSecond = parseInt(end);
+    } else if (typeof end === "number") {
+      endSecond = Math.ceil(end);
+    }
+
+    // let startSecond = start;
+    // let endSecond = end;
+
+    // if (typeof start === "string") {
+    //   startSecond = parseFloat(start);
+    // }
+    // if (typeof end === "string") {
+    //   endSecond = parseFloat(end);
+    // }
+
+    // youtubePlayer.pauseVideo();
+    youtubePlayer.seekTo(startSecond);
+    youtubePlayer.playVideo();
+
+    setTimeout(() => {
+      console.log("setTimeOut으로 왔다");
+      youtubePlayer.pauseVideo();
+    }, endSecond * 1000);
+    console.log("여기까지 온아");
+    // if (youtubePlayer.currentTime === startSecond + endSecond)
+  };
+
   const [inputs, setInputs] = useState({
     url: "",
     start: 0,
@@ -76,6 +115,8 @@ export default function ManagerPage() {
   const dispatch = useDispatch();
 
   const [modalIsOpen, setIsOpen] = useState(false);
+
+  // const [playTime, setPlayTime] = useState([0, 0]);
 
   function openModal() {
     setIsOpen(true);
@@ -179,7 +220,7 @@ export default function ManagerPage() {
         "&controls=0&rel=0&loop=1";
 
       console.log(newUrl);
-      return newUrl;
+      return splitUrl[1];
     }
   };
 
@@ -266,6 +307,54 @@ export default function ManagerPage() {
     }
   }
 
+  // Youtube 플레이어 관련 변수 및 함수 설정
+
+  const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
+
+  const [nowPlaying, setNowPlaying] = useState<boolean>(false);
+
+  const opts: YouTubeProps["opts"] = {
+    // height: "174",
+    // width: "326",
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      // start: 0,
+      // end: 27,
+      rel: 0, //관련 동영상 표시하지 않음 (근데 별로 쓸모 없는듯..)
+      modestbranding: 0, // 컨트롤 바에 youtube 로고를 표시하지 않음
+      controls: 0,
+    },
+  };
+
+  // 유튜브 플레이어 style 지정 (근데 적용이 안 됨)
+  const style: YouTubeProps["style"] = {
+    borderRadius: "20px",
+  };
+
+  // 플레이 함수들
+  // player 준비시 실행
+  const onPlayerReady: YouTubeProps["onReady"] = (event) => {
+    const player = event.target;
+    setYoutubePlayer(player);
+  };
+
+  const onPlay: YouTubeProps["onPlay"] = (event) => {
+    console.log("onPlay");
+    console.log("event", event);
+  };
+
+  const onStateChange: YouTubeProps["onStateChange"] = (event) => {
+    console.log("onStateChange");
+
+    if (event.data === 1) {
+      // 재생 중일 때
+      setNowPlaying(true);
+    } else if (event.data === 2 || event.data === 0) {
+      //영상이 종료되거나, 일시 정지 시
+      setNowPlaying(false);
+    }
+  };
+
   return (
     <div className="w-screen h-full absolute top-57 left-16">
       <p className="text-24 font-bold mt-32 mb-16">더빙 콘텐츠 불러오기</p>
@@ -335,14 +424,6 @@ export default function ManagerPage() {
       <p className="text-24 font-bold mt-32 mb-16">더빙 콘텐츠 정보</p>
       {videoInfo && (
         <div>
-          <div>
-            <p>콘텐츠 미리보기</p>
-            <iframe
-              src={getIframeUrl()}
-              className="w-full aspect-video"
-            ></iframe>
-          </div>
-
           <div className="flex mt-16 grid grid-cols-2">
             <div>
               <p>썸네일</p>
@@ -378,6 +459,30 @@ export default function ManagerPage() {
             </div>
           </div>
 
+          <div>
+            <p>콘텐츠 미리보기</p>
+            <div>
+              <YouTube
+                videoId={getIframeUrl()}
+                opts={opts}
+                style={style}
+                onReady={onPlayerReady}
+                onEnd={(e) => {
+                  console.log("onEnd 발생");
+
+                  youtubePlayer.pauseVideo();
+                  youtubePlayer.seekTo(opts.start);
+                }}
+                onPlay={onPlay}
+                onStateChange={onStateChange}
+              />
+            </div>
+            {/* <iframe
+              src={getIframeUrl()}
+              className="w-full aspect-video"
+            ></iframe> */}
+          </div>
+
           <p className="text-24 font-bold mt-32 mb-16">스크립트</p>
           {scripts.map((script, index) => (
             <ScriptListItem
@@ -388,6 +493,7 @@ export default function ManagerPage() {
               translation={script.translation}
               key={index}
               // handleAddScript={handleAddScript}
+              handleListenScript={handleListenScript}
             />
           ))}
         </div>
