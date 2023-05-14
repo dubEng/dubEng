@@ -276,29 +276,24 @@ def save():
     cursorclass = pymysql.cursors.Cursor
     connection = pymysql.connect(host=DB_HOST, user=DB_USER,passwd=DB_PASSWORD, database=DB_DATABASE_NAME, charset=DB_CHARSET, cursorclass=cursorclass)
     cursor = connection.cursor()
+    #record 테이블에 해당 콘텐츠를 녹음한 기록이 있는지 검사
+    sql = "SELECT id from record where video_id = %s and user_id = %s "
+    cursor.execute(sql, (videoId, userId))
+    result = cursor.fetchone()  
 
-    try:
-        with connection.cursor() as cursor:
-            #record 테이블에 해당 콘텐츠를 녹음한 기록이 있는지 검사
-            sql = "SELECT id from record where video_id = %s and user_id = %s "
-            cursor.execute(sql, (videoId, userId))
-            result = cursor.fetchone()  
+    if result:
+        # 이미 녹음한 기록이 있을 경우 
+        update_sql = "UPDATE record SET record_path = %s, updated_date = %s WHERE id = %s "
+        cursor.execute(update_sql, (url, date, result['id']))
+    else:
+        #record 테이블에 녹음 데이터 넣기
+        sql = "INSERT INTO record (video_id, user_id, is_public, is_active, play_count, record_path, like_count, vote_count, created_date, updated_date) VALUES (%s, %s, 1, 1, 0, %s, 0, 0, %s, %s)"
+        values = (videoId, userId, url, date, date)
+        cursor.execute(sql, values)
 
-            if result:
-                # 이미 녹음한 기록이 있을 경우 
-                update_sql = "UPDATE record SET record_path = %s, updated_date = %s WHERE id = %s "
-                cursor.execute(update_sql, (url, date, result['id']))
-            else:
-                #record 테이블에 녹음 데이터 넣기
-                sql = "INSERT INTO record (video_id, user_id, is_public, is_active, play_count, record_path, like_count, vote_count, created_date, updated_date) VALUES (%s, %s, 1, 1, 0, %s, 0, 0, %s, %s)"
-                values = (videoId, userId, url, date, date)
-                cursor.execute(sql, values)
+    # 변경사항을 커밋
+    connection.commit()
 
-        # 변경사항을 커밋
-        connection.commit()
-    finally:
-        # 연결 닫기
-        connection.close()
 
     #video 정보 가져오기
     sql = "select start_time, end_time from video where id = %s "
