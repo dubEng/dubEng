@@ -67,44 +67,32 @@ export default function DubCompleteModal({
   // const [selectedOption, setSelectedOption] = useState<string>("public");
 
   const [progressBar, setProgressBar] = useState<string>("0%");
+  const [nowPlaying, setNowPlaying] = useState<boolean>(false);
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const mutation = useRecordSave();
 
-  //내 녹음 다시 듣기 ProgressBar 업데이트를 위한 시간 로직
-  // useEffect(() => {
-  //   if (audioRef.current) {
-  //     const audio = audioRef.current;
-
-  //     const handleTimeUpdate = () => {
-  //       setCurrentTime(audio.currentTime);
-  //     };
-  //     audio.addEventListener("timeupdate", handleTimeUpdate);
-  //     return () => audio.removeEventListener("timeupdate", handleTimeUpdate);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   if (audioRef.current) {
-  //     const audio = audioRef.current;
-
-  //     const handleLoadedMetadata = () => {
-  //       console.log("duration", audio.duration);
-  //       setDuration(audio.duration);
-  //     };
-  //     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
-  //     return () =>
-  //       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-  //   }
-  // }, []);
-
-  //내 녹음 다시 듣기 ProgressBar 업데이트
-  useEffect(() => {
-    const progress = Math.floor((currentTime * 100) / (duration / 1000)) + "%";
-    setProgressBar(progress);
-  }, [currentTime]);
+    // 1초마다 영상 실행 시간 가져오기
+    useEffect(() => {
+      const watchTime = setInterval(() => {
+        // 영상이 재생중일 때만 실행
+        if (nowPlaying) {
+          const time = Math.floor(Number(youtubePlayer?.getCurrentTime()));
+  
+          const progress =
+            ((time - startTime) / (endTime - startTime)) * 100 +
+            "%";
+  
+            setProgressBar(progress);
+        }
+      }, 1000);
+  
+      return () => {
+        clearInterval(watchTime);
+      };
+    });
 
   // const handleOptionChange = (value: string) => {
   //   setSelectedOption(value);
@@ -123,6 +111,16 @@ export default function DubCompleteModal({
     setYoutubePlayer(player);
     player.pauseVideo();
     player.mute();
+  };
+
+  const onStateChange: YouTubeProps["onStateChange"] = (event) => {
+    if (event.data === 1) {
+      // 재생 중일 때
+      setNowPlaying(true);
+    } else if (event.data === 2 || event.data === 0) {
+      //영상이 종료되거나, 일시 정지 시
+      setNowPlaying(false);
+    }
   };
 
   function handlePlayButton() {
@@ -192,9 +190,10 @@ export default function DubCompleteModal({
                   audioRef.current.currentTime = 0;
                 }
               }}
+              onStateChange={onStateChange}
             />
             <div className="w-261 h-30 border-1 border-dubgraymedium my-8 rounded-lg flex flex-row justify-between items-center px-8 mb-16">
-              <PlayBarPreview width={"50%"} />
+              <PlayBarPreview width={progressBar} />
               <PlayButtonSmall
                 isPlaying={isPlaying}
                 playVideo={handlePlayButton}
