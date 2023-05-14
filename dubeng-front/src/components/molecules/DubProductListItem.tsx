@@ -50,7 +50,9 @@ export default function DubProductListItem({
           className="rounded-4"
         ></Image>
         <div className="flex flex-col ml-16 justify-between">
-          <p className="text-14 font-semibold text-dubblack">{title}</p>
+          <p className="leading-18 break-words text-14 font-semibold text-dubblack line-clamp-2 ">
+            {title}
+          </p>
           {runtimeList[0] === 0 ? (
             <p className="text-dubgray text-12">
               영상 길이 : {runtimeList[1]}초
