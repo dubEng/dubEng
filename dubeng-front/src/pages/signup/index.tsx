@@ -73,6 +73,10 @@ export default function SignUpPage(){
   }
   useEffect(()=>{
     // 첫 렌더링시 호출 막기
+    checkIntroduce(introduce);
+
+  },[introduce]);
+  const checkIntroduce = (introduce: string) =>{
     if(!introdeuceMounted.current){
       introdeuceMounted.current = true;
       return;
@@ -84,8 +88,7 @@ export default function SignUpPage(){
       return;
     }
     setcheckintroduceMsg(CheckMessageStatus.INTRODUCE_ISVALID);
-
-  },[introduce]);
+  }
 
   useEffect(()=>{
     if(checknicknameMsg === CheckMessageStatus.NICKNAME_ISVALID && checkintroduceMsg === CheckMessageStatus.INTRODUCE_ISVALID){
