@@ -4,10 +4,12 @@ import * as queryKeys from "@/constants/queryKeys";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 
-const fetcher = (langType: string) => {
+const fetcher = (langType: string, userId: string, accessToken: string) => {
+  axios.defaults.headers.common["Authorization"] = accessToken;
+
   return axios
     .post(process.env.NEXT_PUBLIC_BASE_URL + `/recommend/contents`, {
-      userId: "2780794561",
+      userId: userId,
     })
     .then((res) => {
       console.log(res);
@@ -16,8 +18,11 @@ const fetcher = (langType: string) => {
 };
 
 const useRecommendDubVideoListQuery = (langType: string) => {
-  return useQuery([queryKeys.RECOMMEND_DUB_VIDEO_LIST, langType], () =>
-    fetcher(langType)
+  const { userId, accessToken } = useSelector((state: RootState) => state.user);
+
+  return useQuery(
+    [queryKeys.RECOMMEND_DUB_VIDEO_LIST, langType, userId, accessToken],
+    () => fetcher(langType, userId, accessToken)
   );
 };
 
