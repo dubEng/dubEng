@@ -4,7 +4,6 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 export interface UserState {
   userId: string;
   accessToken: string;
-  refreshToken: string;
   nickname: string;
   imageUrl: string;
 }
@@ -12,7 +11,6 @@ export interface UserState {
 const initialState: UserState = {
   userId: "",
   accessToken: "",
-  refreshToken: "",
   nickname: "익명의 게스트",
   imageUrl: "",
 };
@@ -24,16 +22,18 @@ export const userSlice = createSlice({
     saveUserInfo: (state, action) => {
       state.userId = action.payload.userId;
       state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
       state.nickname = action.payload.nickname;
       state.imageUrl = action.payload.imageUrl;
     },
     saveAccessToken: (state, action) => {
       state.accessToken = action.payload.accessToken;
     },
+    userLogout: (state, action) => {
+      state = initialState;
+    }
   },
 });
 
-export const { saveUserInfo, saveAccessToken } = userSlice.actions;
+export const { saveUserInfo, saveAccessToken, userLogout } = userSlice.actions;
 
 export default userSlice.reducer;
