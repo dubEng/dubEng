@@ -28,12 +28,12 @@ export default function DubProductList() {
     >
       {popularity.data &&
         popularity.data.map((item: any, index: number) => (
-          <SwiperSlide key={item.id}>
+          <SwiperSlide key={item.recordId}>
             <Link href={`/community/shorts/product/${item.recordId}`}>
               <DubVideoThumbnail
                 title={item.title}
                 thumbnail={item.thumbnail ?? ""}
-                id={item.id}
+                id={item.recordId}
               />
             </Link>
           </SwiperSlide>

@@ -37,7 +37,7 @@ export default function UserRankingList() {
             key={item.id}
             imageUrl={item.profileImage ?? DefaultImage}
             introduce={item.description}
-            nickname={item.nickname}
+            nickname={item.nickName}
             ranking={index}
             dubingCount={item.recordCount}
             recordingTime={item.totalRecTime}
