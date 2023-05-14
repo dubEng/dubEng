@@ -333,8 +333,6 @@ export default function DubbingPage() {
           onStateChange={onStateChange}
         />
       )}
-      {dubbingCheckList &&
-        dubbingCheckList.map((value, index) => <li key={index}>{value}</li>)}
       <PlayBar width={progressBarWidth} />
       <div className="w-390 my-8 py-8 bg-dubgraylight flex justify-center items-center">
         <Swiper
