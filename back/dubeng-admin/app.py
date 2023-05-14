@@ -259,9 +259,9 @@ def sendInfo(start, end):
 
         if lang == 'english':
             # script 가져오기
-            sc = YouTubeTranscriptApi.get_transcript(video_id, languages=[data['lang']])
+            sc = YouTubeTranscriptApi.get_transcript(video_id, languages=[data['lang'], 'en', 'en-US'])
             transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-            transcript = transcript_list.find_transcript([data['lang']])
+            transcript = transcript_list.find_transcript([data['lang'], 'en', 'en-US'])
             translated_transcript = transcript.translate('ko').fetch()  # 한국어 script
 
             for s, t in zip(sc, translated_transcript):
