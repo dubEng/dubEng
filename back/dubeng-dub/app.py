@@ -281,7 +281,7 @@ def save():
         with connection.cursor() as cursor:
             #record 테이블에 해당 콘텐츠를 녹음한 기록이 있는지 검사
             sql = "SELECT id from record where video_id = %s and user_id = %s "
-            cursor.execute(sql)
+            cursor.execute(sql, (videoId, userId))
             result = cursor.fetchone()  
 
             if result:
