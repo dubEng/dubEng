@@ -25,12 +25,9 @@ export default function kitchen(){
     //Redux
     const { nickname, accessToken, interest, introduce } = useSelector((state: RootState) => state.signupInfo);
 
-
     //three.js
-    const rayTracing = true;
     const kitchenInputHandler = (e : React.ChangeEvent<HTMLInputElement>) =>{
         setKitchenName(e.target.value);
-        console.log(kitchenName.length);
         
         if(!kitchenName || kitchenName.length < 2){
             setNextBtnStatus(false);
@@ -40,13 +37,6 @@ export default function kitchen(){
     }
 
     const singupNextHandler = async () =>{
-        
-        //회원가입 고고싱
-        console.log(`nickname : ${nickname}`);
-        console.log(`accessToken : ${accessToken}`);
-        console.log(`interest : ${interest}`);
-        console.log(`introduce : ${introduce}`);
-        
         const signupInfo:SignupInfo = {
             nickname : nickname,
             accessToken : accessToken,
@@ -58,7 +48,6 @@ export default function kitchen(){
         // POST 요청
         try{
             const result = await mutation.mutateAsync(signupInfo);
-            console.log(result);
             if(result === 'success'){
                 route.push('/login/success');
             }
@@ -76,12 +65,12 @@ export default function kitchen(){
                         
                         {/* three.js */}
                         <div className="h-350 rounded-10">
-                            <Canvas camera={{position: [1.625,2.4665,2.516] }} id="Mycanvas" style={{borderRadius : 10}}>
+                            <Canvas camera={{position: [1.625,2.4665,2.516] }} id="Mycanvas" style={{borderRadius : 10, border: '1px solid #F5F6F8'}}>
                                 <Suspense fallback={null}>
                                     <Plane args={[100, 100]} rotation={[-Math.PI / 2, 0, 0]} position={[0.1,0.1,0.1]}>
                                     <meshStandardMaterial color="#FFB679" />
                                     </Plane>
-                                    <Model url="https://dubingdubing.s3.ap-northeast-2.amazonaws.com/b2.glb" height={300} width={350}/>
+                                    <Model url="/assets/b2.glb" height={300} width={350}/>
                                 </Suspense>
                                 <ContactShadows position={[0, -4.5, 0]} scale={20} blur={2} far={4.5} />
                                 <OrbitControls makeDefault dampingFactor={0.9} minDistance={5} maxDistance={20}
@@ -93,7 +82,7 @@ export default function kitchen(){
                             </Canvas>
                         </div>
                         <div className="mt-10">
-                            <CommonInputBox type="text" placeholder="나의 부엌 이름을 지어주세요!" name="" value={kitchenName} onChange={kitchenInputHandler} />
+                            <CommonInputBox type="text" placeholder="귀여운 이름을 지어주세요." name="" value={kitchenName} onChange={kitchenInputHandler} />
                         </div>
                     </div>
                 </div>
