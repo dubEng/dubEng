@@ -15,27 +15,27 @@ interface Iprops {
 }
 
 export default function RecordingButton({ page }: Iprops) {
-  const languageIndex = useSelector((state: RootState) => {
-    return state.languageTab.langType;
-  });
+  // const languageIndex = useSelector((state: RootState) => {
+  //   return state.languageTab.langType;
+  // });
 
   const [isOpen, setOpen] = useState(false);
 
-  const { data, isLoading, isError, refetch } =
-    useRecommendDubVideoListQuery(languageIndex);
+  // const { data, isLoading, isError, refetch } =
+  //   useRecommendDubVideoListQuery(languageIndex);
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center my-16">
-        {/* <ScaleLoader color="#FF6D60" /> */}
-        {"로딩 중입니다"}
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="flex justify-center items-center my-16">
+  //       {/* <ScaleLoader color="#FF6D60" /> */}
+  //       {"로딩 중입니다"}
+  //     </div>
+  //   );
+  // }
 
-  if (isError) {
-    return <ErrorComponent onClick={() => refetch} retry={true} />;
-  }
+  // if (isError) {
+  //   return <ErrorComponent onClick={() => refetch} retry={true} />;
+  // }
 
   if (page === "/dubbing") {
     return <Image src={dubbingRecordingIcon} alt="dubbingRecordingIcon" />;
