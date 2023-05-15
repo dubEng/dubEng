@@ -6,11 +6,10 @@ import java.util.List;
 
 @Data
 public class UserJoinReq {
-    private String accessToken;
-    private String refreshToken;
     private String nickname;
     private String kitchenName;
     private String introduce;
     private List<Long> categories;
     private Boolean gender;
+    private String profileImgUrl;
 }

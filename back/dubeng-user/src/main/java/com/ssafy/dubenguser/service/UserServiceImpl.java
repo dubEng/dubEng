@@ -49,6 +49,13 @@ public class UserServiceImpl implements UserService {
                 .description(request.getIntroduce())
                 .landName(request.getKitchenName())
                 .gender(request.getGender())
+                .profileImage(request.getProfileImgUrl())
+                // default 설정
+                .isPublic(true)
+                .isActive(true)
+                .isVoted(true)
+                .totalRecTime(0L)
+                .recordCount(0L)
                 .build();
 
         User savedUser = userRepository.save(newUser);
