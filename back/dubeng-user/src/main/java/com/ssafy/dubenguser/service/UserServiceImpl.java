@@ -108,11 +108,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public UserProfileRes findProfile(String accessToken) {
-        //Token Parsing
-        String userId = authService.parseToken(accessToken);
-        if(userId == null) throw new UnAuthorizedException("유저 아이디가 없습니다!");
-
+    public UserProfileRes findProfile(String userId) {
         Optional<User> findUser = userRepository.findById(userId);
 
         if(!findUser.isPresent()) 

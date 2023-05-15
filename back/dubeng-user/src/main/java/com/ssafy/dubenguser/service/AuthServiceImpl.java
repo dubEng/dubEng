@@ -6,7 +6,9 @@ import com.ssafy.dubenguser.dto.Token;
 import com.ssafy.dubenguser.dto.UserLoginReq;
 import com.ssafy.dubenguser.dto.UserLoginRes;
 import com.ssafy.dubenguser.entity.User;
+import com.ssafy.dubenguser.entity.UserCalendar;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
+import com.ssafy.dubenguser.repository.UserCalenderRepository;
 import com.ssafy.dubenguser.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,8 @@ public class AuthServiceImpl implements AuthService{
     private String REDIRECT_URI;
 
     private final UserRepository userRepository;
-    
+    private final UserCalenderRepository userCalenderRepository;
+
     public HashMap<String, Object> findAccessToken(String code){
 
         // 인가 코드를 통해 access-token 요청
