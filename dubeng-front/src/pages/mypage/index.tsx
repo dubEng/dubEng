@@ -119,10 +119,16 @@ export default function MyPage() {
         <p className="flex justify-start text-19 font-bold mt-24 mb-16">
           저장한 콘텐츠 목록
         </p>
-        <button className="mt-24 mb-16 flex justify-center items-center">
-          <p className="text-dubblack text-14 ">모두보기</p>
-          <MdArrowForwardIos width={16} height={16} className="text-dubgray" />
-        </button>
+        <Link href={`/mypage/save-contents-list`}>
+          <button className="mt-24 mb-16 flex justify-center items-center">
+            <p className="text-dubblack text-14 ">모두보기</p>
+            <MdArrowForwardIos
+              width={16}
+              height={16}
+              className="text-dubgray"
+            />
+          </button>
+        </Link>
       </div>
       <ScrapDubVideoList />
       <div className="flex items-center justify-between">
@@ -133,6 +139,7 @@ export default function MyPage() {
           <MdArrowForwardIos width={16} height={16} className="text-dubgray" />
         </button>
       </div>
+      <div className="h-80"></div>
     </div>
   );
 }

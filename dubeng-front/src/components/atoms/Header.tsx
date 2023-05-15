@@ -107,6 +107,36 @@ export default function Header() {
         </div>
       </div>
     );
+  } else if (pathName === "/mypage/like-dubbing-list") {
+    return (
+      <div className="fixed min-w-384 top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-start px-16 items-center bg-white">
+        <div className="flex justify-start items-center">
+          <button
+            onClick={() => {
+              route.back();
+            }}
+          >
+            <MdOutlineArrowBackIos className="mr-8 mb-2" />
+          </button>
+          좋아요한 더빙 목록
+        </div>
+      </div>
+    );
+  } else if (pathName === "/mypage/save-contents-list") {
+    return (
+      <div className="fixed min-w-384 top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-start px-16 items-center bg-white">
+        <div className="flex justify-start items-center">
+          <button
+            onClick={() => {
+              route.back();
+            }}
+          >
+            <MdOutlineArrowBackIos className="mr-8 mb-2" />
+          </button>
+          저장한 콘텐츠 목록
+        </div>
+      </div>
+    );
   } else if (pathName === "/manager") {
     return <></>;
   } else if (pathName.includes("shorts")) {
