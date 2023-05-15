@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/stores/store";
 import Calendar from 'react-calendar';
 import Moment from 'moment';
 import "moment/locale/ko"; // Locale Setting
@@ -25,10 +23,11 @@ export default function MyCalendar(){
     setMark(data);
   },[data]);
 
-  const datePickHandler = (value: any, event: React.MouseEvent<HTMLButtonElement>)=>{
+  //Calender Date Click Event
+  const datePickHandler = (value: any)=>{
     setValue(value);
   }
-  // 캘린더 년,월 선택 이벤트
+  // 캘린더 상단 버튼 년,월 선택 이벤트
   const navClickHandler = (date : any) => {
     const month = parseInt(Moment(date).format("MM"));
     const year = parseInt(Moment(date).format("YYYY"));

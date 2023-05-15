@@ -12,8 +12,6 @@ const fetcher = async(accessToken: string, month: number) => {
       process.env.NEXT_PUBLIC_BASE_URL +
         `/user/mypage/attendance`, {params:{month: month}}
     );
-    console.log('attendance :', data);
-    
     return data;
 };
 
