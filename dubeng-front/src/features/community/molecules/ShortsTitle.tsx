@@ -55,8 +55,8 @@ export default function ShortsTitle({
   const { mutate, isSuccess, isError } = useLikePost();
 
   function handleCommentButton() {
-    setIsCommentSliderOpen(true);
     console.log("댓글 버튼 누름");
+    setIsCommentSliderOpen(true);
   }
 
   const handleLikeButton = () => {
@@ -72,17 +72,11 @@ export default function ShortsTitle({
           <p className="text-16 text-dubgraylight">{title}</p>
           <div className="flex text-14 text-dubgraylight space-x-8">
             {isLiked ? (
-              <button
-                className="flex space-x-4"
-                onClick={() => handleLikeButton()}
-              >
+              <button className="flex space-x-4" onClick={handleLikeButton}>
                 <MdFavorite size={20} className="text-dubcoral" />
               </button>
             ) : (
-              <button
-                className="flex space-x-4"
-                onClick={() => handleLikeButton()}
-              >
+              <button className="flex space-x-4" onClick={handleLikeButton}>
                 <MdFavoriteBorder size={20} />
               </button>
             )}

@@ -16,67 +16,67 @@ export default function CommentSlider({
   const recordId = Number(router.query.id);
   console.log("recordId 확인하기!~!~", recordId, typeof recordId);
 
-  const { hello, isLoading, isError, refetch } = useCommentListQuery(
+  const { data, isLoading, isError, refetch } = useCommentListQuery(
     recordId,
     "10"
   );
 
-  const data = {
-    content: [
-      {
-        content:
-          "안녕하세요안녕하세요안녕하세세요안녕하세요안녕하세요안녕하세요",
-        nickName: "언도더씨",
-        updatedDate: "2023-05-15T16:53:47.323Z",
-        userId: "12",
-      },
-      {
-        content:
-          "안녕하세요안녕하세요안녕하세세요안녕하세요안녕하세요안녕하세요",
-        nickName: "언도더씨",
-        updatedDate: "2023-05-15T16:53:47.323Z",
-        userId: "12",
-      },
-      {
-        content:
-          "안녕하세요안녕하세요안녕하세세요안녕하세요안녕하세요안녕하세요",
-        nickName: "언도더씨",
-        updatedDate: "2023-05-15T16:53:47.323Z",
-        userId: "12",
-      },
-      {
-        content:
-          "안녕하세요안녕하세요안녕하세세요안녕하세요안녕하세요안녕하세요",
-        nickName: "언도더씨",
-        updatedDate: "2023-05-15T16:53:47.323Z",
-        userId: "12",
-      },
-      {
-        content:
-          "안녕하세요안녕하세요안녕하세세요안녕하세요안녕하세요안녕하세요",
-        nickName: "언도더씨",
-        updatedDate: "2023-05-15T16:53:47.323Z",
-        userId: "12",
-      },
-    ],
-    empty: true,
-    first: true,
-    last: true,
-    number: 0,
-    numberOfElements: 0,
-    pageable: {
-      page: "string",
-      size: "string",
-    },
-    size: 0,
-    sort: {
-      empty: true,
-      sorted: true,
-      unsorted: true,
-    },
-    totalElements: 0,
-    totalPages: 0,
-  };
+  // const data = {
+  //   content: [
+  //     {
+  //       content:
+  //         "안녕하세요안녕하세요안녕하세세요안녕하세요안녕하세요안녕하세요",
+  //       nickName: "언도더씨",
+  //       updatedDate: "2023-05-15T16:53:47.323Z",
+  //       userId: "12",
+  //     },
+  //     {
+  //       content:
+  //         "안녕하세요안녕하세요안녕하세세요안녕하세요안녕하세요안녕하세요",
+  //       nickName: "언도더씨",
+  //       updatedDate: "2023-05-15T16:53:47.323Z",
+  //       userId: "12",
+  //     },
+  //     {
+  //       content:
+  //         "안녕하세요안녕하세요안녕하세세요안녕하세요안녕하세요안녕하세요",
+  //       nickName: "언도더씨",
+  //       updatedDate: "2023-05-15T16:53:47.323Z",
+  //       userId: "12",
+  //     },
+  //     {
+  //       content:
+  //         "안녕하세요안녕하세요안녕하세세요안녕하세요안녕하세요안녕하세요",
+  //       nickName: "언도더씨",
+  //       updatedDate: "2023-05-15T16:53:47.323Z",
+  //       userId: "12",
+  //     },
+  //     {
+  //       content:
+  //         "안녕하세요안녕하세요안녕하세세요안녕하세요안녕하세요안녕하세요",
+  //       nickName: "언도더씨",
+  //       updatedDate: "2023-05-15T16:53:47.323Z",
+  //       userId: "12",
+  //     },
+  //   ],
+  //   empty: true,
+  //   first: true,
+  //   last: true,
+  //   number: 0,
+  //   numberOfElements: 0,
+  //   pageable: {
+  //     page: "string",
+  //     size: "string",
+  //   },
+  //   size: 0,
+  //   sort: {
+  //     empty: true,
+  //     sorted: true,
+  //     unsorted: true,
+  //   },
+  //   totalElements: 0,
+  //   totalPages: 0,
+  // };
 
   return (
     <>
