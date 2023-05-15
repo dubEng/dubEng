@@ -2,7 +2,6 @@ FROM python:3.8-slim
 
 COPY requirements.txt requirements.txt
 
-RUN chmod +x boot.sh
 
 RUN pip install -r requirements.txt
 
@@ -16,5 +15,5 @@ COPY . /app
 
 WORKDIR /app
 
-ENTRYPOINT ["./boot.sh"]
+CMD ["gunicorn", "app:app", "-b", "0.0.0.0:5000", "--timeout", "300"]
 
