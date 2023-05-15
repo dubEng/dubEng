@@ -103,10 +103,16 @@ export default function MyPage() {
         <p className="flex justify-start text-19 font-bold mt-24 mb-16">
           좋아요한 더빙 목록
         </p>
-        <button className="mt-24 mb-16 flex justify-center items-center">
-          <p className="text-dubblack text-14 ">모두보기</p>
-          <MdArrowForwardIos width={16} height={16} className="text-dubgray" />
-        </button>
+        <Link href={`/mypage/like-dubbing-list`}>
+          <button className="mt-24 mb-16 flex justify-center items-center">
+            <p className="text-dubblack text-14 ">모두보기</p>
+            <MdArrowForwardIos
+              width={16}
+              height={16}
+              className="text-dubgray"
+            />
+          </button>
+        </Link>
       </div>
       <LikeDubProductList />
       <div className="flex items-center justify-between">

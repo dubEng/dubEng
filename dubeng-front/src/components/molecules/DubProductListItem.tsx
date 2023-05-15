@@ -15,7 +15,7 @@ interface Iprops {
   profileImage?: string;
   nickname?: string;
   playCount: number;
-  createdDate: string;
+  createdDate?: string;
 }
 
 export default function DubProductListItem({
@@ -86,7 +86,9 @@ export default function DubProductListItem({
           <p className="flex text-dubgray text-12 space-x-4">
             <p>조회수 {playCount}회</p>
             <p className="text-8">▪</p>
-            <TimeAgo datetime={createdDate} locale="ko" />
+            {createdDate ? (
+              <TimeAgo datetime={createdDate} locale="ko" />
+            ) : null}
           </p>
         </div>
       </div>
