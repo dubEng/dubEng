@@ -275,16 +275,8 @@ def sendInfo(start, end):
                 result = createEmptyList()
 
         else:
-            try:
-                sc = YouTubeTranscriptApi.get_transcript(video_id, languages=['ko', 'en'])
-                for s in sc:
-                    if float(s['start']) >= float(start) and float(s['start']) <= float(end):
-                        result.append(s)
-                    elif float(s['start']) >= float(end):
-                        break
-                data['lang']='ko'
-            except:
-                result = createEmptyList()
+            result = createEmptyList()
+
 
         response = {
             "videoInfo": data,
