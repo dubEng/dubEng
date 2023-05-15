@@ -3,6 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer, YouTubeProps } from "react-youtube";
 import useCommunityDetailQuery from "@/apis/community/queries/useCommunityDetailQuery";
 
+import Image from "next/image";
+import ShortsTitle from "@/features/community/molecules/ShortsTitle";
+
 export default function ShortsProductPage() {
   const router = useRouter();
 
@@ -120,6 +123,16 @@ export default function ShortsProductPage() {
     <div className="w-full h-screen bg-black flex flex-col items-center justify-center">
       {data && (
         <>
+          <div className="flex mb-8 flex flex-row mt-16 mb-16 items-center w-390 px-16">
+            <Image
+              src={data.profile}
+              alt="profileImage"
+              width={24}
+              height={24}
+              className="rounded-full"
+            />
+            <p className="ml-4 text-dubgraymedium">{data.nickname}</p>
+          </div>
           <YouTube
             videoId={transferYoutube(data.videoPath)}
             opts={{
@@ -153,9 +166,24 @@ export default function ShortsProductPage() {
             style={{ display: "none" }}
             src={data.recordPath}
           />
-          <div className="flex flex-row justify-between mt-16 mb-16 items-center w-390 px-16">
-            <p className="text-16 text-white">{data.title}</p>
+          <div className="mt-16">
+            <ShortsTitle
+              userId={data.userId}
+              title={data.title}
+              playCount={1}
+              createdDate={data.createdDate}
+              recordCommentCount={data.recordCommentCount}
+              recordLikeCount={11}
+              isLike={false}
+              isScrap={false}
+            />
           </div>
+          {/* <div className="flex flex-row justify-between mt-16 mb-16 items-center w-390 px-16">
+            <p className="text-16 text-white">{data.title}</p>
+            <div>
+
+            </div>
+          </div> */}
           <div className="h-250 pt-32 overflow-y-scroll bg-black container mx-auto mb-16 w-391 mt-15">
             {data.scriptList &&
               data.scriptList.map((item: any, index: number) => {
