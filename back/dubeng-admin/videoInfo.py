@@ -40,5 +40,15 @@ def getVideoId(url):
     # print(video_id) # 동영상 ID 출력
     return video_id
 
-
+def createEmptyList():
+    result = list()
+    scripts = {
+        "duration":2.0,
+        "start":0,
+        "text":'',
+        "translation":''
+    }
+    for i in range(10):
+        result.append(scripts)
+    return result
 

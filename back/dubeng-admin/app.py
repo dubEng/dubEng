@@ -2,7 +2,7 @@ import subprocess
 from flask import Flask, request, jsonify
 from youtube_transcript_api import YouTubeTranscriptApi
 from pydub import AudioSegment
-from videoInfo import getVideoId, get_video_info
+from videoInfo import getVideoId, get_video_info, createEmptyList
 from io import BytesIO
 import boto3
 import time
@@ -258,18 +258,34 @@ def sendInfo(start, end):
         result = list()
 
         if lang == 'english':
-            # script 가져오기
-            sc = YouTubeTranscriptApi.get_transcript(video_id, languages=[data['lang'], 'en', 'en-US'])
-            transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-            transcript = transcript_list.find_transcript([data['lang'], 'en', 'en-US'])
-            translated_transcript = transcript.translate('ko').fetch()  # 한국어 script
+            try:
+                # script 가져오기
+                sc = YouTubeTranscriptApi.get_transcript(video_id, languages=[data['lang'], 'en', 'en-US'])
+                transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+                transcript = transcript_list.find_transcript([data['lang'], 'en', 'en-US'])
+                translated_transcript = transcript.translate('ko').fetch()  # 한국어 script
 
-            for s, t in zip(sc, translated_transcript):
-                if float(s['start']) >= float(start) and float(s['start']) <= float(end):
-                    s['translation'] = t['text']
-                    result.append(s)
-                elif float(s['start']) >= float(end):
-                    break
+                for s, t in zip(sc, translated_transcript):
+                    if float(s['start']) >= float(start) and float(s['start']) <= float(end):
+                        s['translation'] = t['text']
+                        result.append(s)
+                    elif float(s['start']) >= float(end):
+                        break
+            except:
+                result = createEmptyList()
+
+        else:
+            try:
+                sc = YouTubeTranscriptApi.get_transcript(video_id, languages=['ko', 'en'])
+                for s in sc:
+                    if float(s['start']) >= float(start) and float(s['start']) <= float(end):
+                        result.append(s)
+                    elif float(s['start']) >= float(end):
+                        break
+                data['lang']='ko'
+            except:
+                result = createEmptyList()
+
         response = {
             "videoInfo": data,
             "scripts": result,
