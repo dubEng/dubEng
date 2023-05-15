@@ -25,9 +25,10 @@ public class CommunityDetailRes {
     private Long startTime;
     private Long endTime;
     private String recordPath;
+    private String profileImage;
 
     @QueryProjection
-    public CommunityDetailRes(Long id, String title, String thumbnail, String videoPath, ZonedDateTime createdDate, Long recordCommentCount, Long recordLikeCount,String userId, String nickname, Long recordId,Long startTime, Long endTime, String recordPath) {
+    public CommunityDetailRes(Long id, String title, String thumbnail, String videoPath, ZonedDateTime createdDate, Long recordCommentCount, Long recordLikeCount,String userId, String nickname, Long recordId,Long startTime, Long endTime, String recordPath, String profileImage) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
@@ -41,6 +42,7 @@ public class CommunityDetailRes {
         this.startTime = startTime;
         this.endTime = endTime;
         this.recordPath = recordPath;
+        this.profileImage = profileImage;
     }
 
 }
