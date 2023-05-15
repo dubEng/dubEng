@@ -7,15 +7,15 @@ import koLocale from "timeago.js/lib/lang/ko";
 import profile_01 from "../../../public/images/dump/profile_01.svg";
 
 interface Iprops {
-  id: number;
+  id?: number;
   recordId: number;
   title: string;
   thumbnail: string;
-  runtime: number;
-  profileImage: string;
-  nickname: string;
+  runtime?: number;
+  profileImage?: string;
+  nickname?: string;
   playCount: number;
-  createdDate: string;
+  createdDate?: string;
 }
 
 export default function DubProductListItem({
@@ -37,7 +37,7 @@ export default function DubProductListItem({
     return [minutes, remainingSeconds];
   }
 
-  const runtimeList = secondsToMinutes(runtime);
+  // const runtimeList = secondsToMinutes(runtime);
 
   return (
     <Link href={`/community/shorts/product/${recordId}`}>
@@ -53,33 +53,42 @@ export default function DubProductListItem({
           <p className="leading-18 break-words text-14 font-semibold text-dubblack line-clamp-2 ">
             {title}
           </p>
-          {runtimeList[0] === 0 ? (
-            <p className="text-dubgray text-12">
-              영상 길이 : {runtimeList[1]}초
-            </p>
-          ) : (
-            <p className="text-dubgray text-12">
-              영상 길이 : {runtimeList[0]}분 {runtimeList[1]}초
-            </p>
-          )}
+          {runtime ? (
+            secondsToMinutes(runtime)[0] === 0 ? (
+              <p className="text-dubgray text-12">
+                영상 길이 : {secondsToMinutes(runtime)[1]}초
+              </p>
+            ) : (
+              <p className="text-dubgray text-12">
+                영상 길이 : {secondsToMinutes(runtime)[0]}분{" "}
+                {secondsToMinutes(runtime)[1]}초
+              </p>
+            )
+          ) : null}
 
           <div className="flex items-center">
             <div className="flex justify-end">
-              <Image
-                src={profileImage ?? profile_01}
-                alt={"profile"}
-                width={16}
-                height={16}
-                className="rounded-full"
-              />
+              {profileImage ? (
+                <Image
+                  src={profileImage ?? profile_01}
+                  alt={"profile"}
+                  width={16}
+                  height={16}
+                  className="rounded-full"
+                />
+              ) : null}
             </div>
-            <p className="pl-4 text-dubgray text-12">{nickname}</p>
+            {nickname ? (
+              <p className="pl-4 text-dubgray text-12">{nickname}</p>
+            ) : null}
           </div>
 
           <p className="flex text-dubgray text-12 space-x-4">
             <p>조회수 {playCount}회</p>
             <p className="text-8">▪</p>
-            <TimeAgo datetime={createdDate} locale="ko" />
+            {createdDate ? (
+              <TimeAgo datetime={createdDate} locale="ko" />
+            ) : null}
           </p>
         </div>
       </div>

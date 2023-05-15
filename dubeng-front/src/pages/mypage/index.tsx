@@ -15,6 +15,8 @@ import MyCalendar from "@/features/mypage/atoms/MyCalendar";
 import LikeDubProductList from "@/features/mypage/organism/LikeDubProductList";
 import ScrapDubVideoList from "@/features/mypage/organism/ScrapDubVideoList";
 
+import Link from "next/link";
+
 export default function MyPage() {
   const userId = useSelector((state: RootState) => state.user.userId);
   const nickname = useSelector((state: RootState) => state.user.nickname);
@@ -85,30 +87,48 @@ export default function MyPage() {
         <p className="flex justify-start text-19 font-bold mt-24 mb-16">
           나의 상영관
         </p>
-        <button className="mt-24 mb-16 flex justify-center items-center">
-          <p className="text-dubblack text-14 ">모두보기</p>
-          <MdArrowForwardIos width={16} height={16} className="text-dubgray" />
-        </button>
+        <Link href={`/mypage/my-dubbing-product`}>
+          <button className="mt-24 mb-16 flex justify-center items-center">
+            <p className="text-dubblack text-14 ">모두보기</p>
+            <MdArrowForwardIos
+              width={16}
+              height={16}
+              className="text-dubgray"
+            />
+          </button>
+        </Link>
       </div>
       <MyDubProductList />
       <div className="flex items-center justify-between">
         <p className="flex justify-start text-19 font-bold mt-24 mb-16">
           좋아요한 더빙 목록
         </p>
-        <button className="mt-24 mb-16 flex justify-center items-center">
-          <p className="text-dubblack text-14 ">모두보기</p>
-          <MdArrowForwardIos width={16} height={16} className="text-dubgray" />
-        </button>
+        <Link href={`/mypage/like-dubbing-list`}>
+          <button className="mt-24 mb-16 flex justify-center items-center">
+            <p className="text-dubblack text-14 ">모두보기</p>
+            <MdArrowForwardIos
+              width={16}
+              height={16}
+              className="text-dubgray"
+            />
+          </button>
+        </Link>
       </div>
       <LikeDubProductList />
       <div className="flex items-center justify-between">
         <p className="flex justify-start text-19 font-bold mt-24 mb-16">
           저장한 콘텐츠 목록
         </p>
-        <button className="mt-24 mb-16 flex justify-center items-center">
-          <p className="text-dubblack text-14 ">모두보기</p>
-          <MdArrowForwardIos width={16} height={16} className="text-dubgray" />
-        </button>
+        <Link href={`/mypage/save-contents-list`}>
+          <button className="mt-24 mb-16 flex justify-center items-center">
+            <p className="text-dubblack text-14 ">모두보기</p>
+            <MdArrowForwardIos
+              width={16}
+              height={16}
+              className="text-dubgray"
+            />
+          </button>
+        </Link>
       </div>
       <ScrapDubVideoList />
       <div className="flex items-center justify-between">
@@ -119,6 +139,7 @@ export default function MyPage() {
           <MdArrowForwardIos width={16} height={16} className="text-dubgray" />
         </button>
       </div>
+      <div className="h-80"></div>
     </div>
   );
 }

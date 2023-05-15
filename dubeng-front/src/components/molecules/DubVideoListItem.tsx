@@ -12,7 +12,7 @@ interface Iprops {
   id: number;
   title: string;
   thumbnail: string;
-  runtime: number;
+  runtime?: number;
 }
 
 const MySwal = withReactContent(Swal);
@@ -31,7 +31,7 @@ export default function DubVideoListItem({
 
   const router = useRouter();
 
-  const runtimeList = secondsToMinutes(runtime);
+  // const runtimeList = secondsToMinutes(runtime);
 
   const userId = useSelector((state: RootState) => state.user.userId);
 
@@ -67,15 +67,17 @@ export default function DubVideoListItem({
               {title}
             </p>
           </Link>
-          {runtimeList[0] === 0 ? (
-            <p className="text-dubgray text-12">
-              영상 길이 : {runtimeList[1]}초
-            </p>
-          ) : (
-            <p className="text-dubgray text-12">
-              영상 길이 : {runtimeList[0]}분 {runtimeList[1]}초
-            </p>
-          )}
+          {runtime ? (
+            secondsToMinutes(runtime)[0] === 0 ? (
+              <p className="text-dubgray text-12">
+                영상 길이 : {secondsToMinutes(runtime)[1]}초
+              </p>
+            ) : (
+              <p className="text-dubgray text-12">
+                영상 길이 : {secondsToMinutes(runtime)[0]}분 {secondsToMinutes(runtime)[1]}초
+              </p>
+            )
+          ) : null}
         </div>
         <div>
           <DubButton onClick={handleDubButton} />
