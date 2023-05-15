@@ -12,7 +12,6 @@ interface videoType {
   runtime: number;
 }
 interface Iprops {
-  // videoList: videoType[];
   isOpen: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
