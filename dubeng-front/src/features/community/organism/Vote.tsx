@@ -225,12 +225,12 @@ export default function Vote({ languageIndex, userId }: Iprops) {
         <div className="flex flex-col items-center justify-center p-16 bg-[#FFFAFA] rounded-8 border-1 border-[#FFD8D8]">
           <audio
             ref={audioRef1}
-            controls
+            // controls
             src={voteData.result.user1.recordPath}
           ></audio>
           <audio
             ref={audioRef2}
-            controls
+            // controls
             src={voteData.result.user2.recordPath}
           ></audio>
           {videoId && (
