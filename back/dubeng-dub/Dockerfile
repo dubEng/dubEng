@@ -14,5 +14,5 @@ COPY . /app
 
 WORKDIR /app
 
-CMD ["gunicorn","-w","4","--bind","0.0.0.0:5000","app"]
+ENTRYPOINT ["./boot.sh"]
 
