@@ -8,7 +8,12 @@ const fetcher = async (isLimit: boolean, accessToken: string) => {
   axios.defaults.headers.common["Authorization"] = accessToken;
 
   const { data } = await axios.get(
-    process.env.NEXT_PUBLIC_BASE_URL + `/user/mypage/bookmark/${isLimit}`
+    process.env.NEXT_PUBLIC_BASE_URL + `/user/mypage/bookmark`,
+    {
+      params: {
+        isLimit,
+      },
+    }
   );
 
   console.log('useScrapDubVideoListQuery', data);
