@@ -1,4 +1,4 @@
-import {Suspense, useState} from "react";
+import {Suspense, useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "../../stores/store";
@@ -26,15 +26,21 @@ export default function kitchen(){
     //Redux
     const { nickname, accessToken, interest, introduce, gender, imageUrl} = useSelector((state: RootState) => state.signupInfo);
 
-    //three.js
-    const kitchenInputHandler = (e : React.ChangeEvent<HTMLInputElement>) =>{
-        setKitchenName(e.target.value);
+    useEffect(()=>{
+        checkKitchenName(kitchenName);
+    }, [kitchenName])
+
+    const checkKitchenName = (kitchenName : string)=>{
         
-        if(!kitchenName || kitchenName.length < 2){
+        if(!kitchenName || kitchenName.length < 1){
             setNextBtnStatus(false);
             return;
         }
         setNextBtnStatus(true);
+    }
+    //kitchenName Input Event
+    const kitchenInputHandler = (e : React.ChangeEvent<HTMLInputElement>) =>{
+        setKitchenName(e.target.value);
     }
 
     const singupNextHandler = async () =>{
