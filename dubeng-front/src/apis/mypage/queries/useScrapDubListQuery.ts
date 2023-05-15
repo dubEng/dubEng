@@ -4,23 +4,22 @@ import * as queryKeys from "@/constants/queryKeys";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 
-const fetcher = (isLimit: boolean, userId: string, accessToken: string) => {
+const fetcher = async (isLimit: boolean, accessToken: string) => {
   axios.defaults.headers.common["Authorization"] = accessToken;
 
-  return axios
-    .get(process.env.NEXT_PUBLIC_BASE_URL + `/user/mypage/bookmark/${isLimit}`)
-    .then(({ data }) => {
-      console.log("scarpList", data);
-      return data;
-    });
+  const { data } = await axios.get(
+    process.env.NEXT_PUBLIC_BASE_URL + `/user/mypage/bookmark/${isLimit}`
+  );
+
+  console.log('useScrapDubVideoListQuery', data);
+  return data;
 };
 
 const useScrapDubVideoListQuery = (isLimit: boolean) => {
-  const { userId, accessToken } = useSelector((state: RootState) => state.user);
+  const { accessToken } = useSelector((state: RootState) => state.user);
 
-  return useQuery(
-    [queryKeys.SCRAP_DUB_VIDEO_LIST, isLimit, userId, accessToken],
-    () => fetcher(isLimit, userId, accessToken)
+  return useQuery([queryKeys.SCRAP_DUB_VIDEO_LIST, isLimit, accessToken], () =>
+    fetcher(isLimit, accessToken)
   );
 };
 
