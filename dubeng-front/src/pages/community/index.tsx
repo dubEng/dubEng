@@ -33,6 +33,7 @@ interface IDubVideoResult {
 }
 export default function CommunityPage() {
   // 전역에서 들고오는 state
+  const userId = useSelector((state: RootState) => state.user.userId);
   const tabIndex = useSelector((state: RootState) => {
     return state.communityTab.dubType;
   });
@@ -124,7 +125,7 @@ export default function CommunityPage() {
   }, [tabIndex]);
 
   return (
-    <div className="static h-full px-16 bg-white mt-57 mb-61"> 
+    <div className="static h-full px-16 bg-white mt-57 mb-61">
       <div className="flex sticky top-0">
         <DubTypeTap dubType={tabIndex} langType={languageIndex} />
       </div>
@@ -145,7 +146,7 @@ export default function CommunityPage() {
           <p className="flex justify-start text-19 font-bold mt-24 mb-16">
             오늘의 더빙왕은?
           </p>
-          <Vote />
+          <Vote userId={userId} languageIndex={languageIndex} />
         </div>
       )}
 
@@ -283,7 +284,7 @@ export default function CommunityPage() {
               createdDate: string;
             }) => (
               <DubProductListItem
-                key={dubProduct.id}
+                key={dubProduct.recordId}
                 id={dubProduct.id}
                 recordId={dubProduct.recordId}
                 title={dubProduct.title}

@@ -9,7 +9,7 @@ export interface UserState {
 }
 
 const initialState: UserState = {
-  userId: "",
+  userId: "2783776454",
   accessToken: "",
   nickname: "익명의 게스트",
   imageUrl: "",
@@ -30,7 +30,7 @@ export const userSlice = createSlice({
     },
     userLogout: (state, action) => {
       state = initialState;
-    }
+    },
   },
 });
 
