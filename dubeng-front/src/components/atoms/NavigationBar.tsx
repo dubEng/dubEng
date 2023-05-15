@@ -96,6 +96,7 @@ export default function NavigationBar() {
     if (pathName === "/mission" || pathName === "/mypage") {
       if (userId.length == 0) {
         MySwal.fire("로그인 후 이용 가능합니다.");
+        route.push("/login");
       } else {
         route.push(pathName);
       }
