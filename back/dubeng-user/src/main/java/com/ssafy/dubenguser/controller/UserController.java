@@ -51,12 +51,8 @@ public class UserController {
 
     @ApiOperation(value = "더빙 목록 보여주기")
     @PostMapping("/record/list")
-    public ResponseEntity<List<UserRecordRes>> userRecordList(@RequestHeader HttpHeaders headers, @RequestBody UserRecordReq request) {
-        String accessToken = headers.getFirst("Authorization");
-        if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
-        }
-        List<UserRecordRes> recordList = userService.findRecord(accessToken, request);
+    public ResponseEntity<List<UserRecordRes>> userRecordList(@RequestBody UserRecordReq request) {
+        List<UserRecordRes> recordList = userService.findRecord(request);
         return new ResponseEntity<>(recordList, HttpStatus.OK);
     }
 
