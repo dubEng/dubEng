@@ -29,13 +29,10 @@ public class UserController {
 
     @ApiOperation(value = "프로필 보여주기")
     @PostMapping("/profile")
-    public ResponseEntity<UserProfileRes> userProfileDetails(@RequestHeader HttpHeaders headers) {
-        String accessToken = headers.getFirst("Authorization");
+    public ResponseEntity<UserProfileRes> userProfileDetails(@RequestBody UserProfileReq request) {
+        String userId = request.getUserId();
+        UserProfileRes result = userService.findProfile(userId);
 
-        if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
-        }
-        UserProfileRes result = userService.findProfile(accessToken);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

@@ -102,19 +102,24 @@ public class AuthServiceImpl implements AuthService{
 
         User loginUser = findUser.get();
 
-        // imageUrl 가져오기
-        String kakaoImageUrl = getKakaoImageUrl(accessToken);
+        // 출석하기
 
         UserLoginRes userLoginRes = UserLoginRes.builder()
                 .userId(userId)
                 .accessToken(accessToken)
                 .nickname(loginUser.getNickname())
-                .imageUrl(kakaoImageUrl)
+                .imageUrl(loginUser.getProfileImage())
                 .build();
 
         return userLoginRes;
     }
 
+    /**
+     * 출석하기
+     */
+    private void setAttendance(){
+
+    }
     /**
      * accessToken을 받아
      * kakao Auth 서버에 parse 요청
