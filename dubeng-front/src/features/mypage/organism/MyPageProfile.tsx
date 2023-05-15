@@ -1,4 +1,5 @@
 import Image from "next/image";
+import DefaultImage from "../../../../public/images/default/mic_profile.png";
 
 interface Iprops {
   nickname: string;
@@ -19,7 +20,7 @@ export default function MyPageProfile({
     <div className="flex flex-col items-center justify-center text-center">
       <div>
         <Image
-          src={profileImage}
+          src={profileImage ?? DefaultImage}
           alt="profileImage"
           width={108}
           height={108}
