@@ -48,7 +48,7 @@ def createEmptyList():
         "text":'',
         "translation":''
     }
-    for i in range(20):
+    for i in range(30):
         result.append(scripts)
     return result
 
