@@ -4,6 +4,8 @@ COPY requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
 
+RUN pip install gunicorn
+
 RUN apt-get --allow-releaseinfo-change update
 
 RUN apt-get install -y ffmpeg
@@ -12,4 +14,5 @@ COPY . /app
 
 WORKDIR /app
 
-CMD ["python3", "-m", "flask", "run", "--host=0.0.0.0"]
+CMD ["gunicorn","-w","4","--bind","0.0.0.0:5000","app"]
+
