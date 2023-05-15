@@ -71,7 +71,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         List<UserRecordRes> recordList;
         if(isLimit) {
             recordList = jpaQueryFactory
-                    .select(new QUserRecordRes(video.title, video.thumbnail, record.playCount, record.updatedDate))
+                    .select(new QUserRecordRes(record.id, video.title, video.thumbnail, record.playCount, record.updatedDate))
                     .from(record)
                     .innerJoin(video)
                     .on(record.video.id.eq(video.id))
@@ -81,7 +81,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                     .fetch();
         } else {
             recordList = jpaQueryFactory
-                    .select(new QUserRecordRes(video.title, video.thumbnail, record.playCount, record.updatedDate))
+                    .select(new QUserRecordRes(record.id, video.title, video.thumbnail, record.playCount, record.updatedDate))
                     .from(record)
                     .innerJoin(video)
                     .on(record.video.id.eq(video.id))
@@ -104,7 +104,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
         if(isLimit){
             result = jpaQueryFactory
-                    .select(new QRecordLikeRes(video.title, video.thumbnail, record.user.nickname, record.playCount))
+                    .select(new QRecordLikeRes(record.id, video.title, video.thumbnail, record.user.nickname, record.playCount))
                     .from(record)
                     .innerJoin(video).on(record.video.id.eq(video.id))
                     .where(record.id.in(recordIds))
@@ -113,7 +113,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                     .fetch();
         } else {
             result = jpaQueryFactory
-                    .select(new QRecordLikeRes(video.title, video.thumbnail, record.user.nickname, record.playCount))
+                    .select(new QRecordLikeRes(record.id, video.title, video.thumbnail, record.user.nickname, record.playCount))
                     .from(record)
                     .innerJoin(video).on(record.video.id.eq(video.id))
                     .where(record.id.in(recordIds))
@@ -133,7 +133,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         List<VideoBookmarkRes> result;
         if(isLimit) {
             result = jpaQueryFactory
-                    .select(new QVideoBookmarkRes(video.title, video.thumbnail))
+                    .select(new QVideoBookmarkRes(video.id, video.title, video.thumbnail))
                     .from(video)
                     .where(video.id.in(videoIds))
                     .orderBy(video.updatedDate.desc())
@@ -141,7 +141,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                     .fetch();
         }else {
             result = jpaQueryFactory
-                    .select(new QVideoBookmarkRes(video.title, video.thumbnail))
+                    .select(new QVideoBookmarkRes(video.id, video.title, video.thumbnail))
                     .from(video)
                     .where(video.id.in(videoIds))
                     .orderBy(video.updatedDate.desc())

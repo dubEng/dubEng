@@ -9,13 +9,15 @@ import java.time.ZonedDateTime;
 @Data
 @NoArgsConstructor
 public class UserRecordRes {
+    private Long id;
     private String title;
     private String thumbnail;
     private Long playCount;
     private ZonedDateTime updatedDate;
     @Builder
     @QueryProjection
-    public UserRecordRes(String title, String thumbnail, Long playCount, ZonedDateTime updatedDate) {
+    public UserRecordRes(Long id, String title, String thumbnail, Long playCount, ZonedDateTime updatedDate) {
+        this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
         this.playCount = playCount;

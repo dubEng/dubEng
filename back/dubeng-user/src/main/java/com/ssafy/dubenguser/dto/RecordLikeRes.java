@@ -9,6 +9,7 @@ import java.time.ZonedDateTime;
 @Data
 @NoArgsConstructor
 public class RecordLikeRes {
+    private Long id;
     private String title;
     private String thumbnail;
     private String nickname;
@@ -17,7 +18,8 @@ public class RecordLikeRes {
 
     @Builder
     @QueryProjection
-    public RecordLikeRes(String title, String thumbnail, String nickname, Long playCount) {
+    public RecordLikeRes(Long id, String title, String thumbnail, String nickname, Long playCount) {
+        this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
         this.nickname = nickname;
