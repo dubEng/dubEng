@@ -1,4 +1,6 @@
 import "@/styles/globals.css";
+import 'react-calendar/dist/Calendar.css'; // css import
+import "@/styles/Calender.css"
 import localFont from "next/font/local";
 import type { AppProps } from "next/app";
 import { useState } from "react";

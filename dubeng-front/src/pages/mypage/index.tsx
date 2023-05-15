@@ -9,11 +9,12 @@ import MyPageProfile from "@/features/mypage/organism/MyPageProfile";
 import TagButton from "@/components/atoms/TagButton";
 import { MdArrowForwardIos } from "react-icons/md";
 import MyDubProductList from "@/features/mypage/organism/MyDubProductList";
+import MyCalendar from "@/features/mypage/atoms/MyCalendar";
 
 export default function MyPage() {
   const userId = useSelector((state: RootState) => state.user.userId);
   const nickname = useSelector((state: RootState) => state.user.nickname);
-
+  
   const interests = [
     {
       categoryName: "판타지",
@@ -64,7 +65,9 @@ export default function MyPage() {
       <p className="flex justify-start text-19 font-bold mt-24 mb-16">
         이달의 캘린더
       </p>
-      <div>캘린더 들어가는 자리</div>
+      <div className="m-20 drop-shadow-lg">
+        <MyCalendar />
+      </div>
       <div className="h-10 bg-[#F5F5F5]"></div>
 
       <div className="flex items-center justify-between">
