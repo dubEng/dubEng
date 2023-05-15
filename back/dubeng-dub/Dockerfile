@@ -2,6 +2,8 @@ FROM python:3.8-slim
 
 COPY requirements.txt requirements.txt
 
+RUN chmod +x boot.sh
+
 RUN pip install -r requirements.txt
 
 RUN pip install gunicorn
