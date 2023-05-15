@@ -1,9 +1,9 @@
 import DubSituationCard from "../atoms/DubSituationCard";
-import { SituationType } from "../../../enum/statusType";
+import { LangType, SituationType } from "../../../enum/statusType";
 import { useState } from "react";
 import DubVideoSlider from "../../../components/organism/DubVideoSlider";
 import useSearchDubVideoQuery from "@/apis/community/queries/useSearchDubVideoQuery";
-import useSearchSituationVideoQuery from "@/apis/community/queries/useSearchSituationVideoQuery";
+import useSearchSituationVideoQuery from "@/apis/community/queries/useEngSearchSituationVideoQuery";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -11,13 +11,18 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 import { useQueryClient } from "react-query";
 import DubSituationSlider from "../organism/DubSituationSlider";
+import useEngSearchSituationVideoQuery from "@/apis/community/queries/useEngSearchSituationVideoQuery";
+import useKorSearchSituationVideoQuery from "@/apis/community/queries/useKorSearchSituationVideoQuery";
 
 export default function DubSituation() {
   const queryClient = useQueryClient();
   const MySwal = withReactContent(Swal);
 
   const [isOpen, setOpen] = useState(false);
+
   const [situationId, setSituationId] = useState<null | number>(null);
+  const [situationTitle, setSituationTitle] = useState<string>("");
+
   const [sliderTitle, setSliderTitle] = useState("");
 
   const languageIndex = useSelector((state: RootState) => {
@@ -43,11 +48,16 @@ export default function DubSituation() {
   // );
 
   // get 쿼리 요청
-  const { data: situationVideoList } = useSearchSituationVideoQuery(
+  const { data: situationVideoList } = useEngSearchSituationVideoQuery(
     situationId,
     languageIndex,
     10,
     ""
+  );
+  const { data: situationKorVideoList } = useKorSearchSituationVideoQuery(
+    languageIndex,
+    10,
+    situationTitle
   );
 
   console.log("확인!!!!!!!1111", situationVideoList);
@@ -72,25 +82,45 @@ export default function DubSituation() {
   // }
 
   function handleSituationCard1() {
+    if (languageIndex === LangType.ENGLISH) {
+      setSituationId(18);
+      setSliderTitle("식당에서");
+    } else {
+      setSituationTitle("하이킥");
+      setSliderTitle("하이킥 시리즈");
+    }
     console.log("1번 카드 클릭");
-    setSituationId(18);
     setOpen(true);
-    setSliderTitle("식당에서");
   }
   function handleSituationCard2() {
-    setSituationId(21);
+    if (languageIndex === LangType.ENGLISH) {
+      setSituationId(21);
+      setSliderTitle("회사에서");
+    } else {
+      setSituationTitle("무한도전");
+      setSliderTitle("무한도전 시리즈");
+    }
     setOpen(true);
-    setSliderTitle("회사에서");
   }
   function handleSituationCard3() {
-    setSituationId(35);
+    if (languageIndex === LangType.ENGLISH) {
+      setSituationId(35);
+      setSliderTitle("미국 America");
+    } else {
+      setSituationTitle("타짜");
+      setSliderTitle("타짜 더빙해볼까?");
+    }
     setOpen(true);
-    setSliderTitle("미국 America");
   }
   function handleSituationCard4() {
-    setSituationId(29);
+    if (languageIndex === LangType.ENGLISH) {
+      setSituationId(29);
+      setSliderTitle("#기쁨");
+    } else {
+      setSituationTitle("더글로리");
+      setSliderTitle("더글로리 더빙해볼까?");
+    }
     setOpen(true);
-    setSliderTitle("#기쁨");
   }
 
   return (
@@ -120,25 +150,46 @@ export default function DubSituation() {
         <DubSituationCard type={SituationType.EMOTION} />
       </button> */}
       <button id="18" onClick={handleSituationCard1}>
-        <DubSituationCard type={SituationType.PLACE_1} />
+        <DubSituationCard
+          type={SituationType.PLACE_1}
+          langType={languageIndex}
+        />
       </button>
       <button id="21" onClick={handleSituationCard2}>
-        <DubSituationCard type={SituationType.PLACE_2} />
+        <DubSituationCard
+          type={SituationType.PLACE_2}
+          langType={languageIndex}
+        />
       </button>
       <button id="35" onClick={handleSituationCard3}>
-        <DubSituationCard type={SituationType.COUNTRY} />
+        <DubSituationCard
+          type={SituationType.COUNTRY}
+          langType={languageIndex}
+        />
       </button>
       <button id="{SituationType.EMOTION}" onClick={handleSituationCard4}>
-        <DubSituationCard type={SituationType.EMOTION} />
-      </button>
-      {situationVideoList && (
-        <DubSituationSlider
-          title={sliderTitle}
-          videoList={situationVideoList.content}
-          isOpen={isOpen}
-          setOpen={setOpen}
+        <DubSituationCard
+          type={SituationType.EMOTION}
+          langType={languageIndex}
         />
-      )}
+      </button>
+      {languageIndex === LangType.ENGLISH
+        ? situationKorVideoList && (
+            <DubSituationSlider
+              title={sliderTitle}
+              videoList={situationKorVideoList.content}
+              isOpen={isOpen}
+              setOpen={setOpen}
+            />
+          )
+        : situationKorVideoList && (
+            <DubSituationSlider
+              title={sliderTitle}
+              videoList={situationKorVideoList.content}
+              isOpen={isOpen}
+              setOpen={setOpen}
+            />
+          )}
     </div>
   );
 }

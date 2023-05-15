@@ -9,7 +9,7 @@ const fetcher = async (
   langType: string,
   pageParam: number,
   size: number,
-  title: string
+  title: null | string
 ) => {
   const queryArray = qs.stringify(
     { contentsSearch: [categoryId] },
@@ -32,14 +32,14 @@ const fetcher = async (
   return data;
 };
 
-const useSearchSituationVideoQuery = (
+const useEngSearchSituationVideoQuery = (
   categoryId: null | number,
   langType: string,
   size: number,
   title: string
 ) => {
   // const queryClient = useQueryClient();
-  console.log("useSearchSituation 안", categoryId);
+  console.log("useEngSearchSituation 안", categoryId);
   return useQuery(
     [queryKeys.SEARCH_SITUATION_VIDEO, categoryId],
     ({ pageParam = 0 }) =>
@@ -48,4 +48,4 @@ const useSearchSituationVideoQuery = (
   );
 };
 
-export default useSearchSituationVideoQuery;
+export default useEngSearchSituationVideoQuery;

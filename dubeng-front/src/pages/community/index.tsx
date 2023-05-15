@@ -5,7 +5,7 @@ import Header from "@/components/atoms/Header";
 import DubTypeTap from "@/features/community/atoms/DubTypeTap";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
-import { DubType } from "@/enum/statusType";
+import { DubType, LangType } from "@/enum/statusType";
 import DubSituation from "@/features/community/molecules/DubSituation";
 import SearchInputBox from "@/features/community/atoms/SearchInputBox";
 import { useEffect, useState } from "react";
@@ -135,10 +135,16 @@ export default function CommunityPage() {
             {userNickname}님이 좋아하실 영상
           </p>
           <DubVideoList />
+          {languageIndex === LangType.ENGLISH ? (
+            <p className="flex justify-start text-19 font-bold mt-24 mb-16">
+              상황별로 더빙해봐요
+            </p>
+          ) : (
+            <p className="flex justify-start text-19 font-bold mt-24 mb-16">
+              인기 더빙 모음집
+            </p>
+          )}
 
-          <p className="flex justify-start text-19 font-bold mt-24 mb-16">
-            상황별로 더빙해봐요
-          </p>
           <DubSituation />
         </div>
       ) : (
