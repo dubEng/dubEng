@@ -16,29 +16,31 @@ export default function MyPage() {
   const nickname = useSelector((state: RootState) => state.user.nickname);
 
   const [description, setDescription] = useState<string>("");
+  const [profileImage, setProfileImage] = useState<string>("");
+  const [totalRecTime, setTotalRecTime] = useState<number>(0);
+  const [recordCount, setRecordCount] = useState<number>(0);
+  const [categoryList, setCategoryList] = useState<any>(null);
 
   const { mutateAsync } = useProfileQuery();
 
   useEffect(() => {
     if (userId) {
       async function getProfile() {
-        console.log("getProfile");
         const payload = {
           userId: userId,
         };
 
-        console.log('userId', userId);
-
         const { data } = await mutateAsync(payload);
         setDescription(data.description as string);
-        console.log("response", data);
+        setProfileImage(data.profileImage as string);
+        setTotalRecTime(data.totalRecTime as number);
+        setRecordCount(data.recordCount as number);
+        setCategoryList(data.category);
       }
 
       getProfile();
     }
   }, [userId]);
-
-  console.log("nickname", nickname);
 
   const interests = [
     {
@@ -61,17 +63,14 @@ export default function MyPage() {
     },
   ];
 
-
-
   return (
     <div className="static h-full px-16 bg-white mt-57 mb-61">
-      유저 아이디: {userId}
       <MyPageProfile
         nickname={nickname}
         description={description}
-        profileImage={""}
-        totalRecTime={20}
-        recordCount={10}
+        profileImage={profileImage}
+        totalRecTime={totalRecTime}
+        recordCount={recordCount}
       />
 
       <div className="mt-24 h-10 bg-[#F5F5F5]"></div>
@@ -80,15 +79,16 @@ export default function MyPage() {
         선호 장르
       </p>
       <div className="flex flex-wrap">
-        {interests.map((tag: { categoryName: string }, idx: number) => (
-          <TagButton
-            onClick={() => {}}
-            id={0}
-            key={idx}
-            name={tag.categoryName}
-            isSelected={true}
-          />
-        ))}
+        {categoryList &&
+          categoryList.map((tag: { categoryName: string }, idx: number) => (
+            <TagButton
+              onClick={() => {}}
+              id={0}
+              key={idx}
+              name={tag.categoryName}
+              isSelected={true}
+            />
+          ))}
       </div>
       <p className="flex justify-start text-19 font-bold mt-24 mb-16">
         이달의 캘린더

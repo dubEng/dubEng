@@ -18,17 +18,25 @@ export default function MyPageProfile({
 }: Iprops) {
   return (
     <div className="flex flex-col items-center justify-center text-center">
-      <div>
+      {profileImage ? (
         <Image
-          src={profileImage ?? DefaultImage}
+          src={profileImage}
           alt="profileImage"
           width={108}
           height={108}
           className="rounded-full bg-dubgraymedium"
         ></Image>
-        <p className="mt-16 text-16 text-dubblack font-bold">{nickname}</p>
-        <p className="text-14 text-dubgray">{description}</p>
-      </div>
+      ) : (
+        <Image
+          src={DefaultImage}
+          alt="profileImage"
+          width={150}
+          height={150}
+          className="rounded-full"
+        ></Image>
+      )}
+      <p className="mt-16 text-16 text-dubblack font-bold">{nickname}</p>
+      <p className="text-14 text-dubgray">{description}</p>
       <div className="mt-24 flex justify-center items-center space-x-60">
         <div>
           <p className="text-14 text-dubblack font-semibold">{totalRecTime}</p>
