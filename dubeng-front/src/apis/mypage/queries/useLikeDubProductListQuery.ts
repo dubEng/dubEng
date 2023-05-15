@@ -7,11 +7,16 @@ import { RootState } from "@/stores/store";
 const fetcher = async (isLimit: boolean, accessToken: string) => {
   axios.defaults.headers.common["Authorization"] = accessToken;
 
-  const {data} = await axios.get(
-    process.env.NEXT_PUBLIC_BASE_URL + `/user/mypage/recordLikeList/${isLimit}`
+  const { data } = await axios.get(
+    process.env.NEXT_PUBLIC_BASE_URL + `/user/mypage/record/likes/`,
+    {
+      params: {
+        isLimit,
+      },
+    }
   );
 
-  console.log('useLikeDubProductListQuery', data);
+  console.log("useLikeDubProductListQuery", data);
 
   return data;
 };
