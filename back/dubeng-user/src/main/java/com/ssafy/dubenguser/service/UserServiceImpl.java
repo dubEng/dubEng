@@ -162,19 +162,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public List<UserRecordRes> findRecord(String accessToken, UserRecordReq request) {
-        String userId = authService.parseToken(accessToken);
-        if(userId == null) {
-            throw new UnAuthorizedException("토큰을 가져올 수 없습니다!");
-        }
-        if(checkEnrolledMember(userId)){
-            throw new DuplicateException("이미 등록된 사용자입니다.");
-        }
-        if(request.getIsPublic()==null || request.getIsLimit()==null || request.getLanType()==null)
+    public List<UserRecordRes> findRecord(UserRecordReq request) {
+
+        if(request.getUserId()==null || request.getIsPublic()==null || request.getIsLimit()==null || request.getLanType()==null)
             throw new InvalidInputException("모든 값을 채워주세요!");
 
         //JPA
-        List<UserRecordRes> result = userRepository.findRecordByUserId(userId, request.getIsPublic(), request.getIsLimit(), request.getLanType());
+        List<UserRecordRes> result = userRepository.findRecordByUserId(request.getUserId(), request.getIsPublic(), request.getIsLimit(), request.getLanType());
         return result;
     }
 

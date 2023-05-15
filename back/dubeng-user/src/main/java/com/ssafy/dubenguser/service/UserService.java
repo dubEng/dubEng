@@ -10,7 +10,7 @@ public interface UserService {
     public boolean checkExistNickname(String nickname);
     public UserProfileRes findProfile(String accessToken);
     public UserCalendarRes findCalendar(String userId);
-    public List<UserRecordRes> findRecord(String userId, UserRecordReq request);
+    public List<UserRecordRes> findRecord(UserRecordReq request);
     public List<RecordLikeRes> findRecordLike(String userId, Boolean isLimit);
     public List<VideoBookmarkRes> findVideoBookmark(String userId, Boolean isLimit);
 }
