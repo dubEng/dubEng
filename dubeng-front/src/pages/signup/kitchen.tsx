@@ -16,6 +16,7 @@ export interface SignupInfo{
     introduce: string;
     kitchenName : string;
     gender : boolean;
+    profileImgUrl: string;
 }
 export default function kitchen(){
     const [nextBtnStatus, setNextBtnStatus] = useState<boolean>(false);
@@ -23,7 +24,7 @@ export default function kitchen(){
     const mutation = useSignupPost();
     const route = useRouter();
     //Redux
-    const { nickname, accessToken, interest, introduce } = useSelector((state: RootState) => state.signupInfo);
+    const { nickname, accessToken, interest, introduce, gender, imageUrl} = useSelector((state: RootState) => state.signupInfo);
 
     //three.js
     const kitchenInputHandler = (e : React.ChangeEvent<HTMLInputElement>) =>{
@@ -43,8 +44,10 @@ export default function kitchen(){
             categories : interest,
             introduce : introduce,
             kitchenName : kitchenName,
-            gender : true
+            gender : gender,
+            profileImgUrl : imageUrl,
         }
+        
         // POST 요청
         try{
             const result = await mutation.mutateAsync(signupInfo);

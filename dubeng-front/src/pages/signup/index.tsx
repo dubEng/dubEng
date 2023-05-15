@@ -17,6 +17,7 @@ export default function SignUpPage(){
   const introdeuceMounted = useRef(false);
   const [nickname, setNickname] = useState<string>('');
   const [introduce, setIntroduce] = useState<string>('');
+  const [gender, setGender] = useState<any>(undefined);
   const [nextBtnStatus, setNextBtnStatus] = useState<boolean>(false);
   const [checknicknameMsg, setchecknicknameMsg] = useState<CheckMessageStatus>(CheckMessageStatus.INIT);
   const [checkintroduceMsg, setcheckintroduceMsg] = useState<CheckMessageStatus>(CheckMessageStatus.INIT);
@@ -91,12 +92,14 @@ export default function SignUpPage(){
     }
     setcheckintroduceMsg(CheckMessageStatus.INTRODUCE_ISVALID);
   }
-
+  
+  //nextBtn
   useEffect(()=>{
-    if(checknicknameMsg === CheckMessageStatus.NICKNAME_ISVALID){
+    if(checknicknameMsg === CheckMessageStatus.NICKNAME_ISVALID && gender != undefined){
       setNextBtnStatus(true);
     }
-  },[checknicknameMsg, checkintroduceMsg])
+  },[checknicknameMsg, gender])
+
   const nicknameChange = async (e : React.ChangeEvent<HTMLInputElement>) =>{
     const nickname = e.target.value;
     setNickname(nickname);
@@ -105,13 +108,25 @@ export default function SignUpPage(){
     const introduce = e.target.value;
     setIntroduce(introduce);
   }
+  const genderChange = (e : React.ChangeEvent<HTMLInputElement>) =>{
+    const gender = parseInt(e.target.value);
+    
+    if(gender == 1){
+      setGender(true);
+    }else{
+      setGender(false);
+    }
+
+    
+  }
   const singupNextHandler = () =>{
     // 리덕스 저장
     // dispatch해줄 것
     const signuoInfoToSubmit = { accessToken: cookie.load("accessToken"),
         imageUrl : profileImage,
         nickname : nickname,
-        introduce : introduce
+        introduce : introduce,
+        gender : gender,
     };
     dispatch(saveSignupInfo(signuoInfoToSubmit))
 
@@ -140,6 +155,20 @@ export default function SignUpPage(){
             <p className="font-bold mb-6">한 줄 소개</p>
             <CommonInputBox type="text" placeholder="나를 표현하는 한 줄을 적어주세요." name="" value={introduce} onChange={introduceChange} />
             <p className="text-right text-xs text-dubgray">{introduce.length}/{introduceLimitSize}</p>
+            <CheckMessage status={checkintroduceMsg}/>
+          </div>
+          <div className="my-20">
+            <p className="font-bold mb-6">성별</p>
+            <div className="flex flex-row">
+              <div className="items-center text-center">
+                <span className="mr-5">남자</span>
+                <input type="radio" name="gender" value="1" onChange={genderChange}/>
+              </div>
+              <div className="items-center text-center">
+                <span className="ml-10 mr-5">여자</span>
+                <input type="radio" name="gender" value="0" onChange={genderChange}/>
+              </div>
+            </div>
             <CheckMessage status={checkintroduceMsg}/>
           </div>
         </div>
