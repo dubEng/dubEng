@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../stores/store";
 import DubProductCard from "@/features/mypage/molecules/DubProductCard";
 import WeBareBears from "../../../public/images/dump/webarebears_image.png";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { LangType } from "@/enum/statusType";
 import LanguageTap from "@/features/mypage/atoms/LanguageTap";
 import MyPageProfile from "@/features/mypage/organism/MyPageProfile";
@@ -10,10 +10,36 @@ import TagButton from "@/components/atoms/TagButton";
 import { MdArrowForwardIos } from "react-icons/md";
 import MyDubProductList from "@/features/mypage/organism/MyDubProductList";
 import MyCalendar from "@/features/mypage/atoms/MyCalendar";
+import useProfileQuery from "@/apis/mypage/queries/useProfileQuery";
 
 export default function MyPage() {
   const userId = useSelector((state: RootState) => state.user.userId);
   const nickname = useSelector((state: RootState) => state.user.nickname);
+
+  const [description, setDescription] = useState<string>("");
+
+  const { mutateAsync } = useProfileQuery();
+
+  useEffect(() => {
+    if (userId) {
+      async function getProfile() {
+        console.log("getProfile");
+        const payload = {
+          userId: userId,
+        };
+
+        console.log('userId', userId);
+
+        const { data } = await mutateAsync(payload);
+        setDescription(data.description as string);
+        console.log("response", data);
+      }
+
+      getProfile();
+    }
+  }, [userId]);
+
+  console.log("nickname", nickname);
   
   const interests = [
     {
@@ -36,11 +62,14 @@ export default function MyPage() {
     },
   ];
 
+
+
   return (
     <div className="static h-full px-16 bg-white mt-57 mb-61">
+      유저 아이디: {userId}
       <MyPageProfile
-        nickname={"닉네임"}
-        description={"한 줄 소개입니다"}
+        nickname={nickname}
+        description={description}
         profileImage={""}
         totalRecTime={20}
         recordCount={10}

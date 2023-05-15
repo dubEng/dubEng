@@ -11,6 +11,9 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useRouter } from "next/navigation";
 
+import { useSelector } from "react-redux";
+import { RootState } from "../../stores/store";
+
 const MySwal = withReactContent(Swal);
 
 const menu = [
@@ -51,8 +54,9 @@ const menu = [
 
 export default function NavigationBar() {
   const pathName = usePathname();
-
   const route = useRouter();
+
+  const userId = useSelector((state: RootState) => state.user.userId);
 
   // 관리자 페이지에서는 NavBar안보여줌
 
@@ -89,10 +93,12 @@ export default function NavigationBar() {
   }
 
   function handleNavigationButton(pathName: string) {
-    if (pathName === "/mission") {
-      MySwal.fire("도전과제 Coming Soon👋");
-    } else if (pathName === "/mypage") {
-      MySwal.fire("마이페이지 Coming Soon😄");
+    if (pathName === "/mission" || pathName === "/mypage") {
+      if (userId.length == 0) {
+        MySwal.fire("로그인 후 이용 가능합니다.");
+      } else {
+        route.push(pathName);
+      }
     } else {
       route.push(pathName);
     }

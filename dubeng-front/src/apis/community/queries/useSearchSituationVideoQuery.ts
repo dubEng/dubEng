@@ -1,51 +1,50 @@
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import * as queryKeys from "@/constants/queryKeys";
 
 import qs from "qs";
 
-const fetcher = (
-  contentsSearch: number[],
+const fetcher = async (
+  categoryId: null | number,
   langType: string,
   pageParam: number,
   size: number,
   title: string
 ) => {
   const queryArray = qs.stringify(
-    { contentsSearch: contentsSearch },
+    { contentsSearch: [categoryId] },
     { arrayFormat: "repeat" }
   );
-  return axios
-    .get(
-      process.env.NEXT_PUBLIC_BASE_URL +
-        `/dub/contents/search/${langType}` +
-        `?${queryArray}`,
-      {
-        params: {
-          page: pageParam,
-          size: size,
-          title: title,
-        },
-      }
-    )
-    .then(({ data }) => {
-      console.log("상황 비디오 쿼리 안!!!!", data);
-      return data;
-    });
+  const { data } = await axios.get(
+    process.env.NEXT_PUBLIC_BASE_URL +
+      `/dub/contents/search/${langType}` +
+      `?${queryArray}`,
+    {
+      params: {
+        page: pageParam,
+        size: size,
+        title: title,
+      },
+    }
+  );
+
+  console.log("data:", data);
+  return data;
 };
 
 const useSearchSituationVideoQuery = (
-  contentsSearch: number[],
+  categoryId: null | number,
   langType: string,
   size: number,
   title: string
 ) => {
-  console.log("useSearchSituation 안", contentsSearch);
+  // const queryClient = useQueryClient();
+  console.log("useSearchSituation 안", categoryId);
   return useQuery(
-    [queryKeys.SEARCH_SITUATION_VIDEO, contentsSearch[0]],
+    [queryKeys.SEARCH_SITUATION_VIDEO, categoryId],
     ({ pageParam = 0 }) =>
-      fetcher(contentsSearch, langType, pageParam, size, title),
-    { enabled: false }
+      fetcher(categoryId, langType, pageParam, size, title),
+    { enabled: !!categoryId }
   );
 };
 
