@@ -9,7 +9,7 @@ from flask import Flask, request
 from flask_cors import CORS
 import pymysql
 import random
-
+import traceback
 import logging
 
 app = Flask(__name__)
@@ -33,8 +33,6 @@ logging.basicConfig(
     format='%(asctime)s %(levelname)s %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S'
 )
-
-
 
 
 def getData():
@@ -95,30 +93,34 @@ def getSimilarity():
 
 
 def find_sim_movie(df, sorted_ind, title_name, top_n=10):
-    title_movie = df[df['title'] == title_name]
-    title_index = title_movie.index.values
+    try:
+        title_movie = df[df['title'] == title_name]
+        title_index = title_movie.index.values
 
-    logging.info(f"title index: {title_index}")
+        logging.info(f"title index: {title_index}")
 
-    # top_n의 2배에 해당하는 장르 유사성이 높은 인덱스 추출
-    similar_indexes = sorted_ind[title_index, :(top_n*2)]
+        # top_n의 2배에 해당하는 장르 유사성이 높은 인덱스 추출
+        similar_indexes = sorted_ind[title_index, :(top_n*2)]
 
-    logging.info(f"similar indexes: {similar_indexes}")
+        logging.info(f"similar indexes: {similar_indexes}")
 
-    # reshape(-1) 1차열 배열 반환
-    similar_indexes = similar_indexes.reshape(-1)
+        # reshape(-1) 1차열 배열 반환
+        similar_indexes = similar_indexes.reshape(-1)
 
-    logging.info(f"similar indexes length: {len(similar_indexes)}")
+        logging.info(f"similar indexes length: {len(similar_indexes)}")
 
+        # 기준 영화 인덱스는 제외
+        similar_indexes = similar_indexes[similar_indexes != title_index]
 
-    # 기준 영화 인덱스는 제외
-    similar_indexes = similar_indexes[similar_indexes != title_index]
-
-    logging.info(f"similar indexes after remove index: {len(similar_indexes)}")
-    logging.info(f"top n: {top_n}")
-
-    # top_n의 2배에 해당하는 후보군에서 weighted_vote가 높은 순으로 top_n만큼 추출
-    return df.iloc[similar_indexes][:top_n]
+        logging.info(
+            f"similar indexes after remove index: {len(similar_indexes)}")
+        logging.info(f"top n: {top_n}")
+        return df.iloc[similar_indexes][:top_n]
+        # top_n의 2배에 해당하는 후보군에서 weighted_vote가 높은 순으로 top_n만큼 추출
+    except Exception as e:
+        print(e)
+        print(traceback.format_exc())
+        return []
 
 
 # 회원 조회해서 회원의 더빙 영상이 있는지 체크 => 가장 최근에 더빙한 영상으로 뽑아줌
@@ -202,7 +204,8 @@ def dublistAPI():
     logging.info(f"movies_df: {movies_df}")
 
     if usercheckDub:
-        similar_movies = find_sim_movie(movies_df, getSimilarity(), getDubRecord(usercheckDub)[0], 10)
+        similar_movies = find_sim_movie(
+            movies_df, getSimilarity(), getDubRecord(usercheckDub)[0], 10)
         sm = similar_movies[['id', 'title', 'thumbnail']]
         for index, row in sm.iterrows():
             result.append({'id': row.id, 'title': row.title,
@@ -213,7 +216,8 @@ def dublistAPI():
             randomCategoryId = random.choice(userCategoryId)
             randomVideoTitle = random.choice(
                 getVideoFindByCategory(randomCategoryId))
-            similar_movies = find_sim_movie(movies_df, getSimilarity(), randomVideoTitle, 10)
+            similar_movies = find_sim_movie(
+                movies_df, getSimilarity(), randomVideoTitle, 10)
             sm = similar_movies[['id', 'title', 'thumbnail']]
             for index, row in sm.iterrows():
                 result.append({'id': row.id, 'title': row.title,
