@@ -28,7 +28,7 @@ export default function MyDubProductList() {
 
         const { data } = await mutateAsync(payload);
         console.log('getMyDubProductList', data);
-        setMyProductList(data.recordList);
+        setMyProductList(data);
       }
 
       getMyDubProductList();
@@ -52,8 +52,8 @@ export default function MyDubProductList() {
       <Swiper slidesPerView={1.25}>
         {myProductList &&
           myProductList.map((item: any) => (
-            <SwiperSlide key={item.recordId}>
-              <Link href={`/community/shorts/product/${item.recordId}`}>
+            <SwiperSlide key={item.id}>
+              <Link href={`/community/shorts/product/${item.id}`}>
                 <DubProductCard
                   title={item.title}
                   thumbnail={item.thumbnail ?? ""}
