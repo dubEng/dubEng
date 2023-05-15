@@ -22,6 +22,7 @@ import PlayBarSound from "../atoms/PlayBarSound";
 import PlayBarRecording from "../atoms/PlayBarRecording";
 import PlayBarOrigin from "../atoms/PlayBarOrigin";
 
+import Lottie from "react-lottie-player";
 // import { useSwiperSlide } from "swiper/react";
 
 export default function DubBox({
@@ -100,9 +101,9 @@ export default function DubBox({
         });
 
         saveRecordingFile(audioBlob);
-        
+
         //녹음 종료 후 1초뒤에 STT 인식 종료
-        setTimeout(()=> {
+        setTimeout(() => {
           SpeechRecognition.stopListening();
         }, 1000);
       };
@@ -192,25 +193,24 @@ export default function DubBox({
     resetTranscript();
   }, [listening]);
 
-
   async function saveRecordingFile(audioBlob: Blob) {
     const formData = new FormData();
-        
+
     formData.append("recodeInfo.nickname", nickname);
     formData.append("recodeInfo.recodeNum", scriptIndex.toString());
     formData.append("recodeInfo.videoId", videoId);
-    
+
     const file = new File([audioBlob], "myRecordingFile.wav", {
       type: "audio/wav",
     }); // File 객체 생성
-    
+
     formData.append("audioFile", file);
 
-    try{
+    try {
       await mutateAsync(formData);
       updateDubbingCompleteCheckList(scriptIndex);
-    } catch(e){
-      console.error('error:', e);
+    } catch (e) {
+      console.error("error:", e);
     }
   }
 
@@ -225,7 +225,7 @@ export default function DubBox({
     //   youtubePlayer.seekTo(startTime);
     //   await setTimeout(() => {}, 800);
     // }
-    youtubePlayer.seekTo(startTime/1000);
+    youtubePlayer.seekTo(startTime / 1000);
     youtubePlayer.playVideo();
 
     const timerId = window.setTimeout(() => {
@@ -385,8 +385,14 @@ export default function DubBox({
           {transcript}
         </p>
       ) : answer ? (
-        <p className="text-14 text-[#0FA64B] font-normal flex justify-start h-34 mx-16 mb-16">
+        <p className="text-14 text-[#0FA64B] font-normal flex flex-row justify-start items-center h-34 mx-16 mb-16">
           {speechToText}
+          <Lottie
+            loop
+            path="/lottie/checked.json"
+            play
+            style={{ width: 35, height: 35 }}
+          />
         </p>
       ) : (
         <p className="text-14 text-dubcoral font-normal flex justify-start h-34 mx-16 mb-16">

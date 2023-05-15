@@ -8,6 +8,7 @@ interface signupInfoState {
   introduce : string;
   interest: number[];
   kitchenName: string;
+  gender: boolean;
 }
 
 const initialState: signupInfoState = {
@@ -16,7 +17,8 @@ const initialState: signupInfoState = {
   nickname: "",
   introduce: "",
   interest: [],
-  kitchenName: ""
+  kitchenName: "",
+  gender: true,
 };
 
 export const signupSlice = createSlice({
@@ -28,6 +30,7 @@ export const signupSlice = createSlice({
       state.imageUrl = action.payload.imageUrl;
       state.nickname = action.payload.nickname;
       state.introduce = action.payload.introduce;
+      state.gender = action.payload.gender;
     },
     saveInterest: (state, action) =>{
       state.interest = action.payload;
