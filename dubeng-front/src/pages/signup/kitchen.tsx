@@ -1,4 +1,4 @@
-import {Suspense, useState} from "react";
+import {Suspense, useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "../../stores/store";
@@ -16,6 +16,7 @@ export interface SignupInfo{
     introduce: string;
     kitchenName : string;
     gender : boolean;
+    profileImgUrl: string;
 }
 export default function kitchen(){
     const [nextBtnStatus, setNextBtnStatus] = useState<boolean>(false);
@@ -23,17 +24,23 @@ export default function kitchen(){
     const mutation = useSignupPost();
     const route = useRouter();
     //Redux
-    const { nickname, accessToken, interest, introduce } = useSelector((state: RootState) => state.signupInfo);
+    const { nickname, accessToken, interest, introduce, gender, imageUrl} = useSelector((state: RootState) => state.signupInfo);
 
-    //three.js
-    const kitchenInputHandler = (e : React.ChangeEvent<HTMLInputElement>) =>{
-        setKitchenName(e.target.value);
+    useEffect(()=>{
+        checkKitchenName(kitchenName);
+    }, [kitchenName])
+
+    const checkKitchenName = (kitchenName : string)=>{
         
-        if(!kitchenName || kitchenName.length < 2){
+        if(!kitchenName || kitchenName.length < 1){
             setNextBtnStatus(false);
             return;
         }
         setNextBtnStatus(true);
+    }
+    //kitchenName Input Event
+    const kitchenInputHandler = (e : React.ChangeEvent<HTMLInputElement>) =>{
+        setKitchenName(e.target.value);
     }
 
     const singupNextHandler = async () =>{
@@ -43,8 +50,10 @@ export default function kitchen(){
             categories : interest,
             introduce : introduce,
             kitchenName : kitchenName,
-            gender : true
+            gender : gender,
+            profileImgUrl : imageUrl,
         }
+        
         // POST 요청
         try{
             const result = await mutation.mutateAsync(signupInfo);

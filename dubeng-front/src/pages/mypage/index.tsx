@@ -9,8 +9,10 @@ import MyPageProfile from "@/features/mypage/organism/MyPageProfile";
 import TagButton from "@/components/atoms/TagButton";
 import { MdArrowForwardIos } from "react-icons/md";
 import MyDubProductList from "@/features/mypage/organism/MyDubProductList";
+
 import useProfileMutation from "@/apis/mypage/mutations/useProfileMutation";
-import LikeDubProductList from "@/features/mypage/organism/LikeDubProductList";
+import MyCalendar from "@/features/mypage/atoms/MyCalendar";
+
 
 export default function MyPage() {
   const userId = useSelector((state: RootState) => state.user.userId);
@@ -73,7 +75,9 @@ export default function MyPage() {
       <p className="flex justify-start text-19 font-bold mt-24 mb-16">
         이달의 캘린더
       </p>
-      <div>캘린더 들어가는 자리</div>
+      <div className="m-20 drop-shadow-lg">
+        <MyCalendar />
+      </div>
       <div className="h-10 bg-[#F5F5F5]"></div>
 
       <div className="flex items-center justify-between">
@@ -95,7 +99,6 @@ export default function MyPage() {
           <MdArrowForwardIos width={16} height={16} className="text-dubgray" />
         </button>
       </div>
-      <LikeDubProductList />
       <div className="flex items-center justify-between">
         <p className="flex justify-start text-19 font-bold mt-24 mb-16">
           저장한 콘텐츠 목록

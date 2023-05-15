@@ -8,6 +8,7 @@ export const RECOMMEND_DUB_VIDEO_LIST = "/recommand";
 export const SEARCH_DUB_VIDEO = "/search/dub-video";
 export const SEARCH_DUB_PRODUCT = "/search/dub-product";
 export const SEARCH_SITUATION_VIDEO = "/search/situation";
+export const VOTE = "/vote";
 
 // signup
 export const NICKNAME = "/check";
@@ -34,3 +35,4 @@ export const CALENDAR = "mypage/calendar";
 export const MY_DUB_PRODUCT_LIST = "/mypage/my-product-list";
 export const LIKE_DUB_PRODUCT_LIST = "mypage/like-product-list";
 export const SCRAP_DUB_VIDEO_LIST = "mypage/scrap-video-list";
+export const CALENDAR_ATTENDANCE_LIST = "/mypage/attandance";

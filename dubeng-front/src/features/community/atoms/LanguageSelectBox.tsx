@@ -21,11 +21,8 @@ export default function LanguageSelectBox({ langType }: Iprops) {
 
   function handleKoreanTab() {
     console.log("한국어탭 누름");
-    MySwal.fire("한국어 콘텐츠 Coming Soon👀");
-    router.push("/community");
-
-    // // 실제로 작업할 때에는 밑에 주석 풀고 진행해야 함
-    // dispatch(setTabKorean());
+    // 실제로 작업할 때에는 밑에 주석 풀고 진행해야 함
+    dispatch(setTabKorean());
   }
   function handleEnglishTab() {
     console.log("영어탭 누름");
