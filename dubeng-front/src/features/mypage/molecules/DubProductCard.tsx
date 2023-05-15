@@ -8,7 +8,7 @@ interface Iprops {
   title: string;
   thumbnail: string;
   playCount: number;
-  updatedDate: string;
+  updatedDate?: string;
 }
 
 export default function DubProductCard({
@@ -34,11 +34,13 @@ export default function DubProductCard({
       <div className="flex items-center space-x-4">
         <p className="text-14 text-dubgray">조회수 {playCount}회</p>
         <p className="text-10 text-dubgray"> ▪ </p>
-        <TimeAgo
-          datetime={updatedDate}
-          locale="ko"
-          className="text-14 text-dubgray"
-        />
+        {updatedDate ? (
+          <TimeAgo
+            datetime={updatedDate}
+            locale="ko"
+            className="text-14 text-dubgray"
+          />
+        ) : null}
       </div>
     </div>
   );

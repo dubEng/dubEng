@@ -12,7 +12,8 @@ import MyDubProductList from "@/features/mypage/organism/MyDubProductList";
 
 import useProfileMutation from "@/apis/mypage/mutations/useProfileMutation";
 import MyCalendar from "@/features/mypage/atoms/MyCalendar";
-
+import LikeDubProductList from "@/features/mypage/organism/LikeDubProductList";
+import ScrapDubVideoList from "@/features/mypage/organism/ScrapDubVideoList";
 
 export default function MyPage() {
   const userId = useSelector((state: RootState) => state.user.userId);
@@ -99,6 +100,7 @@ export default function MyPage() {
           <MdArrowForwardIos width={16} height={16} className="text-dubgray" />
         </button>
       </div>
+      <LikeDubProductList />
       <div className="flex items-center justify-between">
         <p className="flex justify-start text-19 font-bold mt-24 mb-16">
           저장한 콘텐츠 목록
@@ -108,6 +110,7 @@ export default function MyPage() {
           <MdArrowForwardIos width={16} height={16} className="text-dubgray" />
         </button>
       </div>
+      <ScrapDubVideoList />
       <div className="flex items-center justify-between">
         <p className="flex justify-start text-19 font-bold mt-24 mb-16">
           로그아웃
@@ -116,12 +119,6 @@ export default function MyPage() {
           <MdArrowForwardIos width={16} height={16} className="text-dubgray" />
         </button>
       </div>
-      <DubProductCard
-        title={"안녕안녕안녕"}
-        thumbnail={""}
-        playCount={11}
-        updatedDate={""}
-      />
     </div>
   );
 }
