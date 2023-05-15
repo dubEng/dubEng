@@ -1,43 +1,69 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import useHomePopularityQuery from "../../../apis/home/queries/useHomePopularityQuery";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import ErrorComponent from "../../../components/atoms/ErrorComponent";
 import "swiper/css";
 import Link from "next/link";
 import DubProductCard from "../molecules/DubProductCard";
-import useMyDubProductListQuery from "@/apis/mypage/queries/useMyDubProductListQuery";
-import { LangType } from "@/enum/statusType";
+import useMyDubProductListMutation from "@/apis/mypage/mutations/useMyDubProductListMutationts";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../stores/store";
 
 export default function MyDubProductList() {
-  const myProductList = useMyDubProductListQuery(true, true, LangType.ENGLISH);
+  const userId = useSelector((state: RootState) => state.user.userId);
 
-  // if (popularity.isLoading) {
-  //   return (
-  //     <div className="flex justify-center items-center my-16">
-  //       <ScaleLoader color="#FF6D60" />
-  //     </div>
-  //   );
-  // }
+  const { mutateAsync, isLoading, isError } = useMyDubProductListMutation();
 
-  // if (popularity.isError) {
-  //   return <ErrorComponent onClick={() => popularity.refetch} retry={true} />;
-  // }
+  const [myProductList, setMyProductList] = useState<any>(null);
+
+  useEffect(() => {
+    if (userId) {
+      async function getMyDubProductList() {
+        const payload = {
+          userId: userId,
+          isPublic: false,
+          isLimit: true,
+          lanType: "",
+        };
+
+        const { data } = await mutateAsync(payload);
+        console.log('getMyDubProductList', data);
+        setMyProductList(data.recordList);
+      }
+
+      getMyDubProductList();
+    }
+  }, [userId]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center my-16">
+        <ScaleLoader color="#FF6D60" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return <ErrorComponent onClick={() => {}} retry={false} />;
+  }
 
   return (
-    // <Swiper slidesPerView={1.25}>
-    //   {popularity.data &&
-    //     popularity.data.map((item: any, index: number) => (
-    //       <SwiperSlide key={item.recordId}>
-    //         <Link href={`/community/shorts/product/${item.recordId}`}>
-    //           <DubProductCard
-    //             title={item.title}
-    //             thumbnail={item.thumbnail ?? ""}
-    //             id={item.recordId}
-    //           />
-    //         </Link>
-    //       </SwiperSlide>
-    //     ))}
-    // </Swiper>
-    <></>
+    <>
+      <Swiper slidesPerView={1.25}>
+        {myProductList &&
+          myProductList.map((item: any) => (
+            <SwiperSlide key={item.recordId}>
+              <Link href={`/community/shorts/product/${item.recordId}`}>
+                <DubProductCard
+                  title={item.title}
+                  thumbnail={item.thumbnail ?? ""}
+                  playCount={item.playCount}
+                  updatedDate={item.updatedDate}
+                />
+              </Link>
+            </SwiperSlide>
+          ))}
+      </Swiper>
+    </>
   );
 }

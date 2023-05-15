@@ -5,7 +5,7 @@ import ErrorComponent from "../../../components/atoms/ErrorComponent";
 import "swiper/css";
 import Link from "next/link";
 import DubProductCard from "../molecules/DubProductCard";
-import useMyDubProductListQuery from "@/apis/mypage/queries/useMyDubProductListQuery";
+// import useMyDubProductListQuery from "@/apis/mypage/mutations/useMyDubProductListQuery";
 import { LangType } from "@/enum/statusType";
 import useLikeDubProductListQuery from "@/apis/mypage/queries/useLikeDubProductListQuery";
 
