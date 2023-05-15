@@ -1,9 +1,9 @@
 package com.ssafy.dubenguser.controller;
 
 import com.ssafy.dubenguser.dto.*;
-import com.ssafy.dubenguser.entity.User;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
-import com.ssafy.dubenguser.service.UserServiceImpl;
+import com.ssafy.dubenguser.service.AuthService;
+import com.ssafy.dubenguser.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 
 @Slf4j
@@ -23,7 +24,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Api("마이페이지 API")
 public class UserController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
+    private final AuthService authService;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
@@ -78,5 +80,17 @@ public class UserController {
         }
         List<VideoBookmarkRes> bookmarkList = userService.findVideoBookmark(accessToken, isLimit);
         return new ResponseEntity<>(bookmarkList, HttpStatus.OK);
+    }
+    @GetMapping("/attendance")
+    @ApiOperation(value = "출석 정보 확인하기")
+    public ResponseEntity<?> getAttendance(@RequestHeader HttpHeaders headers, @RequestParam int month){
+        String accessToken = headers.getFirst("Authorization");
+        if(accessToken == null){
+            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+        }
+
+        Set<String> dateList = authService.getAttendanceByMonth(accessToken, month);
+
+        return new ResponseEntity<Set<String>>(dateList, HttpStatus.OK);
     }
 }

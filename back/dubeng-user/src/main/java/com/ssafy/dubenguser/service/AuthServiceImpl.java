@@ -3,6 +3,7 @@ package com.ssafy.dubenguser.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.dubenguser.dto.Token;
+import com.ssafy.dubenguser.dto.UserCalendarRes;
 import com.ssafy.dubenguser.dto.UserLoginReq;
 import com.ssafy.dubenguser.dto.UserLoginRes;
 import com.ssafy.dubenguser.entity.User;
@@ -18,9 +19,10 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -106,6 +108,15 @@ public class AuthServiceImpl implements AuthService{
         User loginUser = findUser.get();
 
         // 출석하기
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MM");
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        int month = Integer.parseInt(currentDateTime.format(formatter1));
+        String nowDate = currentDateTime.format(formatter2);
+
+        saveAttendance(userId, nowDate, month);
 
         UserLoginRes userLoginRes = UserLoginRes.builder()
                 .userId(userId)
@@ -116,12 +127,49 @@ public class AuthServiceImpl implements AuthService{
 
         return userLoginRes;
     }
+    public Set<String> getAttendanceByMonth(String accessToken, int month){
+        //토큰파싱
+        String userId = parseToken(accessToken);
 
+        List<UserCalendar> list = userCalenderRepository.findByUserIdAndMonth(userId, month);
+
+        Set<String> dateList = new HashSet<>();
+        for (UserCalendar userCalendar : list) {
+            //DateFormat
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            String date = userCalendar.getCalDate().format(formatter);
+
+            dateList.add(date);
+        }
+
+        return dateList;
+    }
     /**
      * 출석하기
      */
-    private void setAttendance(){
+    private void saveAttendance(String userId, String nowDate, int month){
 
+        //먼저 검색
+        List<UserCalendar> attendanceList = userCalenderRepository.findByUserIdAndMonth(userId, month);
+
+        for (UserCalendar userCalendar : attendanceList) {
+            // Define the desired date format
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            // Format the ZonedDateTime object using the formatter
+            String formattedDateTime = userCalendar.getCalDate().format(formatter);
+
+            if(formattedDateTime.equals(nowDate)) return;
+        }
+        User user = new User();
+        user.setId(userId);
+
+        UserCalendar userCalendar = new UserCalendar();
+        userCalendar.setUser(user);
+        userCalendar.setMonth(month);
+
+        userCalenderRepository.save(userCalendar);
     }
     /**
      * accessToken을 받아
