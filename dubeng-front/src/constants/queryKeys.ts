@@ -28,6 +28,8 @@ export const CONTENTS_DETAIL = "/contents/detail";
 
 // product shorts
 export const COMMUNITY_DETAIL = "/community/detail";
+export const PLAY_COUNT = "/community/playCount";
+export const COMMENT_LIST = "/community/comment";
 
 // mypage
 export const PROFILE = "/mypage/profile";
