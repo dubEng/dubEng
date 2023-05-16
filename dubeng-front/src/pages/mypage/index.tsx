@@ -16,6 +16,7 @@ import LikeDubProductList from "@/features/mypage/organism/LikeDubProductList";
 import ScrapDubVideoList from "@/features/mypage/organism/ScrapDubVideoList";
 
 import Link from "next/link";
+import useLogoutQuery from "@/apis/login/queries/useLogoutQuery";
 
 export default function MyPage() {
   const userId = useSelector((state: RootState) => state.user.userId);
@@ -28,6 +29,8 @@ export default function MyPage() {
   const [categoryList, setCategoryList] = useState<any>(null);
 
   const { mutateAsync } = useProfileMutation();
+
+  const { mutate } = useLogoutQuery();
 
   useEffect(() => {
     if (userId) {
@@ -47,6 +50,10 @@ export default function MyPage() {
       getProfile();
     }
   }, [userId]);
+
+  function handleLogOutButton() {
+    mutate();
+  }
 
   return (
     <div className="static h-full px-16 bg-white mt-57 mb-61">
@@ -131,7 +138,7 @@ export default function MyPage() {
         </Link>
       </div>
       <ScrapDubVideoList />
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between" onClick={handleLogOutButton}>
         <p className="flex justify-start text-19 font-bold mt-24 mb-16">
           로그아웃
         </p>
