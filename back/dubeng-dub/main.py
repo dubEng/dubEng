@@ -1,5 +1,6 @@
-from flask import Flask, request
-from flask_cors import CORS
+from fastapi import FastAPI
+import uvicorn
+
 from pydub import AudioSegment
 from pydub.utils import make_chunks
 
@@ -18,8 +19,8 @@ from urllib.request import urlopen
 import videoClass
 
 
-app = Flask(__name__)
-CORS(app)
+app = FastAPI()
+
 
 #env.txt 파일에서 정보 읽어오기
 f_conn = open("./env.txt")
@@ -202,13 +203,12 @@ def getFile(videoId,nickname):
     return data
 
 
-@app.route('/record/preview', methods=['POST'])
-def maekPreviewAudio():
-    
-    #request에서 정보 가져오기
-    videoId = request.get_json()["videoId"]
-    nickname = request.get_json()["nickname"]
-    userId = request.get_json()["userId"]
+@app.post('/record/preview')
+def maekPreviewAudio(item: videoClass.previewReq):
+
+    videoId = item.videoId
+    nickname = item.nickname
+    userId = item.userId
 
     userVoiceList = getFile(videoId, nickname)
     
@@ -264,15 +264,15 @@ def maekPreviewAudio():
     return resultUrl
     
 
-@app.route('/record/save', methods=['POST'])
-def save():
+@app.post('/record/save')
+def save(item: videoClass.saveReq):
     #request에서 정보 가져오기
-    videoId = request.get_json()["videoId"]
-    userId = request.get_json()["userId"]
-    url = request.get_json()["url"]
-    totalRecordCount = request.get_json()["totalRecordCount"]
-    totalRecordTime = request.get_json()["totalRecordTime"]
-    runtime = request.get_json()["runtime"]
+    videoId = item.videoId
+    userId = item.userId
+    url = item.url
+    totalRecordCount = item.totalRecordCount
+    totalRecordTime = item.totalRecordTime
+    runtime = item.runtime
     date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     #DB 연결
@@ -297,33 +297,8 @@ def save():
     # 변경사항을 커밋
     connection.commit()
 
-
-    # #video 정보 가져오기
-    # sql = "select start_time, end_time from video where id = %s "
-    # cursor.execute(sql, [videoId])
-    # rows = cursor.fetchall()
-    
-    # recTime = 0
-    # for r in rows:
-    #     recTime = r[1]-r[0]
-
-    # #user 정보 가져오기
-    # sql = "select record_count, total_rec_time from user where id = %s "
-    # cursor.execute(sql, [userId])
-    # rows = cursor.fetchall()
-
-    # recCnt = 0
-    # totalTime = 0
-    # for r in rows:
-    #     recCnt = r[0]
-    #     totalTime = r[1]
-    
-    # recCnt += 1
-    # totalTime += recTime
-
     totalRecordCount += 1
     totalRecordTime += runtime
-
 
     #user 정보 업데이트
     sql = "update user set record_count = %s , total_rec_time = %s where id = %s "
@@ -336,4 +311,4 @@ def save():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    uvicorn.run("main:app")
