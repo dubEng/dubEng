@@ -385,6 +385,9 @@ export default function DubbingPage() {
         audioUrl={previewUrl}
         videoId={parseInt(router.query.id as string)}
         userId={userId}
+        runtime={data.runtime}
+        totalRecordCount={data.totalRecordCount}
+        totalRecordTime={data.totalRecordTime}
       />
       <div className="h-80"></div>
     </div>

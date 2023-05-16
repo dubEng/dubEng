@@ -37,6 +37,9 @@ interface Iprops {
   audioUrl: string;
   videoId: number;
   userId: string;
+  totalRecordCount: number;
+  totalRecordTime: number;
+  runtime: number;
 }
 
 interface RadioOption {
@@ -58,6 +61,9 @@ export default function DubCompleteModal({
   audioUrl,
   videoId,
   userId,
+  totalRecordCount,
+  totalRecordTime,
+  runtime,
 }: Iprops) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -145,6 +151,9 @@ export default function DubCompleteModal({
       url: audioUrl,
       videoId: videoId,
       userId: userId,
+      runtime,
+      totalRecordCount,
+      totalRecordTime
     };
 
     const response = await mutation.mutateAsync(payload);
