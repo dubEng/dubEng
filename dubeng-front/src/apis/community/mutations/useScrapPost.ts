@@ -23,10 +23,12 @@ const fetcher = async (payload: requestParams) => {
 const useScrapPost = () => {
   return useMutation(fetcher, {
     onSuccess: (data) => {
-      window.alert("스크랩 정상적으로 반영");
+      console.log('스크랩 성공');
+      // window.alert("스크랩 정상적으로 반영");
     },
     onError: (error) => {
-      window.alert("스크랩 실패");
+      console.log('스크랩 실패');
+      // window.alert("스크랩 실패");
     },
   });
 };
