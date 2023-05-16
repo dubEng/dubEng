@@ -3,6 +3,7 @@ import EmptyComponent from "@/components/atoms/EmptyComponent";
 import ErrorComponent from "@/components/atoms/ErrorComponent";
 import DubVideoListItem from "@/components/molecules/DubVideoListItem";
 import { EmptyType, LangType } from "@/enum/statusType";
+import LanguageTap from "@/features/mypage/atoms/LanguageTap";
 import axios from "axios";
 import Link from "next/link";
 import { useState } from "react";
@@ -11,7 +12,7 @@ import { ScaleLoader } from "react-spinners";
 export default function SaveContentsListPage() {
   const [myPageLangIndex, setMyPageLangIndex] = useState(LangType.ENGLISH);
 
-  const { data, isLoading, error, refetch } = useScrapDubVideoListQuery(false);
+  const { data, isLoading, error, refetch } = useScrapDubVideoListQuery(false, myPageLangIndex);
 
   function handleMyPageLangIndex(presentIndex: LangType) {
     console.log("presentIndex", presentIndex);
@@ -47,10 +48,10 @@ export default function SaveContentsListPage() {
 
   return (
     <div className="static h-full px-16 bg-white mt-57 mb-61">
-      {/* <LanguageTap
+      <LanguageTap
     myPageLangIndex={myPageLangIndex}
     handleMyPageLangIndex={handleMyPageLangIndex}
-  /> */}
+  />
       {data &&
         data.map((item: any) => (
           <Link href={`/community/shorts/video/${item.id}`}>

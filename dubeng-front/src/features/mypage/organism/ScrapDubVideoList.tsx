@@ -12,7 +12,7 @@ import EmptyComponent from "@/components/atoms/EmptyComponent";
 import { EmptyType } from "@/enum/statusType";
 
 export default function ScrapDubVideoList() {
-  const { data, isLoading, error, refetch } = useScrapDubVideoListQuery(true);
+  const { data, isLoading, error, refetch } = useScrapDubVideoListQuery(true, "all");
 
   if (isLoading) {
     return (

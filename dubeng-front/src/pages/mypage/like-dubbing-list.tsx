@@ -10,9 +10,9 @@ import { useState } from "react";
 import { ScaleLoader } from "react-spinners";
 
 export default function LikeDubbingListPage() {
-  const { data, isLoading, error, refetch } = useLikeDubProductListQuery(false);
-
   const [myPageLangIndex, setMyPageLangIndex] = useState(LangType.ENGLISH);
+  
+  const { data, isLoading, error, refetch } = useLikeDubProductListQuery(false, myPageLangIndex);
 
   function handleMyPageLangIndex(presentIndex: LangType) {
     console.log("presentIndex", presentIndex);
@@ -48,10 +48,10 @@ export default function LikeDubbingListPage() {
 
   return (
     <div className="static h-full px-16 bg-white mt-57 mb-61">
-      {/* <LanguageTap
+      <LanguageTap
         myPageLangIndex={myPageLangIndex}
         handleMyPageLangIndex={handleMyPageLangIndex}
-      /> */}
+      />
       {data &&
         data.map((item: any) => (
           <Link href={`/community/shorts/product/${item.id}`}>

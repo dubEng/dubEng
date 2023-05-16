@@ -4,7 +4,7 @@ import * as queryKeys from "@/constants/queryKeys";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 
-const fetcher = async (isLimit: boolean, accessToken: string) => {
+const fetcher = async (isLimit: boolean, accessToken: string, langType: string) => {
   axios.defaults.headers.common["Authorization"] = accessToken;
 
   const { data } = await axios.get(
@@ -20,11 +20,11 @@ const fetcher = async (isLimit: boolean, accessToken: string) => {
   return data;
 };
 
-const useScrapDubVideoListQuery = (isLimit: boolean) => {
+const useScrapDubVideoListQuery = (isLimit: boolean, langType: string) => {
   const { accessToken } = useSelector((state: RootState) => state.user);
 
   return useQuery([queryKeys.SCRAP_DUB_VIDEO_LIST, isLimit, accessToken], () =>
-    fetcher(isLimit, accessToken)
+    fetcher(isLimit, accessToken, langType)
   );
 };
 
