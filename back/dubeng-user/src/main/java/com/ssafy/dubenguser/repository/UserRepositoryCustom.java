@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface UserRepositoryCustom {
     public List<Category> findCategoriesByUserId(String userId);
-    public List<UserCalendar> findCalenderByUserId(String userId, ZonedDateTime start, ZonedDateTime end);
+    public List<UserCalendar> findCalendarByUserId(String userId, ZonedDateTime start, ZonedDateTime end);
     public List<UserRecordRes> findRecordByUserId(String userId, Boolean isPublic, Boolean isLimit, String lanType);
-    public List<RecordLikeRes> findLikedRecordByUserId(String userId, Boolean isLimit, List<Long> recordIds);
-    public List<VideoBookmarkRes> findBookmarkedVideoByUserId(String userId, Boolean isLimit, List<Long> videoIds);
+    public List<RecordLikeRes> findLikedRecordByUserId(String userId, Boolean isLimit, List<Long> recordIds, String lanType);
+    public List<VideoBookmarkRes> findBookmarkedVideoByUserId(String userId, Boolean isLimit, List<Long> videoIds, String lanType);
 }

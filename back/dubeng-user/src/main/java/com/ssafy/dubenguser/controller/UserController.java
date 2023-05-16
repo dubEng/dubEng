@@ -58,23 +58,23 @@ public class UserController {
 
     @ApiOperation(value = "좋아요 누른 더빙 목록 보여주기")
     @GetMapping("/record/likes")
-    public ResponseEntity<List<RecordLikeRes>> userRecordList(@RequestHeader HttpHeaders headers, @RequestParam Boolean isLimit) {
+    public ResponseEntity<List<RecordLikeRes>> userRecordList(@RequestHeader HttpHeaders headers, @RequestParam Boolean isLimit, @RequestParam String langType) {
         String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
             throw new UnAuthorizedException("토큰 전달 방식에 오류");
         }
-        List<RecordLikeRes> recordList = userService.findRecordLike(accessToken, isLimit);
+        List<RecordLikeRes> recordList = userService.findRecordLike(accessToken, isLimit, langType);
         return new ResponseEntity<>(recordList, HttpStatus.OK);
     }
 
     @ApiOperation(value = "북마크 비디오 보여주기")
     @GetMapping("/bookmark")
-    public ResponseEntity<List<VideoBookmarkRes>> userBookmarkList(@RequestHeader HttpHeaders headers, @RequestParam Boolean isLimit) {
+    public ResponseEntity<List<VideoBookmarkRes>> userBookmarkList(@RequestHeader HttpHeaders headers, @RequestParam Boolean isLimit, @RequestParam String langType) {
         String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
             throw new UnAuthorizedException("토큰 전달 방식에 오류");
         }
-        List<VideoBookmarkRes> bookmarkList = userService.findVideoBookmark(accessToken, isLimit);
+        List<VideoBookmarkRes> bookmarkList = userService.findVideoBookmark(accessToken, isLimit, langType);
         return new ResponseEntity<>(bookmarkList, HttpStatus.OK);
     }
     @GetMapping("/attendance")
