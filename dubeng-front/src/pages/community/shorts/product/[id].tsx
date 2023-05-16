@@ -23,7 +23,6 @@ export default function ShortsProductPage() {
 
   const [isPlayed, setIsPlayed] = useState<null | boolean>(null);
 
-  //추후에 languageType도 같이 받아오면 좋을 듯!
   const { data } = useCommunityDetailQuery(router.query.id as string);
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
@@ -52,15 +51,14 @@ export default function ShortsProductPage() {
     Number(router.query.id),
     isPlayed
   );
-  console.log("ddddddd", playCountUp);
 
-  // const onPlay: YouTubeProps["onPlay"] = (event) => {
-  //   console.log("onPlay");
-  //   console.log("event", event);
-  //   // if (audioRef.current) {
-  //   //   audioRef.current.play();
-  //   // }
-  // };
+  const onPlay: YouTubeProps["onPlay"] = (event) => {
+    console.log("onPlay");
+    console.log("event", event);
+    // if (audioRef.current) {
+    //   audioRef.current.play();
+    // }
+  };
 
   const onStateChange: YouTubeProps["onStateChange"] = (event) => {
     console.log("onStateChange");
@@ -199,12 +197,6 @@ export default function ShortsProductPage() {
               isScrap={false}
             />
           </div>
-          {/* <div className="flex flex-row justify-between mt-16 mb-16 items-center w-390 px-16">
-            <p className="text-16 text-white">{data.title}</p>
-            <div>
-
-            </div>
-          </div> */}
           <div className="h-250 pt-32 overflow-y-scroll bg-black container mx-auto mb-16 w-391 mt-15">
             {data.scriptList &&
               data.scriptList.map((item: any, index: number) => {
