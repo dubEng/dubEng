@@ -1,6 +1,6 @@
 import Image from "next/image";
 import DubLogoImage from "../../../public/images/login/LoginImage.svg";
-import LoginBtnImage from "../../../public/images/login/kakao_login_medium_wide.png";
+import LoginBtnImage from "../../../public/images/login/KakaoLoginButton.svg";
 import Script from "next/script";
 import Link from "next/link";
 
@@ -43,14 +43,14 @@ export default function LogInPage() {
           </Link>
           {/* <p className="text-dubgray text-xs text-center my-5">더빙으로 즐거움이 더블</p> */}
         </div>
-        <div onClick={loginHandler}>
+        <button onClick={loginHandler}>
           <Image
             className="mx-auto"
             src={LoginBtnImage}
             alt="kakaoLoginBtn"
             width={350}
           ></Image>
-        </div>
+        </button>
       </div>
     </div>
   );
