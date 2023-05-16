@@ -2,20 +2,19 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import * as queryKeys from "@/constants/queryKeys";
 
-const fetcher = (recordId: string) =>
-  axios
-    .get(
-      process.env.NEXT_PUBLIC_BASE_URL + `/dub/community/detail/${recordId} }`,
-      {
-        params: {
-          page: 0,
-          size: 10,
-        },
-      }
-    )
-    .then(({ data }) => {
-      return data.content[0];
-    });
+const fetcher = async (recordId: string) => {
+  const { data } = await axios.get(
+    process.env.NEXT_PUBLIC_BASE_URL + `/dub/community/detail/${recordId}`,
+    {
+      params: {
+        page: 0,
+        size: 10,
+      },
+    }
+  );
+
+  return data;
+};
 
 const useCommunityDetailQuery = (recordId: string) => {
   return useQuery([queryKeys.COMMUNITY_DETAIL, recordId], () =>
