@@ -147,4 +147,15 @@ public class AuthController {
 
         return new ResponseEntity<Boolean>(check, HttpStatus.OK);
     }
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestHeader HttpHeaders headers){
+        String accessToken = headers.getFirst("Authorization");
+        if(accessToken == null){
+            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+        }
+        log.debug("ATK : {}", accessToken);
+        authService.kakaoLogout(accessToken);
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
 }

@@ -96,6 +96,31 @@ public class AuthServiceImpl implements AuthService{
         }
         return (String) result.get("thumbnail_image");
     }
+
+    /**
+     *
+     */
+    @Value("${auth.logout_redirect_uri}")
+    private String LOGOUT_REDIRECT_URI;
+
+    @Override
+    public void kakaoLogout(String accessToken){
+        WebClient webClient = WebClient.builder()
+                .baseUrl("https://kapi.kakao.com")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .defaultHeader("Authorization", "Bearer " + accessToken)
+                .build();
+
+        String response = webClient
+                .post()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/v1/user/logout")
+                        .build())
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+        log.debug("로그아웃 정보 : {}", response);
+    }
     public UserLoginRes findUser(String accessToken){
         //토큰파싱
         String userId = parseToken(accessToken);
