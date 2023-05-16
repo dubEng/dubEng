@@ -89,6 +89,14 @@ public class ContentsServiceImpl implements ContentsService {
     public boolean findContentsScrap(String userId, Long videoId){
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
         String key = "scrap_userId::"+userId;
+        Optional<User> user = userRepository.findById(userId);
+        if(!user.isPresent()){
+            throw new NotFoundException("존재하지 않는 유저입니다!");
+        }
+        Optional<Video> ovideo = videoRepository.findById(videoId);
+        if(!ovideo.isPresent()){
+            throw new NotFoundException("존재하지 않는 비디오입니다!");
+        }
         boolean isScrap = setOperations.isMember(key, Long.toString(videoId)); // 1: 있음, 0: 없음
         return isScrap;
     }
