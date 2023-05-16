@@ -19,8 +19,6 @@ import Link from "next/link";
 import useLogoutQuery from "@/apis/login/queries/useLogoutQuery";
 
 export default function MyPage() {
-  const userId = useSelector((state: RootState) => state.user.userId);
-  const nickname = useSelector((state: RootState) => state.user.nickname);
 
   const [description, setDescription] = useState<string>("");
   const [profileImage, setProfileImage] = useState<string>("");
@@ -29,8 +27,9 @@ export default function MyPage() {
   const [categoryList, setCategoryList] = useState<any>(null);
 
   const { mutateAsync } = useProfileMutation();
+  const { accessToken, userId, nickname} = useSelector((state: RootState) => state.user);
 
-  const { mutate } = useLogoutQuery();
+  const { mutate } = useLogoutQuery(accessToken);
 
   useEffect(() => {
     if (userId) {
@@ -51,7 +50,10 @@ export default function MyPage() {
     }
   }, [userId]);
 
+  //로그아웃
   function handleLogOutButton() {
+
+    //토큰 만료 로그아웃
     mutate();
   }
 

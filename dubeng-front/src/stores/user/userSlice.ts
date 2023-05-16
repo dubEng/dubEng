@@ -28,8 +28,11 @@ export const userSlice = createSlice({
     saveAccessToken: (state, action) => {
       state.accessToken = action.payload.accessToken;
     },
-    userLogout: (state, action) => {
-      state = initialState;
+    userLogout: (state) => {
+      state.userId = "";
+      state.accessToken = "";
+      state.nickname = "";
+      state.imageUrl = "";
     },
   },
 });

@@ -4,20 +4,24 @@ import axios from "axios";
 import { userLogout } from "@/stores/user/userSlice";
 import { useRouter } from "next/navigation";
 
-const fetcher = async () =>{
+const fetcher = async (accessToken : string) =>{
+  axios.defaults.headers.common['Authorization'] = accessToken;
   const {data} = await axios
-    .get(process.env.NEXT_PUBLIC_BASE_URL + `/user/auth/logout`);
+    .post(process.env.NEXT_PUBLIC_BASE_URL + `/user/auth/logout`);
+    console.log(data);
     
     return data
 }
 
-const useLogoutQuery = () => {
+const useLogoutQuery = (accessToken:string) => {
+  // state먼저 
   const dispatch = useDispatch();
+  dispatch(userLogout);
+
   const route = useRouter();
 
-  return useMutation(() => fetcher(), {
-    onSuccess: (data) => {
-      dispatch(userLogout);
+  return useMutation(() => fetcher(accessToken), {
+    onSuccess: () => {
       route.push("/");
     },
     onError: (error) => {
