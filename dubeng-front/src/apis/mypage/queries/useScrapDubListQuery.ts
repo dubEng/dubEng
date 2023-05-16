@@ -12,6 +12,7 @@ const fetcher = async (isLimit: boolean, accessToken: string, langType: string) 
     {
       params: {
         isLimit,
+        langType
       },
     }
   );
