@@ -18,5 +18,6 @@ public interface ContentsService {
     public Page<ContentsSearchRes> findContentsSearch(String langType, String title,Pageable pageable, List<Long> contentsSearch);
     public Page<ContentsDetailScriptRes> findContentsDetails(Pageable pageable, Long videoId);
     public Integer addContentsScrap(String userId, Long videoId);
+    public boolean findContentsScrap(String userId, Long videoId);
 
 }
