@@ -30,7 +30,6 @@ export default function MyDubProductList() {
         };
 
         const { data } = await mutateAsync(payload);
-        console.log('getMyDubProductList', data);
         setMyProductList(data);
       }
 

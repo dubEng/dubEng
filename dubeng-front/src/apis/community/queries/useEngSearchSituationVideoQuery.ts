@@ -28,7 +28,6 @@ const fetcher = async (
     }
   );
 
-  console.log("data:", data);
   return data;
 };
 
@@ -39,7 +38,6 @@ const useEngSearchSituationVideoQuery = (
   title: string
 ) => {
   // const queryClient = useQueryClient();
-  console.log("useEngSearchSituation 안", categoryId);
   return useQuery(
     [queryKeys.SEARCH_SITUATION_VIDEO, categoryId],
     ({ pageParam = 0 }) =>

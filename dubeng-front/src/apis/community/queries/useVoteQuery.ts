@@ -13,12 +13,10 @@ const fetcher = (langType: string, userId: string) =>
       }
     )
     .then(({ data }) => {
-      console.log("!!!!!!!!!!!!!!!!!!voteQuery 안!!!!!1", data);
       return data;
     });
 
 const useVoteQuery = (langType: string, userId: string) => {
-  console.log("현재 내 id", userId);
   return useQuery(
     [queryKeys.VOTE, langType, userId],
     () => fetcher(langType, userId),

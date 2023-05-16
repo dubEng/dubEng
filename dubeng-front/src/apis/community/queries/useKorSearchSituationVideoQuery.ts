@@ -19,7 +19,6 @@ const fetcher = async (
     }
   );
 
-  console.log("하이하이kordata:", data);
   return data;
 };
 

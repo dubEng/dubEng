@@ -82,7 +82,6 @@ export default function SignUpPage(){
       introdeuceMounted.current = true;
       return;
     }
-    console.log("한줄 소개 : ", introduce);
     
     // 한줄 소개 유효성 체크
     if(!introduce || introduce.length > introduceLimitSize || introduce.length <= 1){

@@ -19,7 +19,6 @@ const fetcher = (recordId: number, userId: string) => {
       }
     )
     .then(({ data }) => {
-      console.log("usePlayCountQuery안 playCount", data);
       const dataList = data as IDataList;
       return dataList;
     });

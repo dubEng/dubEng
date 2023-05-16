@@ -15,7 +15,6 @@ const fetcher = (
     { contentsSearch: contentsSearch },
     { arrayFormat: "repeat" }
   );
-  console.log("queryArray", queryArray);
   return axios
     .get(
       process.env.NEXT_PUBLIC_BASE_URL +
@@ -31,7 +30,6 @@ const fetcher = (
       }
     )
     .then(({ data }) => {
-      console.log("더빙 비디오 쿼리 안!!!!", data);
       return data;
     });
 };

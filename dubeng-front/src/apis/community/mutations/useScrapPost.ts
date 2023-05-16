@@ -7,7 +7,6 @@ interface requestParams {
 }
 
 const fetcher = async (payload: requestParams) => {
-  console.log("스크랩 쿼리 안!", payload.userId);
   const { data } = await axios.post(
     process.env.NEXT_PUBLIC_BASE_URL + `/dub/contents/scrap/${payload.videoId}`,
     null,
@@ -17,7 +16,6 @@ const fetcher = async (payload: requestParams) => {
       },
     }
   );
-  console.log("스크랩 return data", data);
 
   return data;
 };

@@ -57,13 +57,13 @@ export default function ShortsTitle({
   const { data, mutate, isSuccess, isError, mutateAsync } = useLikePost();
 
   function handleCommentButton() {
-    console.log("댓글 버튼 누름");
+    // console.log("댓글 버튼 누름");
     setIsCommentSliderOpen(true);
   }
 
   const handleLikeButton = () => {
     setChangedLike(true);
-    console.log("하트 누름", isLiked);
+    // console.log("하트 누름", isLiked);
     if (isLiked) {
       setIsLiked(!isLiked);
       setPresentLikeCount(presentLikeCount! - 1);

@@ -30,7 +30,6 @@ const fetcher = (
       }
     )
     .then(({ data }) => {
-      console.log("{ 작품search쿼리data }확인", data);
       return data;
     });
 };

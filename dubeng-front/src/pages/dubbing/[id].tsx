@@ -41,8 +41,6 @@ export default function DubbingPage() {
     parseInt(router.query.id as string)
   );
 
-  console.log("useDubRecordVideoInfoQuery", data);
-
   const scriptList = useDubRecordScriptQuery(
     parseInt(router.query.id as string)
   );

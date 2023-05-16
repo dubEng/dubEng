@@ -36,19 +36,15 @@ export default function ShortsVideoPage() {
     (state: RootState) => state.languageTab.langType
   );
 
-  console.log("");
 
   //추후에 languageType도 같이 받아오면 좋을 듯!
   const { data } = useContentsDetailQuery(router.query.id as string);
-  console.log("Data형식 확인 좀", data);
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
   const [selectedScript, setSelectedScript] = useState<number>(0);
 
-  console.log("userId", userId);
   const { data: isScrapData } = useScrapQuery(data?.id, userId);
-  console.log("isScrapData", isScrapData);
 
   const { mutate } = useScrapPost();
 
@@ -104,19 +100,16 @@ export default function ShortsVideoPage() {
       if (selectedScript < data.scriptList.length && time > 0) {
         // 해당 스크립트 리스트의 startTime이 undefined가 아니라면
         if (data.scriptList[selectedScript]?.startTime != undefined) {
-          console.log("현재 시간", currentTimeSecond);
-          console.log("다음 시간", nextTimeSecond);
+
 
           // 현재 재생되고 있는 영상의 시간이 현재 스크립트의 시작 시간보다 크거나 같고
           // 현재 재생되고 있는 영상의 시간이 다음 스크립트의 시작 시간보다 작거나 같다면
           // selectedScript를 증가하지 않고 넘어간다.
           if (currentTimeSecond <= time && time <= nextTimeSecond) {
-            console.log("selectedScript", selectedScript);
-            console.log("현재 스크립트가 재생중인 영상과 일치합니다.");
+            // console.log("현재 스크립트가 재생중인 영상과 일치합니다.");
           }
           // 현재 선택된 스크립트의 시간보다 진행중인 시간이 더 크다면
           else if (time > currentTimeSecond) {
-            console.log("다음 스크립트로 넘어가자");
             setSelectedScript(selectedScript + 1);
           }
         }

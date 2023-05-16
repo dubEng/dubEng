@@ -19,9 +19,6 @@ const fetcher = (videoId: number, userId: string) =>
       }
     )
     .then(({ data }) => {
-      console.log("isScrap 여부 확인 쿼리 안 data", data);
-      // const dataList = data as IDataList;
-      // return dataList;
       return data;
     });
 

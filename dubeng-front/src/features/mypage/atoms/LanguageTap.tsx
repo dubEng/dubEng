@@ -11,11 +11,9 @@ export default function LanguageTap({
   handleMyPageLangIndex,
 }: Iprops) {
   function handleEnglishTab() {
-    console.log("English 누름");
     handleMyPageLangIndex(LangType.ENGLISH);
   }
   function handleKoreanTab() {
-    console.log("한국어 누름");
     handleMyPageLangIndex(LangType.KOREAN);
   }
 

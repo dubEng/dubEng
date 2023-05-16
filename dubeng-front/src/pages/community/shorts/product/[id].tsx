@@ -41,8 +41,6 @@ export default function ShortsProductPage() {
     router.query.id as string
   );
 
-  console.log("contentList", contentList);
-
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
   const [audioPath, setAudioPath] = useState<string>("");
@@ -83,16 +81,13 @@ export default function ShortsProductPage() {
         audioRef.current.play();
       }
       setIsPlayed(true);
-      console.log("현재 IsPlayed", isPlayed);
       // 재생 중일 때
-      console.log("영상 재생");
       refetch();
     } else if (event.data === 2) {
       if (audioRef.current) {
         audioRef.current.pause();
       }
       //일시 정지 시
-      console.log("일시 정지");
     }
   };
   useEffect(() => {

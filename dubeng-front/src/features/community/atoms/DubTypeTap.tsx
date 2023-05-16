@@ -19,15 +19,12 @@ export default function DubTypeTap({ dubType, langType }: Iprops) {
   const dispatch = useDispatch();
 
   function handleDubVideoTab() {
-    console.log("더빙 콘텐츠 누름");
     dispatch(setTabDubVideo());
   }
   function handleDubProductTab() {
-    console.log("더빙 작품 누름");
     dispatch(setTabDubProduct());
   }
   function handleLanguageButton() {
-    console.log("언어버튼 눌렀다!");
     setIsLanguageButtonOpen(!isLanguageButtonOpen);
   }
 

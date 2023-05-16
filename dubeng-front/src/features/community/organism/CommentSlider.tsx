@@ -16,7 +16,6 @@ export default function CommentSlider({
 }: Iprops) {
   const router = useRouter();
   const recordId = Number(router.query.id);
-  console.log("recordId 확인하기!~!~", recordId, typeof recordId);
 
   const { data, isLoading, isError, refetch } = useCommentListQuery(
     recordId,

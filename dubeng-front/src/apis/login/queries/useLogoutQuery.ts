@@ -8,7 +8,6 @@ const fetcher = async (accessToken : string) =>{
   axios.defaults.headers.common['Authorization'] = accessToken;
   const {data} = await axios
     .post(process.env.NEXT_PUBLIC_BASE_URL + `/user/auth/logout`);
-    console.log(data);
     
     return data
 }

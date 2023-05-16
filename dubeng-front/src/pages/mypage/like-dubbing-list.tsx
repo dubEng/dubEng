@@ -15,8 +15,7 @@ export default function LikeDubbingListPage() {
   const { data, isLoading, error, refetch } = useLikeDubProductListQuery(false, myPageLangIndex);
 
   function handleMyPageLangIndex(presentIndex: LangType) {
-    console.log("presentIndex", presentIndex);
-    console.log("handle 실행됨", myPageLangIndex);
+
     setMyPageLangIndex(presentIndex);
   }
 

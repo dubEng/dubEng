@@ -99,7 +99,6 @@ export default function Vote({ languageIndex, userId }: Iprops) {
   const { mutate, isSuccess, isError } = useVotePost();
 
   function handleVoteUser1Button() {
-    console.log("유저 1 투표 버튼 눌렀다!");
 
     const payload = {
       userId: userId,
@@ -115,7 +114,6 @@ export default function Vote({ languageIndex, userId }: Iprops) {
   }
 
   function handleVoteUser2Button() {
-    console.log("유저 2 투표 버튼 눌렀다!");
 
     const payload = {
       userId: userId,
@@ -147,9 +145,9 @@ export default function Vote({ languageIndex, userId }: Iprops) {
     //   youtubePlayer.seekTo(opts.start);
     //   youtubePlayer.playVideo();
     // }
-    console.log("audioRef1.current", audioRef1.current);
-    console.log("audioRef1.current", audioRef1.current?.paused);
-    console.log("audioRef1.current", audioRef1.current?.currentTime);
+    // console.log("audioRef1.current", audioRef1.current);
+    // console.log("audioRef1.current", audioRef1.current?.paused);
+    // console.log("audioRef1.current", audioRef1.current?.currentTime);
 
     if (audioRef1.current && audioRef1.current.paused) {
       audioRef2.current?.pause();
@@ -170,7 +168,6 @@ export default function Vote({ languageIndex, userId }: Iprops) {
 
   // 유저2 플레이 함수
   function handlePlayUser2Button() {
-    console.log("user2 플레이 버튼 눌렀다!");
 
     if (audioRef2.current && audioRef2.current?.currentTime === opts.start) {
       // console.log("2 끝났따");

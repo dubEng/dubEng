@@ -11,7 +11,6 @@ interface requestParams {
 }
 
 const fetcher = async (payload: requestParams) => {
-  console.log("payload", payload);
   const { data } = await axios.post(
     process.env.NEXT_PUBLIC_BASE_URL + `/dub/community/dubking`,
     null,
@@ -32,10 +31,10 @@ const useVotePost = () => {
 
   return useMutation(fetcher, {
     onSuccess: () => {
-      console.log("투표가 정상적으로 등록되었습니다.");
+      // console.log("투표가 정상적으로 등록되었습니다.");
     },
     onError: (error: any) => {
-      console.log("투표 등록에 실패하였습니다.", error);
+      // console.log("투표 등록에 실패하였습니다.", error);
     },
   });
 };
