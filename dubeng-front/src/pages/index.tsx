@@ -1,11 +1,6 @@
 import UserRankingList from "@/features/home/organism/UserRankingList";
 import DubKingList from "@/features/home/organism/DubKingList";
 import DubProductList from "@/features/home/organism/DubProductList";
-import Image from "next/image";
-
-import BannerOne from "../../public/images/home/banner1.png";
-import BannerTwo from "../../public/images/home/banner2.png";
-import BannerThree from "../../public/images/home/banner3.png";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -31,17 +26,17 @@ export default function HomePage() {
         >
           <SwiperSlide>
             <div className="p-16 ">
-              <Image src={BannerOne} alt={"banner"} className="rounded-6" />
+              <img src={"/images/home/banner1.png"} alt={"banner"} className="rounded-6" />
             </div>
           </SwiperSlide>
           <SwiperSlide>
             <div className="p-16 ">
-              <Image src={BannerTwo} alt={"banner"} className="rounded-6" />
+              <img src={"/images/home/banner2.png"} alt={"banner"} className="rounded-6" />
             </div>
           </SwiperSlide>
           <SwiperSlide>
             <div className="p-16 ">
-              <Image src={BannerThree} alt={"banner"} className="rounded-6" />
+              <img src={"/images/home/banner3.png"} alt={"banner"} className="rounded-6" />
             </div>
           </SwiperSlide>
         </Swiper>
