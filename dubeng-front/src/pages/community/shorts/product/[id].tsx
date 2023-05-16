@@ -10,19 +10,22 @@ import profile_01 from "../../../../../public/images/dump/profile_01.svg";
 import usePlayCountUpQuery from "@/apis/community/queries/usePlayCountUpQuery";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
+import { LangType } from "@/enum/statusType";
 
 export default function ShortsProductPage() {
   const router = useRouter();
 
-  //추후에 languageType도 같이 받아오면 좋을 듯!
-  const { data } = useCommunityDetailQuery(
-    router.query.id as string,
-    "english"
+  const langType = useSelector(
+    (state: RootState) => state.languageTab.langType
   );
 
   const userId = useSelector((state: RootState) => state.user.userId);
 
   const [isPlayed, setIsPlayed] = useState<null | boolean>(null);
+
+  //추후에 languageType도 같이 받아오면 좋을 듯!
+  const { data } = useCommunityDetailQuery(router.query.id as string, langType);
+
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
   const [selectedScript, setSelectedScript] = useState<number>(0);
@@ -212,9 +215,11 @@ export default function ShortsProductPage() {
                       key={index}
                     >
                       <p className="text-16 text-white">{item.content}</p>
-                      <p className="text-14 text-[#8E8D8D]">
-                        {item.translateContent}
-                      </p>
+                      {langType === LangType.ENGLISH ? (
+                        <p className="text-14 text-[#8E8D8D]">
+                          {item.translateContent}
+                        </p>
+                      ) : null}
                     </div>
                   );
                 } else {
@@ -224,9 +229,11 @@ export default function ShortsProductPage() {
                       key={index}
                     >
                       <p className="text-16 text-white">{item.content}</p>
-                      <p className="text-14 text-[#8E8D8D]">
-                        {item.translateContent}
-                      </p>
+                      {langType === LangType.ENGLISH ? (
+                        <p className="text-14 text-[#8E8D8D]">
+                          {item.translateContent}
+                        </p>
+                      ) : null}
                     </div>
                   );
                 }

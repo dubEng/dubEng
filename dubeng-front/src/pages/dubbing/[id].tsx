@@ -22,6 +22,7 @@ import DubCompleteModal from "@/features/dubbing/organism/DubCompleteModal";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import DubLoadingModal from "@/features/dubbing/organism/DubLoadingModal";
+import { LangType } from "@/enum/statusType";
 
 const MySwal = withReactContent(Swal);
 
@@ -39,6 +40,8 @@ export default function DubbingPage() {
   const { isLoading, isError, data } = useDubRecordVideoInfoQuery(
     parseInt(router.query.id as string)
   );
+
+  console.log("useDubRecordVideoInfoQuery", data);
 
   const scriptList = useDubRecordScriptQuery(
     parseInt(router.query.id as string)
@@ -310,6 +313,7 @@ export default function DubbingPage() {
                   scriptLength={scriptList.data.length}
                   youtubePlayer={youtubePlayer}
                   speechToText={speechToText}
+                  langType={data.langType}
                   setSpeechToText={setSpeechToText}
                   timerId={timerId}
                   setTimerId={setTimerId}
@@ -334,9 +338,11 @@ export default function DubbingPage() {
                 key={item.id}
               >
                 <p className="text-14 text-dubblack">{item.content}</p>
-                <p className="text-14 text-dubgray">
-                  {item.translateContent}
-                </p>
+                {data.langType === LangType.ENGLISH ? (
+                  <p className="text-14 text-dubgray">
+                    {item.translateContent}
+                  </p>
+                ) : null}
               </div>
             );
             // if (item.id === selectedScript) {

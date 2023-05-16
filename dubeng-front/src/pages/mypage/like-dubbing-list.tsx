@@ -1,15 +1,16 @@
 import useLikeDubProductListQuery from "@/apis/mypage/queries/useLikeDubProductListQuery";
+import EmptyComponent from "@/components/atoms/EmptyComponent";
 import ErrorComponent from "@/components/atoms/ErrorComponent";
 import DubProductListItem from "@/components/molecules/DubProductListItem";
-import { LangType } from "@/enum/statusType";
+import { EmptyType, LangType } from "@/enum/statusType";
 import LanguageTap from "@/features/mypage/atoms/LanguageTap";
+import axios from "axios";
 import Link from "next/link";
 import { useState } from "react";
 import { ScaleLoader } from "react-spinners";
 
 export default function LikeDubbingListPage() {
-  const { data, isLoading, isError, refetch } =
-    useLikeDubProductListQuery(false);
+  const { data, isLoading, error, refetch } = useLikeDubProductListQuery(false);
 
   const [myPageLangIndex, setMyPageLangIndex] = useState(LangType.ENGLISH);
 
@@ -21,14 +22,28 @@ export default function LikeDubbingListPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center my-16">
+      <div className="flex justify-center items-center my-16 mt-80">
         <ScaleLoader color="#FF6D60" />
       </div>
     );
   }
 
-  if (isError) {
-    return <ErrorComponent onClick={() => refetch} retry={true} />;
+  if (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 404) {
+        return (
+          <div className="mt-80">
+            <EmptyComponent status={EmptyType.EMPTY_LIKE_DUB_PRODUCT} />
+          </div>
+        );
+      }
+    } else {
+      return (
+        <div className="mt-80">
+          <ErrorComponent onClick={() => refetch} retry={true} />;
+        </div>
+      );
+    }
   }
 
   return (

@@ -1,4 +1,4 @@
-import { LangType } from "@/enum/statusType";
+import { EmptyType, LangType } from "@/enum/statusType";
 import LanguageTap from "@/features/mypage/atoms/LanguageTap";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -8,13 +8,15 @@ import { ScaleLoader } from "react-spinners";
 import ErrorComponent from "@/components/atoms/ErrorComponent";
 import Link from "next/link";
 import DubProductListItem from "@/components/molecules/DubProductListItem";
+import EmptyComponent from "@/components/atoms/EmptyComponent";
+import axios from "axios";
 
 export default function myDubbingProductPage() {
   const [myPageLangIndex, setMyPageLangIndex] = useState(LangType.ENGLISH);
 
   const userId = useSelector((state: RootState) => state.user.userId);
 
-  const { mutateAsync, isLoading, isError } = useMyDubProductListMutation();
+  const { mutateAsync, isLoading, error } = useMyDubProductListMutation();
 
   const [myProductList, setMyProductList] = useState<any>(null);
 
@@ -55,21 +57,35 @@ export default function myDubbingProductPage() {
   }, [userId]);
 
   function handleMyPageLangIndex(presentIndex: LangType) {
-    console.log('presentIndex', presentIndex);
+    console.log("presentIndex", presentIndex);
     console.log("handle 실행됨", myPageLangIndex);
     setMyPageLangIndex(presentIndex);
   }
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center my-16">
+      <div className="flex justify-center items-center my-16 mt-80">
         <ScaleLoader color="#FF6D60" />
       </div>
     );
   }
 
-  if (isError) {
-    return <ErrorComponent onClick={() => {}} retry={false} />;
+  if (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 404) {
+        return (
+          <div className="mt-80">
+            <EmptyComponent status={EmptyType.EMPTY_DUB_PRODUCT} />
+          </div>
+        );
+      }
+    } else {
+      return (
+        <div className="mt-80">
+          <ErrorComponent onClick={() => {}} retry={false} />;
+        </div>
+      );
+    }
   }
 
   return (

@@ -13,6 +13,7 @@ export interface Script{
     scriptLength: number;
     youtubePlayer: YouTubePlayer;
     speechToText: string;
+    langType: string;
     setSpeechToText: React.Dispatch<React.SetStateAction<string>>;
     timerId: number;
     setTimerId: React.Dispatch<React.SetStateAction<number>>;

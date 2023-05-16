@@ -5,9 +5,12 @@ import "swiper/css";
 import Link from "next/link";
 import DubProductCard from "../molecules/DubProductCard";
 import useLikeDubProductListQuery from "@/apis/mypage/queries/useLikeDubProductListQuery";
+import axios from 'axios';
+import EmptyComponent from "@/components/atoms/EmptyComponent";
+import { EmptyType } from "@/enum/statusType";
 
 export default function LikeDubProductList() {
-  const {data, isLoading, isError, refetch} = useLikeDubProductListQuery(true);
+  const {data, isLoading, refetch, error} = useLikeDubProductListQuery(true);
 
   if (isLoading) {
     return (
@@ -17,8 +20,14 @@ export default function LikeDubProductList() {
     );
   }
 
-  if (isError) {
-    return <ErrorComponent onClick={() => refetch} retry={true} />;
+  if (error) {
+    if (axios.isAxiosError(error)) {
+      if(error.response?.status === 404){
+        return <EmptyComponent status={EmptyType.EMPTY_LIKE_DUB_PRODUCT} />
+      }
+    } else {
+      return <ErrorComponent onClick={() => refetch} retry={true} />;
+    }
   }
 
   return (

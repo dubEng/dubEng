@@ -1,7 +1,9 @@
 import useScrapDubVideoListQuery from "@/apis/mypage/queries/useScrapDubListQuery";
+import EmptyComponent from "@/components/atoms/EmptyComponent";
 import ErrorComponent from "@/components/atoms/ErrorComponent";
 import DubVideoListItem from "@/components/molecules/DubVideoListItem";
-import { LangType } from "@/enum/statusType";
+import { EmptyType, LangType } from "@/enum/statusType";
+import axios from "axios";
 import Link from "next/link";
 import { useState } from "react";
 import { ScaleLoader } from "react-spinners";
@@ -9,8 +11,7 @@ import { ScaleLoader } from "react-spinners";
 export default function SaveContentsListPage() {
   const [myPageLangIndex, setMyPageLangIndex] = useState(LangType.ENGLISH);
 
-  const { data, isLoading, isError, refetch } =
-    useScrapDubVideoListQuery(false);
+  const { data, isLoading, error, refetch } = useScrapDubVideoListQuery(false);
 
   function handleMyPageLangIndex(presentIndex: LangType) {
     console.log("presentIndex", presentIndex);
@@ -20,14 +21,28 @@ export default function SaveContentsListPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center my-16">
+      <div className="flex justify-center items-center my-16 mt-80">
         <ScaleLoader color="#FF6D60" />
       </div>
     );
   }
 
-  if (isError) {
-    return <ErrorComponent onClick={() => refetch} retry={true} />;
+  if (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 404) {
+        return (
+          <div className="mt-80">
+            <EmptyComponent status={EmptyType.EMPTY_SCRAP_DUB_VIDEO} />
+          </div>
+        );
+      }
+    } else {
+      return (
+        <div className="mt-80">
+          <ErrorComponent onClick={() => refetch} retry={true} />;
+        </div>
+      );
+    }
   }
 
   return (

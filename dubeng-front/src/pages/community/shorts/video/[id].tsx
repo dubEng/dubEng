@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../stores/store";
+import { LangType } from "@/enum/statusType";
 
 interface Iprops {
   id: number;
@@ -23,8 +24,12 @@ export default function ShortsVideoPage() {
 
   const userId = useSelector((state: RootState) => state.user.userId);
 
+  const langType = useSelector(
+    (state: RootState) => state.languageTab.langType
+  );
+
   //추후에 languageType도 같이 받아오면 좋을 듯!
-  const { data } = useContentsDetailQuery("english", router.query.id as string);
+  const { data } = useContentsDetailQuery(langType, router.query.id as string);
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
@@ -157,9 +162,11 @@ export default function ShortsVideoPage() {
                       key={index}
                     >
                       <p className="text-16 text-white">{item.content}</p>
-                      <p className="text-14 text-[#8E8D8D]">
-                        {item.translateContent}
-                      </p>
+                      {langType === LangType.ENGLISH ? (
+                        <p className="text-14 text-[#8E8D8D]">
+                          {item.translateContent}
+                        </p>
+                      ) : null}
                     </div>
                   );
                 } else {
@@ -169,9 +176,11 @@ export default function ShortsVideoPage() {
                       key={index}
                     >
                       <p className="text-16 text-white">{item.content}</p>
-                      <p className="text-14 text-[#8E8D8D]">
-                        {item.translateContent}
-                      </p>
+                      {langType === LangType.ENGLISH ? (
+                        <p className="text-14 text-[#8E8D8D]">
+                          {item.translateContent}
+                        </p>
+                      ) : null}
                     </div>
                   );
                 }
