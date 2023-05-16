@@ -174,10 +174,10 @@ export default function DubSituation() {
         />
       </button>
       {languageIndex === LangType.ENGLISH
-        ? situationKorVideoList && (
+        ? situationVideoList && (
             <DubSituationSlider
               title={sliderTitle}
-              videoList={situationKorVideoList.content}
+              videoList={situationVideoList.content}
               isOpen={isOpen}
               setOpen={setOpen}
             />

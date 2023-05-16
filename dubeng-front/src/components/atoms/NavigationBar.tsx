@@ -107,7 +107,8 @@ export default function NavigationBar() {
 
   function getNavigationBarStyle(pathName: string): string {
     if (pathName.includes("shorts")) {
-      return "h-61 pt-8 pb-8 fixed min-w-390 bottom-0 z-50 bg-dubblack border-t-1 border-[#DEE2E6]";
+      // border-t-1 border-[#DEE2E6]
+      return "h-61 pt-8 pb-8 fixed min-w-390 bottom-0 z-50 bg-dubblack ";
     } else {
       return "h-61 pt-8 pb-8 fixed  min-w-390 bottom-0 z-50 bg-white border-t-1 border-[#DEE2E6]";
     }
