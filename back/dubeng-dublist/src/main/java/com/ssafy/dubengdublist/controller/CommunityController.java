@@ -86,4 +86,10 @@ public class CommunityController {
         // 2. 리턴으로 캐시에서 조회수, 좋아요 수, 좋아요 여부
         return new ResponseEntity<>(communityService.findPlayCounts(recordId, userId), HttpStatus.ACCEPTED);
     }
+
+    @ApiOperation(value="카테고리 리턴")
+    @GetMapping("/category")
+    public ResponseEntity<List<CommunityCategoryRes>> CategoryList(){
+        return new ResponseEntity<>(communityService.findCategories(), HttpStatus.ACCEPTED);
+    }
 }

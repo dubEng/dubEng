@@ -250,4 +250,8 @@ public class CommunityServiceImpl implements CommunityService{
 
         return new ContentsPlayCountRes(playCount, likeCount, isLike);
     }
+
+    public List<CommunityCategoryRes> findCategories(){
+        return categoryRepository.findByAll();
+    }
 }
