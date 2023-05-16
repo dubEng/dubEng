@@ -26,7 +26,9 @@ const fetcher = (videoId: number, userId: string) =>
     });
 
 const useScrapQuery = (videoId: number, userId: string) => {
-  return useQuery([queryKeys.IS_SCRAP], () => fetcher(videoId, userId));
+  return useQuery([queryKeys.IS_SCRAP], () => fetcher(videoId, userId), {
+    enabled: !!videoId,
+  });
 };
 
 export default useScrapQuery;
