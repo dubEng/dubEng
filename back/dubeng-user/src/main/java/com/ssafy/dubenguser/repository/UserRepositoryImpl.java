@@ -43,7 +43,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<UserCalendar> findCalenderByUserId(String userId, ZonedDateTime start, ZonedDateTime end) {
+    public List<UserCalendar> findCalendarByUserId(String userId, ZonedDateTime start, ZonedDateTime end) {
         List<UserCalendar> userCalendars = jpaQueryFactory
                 .selectFrom(userCalendar)
                 .where(userCalendar.user.id.eq(userId).and(userCalendar.calDate.between(start, end)))
@@ -98,16 +98,22 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<RecordLikeRes> findLikedRecordByUserId(String userId, Boolean isLimit, List<Long> recordIds) {
-
+    public List<RecordLikeRes> findLikedRecordByUserId(String userId, Boolean isLimit, List<Long> recordIds, String lanType) {
+        BooleanBuilder builder = new BooleanBuilder();
         List<RecordLikeRes> result;
+
+        builder.and(record.id.in(recordIds));
+
+        if(!isLimit){
+            builder.and(video.langType.eq(lanType));
+        }
 
         if(isLimit){
             result = jpaQueryFactory
                     .select(new QRecordLikeRes(record.id, video.title, video.thumbnail, record.user.nickname, record.playCount))
                     .from(record)
                     .innerJoin(video).on(record.video.id.eq(video.id))
-                    .where(record.id.in(recordIds))
+                    .where(builder)
                     .orderBy(record.updatedDate.desc())
                     .limit(5)
                     .fetch();
@@ -116,7 +122,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                     .select(new QRecordLikeRes(record.id, video.title, video.thumbnail, record.user.nickname, record.playCount))
                     .from(record)
                     .innerJoin(video).on(record.video.id.eq(video.id))
-                    .where(record.id.in(recordIds))
+                    .where(builder)
                     .orderBy(record.updatedDate.desc())
                     .fetch();
         }
@@ -128,22 +134,29 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<VideoBookmarkRes> findBookmarkedVideoByUserId(String userId, Boolean isLimit, List<Long> videoIds) {
-
+    public List<VideoBookmarkRes> findBookmarkedVideoByUserId(String userId, Boolean isLimit, List<Long> videoIds, String lanType) {
+        BooleanBuilder builder = new BooleanBuilder();
         List<VideoBookmarkRes> result;
+
+        builder.and(video.id.in(videoIds));
+
+        if(!isLimit){
+            builder.and(video.langType.eq(lanType));
+        }
+
         if(isLimit) {
             result = jpaQueryFactory
-                    .select(new QVideoBookmarkRes(video.id, video.title, video.thumbnail))
+                    .select(new QVideoBookmarkRes(video.id, video.title, video.thumbnail, video.runtime))
                     .from(video)
-                    .where(video.id.in(videoIds))
+                    .where(builder)
                     .orderBy(video.updatedDate.desc())
                     .limit(5)
                     .fetch();
         }else {
             result = jpaQueryFactory
-                    .select(new QVideoBookmarkRes(video.id, video.title, video.thumbnail))
+                    .select(new QVideoBookmarkRes(video.id, video.title, video.thumbnail, video.runtime))
                     .from(video)
-                    .where(video.id.in(videoIds))
+                    .where(builder)
                     .orderBy(video.updatedDate.desc())
                     .fetch();
         }

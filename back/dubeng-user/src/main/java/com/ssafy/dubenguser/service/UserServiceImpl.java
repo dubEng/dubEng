@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserService {
         ZonedDateTime startDate = today.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
         ZonedDateTime endDate = today.withDayOfMonth(today.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59).withNano(999_999_999);
 
-        List<UserCalendar> userCalendars = userRepository.findCalenderByUserId(userId, startDate, endDate);
+        List<UserCalendar> userCalendars = userRepository.findCalendarByUserId(userId, startDate, endDate);
         List<ZonedDateTime> res = new ArrayList<>();
 
         for(UserCalendar uc: userCalendars) {
@@ -173,7 +173,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public List<RecordLikeRes> findRecordLike(String accessToken, Boolean isLimit) {
+    public List<RecordLikeRes> findRecordLike(String accessToken, Boolean isLimit, String langType) {
         //Token Parsing
         String userId = authService.parseToken(accessToken);
         if(userId == null) throw new UnAuthorizedException("유저 아이디가 없습니다!");
@@ -186,12 +186,12 @@ public class UserServiceImpl implements UserService {
                 .map(String::valueOf)
                 .map(Long::valueOf)
                 .collect(Collectors.toList());
-        List<RecordLikeRes> result = userRepository.findLikedRecordByUserId(userId, isLimit,recordIds);
+        List<RecordLikeRes> result = userRepository.findLikedRecordByUserId(userId, isLimit,recordIds, langType);
         return result;
     }
 
     @Transactional
-    public List<VideoBookmarkRes> findVideoBookmark(String accessToken, Boolean isLimit) {
+    public List<VideoBookmarkRes> findVideoBookmark(String accessToken, Boolean isLimit, String langType) {
         //Token Parsing
         String userId = authService.parseToken(accessToken);
         if(userId == null) throw new UnAuthorizedException("유저 아이디가 없습니다!");
@@ -204,7 +204,7 @@ public class UserServiceImpl implements UserService {
                 .map(String::valueOf)
                 .map(Long::valueOf)
                 .collect(Collectors.toList());
-        List<VideoBookmarkRes> result = userRepository.findBookmarkedVideoByUserId(userId, isLimit, videoIds);
+        List<VideoBookmarkRes> result = userRepository.findBookmarkedVideoByUserId(userId, isLimit, videoIds, langType);
         return result;
     }
 
