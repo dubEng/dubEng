@@ -95,11 +95,23 @@ export default function ShortsProductPage() {
       console.log("일시 정지");
     }
   };
-
   useEffect(() => {
-    // 페이지가 로드된 후에 실행되는 콜백 함수
-    document.documentElement.classList.remove("fp-enabled");
+    const observer = new MutationObserver((mutationsList) => {
+      mutationsList.forEach((mutation) => {
+        const { target } = mutation;
+        if (target instanceof Element && target.classList.contains('fp-enabled')) {
+          target.classList.remove('fp-enabled');
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
+
 
   useEffect(() => {
     if (contentList) {
@@ -205,11 +217,9 @@ export default function ShortsProductPage() {
                                     <p className="text-16 text-white">
                                       {item.content}
                                     </p>
-                                    {langType === LangType.ENGLISH ? (
                                       <p className="text-14 text-[#8E8D8D]">
                                         {item.translateContent}
                                       </p>
-                                    ) : null}
                                   </div>
                                 );
                               }
