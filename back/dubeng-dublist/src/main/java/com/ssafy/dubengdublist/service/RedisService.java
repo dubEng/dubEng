@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
@@ -26,8 +27,8 @@ public class RedisService {
     private final VideoRepository videoRepository;
     private final VideoBookmarkRepository videoBookmarkRepository;
     private final DubKingRepository dubKingRepository;
-
-    @Scheduled(fixedDelay = 300000)
+    private final EntityManager em;
+    @Scheduled(fixedDelay = 300000, initialDelay = 2000)
     @Transactional
     public void addPlayCountFromRedis(){
 
@@ -36,15 +37,26 @@ public class RedisService {
         while(it.hasNext()){
             String data = it.next();
             Long recordId = Long.parseLong(data.split("::")[1]);
-            Long playCnt = Long.parseLong((String) redisTemplate.opsForValue().get(data));
+            Object ovalue = redisTemplate.opsForValue().get(data);
+            Long playCnt = 0L;
+            if(ovalue!=null)
+                playCnt = Long.parseLong((String)ovalue);
+
+            Optional<Record> orecord = recordRepository.findById(recordId);
+            if(!orecord.isPresent()){
+                throw new NotFoundException("존재하지 않는 녹음입니다!");
+            }
             recordRepository.updatePlayCount(recordId, playCnt);
         }
     }
 
-    @Scheduled(fixedDelay = 3600000)
+//    @Scheduled(fixedDelay = 3600000, initialDelay = 6000)
     @Transactional
     public void updateLikeFromRedis(){
         recordLikeRepository.deleteAll();
+        recordLikeRepository.flush();
+        em.flush();
+        em.clear();
         Set<String> redisKeys = redisTemplate.keys("like_userId*");
         Iterator<String> it = redisKeys.iterator();
         while(it.hasNext()){
@@ -57,6 +69,7 @@ public class RedisService {
                 throw new NotFoundException("존재하지 않는 유저입니다!");
             }
             User user = ouser.get();
+            if(records.isEmpty()) return;
             for(Object record : records){
                 Long recordId = Long.parseLong((String) record);
                 Optional<Record> orecord = recordRepository.findById(recordId);
@@ -68,10 +81,13 @@ public class RedisService {
             }
         }
     }
-    @Scheduled(fixedDelay = 3600000)
+//    @Scheduled(fixedDelay = 3600000, initialDelay = 120000)
     @Transactional
     public void updateScrapFromRedis(){
         videoBookmarkRepository.deleteAll();
+        videoBookmarkRepository.flush();
+        em.flush();
+        em.clear();
         Set<String> redisKeys = redisTemplate.keys("scrap_userId*");
         Iterator<String> it = redisKeys.iterator();
         while(it.hasNext()){
@@ -104,10 +120,11 @@ public class RedisService {
         redisTemplate.delete(redisKeys);
     }
 
-    // 매주 월요일 자정 업데이트
-    @Scheduled(cron = "0 0 0 * * 1")
+    // 매주 월요일 자정 업데이트 -> 일단 목요일로 변경
+//    @Scheduled(cron = "0 0 0 * * 4")
     public void updateDubKing(){
         dubKingRepository.deleteAll();
+        dubKingRepository.flush();
         Set<String> redisKeys = redisTemplate.keys("dubKing_userId*");
         Iterator<String> it = redisKeys.iterator();
         while(it.hasNext()){
@@ -121,5 +138,13 @@ public class RedisService {
             User user = ouser.get();
             dubKingRepository.save(new DubKing(user, voteCnt, true));
         }
+    }
+
+    @Transactional
+    public void deleteLikeTable(){
+        recordLikeRepository.deleteAll();
+        em.flush();
+        em.clear();
+
     }
 }
