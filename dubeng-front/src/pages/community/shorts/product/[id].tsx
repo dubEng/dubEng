@@ -138,7 +138,7 @@ export default function ShortsProductPage() {
       {contentList && (
         <ReactFullpage
           licenseKey={"OPEN-SOURCE-GPLV3-LICENSE"}
-          navigation
+          navigation={false}
           onLeave={onLeave}
           pluginWrapper={pluginWrapper}
           debug={false}
@@ -206,7 +206,7 @@ export default function ShortsProductPage() {
                             isScrap={false}
                           />
                         </div>
-                        <div className="h-250 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-391 mt-15">
+                        <div className="h-150 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-391 mt-15">
                           {content.scriptList &&
                             content.scriptList.map(
                               (item: any, index: number) => {
