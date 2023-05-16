@@ -8,11 +8,14 @@ import useMyDubProductListMutation from "@/apis/mypage/mutations/useMyDubProduct
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../stores/store";
+import axios from 'axios';
+import EmptyComponent from "@/components/atoms/EmptyComponent";
+import { EmptyType } from "@/enum/statusType";
 
 export default function MyDubProductList() {
   const userId = useSelector((state: RootState) => state.user.userId);
 
-  const { mutateAsync, isLoading, isError } = useMyDubProductListMutation();
+  const { mutateAsync, isLoading, error } = useMyDubProductListMutation();
 
   const [myProductList, setMyProductList] = useState<any>(null);
 
@@ -43,8 +46,14 @@ export default function MyDubProductList() {
     );
   }
 
-  if (isError) {
-    return <ErrorComponent onClick={() => {}} retry={false} />;
+  if (error) {
+    if (axios.isAxiosError(error)) {
+      if(error.response?.status === 404){
+        return <EmptyComponent status={EmptyType.EMPTY_DUB_PRODUCT} />
+      }
+    } else {
+      return <ErrorComponent onClick={() => {}} retry={false} />;
+    }
   }
 
   return (

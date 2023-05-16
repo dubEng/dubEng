@@ -1,7 +1,9 @@
 import useScrapDubVideoListQuery from "@/apis/mypage/queries/useScrapDubListQuery";
+import EmptyComponent from "@/components/atoms/EmptyComponent";
 import ErrorComponent from "@/components/atoms/ErrorComponent";
 import DubVideoListItem from "@/components/molecules/DubVideoListItem";
-import { LangType } from "@/enum/statusType";
+import { EmptyType, LangType } from "@/enum/statusType";
+import axios from "axios";
 import Link from "next/link";
 import { useState } from "react";
 import { ScaleLoader } from "react-spinners";
@@ -9,7 +11,7 @@ import { ScaleLoader } from "react-spinners";
 export default function SaveContentsListPage() {
   const [myPageLangIndex, setMyPageLangIndex] = useState(LangType.ENGLISH);
 
-  const { data, isLoading, isError, refetch } =
+  const { data, isLoading, error, refetch } =
     useScrapDubVideoListQuery(false);
 
   function handleMyPageLangIndex(presentIndex: LangType) {
@@ -26,8 +28,14 @@ export default function SaveContentsListPage() {
     );
   }
 
-  if (isError) {
-    return <ErrorComponent onClick={() => refetch} retry={true} />;
+  if (error) {
+    if (axios.isAxiosError(error)) {
+      if(error.response?.status === 404){
+        return <EmptyComponent status={EmptyType.EMPTY_SCRAP_DUB_VIDEO} />
+      }
+    } else {
+      return <ErrorComponent onClick={() => refetch} retry={true} />;
+    }
   }
 
   return (

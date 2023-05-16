@@ -1,14 +1,16 @@
 import useLikeDubProductListQuery from "@/apis/mypage/queries/useLikeDubProductListQuery";
+import EmptyComponent from "@/components/atoms/EmptyComponent";
 import ErrorComponent from "@/components/atoms/ErrorComponent";
 import DubProductListItem from "@/components/molecules/DubProductListItem";
-import { LangType } from "@/enum/statusType";
+import { EmptyType, LangType } from "@/enum/statusType";
 import LanguageTap from "@/features/mypage/atoms/LanguageTap";
+import axios from "axios";
 import Link from "next/link";
 import { useState } from "react";
 import { ScaleLoader } from "react-spinners";
 
 export default function LikeDubbingListPage() {
-  const { data, isLoading, isError, refetch } =
+  const { data, isLoading, error, refetch } =
     useLikeDubProductListQuery(false);
 
   const [myPageLangIndex, setMyPageLangIndex] = useState(LangType.ENGLISH);
@@ -27,8 +29,14 @@ export default function LikeDubbingListPage() {
     );
   }
 
-  if (isError) {
-    return <ErrorComponent onClick={() => refetch} retry={true} />;
+  if (error) {
+    if (axios.isAxiosError(error)) {
+      if(error.response?.status === 404){
+        return <EmptyComponent status={EmptyType.EMPTY_LIKE_DUB_PRODUCT} />
+      }
+    } else {
+      return <ErrorComponent onClick={() => refetch} retry={true} />;
+    }
   }
 
   return (

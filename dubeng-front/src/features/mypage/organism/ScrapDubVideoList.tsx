@@ -7,9 +7,12 @@ import "swiper/css";
 import Link from "next/link";
 import { ScaleLoader } from "react-spinners";
 import useScrapDubVideoListQuery from "@/apis/mypage/queries/useScrapDubListQuery";
+import axios from 'axios';
+import EmptyComponent from "@/components/atoms/EmptyComponent";
+import { EmptyType } from "@/enum/statusType";
 
 export default function ScrapDubVideoList() {
-  const { data, isLoading, isError, refetch } = useScrapDubVideoListQuery(true);
+  const { data, isLoading, error, refetch } = useScrapDubVideoListQuery(true);
 
   if (isLoading) {
     return (
@@ -19,10 +22,17 @@ export default function ScrapDubVideoList() {
     );
   }
 
-  if (isError) {
-    return <ErrorComponent onClick={() => refetch} retry={true} />;
+  if (error) {
+    if (axios.isAxiosError(error)) {
+      if(error.response?.status === 404){
+        return <EmptyComponent status={EmptyType.EMPTY_SCRAP_DUB_VIDEO} />
+      }
+    } else {
+      return <ErrorComponent onClick={() => refetch} retry={true} />;
+    }
   }
 
+  
   return (
     <Swiper
       slidesPerView={1.4}
