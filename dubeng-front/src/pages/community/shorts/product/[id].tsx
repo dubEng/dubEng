@@ -149,7 +149,7 @@ export default function ShortsProductPage() {
               {contentList.map((content: any) => {
                 return (
                   <div key={content.recordId} className="section">
-                    <div className="w-full h-screen bg-black flex flex-col items-center justify-center">
+                    <div className="w-full h-screen bg-black flex flex-col items-center justify-start">
                       <>
                         <div className="flex flex-row mt-16 mb-16 items-center w-390 px-16">
                           <Image
@@ -206,7 +206,7 @@ export default function ShortsProductPage() {
                             isScrap={false}
                           />
                         </div>
-                        <div className="h-150 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-391 mt-15">
+                        <div className="h-200 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-391 mt-15">
                           {content.scriptList &&
                             content.scriptList.map(
                               (item: any, index: number) => {
