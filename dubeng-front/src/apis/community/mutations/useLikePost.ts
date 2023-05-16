@@ -13,6 +13,7 @@ const fetcher = async (payload: requestParams) => {
   const { data } = await axios.post(
     process.env.NEXT_PUBLIC_BASE_URL +
       `/dub/community/like/${payload.recordId}`,
+    null,
     {
       params: {
         userId: payload.userId,
@@ -20,16 +21,18 @@ const fetcher = async (payload: requestParams) => {
     }
   );
   console.log("useLikePost", data);
+
   return data;
 };
 
 const useLikePost = () => {
   return useMutation(fetcher, {
-    onSuccess: () => {
-      window.alert("좋아요가 정상적으로 반영되었습니다.");
+    onSuccess: (data) => {
+      console.log(data);
+      console.log("좋아요가 정상적으로 반영되었습니다.");
     },
     onError: (error) => {
-      window.alert("좋아요에 실패하였습니다.");
+      console.log("좋아요에 실패하였습니다.");
     },
   });
 };

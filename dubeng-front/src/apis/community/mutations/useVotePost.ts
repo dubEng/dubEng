@@ -27,10 +27,10 @@ const fetcher = async (payload: requestParams) => {
 const useVotePost = () => {
   return useMutation(fetcher, {
     onSuccess: () => {
-      window.alert("투표가 정상적으로 등록되었습니다.");
+      console.log("투표가 정상적으로 등록되었습니다.");
     },
-    onError: (error) => {
-      window.alert("투표 등록에 실패하였습니다.");
+    onError: (error: any) => {
+      console.log("투표 등록에 실패하였습니다.", error);
     },
   });
 };

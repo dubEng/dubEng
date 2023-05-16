@@ -3,6 +3,8 @@ import ErrorComponent from "@/components/atoms/ErrorComponent";
 import { useRouter } from "next/router";
 import Sheet from "react-modal-sheet";
 import CommentListItem from "../molecules/CommentListItem";
+import EmptyComponent from "@/components/atoms/EmptyComponent";
+import { EmptyType } from "@/enum/statusType";
 interface Iprops {
   isCommentSliderOpen: boolean;
   setIsCommentSliderOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -98,8 +100,15 @@ export default function CommentSlider({
               <div className="mx-24 h-full">
                 <div className="flex items-centers">
                   <p className="text-19 font-bold mb-16">댓글</p>
-                  <p className="text-14 text-dubgray mt-2 ml-4">{100}</p>
+                  <p className="text-14 text-dubgray mt-2 ml-4">
+                    {data?.number}
+                  </p>
                 </div>
+                {data?.content.length === 0 && (
+                  <div className="justify-center my-400">
+                    <EmptyComponent status={EmptyType.EMPTY_COMMENT} />
+                  </div>
+                )}
                 {data?.content &&
                   data?.content.map((item: any, index: number) => (
                     <div className="mb-32 w-full" key={index}>

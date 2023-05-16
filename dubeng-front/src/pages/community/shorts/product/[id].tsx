@@ -5,8 +5,11 @@ import useCommunityDetailQuery from "@/apis/community/queries/useCommunityDetail
 
 import Image from "next/image";
 import ShortsTitle from "@/features/community/molecules/ShortsTitle";
+import { AiFillProfile } from "react-icons/ai";
+import profile_01 from "../../../../../public/images/dump/profile_01.svg";
+import usePlayCountUpQuery from "@/apis/community/queries/usePlayCountUpQuery";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../../stores/store";
+import { RootState } from "@/stores/store";
 import { LangType } from "@/enum/statusType";
 
 export default function ShortsProductPage() {
@@ -15,6 +18,10 @@ export default function ShortsProductPage() {
   const langType = useSelector(
     (state: RootState) => state.languageTab.langType
   );
+
+  const userId = useSelector((state: RootState) => state.user.userId);
+
+  const [isPlayed, setIsPlayed] = useState<null | boolean>(null);
 
   //추후에 languageType도 같이 받아오면 좋을 듯!
   const { data } = useCommunityDetailQuery(router.query.id as string, langType);
@@ -40,6 +47,13 @@ export default function ShortsProductPage() {
     player.mute();
   };
 
+  const { data: playCountUp, refetch } = usePlayCountUpQuery(
+    userId,
+    Number(router.query.id),
+    isPlayed
+  );
+  console.log("ddddddd", playCountUp);
+
   // const onPlay: YouTubeProps["onPlay"] = (event) => {
   //   console.log("onPlay");
   //   console.log("event", event);
@@ -55,8 +69,11 @@ export default function ShortsProductPage() {
       if (audioRef.current) {
         audioRef.current.play();
       }
+      setIsPlayed(true);
+      console.log("현재 IsPlayed", isPlayed);
       // 재생 중일 때
       console.log("영상 재생");
+      refetch();
     } else if (event.data === 2) {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -129,7 +146,7 @@ export default function ShortsProductPage() {
         <>
           <div className="flex mb-8 flex flex-row mt-16 mb-16 items-center w-390 px-16">
             <Image
-              src={data.profile}
+              src={data.profileImage ?? profile_01}
               alt="profileImage"
               width={24}
               height={24}
@@ -174,11 +191,11 @@ export default function ShortsProductPage() {
             <ShortsTitle
               userId={data.userId}
               title={data.title}
-              playCount={1}
+              playCount={playCountUp?.playCount}
               createdDate={data.createdDate}
               recordCommentCount={data.recordCommentCount}
-              recordLikeCount={11}
-              isLike={false}
+              recordLikeCount={playCountUp?.likeCount}
+              isLike={playCountUp?.like}
               isScrap={false}
             />
           </div>

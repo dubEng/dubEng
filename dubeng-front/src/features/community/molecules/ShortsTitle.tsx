@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../stores/store";
 import { MdFavoriteBorder, MdMoreHoriz } from "react-icons/md";
@@ -18,11 +18,11 @@ import useLikePost from "@/apis/community/mutations/useLikePost";
 interface Iprops {
   userId: string;
   title: string;
-  playCount: number;
+  playCount?: number;
   createdDate: number;
   recordCommentCount: number;
-  recordLikeCount: number;
-  isLike: boolean;
+  recordLikeCount?: number;
+  isLike?: boolean;
   isScrap: boolean;
 }
 
@@ -42,6 +42,7 @@ export default function ShortsTitle({
   // const [isTaskButtonOpen, setIsTaskButtonOpen] = useState(false);
   const [isCommentSliderOpen, setIsCommentSliderOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(isLike);
+  const [presentLikeCount, setPresentLikeCount] = useState(recordLikeCount);
 
   const router = useRouter();
   const recordId = Number(router.query.id);
@@ -62,6 +63,7 @@ export default function ShortsTitle({
   const handleLikeButton = () => {
     console.log("하트 누름", isLiked);
     setIsLiked(!isLiked);
+
     mutate({ recordId: recordId, userId: userIdData });
   };
 
