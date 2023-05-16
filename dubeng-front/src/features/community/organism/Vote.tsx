@@ -37,6 +37,9 @@ export default function Vote({ languageIndex, userId }: Iprops) {
 
   const [oncePlayed, setOncePlayed] = useState(false);
 
+  useEffect(() => {
+    refetch();
+  }, []);
   // useQuery들로 가져오는 것들
   const {
     data: voteData,
@@ -108,7 +111,7 @@ export default function Vote({ languageIndex, userId }: Iprops) {
     // }
 
     mutate(payload);
-    refetch;
+    refetch();
   }
 
   function handleVoteUser2Button() {
@@ -124,7 +127,7 @@ export default function Vote({ languageIndex, userId }: Iprops) {
     // }
 
     mutate(payload);
-    refetch;
+    refetch();
   }
 
   // 유저1 플레이 함수
@@ -234,21 +237,25 @@ export default function Vote({ languageIndex, userId }: Iprops) {
             src={voteData.result.user2.recordPath}
           ></audio>
           {videoId && (
-            <YouTube
-              videoId={videoId}
-              opts={opts}
-              style={style}
-              onReady={onPlayerReady}
-              onEnd={(e) => {
-                console.log("onEnd 발생");
+            <div className="relative">
+              <YouTube
+                videoId={videoId}
+                opts={opts}
+                style={style}
+                onReady={onPlayerReady}
+                onEnd={(e) => {
+                  console.log("onEnd 발생");
 
-                youtubePlayer.pauseVideo();
-                youtubePlayer.seekTo(opts.start);
-                setOncePlayed(true);
-              }}
-              onPlay={onPlay}
-              onStateChange={onStateChange}
-            />
+                  youtubePlayer.pauseVideo();
+                  youtubePlayer.seekTo(opts.start);
+                  setOncePlayed(true);
+                }}
+                onPlay={onPlay}
+                onStateChange={onStateChange}
+                className="relative"
+              />
+              <div className="opacity-100 absolute top-0 left-0 w-320 h-174"></div>
+            </div>
           )}
           <div className="mt-16 flex justify-between">
             <div className="space-y-16">
