@@ -5,6 +5,7 @@ import com.ssafy.dubengdublist.dto.contents.ContentsDetailScriptRes;
 import com.ssafy.dubengdublist.dto.contents.ContentsRecommendRes;
 import com.ssafy.dubengdublist.dto.contents.ContentsSearchRes;
 import com.ssafy.dubengdublist.service.CommunityService;
+import com.ssafy.dubengdublist.service.ContentsService;
 import com.ssafy.dubengdublist.service.ContentsServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,7 +27,7 @@ import java.util.List;
 @RequestMapping(path="/contents")
 public class ContentsController {
 
-    private final ContentsServiceImpl contentsService;
+    private final ContentsService contentsService;
     private final CommunityService communityService;
 
     @ApiOperation(value = "00님이 좋아하실 영상")
@@ -64,6 +65,12 @@ public class ContentsController {
     @PostMapping("/scrap/{videoId}")
     public ResponseEntity<?> ContentsScrapAdd(@RequestParam String userId, @PathVariable("videoId") Long videoId){
         return new ResponseEntity<Integer>(contentsService.addContentsScrap(userId, videoId), HttpStatus.ACCEPTED);
+    }
+
+    @ApiOperation(value = "콘텐츠 영상 스크랩 여부")
+    @GetMapping("/isScrap/{videoId}")
+    public ResponseEntity<?> ContentsScrapFind(@RequestParam String userId, @PathVariable("videoId") Long videoId){
+        return new ResponseEntity<>(contentsService.findContentsScrap(userId, videoId), HttpStatus.ACCEPTED);
     }
 
 }
