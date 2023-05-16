@@ -17,5 +17,5 @@ public interface AuthService {
 
     Set<String> getAttendanceByMonth(String accessToken, int month);
 
-    void kakaoLogout();
+    void kakaoLogout(String accessToken);
 }

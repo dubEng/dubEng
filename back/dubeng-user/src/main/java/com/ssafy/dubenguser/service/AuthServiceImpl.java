@@ -104,21 +104,22 @@ public class AuthServiceImpl implements AuthService{
     private String LOGOUT_REDIRECT_URI;
 
     @Override
-    public void kakaoLogout(){
+    public void kakaoLogout(String accessToken){
         WebClient webClient = WebClient.builder()
-                .baseUrl("https://kauth.kakao.com")
+                .baseUrl("https://kapi.kakao.com")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .defaultHeader("Authorization", "Bearer " + accessToken)
                 .build();
 
         String response = webClient
-                .get()
+                .post()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/oauth/logout")
-                        .queryParam("client_id", KAKAO_CLIENT_ID)
-                        .queryParam("logout_redirect_uri", LOGOUT_REDIRECT_URI)
+                        .path("/v1/user/logout")
                         .build())
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
+        log.debug("로그아웃 정보 : {}", response);
     }
     public UserLoginRes findUser(String accessToken){
         //토큰파싱
