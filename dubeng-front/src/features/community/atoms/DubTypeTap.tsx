@@ -80,7 +80,7 @@ export default function DubTypeTap({ dubType, langType }: Iprops) {
           <LanguageSelectTap
             langType={langType}
             onClick={handleLanguageButton}
-          />
+          ></LanguageSelectTap>
           <div className="absolute right-0 top-24">
             {isLanguageButtonOpen && <LanguageSelectBox langType={langType} />}
           </div>

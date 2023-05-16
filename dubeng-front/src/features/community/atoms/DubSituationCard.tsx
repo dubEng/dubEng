@@ -12,14 +12,14 @@ export default function DubSituationCard({ type, langType }: Iprops) {
       return (
         <div className="flex flex-col justify-center items-center rounded-8 w-175 h-80 bg-dubcoral text-white">
           <p className="font-bold text-18">🍕식당에서</p>
-          <p className="text-10">식당에서 쓸 수 있는 유용한 표현</p>
+          <p className="text-11">식당에서 쓸 수 있는 유용한 표현</p>
         </div>
       );
     } else {
       return (
         <div className="flex flex-col justify-center items-center rounded-8 w-175 h-80 bg-dubcoral text-white">
           <p className="font-bold text-18">하이킥 시리즈</p>
-          <p className="text-10">국민 시트콤 하이킥을 더빙으로?</p>
+          <p className="text-11">국민 시트콤 하이킥을 더빙으로?</p>
         </div>
       );
     }
@@ -28,7 +28,7 @@ export default function DubSituationCard({ type, langType }: Iprops) {
       return (
         <div className="flex flex-col justify-center items-center rounded-8 w-175 h-80 bg-dubivory">
           <p className="font-bold text-18 text-dubblack">💻회사에서</p>
-          <p className="text-10 text-dubgray">
+          <p className="text-11 text-dubgray">
             직장 상사에게 영어로 어떻게 말하지?
           </p>
         </div>
@@ -37,7 +37,7 @@ export default function DubSituationCard({ type, langType }: Iprops) {
       return (
         <div className="flex flex-col justify-center items-center rounded-8 w-175 h-80 bg-dubivory">
           <p className="font-bold text-18 text-dubblack">무한도전 시리즈</p>
-          <p className="text-10 text-dubgray">클래식 이즈 더 베스트!</p>
+          <p className="text-11 text-dubgray">클래식 이즈 더 베스트!</p>
         </div>
       );
     }
@@ -46,14 +46,14 @@ export default function DubSituationCard({ type, langType }: Iprops) {
       return (
         <div className="flex flex-col justify-center items-center rounded-8 w-175 h-80 bg-dubblue text-white">
           <p className="font-bold text-18">😁#기쁨</p>
-          <p className="text-10">행복한 이 기분, 영어로 해보자!</p>
+          <p className="text-11">행복한 이 기분, 영어로 해보자!</p>
         </div>
       );
     } else {
       return (
         <div className="flex flex-col justify-center items-center rounded-8 w-175 h-80 bg-dubblue text-white">
           <p className="font-bold text-18">더글로리</p>
-          <p className="text-10">브라보~ 더빙 멋지다 연진아!</p>
+          <p className="text-11">브라보~ 더빙 멋지다 연진아!</p>
         </div>
       );
     }
@@ -62,14 +62,14 @@ export default function DubSituationCard({ type, langType }: Iprops) {
       return (
         <div className="flex flex-col justify-center items-center rounded-8 w-175 h-80 bg-dubpink text-dubblack">
           <p className="font-bold text-18">🗽미국 America</p>
-          <p className="text-10">미국권 영어 한 번 배워볼까?</p>
+          <p className="text-11">미국권 영어 한 번 배워볼까?</p>
         </div>
       );
     } else {
       return (
         <div className="flex flex-col justify-center items-center rounded-8 w-175 h-80 bg-dubpink text-dubblack">
-          <p className="font-bold text-18">타짜</p>
-          <p className="text-10">덥잉 할 수 있어!</p>
+          <p className="font-bold text-18">재벌집 막내아들</p>
+          <p className="text-11">더빙으로 진양철 되기</p>
         </div>
       );
     }

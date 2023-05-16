@@ -48,6 +48,7 @@ export default function RecordingButton({ page }: Iprops) {
           src={defaultRecordingIcon}
           alt="defaultRecordingIcon"
           onClick={() => setOpen(true)}
+          className="cursor-pointer"
         />
         <DubVideoSlider isOpen={isOpen} setOpen={setOpen} />
       </>
