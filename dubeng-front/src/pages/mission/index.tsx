@@ -12,9 +12,9 @@ export default function MissionPage() {
   return (
     <div className="container mx-auto h-screen bg-white mt-57 mb-61">
       <p className="flex justify-start mx-16 text-19 font-bold mt-24 mb-16">
-        나의 섬
+        나의 주방
       </p>
-      <div className="h-350 rounded-10">
+      <div className="h-350 rounded-10 mx-20">
         <MissionKitchen/> 
       </div>
       <p className="flex justify-start mx-16 text-19 font-bold mt-24 mb-16">
