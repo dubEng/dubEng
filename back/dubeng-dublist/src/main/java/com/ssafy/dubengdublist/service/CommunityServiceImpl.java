@@ -189,20 +189,25 @@ public class CommunityServiceImpl implements CommunityService{
         String cntKey = "recordLikeCnt::"+Long.toString(recordId);
         String recordStr = Long.toString(recordId);
         ValueOperations valueOperations = redisTemplate.opsForValue();
+        Integer result = 0;
         if(valueOperations.get(cntKey)==null){
             valueOperations.set(cntKey,"0");
         }
 
         if(setOperations.add(key, recordStr)==1){ // 좋아요 완료
             valueOperations.increment(cntKey);
-
-            return 1;
-        }else{ // 이미 좋아요를 눌렀음.
+            String temp = (String) valueOperations.get(cntKey);
+            result = Integer.parseInt(temp);
+            System.out.println(result);
+            return result;
+        }else { // 이미 좋아요를 눌렀음.
             setOperations.remove(key, recordStr); // 좋아요 취소
             valueOperations.decrement(cntKey);
-
+            String temp = (String) valueOperations.get(cntKey);
+            result = Integer.parseInt(temp);
         }
-        return 0;
+
+        return result;
     }
     public Integer addPlayCntToRedis(Long recordId){
         String key = "recordPlayCnt::"+recordId;
