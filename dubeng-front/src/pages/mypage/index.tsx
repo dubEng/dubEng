@@ -16,7 +16,7 @@ import LikeDubProductList from "@/features/mypage/organism/LikeDubProductList";
 import ScrapDubVideoList from "@/features/mypage/organism/ScrapDubVideoList";
 
 import Link from "next/link";
-import useLogoutQuery from "@/apis/login/queries/useLogoutQuery";
+import useLogoutPost from "@/apis/login/mutations/useLogoutPost";
 
 export default function MyPage() {
 
@@ -29,8 +29,8 @@ export default function MyPage() {
   const { mutateAsync } = useProfileMutation();
   const { accessToken, userId, nickname} = useSelector((state: RootState) => state.user);
 
-  const { mutate } = useLogoutQuery(accessToken);
-
+  const { mutate } = useLogoutPost(accessToken);
+  
   useEffect(() => {
     if (userId) {
       async function getProfile() {
