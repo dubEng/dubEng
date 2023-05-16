@@ -13,7 +13,10 @@ const fetcher = async (recordId: string) => {
     }
   );
 
-  return data.content[0];
+  // console.log('useCommunityDetailQuery', data);
+  // console.log('content', data.content);
+
+  return data.content;
 };
 
 const useCommunityDetailQuery = (recordId: string) => {
