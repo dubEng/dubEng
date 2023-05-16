@@ -9,7 +9,7 @@ export interface UserState {
 }
 
 const initialState: UserState = {
-  userId: "",
+  userId: "2780666674",
   accessToken: "",
   nickname: "익명의 게스트",
   imageUrl: "",
