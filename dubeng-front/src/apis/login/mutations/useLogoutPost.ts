@@ -12,15 +12,16 @@ const fetcher = async (accessToken : string) =>{
     return data
 }
 
-const useLogoutQuery = (accessToken:string) => {
+const useLogoutPost = (accessToken:string) => {
+  
   // state먼저 
   const dispatch = useDispatch();
-  dispatch(userLogout());
-
   const route = useRouter();
 
   return useMutation(() => fetcher(accessToken), {
     onSuccess: () => {
+      
+      dispatch(userLogout());
       route.push("/");
     },
     onError: (error) => {
@@ -29,4 +30,4 @@ const useLogoutQuery = (accessToken:string) => {
   });
 };
 
-export default useLogoutQuery;
+export default useLogoutPost;
