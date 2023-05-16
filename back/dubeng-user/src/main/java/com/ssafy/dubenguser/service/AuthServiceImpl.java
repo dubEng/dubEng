@@ -97,12 +97,6 @@ public class AuthServiceImpl implements AuthService{
         return (String) result.get("thumbnail_image");
     }
 
-    /**
-     *
-     */
-    @Value("${auth.logout_redirect_uri}")
-    private String LOGOUT_REDIRECT_URI;
-
     @Override
     public void kakaoLogout(String accessToken){
         WebClient webClient = WebClient.builder()
