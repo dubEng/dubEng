@@ -10,6 +10,14 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../stores/store";
 import { LangType } from "@/enum/statusType";
 
+import useScrapPost from "@/apis/community/mutations/useScrapPost";
+
+// react-icons/md/MdOutlineTurnedInNot
+// react-icons/md/MdOutlineTurnedIn
+import { MdOutlineTurnedInNot } from "react-icons/md";
+import { MdOutlineTurnedIn } from "react-icons/md";
+import useScrapQuery from "@/apis/community/queries/useScrapQuery";
+
 interface Iprops {
   id: number;
   title: string;
@@ -28,15 +36,26 @@ export default function ShortsVideoPage() {
     (state: RootState) => state.languageTab.langType
   );
 
-  console.log('');
+  console.log("");
 
   //추후에 languageType도 같이 받아오면 좋을 듯!
   const { data } = useContentsDetailQuery(router.query.id as string);
+  console.log("Data형식 확인 좀", data);
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
   const [selectedScript, setSelectedScript] = useState<number>(0);
 
+  console.log("userId", userId);
+  const { data: isScrapData } = useScrapQuery(data?.id, userId);
+  console.log("isScrapData", isScrapData);
+
+  const { mutate } = useScrapPost();
+
+  function handleScrapButton() {
+    // post해주기
+    mutate({ userId: userId, videoId: data.id });
+  }
   function transferYoutube(videoPath: string) {
     const originalUrl = videoPath;
     const splitUrl = originalUrl.split("watch?v=");
@@ -148,8 +167,26 @@ export default function ShortsVideoPage() {
               setSelectedScript(0);
             }}
           />
-          <div className="flex flex-row justify-between mt-16 mb-16 items-center w-390 px-8">
-            <p className="text-16 text-white">{data.title}</p>
+          <div className="flex flex-row justify-between mt-16 mb-16 items-center w-390 px-16">
+            <div className="flex max-w-200 space-x-4">
+              <p className="text-16 text-white line-clamp-1">{data.title}</p>
+              {userId &&
+                (isScrapData ? (
+                  <button
+                    className="text-dubgraylight"
+                    onClick={handleScrapButton}
+                  >
+                    <MdOutlineTurnedIn size={20} />
+                  </button>
+                ) : (
+                  <button
+                    className="text-dubgraylight"
+                    onClick={handleScrapButton}
+                  >
+                    <MdOutlineTurnedInNot size={20} />
+                  </button>
+                ))}
+            </div>
             <div>
               <DubButton type={"shorts"} onClick={handleDubButton} />
             </div>

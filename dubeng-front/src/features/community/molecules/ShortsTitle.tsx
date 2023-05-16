@@ -79,7 +79,7 @@ export default function ShortsTitle({
     return (
       <div className="bg-black w-358">
         <div className="flex items-center justify-between">
-          <p className="text-16 text-dubgraylight">{title}</p>
+          <p className="text-16 text-dubgraylight line-clamp-1">{title}</p>
           <div className="flex text-14 text-dubgraylight space-x-8">
             {isLiked ? (
               <button className="flex space-x-4" onClick={handleLikeButton}>

@@ -25,6 +25,7 @@ export const Home_RANK = "/home/rank";
 
 // original shorts
 export const CONTENTS_DETAIL = "/contents/detail";
+export const IS_SCRAP = "/contents/scrap";
 
 // product shorts
 export const COMMUNITY_DETAIL = "/community/detail";
