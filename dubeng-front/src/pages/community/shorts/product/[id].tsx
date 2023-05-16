@@ -98,7 +98,6 @@ export default function ShortsProductPage() {
 
   useEffect(() => {
     if (contentList) {
-      console.log("오디오 경로:", contentList[0].recordPath);
       setAudioPath(contentList[0].recordPath);
     }
   }, [contentList]);
