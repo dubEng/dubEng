@@ -37,10 +37,19 @@ public class UserServiceImpl implements UserService {
     /**
      *
      */
-    public void addUser(UserJoinReq request, String accessToken){
+    @Override
+    public void addUser(UserJoinReq request, String accessToken, String refreshToken){
         if(checkExistNickname(request.getNickname()))
             throw new DuplicateException("이미 등록된 닉네임입니다.");
 
+        //토큰 유효성 검사
+        try{
+            authService.parseToken(accessToken);
+        }catch(Exception e){
+            accessToken = authService.reissueATK(refreshToken);
+        }
+
+        //parseToken
         String userId = authService.parseToken(accessToken);
 
         User newUser = User.builder()
@@ -139,7 +148,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public UserCalendarRes findCalendar(String accessToken) {
+    public UserCalendarRes findCalendar(String accessToken, String refreshToken) {
+        //토큰 유효성 검사
+        try{
+            authService.parseToken(accessToken);
+        }catch(Exception e){
+            accessToken = authService.reissueATK(refreshToken);
+        }
         //Token parsing
         String userId = authService.parseToken(accessToken);
         if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");
@@ -173,7 +188,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public List<RecordLikeRes> findRecordLike(String accessToken, Boolean isLimit, String langType) {
+    public List<RecordLikeRes> findRecordLike(String accessToken, String refreshToken, Boolean isLimit, String langType) {
+        //토큰 유효성 검사
+        try{
+            authService.parseToken(accessToken);
+        }catch(Exception e){
+            accessToken = authService.reissueATK(refreshToken);
+        }
+
         //Token Parsing
         String userId = authService.parseToken(accessToken);
         if(userId == null) throw new UnAuthorizedException("유저 아이디가 없습니다!");
@@ -191,7 +213,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public List<VideoBookmarkRes> findVideoBookmark(String accessToken, Boolean isLimit, String langType) {
+    public List<VideoBookmarkRes> findVideoBookmark(String accessToken, String refreshToken, Boolean isLimit, String langType) {
+        //토큰 유효성 검사
+        try{
+            authService.parseToken(accessToken);
+        }catch(Exception e){
+            accessToken = authService.reissueATK(refreshToken);
+        }
+
         //Token Parsing
         String userId = authService.parseToken(accessToken);
         if(userId == null) throw new UnAuthorizedException("유저 아이디가 없습니다!");

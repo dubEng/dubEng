@@ -1,5 +1,6 @@
 package com.ssafy.dubenguser.controller;
 
+import com.ssafy.dubenguser.config.CookieHandler;
 import com.ssafy.dubenguser.dto.UserMissionRes;
 import com.ssafy.dubenguser.entity.User;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
@@ -26,37 +27,44 @@ import java.util.Objects;
 @Api("도전과제 페이지 API")
 public class MissionController {
     private final UserMissionService userMissionService;
+    private final CookieHandler cookieHandler;
 
     @ApiOperation(value="도전과제 미션 목록 조회")
     @GetMapping("/list")
-    public ResponseEntity<List<UserMissionRes>>  userMissionList(@RequestHeader HttpHeaders headers){
+    public ResponseEntity<List<UserMissionRes>>  userMissionList(@RequestHeader HttpHeaders headers, HttpServletRequest request){
         String accessToken = headers.getFirst("accessToken");
         if(accessToken == null){
             throw new UnAuthorizedException("토큰 전달 방식에 오류");
         }
-        List<UserMissionRes> result = userMissionService.findUserMissions(accessToken);
+        String refreshToken = cookieHandler.getRefreshToken(request);
+
+        List<UserMissionRes> result = userMissionService.findUserMissions(accessToken, refreshToken);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @ApiOperation(value="해결한 도전과제의 asset list 조회")
     @GetMapping("/asset")
-    public ResponseEntity<List<String>>  userAssetList(@RequestHeader HttpHeaders headers){
+    public ResponseEntity<List<String>>  userAssetList(@RequestHeader HttpHeaders headers, HttpServletRequest request){
         String accessToken = headers.getFirst("accessToken");
         if(accessToken == null){
             throw new UnAuthorizedException("토큰 전달 방식에 오류");
         }
-        List<String> result = userMissionService.findAssets(accessToken);
+        String refreshToken = cookieHandler.getRefreshToken(request);
+
+        List<String> result = userMissionService.findAssets(accessToken,refreshToken);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @ApiOperation(value="도전과제 완료 여부 확인")
     @GetMapping("/complete")
-    public ResponseEntity<HashMap<String, Object>>  userAssetList(@RequestHeader HttpHeaders headers, @RequestParam Long videoId){
+    public ResponseEntity<HashMap<String, Object>>  userAssetList(@RequestHeader HttpHeaders headers, HttpServletRequest request, @RequestParam Long videoId){
         String accessToken = headers.getFirst("accessToken");
         if(accessToken == null){
             throw new UnAuthorizedException("토큰 전달 방식에 오류");
         }
-        HashMap<String, Object> result = userMissionService.findMissionComplete(accessToken, videoId);
+        String refreshToken = cookieHandler.getRefreshToken(request);
+
+        HashMap<String, Object> result = userMissionService.findMissionComplete(accessToken, refreshToken, videoId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

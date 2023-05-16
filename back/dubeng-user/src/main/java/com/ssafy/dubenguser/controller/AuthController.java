@@ -5,6 +5,7 @@ import com.ssafy.dubenguser.dto.Token;
 import com.ssafy.dubenguser.dto.UserJoinReq;
 import com.ssafy.dubenguser.dto.UserLoginRes;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
+import com.ssafy.dubenguser.service.AuthService;
 import com.ssafy.dubenguser.service.AuthServiceImpl;
 import com.ssafy.dubenguser.service.UserService;
 import io.swagger.annotations.Api;
@@ -31,7 +32,7 @@ import java.util.HashMap;
 @Api("회원 API")
 public class AuthController {
     private final UserService userService;
-    private final AuthServiceImpl authService;
+    private final AuthService authService;
     private final CookieHandler cookieHandler;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
@@ -111,7 +112,7 @@ public class AuthController {
      */
     @PostMapping("/join")
     @ApiOperation(value = "회원가입하기")
-    public ResponseEntity<String> userAdd(@RequestHeader HttpHeaders headers, @RequestBody UserJoinReq request){
+    public ResponseEntity<String> userAdd(@RequestHeader HttpHeaders headers, HttpServletRequest request, @RequestBody UserJoinReq req){
         String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
             throw new UnAuthorizedException("토큰 전달 방식에 오류");
@@ -120,8 +121,9 @@ public class AuthController {
         log.debug("ATK : {}", accessToken);
         log.info("userAdd : {}", request.toString());
 
+        String refreshToken = cookieHandler.getRefreshToken(request);
 
-        userService.addUser(request, accessToken);
+        userService.addUser(req, accessToken, refreshToken);
 
         return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
@@ -138,7 +140,7 @@ public class AuthController {
         String refreshToken = cookieHandler.getRefreshToken(request);
 
         //ATK을 이용하여 회원정보 요청
-        UserLoginRes user = authService.findUser(accessToken);
+        UserLoginRes user = authService.findUser(accessToken, refreshToken);
 
         log.debug("loginUser : {}", user);
         return new ResponseEntity<UserLoginRes>(user, HttpStatus.OK);
