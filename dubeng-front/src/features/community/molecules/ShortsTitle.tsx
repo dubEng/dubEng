@@ -43,6 +43,7 @@ export default function ShortsTitle({
   const [isCommentSliderOpen, setIsCommentSliderOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(isLike);
   const [presentLikeCount, setPresentLikeCount] = useState(recordLikeCount);
+  const [changedLike, setChangedLike] = useState(false);
 
   const router = useRouter();
   const recordId = Number(router.query.id);
@@ -53,7 +54,7 @@ export default function ShortsTitle({
   //   console.log(isTaskButtonOpen);
   // }
 
-  const { mutate, isSuccess, isError } = useLikePost();
+  const { data, mutate, isSuccess, isError, mutateAsync } = useLikePost();
 
   function handleCommentButton() {
     console.log("댓글 버튼 누름");
@@ -61,8 +62,15 @@ export default function ShortsTitle({
   }
 
   const handleLikeButton = () => {
+    setChangedLike(true);
     console.log("하트 누름", isLiked);
-    setIsLiked(!isLiked);
+    if (isLiked) {
+      setIsLiked(!isLiked);
+      setPresentLikeCount(presentLikeCount! - 1);
+    } else {
+      setIsLiked(!isLiked);
+      setPresentLikeCount(presentLikeCount! + 1);
+    }
 
     mutate({ recordId: recordId, userId: userIdData });
   };
@@ -82,11 +90,11 @@ export default function ShortsTitle({
                 <MdFavoriteBorder size={20} />
               </button>
             )}
-            <p>{recordLikeCount}</p>
-            <button className="flex space-x-4">
+            <p>{changedLike ? presentLikeCount : recordLikeCount}</p>
+            <button className="flex space-x-4" onClick={handleCommentButton}>
               <MdOutlineModeComment size={20} />
-              <p>{recordCommentCount}</p>
             </button>
+            <p>{recordCommentCount}</p>
           </div>
         </div>
         <div className="flex mt-4 text-14 text-dubgray space-x-4">
@@ -111,10 +119,11 @@ export default function ShortsTitle({
                 <MdFavoriteBorder size={20} />
               </button>
             )}
+            <p>{changedLike ? presentLikeCount : recordLikeCount}</p>
             <button className="flex space-x-4" onClick={handleCommentButton}>
               <MdOutlineModeComment size={20} />
-              <p>{recordCommentCount}</p>
             </button>
+            <p>{recordCommentCount}</p>
             {/* <div className="relative">
               <MdMoreHoriz
                 className="absolute top-0 right-0 text-dubgraylight cursor-pointer"
