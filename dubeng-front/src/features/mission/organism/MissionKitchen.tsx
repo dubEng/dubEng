@@ -24,16 +24,16 @@ export default function MissionKitchen() {
     const [myheight,setMyHeight] = useState(300);
   
     return (
-        <Canvas camera={{position: [1.1413,3.0704,1.95585] }} style={{borderRadius : 10, border: '1px solid #F5F6F8'}}>
+        <Canvas id="Mycanvas" camera={{position: [1.1413,3.0704,1.95585] }} style={{borderRadius : 10, border: '1px solid #F5F6F8'}}>
             <Suspense fallback={null}>
                 <Plane args={[100, 100]} rotation={[-Math.PI / 2, 0, 0]} position={[0.1,0.1,0.1]}>
                     <meshStandardMaterial color="#FFB679" />
                 </Plane>
-                <KitchenModel url="/assets/b2.glb" Rayss={rayTracing} myHeight={300} myWidth={350}/>
-                {/* <KitchenTooltipBox /> */}
+                <KitchenModel url="/assets/ori3.glb" Rayss={rayTracing} myHeight={300} myWidth={350}/>
+                <KitchenTooltipBox />
             </Suspense>
             <ContactShadows position={[0, -4.5, 0]} scale={20} blur={2} far={4.5} />
-            <OrbitControls makeDefault dampingFactor={0.9} minDistance={5} maxDistance={20}
+            <OrbitControls makeDefault dampingFactor={0.9}
                                     minAzimuthAngle={-Math.PI/4} maxAzimuthAngle={Math.PI/4} minPolarAngle={0} maxPolarAngle={Math.PI/3}  />
             {/* <KitchenFilterEffect /> */}
             <ambientLight intensity={0.3} color={'#FFA07A'} /> 
