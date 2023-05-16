@@ -12,6 +12,8 @@ import requests
 import json
 import logging
 
+from fastapi.middleware.cors import CORSMiddleware
+
 from urllib.request import urlopen
 
 
@@ -21,6 +23,22 @@ import videoClass
 
 app = FastAPI()
 
+origins = [
+    "https://k8b208.p.ssafy.io",
+    "https://k8b208.p.ssafy.io/",
+    "https://dub-eng.com/",
+    "https://dub-eng.com",
+    "http://127.0.0.1:8000/"
+]
+
+# 미들웨어 추가
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 #env.txt 파일에서 정보 읽어오기
 f_conn = open("./env.txt")
@@ -265,7 +283,7 @@ def maekPreviewAudio(item: videoClass.previewReq):
     
 
 @app.post('/record/save')
-def save(item: videoClass.saveReq):
+async def save(item: videoClass.saveReq):
     #request에서 정보 가져오기
     videoId = item.videoId
     userId = item.userId
@@ -311,4 +329,4 @@ def save(item: videoClass.saveReq):
 
 
 if __name__ == '__main__':
-    uvicorn.run("main:app")
+    uvicorn.run(app, host="127.0.0.1", port=8000)
