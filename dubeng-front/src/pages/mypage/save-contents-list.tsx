@@ -11,8 +11,7 @@ import { ScaleLoader } from "react-spinners";
 export default function SaveContentsListPage() {
   const [myPageLangIndex, setMyPageLangIndex] = useState(LangType.ENGLISH);
 
-  const { data, isLoading, error, refetch } =
-    useScrapDubVideoListQuery(false);
+  const { data, isLoading, error, refetch } = useScrapDubVideoListQuery(false);
 
   function handleMyPageLangIndex(presentIndex: LangType) {
     console.log("presentIndex", presentIndex);
@@ -22,7 +21,7 @@ export default function SaveContentsListPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center my-16">
+      <div className="flex justify-center items-center my-16 mt-80">
         <ScaleLoader color="#FF6D60" />
       </div>
     );
@@ -30,11 +29,19 @@ export default function SaveContentsListPage() {
 
   if (error) {
     if (axios.isAxiosError(error)) {
-      if(error.response?.status === 404){
-        return <EmptyComponent status={EmptyType.EMPTY_SCRAP_DUB_VIDEO} />
+      if (error.response?.status === 404) {
+        return (
+          <div className="mt-80">
+            <EmptyComponent status={EmptyType.EMPTY_SCRAP_DUB_VIDEO} />
+          </div>
+        );
       }
     } else {
-      return <ErrorComponent onClick={() => refetch} retry={true} />;
+      return (
+        <div className="mt-80">
+          <ErrorComponent onClick={() => refetch} retry={true} />;
+        </div>
+      );
     }
   }
 

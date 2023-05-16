@@ -9,7 +9,7 @@ import ErrorComponent from "@/components/atoms/ErrorComponent";
 import Link from "next/link";
 import DubProductListItem from "@/components/molecules/DubProductListItem";
 import EmptyComponent from "@/components/atoms/EmptyComponent";
-import axios from 'axios';
+import axios from "axios";
 
 export default function myDubbingProductPage() {
   const [myPageLangIndex, setMyPageLangIndex] = useState(LangType.ENGLISH);
@@ -57,14 +57,14 @@ export default function myDubbingProductPage() {
   }, [userId]);
 
   function handleMyPageLangIndex(presentIndex: LangType) {
-    console.log('presentIndex', presentIndex);
+    console.log("presentIndex", presentIndex);
     console.log("handle 실행됨", myPageLangIndex);
     setMyPageLangIndex(presentIndex);
   }
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center my-16">
+      <div className="flex justify-center items-center my-16 mt-80">
         <ScaleLoader color="#FF6D60" />
       </div>
     );
@@ -72,11 +72,19 @@ export default function myDubbingProductPage() {
 
   if (error) {
     if (axios.isAxiosError(error)) {
-      if(error.response?.status === 404){
-        return <EmptyComponent status={EmptyType.EMPTY_DUB_PRODUCT} />
+      if (error.response?.status === 404) {
+        return (
+          <div className="mt-80">
+            <EmptyComponent status={EmptyType.EMPTY_DUB_PRODUCT} />
+          </div>
+        );
       }
     } else {
-      return <ErrorComponent onClick={() => {}} retry={false} />;
+      return (
+        <div className="mt-80">
+          <ErrorComponent onClick={() => {}} retry={false} />;
+        </div>
+      );
     }
   }
 

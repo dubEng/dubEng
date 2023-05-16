@@ -10,8 +10,7 @@ import { useState } from "react";
 import { ScaleLoader } from "react-spinners";
 
 export default function LikeDubbingListPage() {
-  const { data, isLoading, error, refetch } =
-    useLikeDubProductListQuery(false);
+  const { data, isLoading, error, refetch } = useLikeDubProductListQuery(false);
 
   const [myPageLangIndex, setMyPageLangIndex] = useState(LangType.ENGLISH);
 
@@ -23,7 +22,7 @@ export default function LikeDubbingListPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center my-16">
+      <div className="flex justify-center items-center my-16 mt-80">
         <ScaleLoader color="#FF6D60" />
       </div>
     );
@@ -31,11 +30,19 @@ export default function LikeDubbingListPage() {
 
   if (error) {
     if (axios.isAxiosError(error)) {
-      if(error.response?.status === 404){
-        return <EmptyComponent status={EmptyType.EMPTY_LIKE_DUB_PRODUCT} />
+      if (error.response?.status === 404) {
+        return (
+          <div className="mt-80">
+            <EmptyComponent status={EmptyType.EMPTY_LIKE_DUB_PRODUCT} />
+          </div>
+        );
       }
     } else {
-      return <ErrorComponent onClick={() => refetch} retry={true} />;
+      return (
+        <div className="mt-80">
+          <ErrorComponent onClick={() => refetch} retry={true} />;
+        </div>
+      );
     }
   }
 
