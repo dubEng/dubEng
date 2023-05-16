@@ -105,7 +105,7 @@ export default function ShortsProductPage() {
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [youtubePlayer]);
 
 
   useEffect(() => {
