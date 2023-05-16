@@ -97,6 +97,11 @@ export default function ShortsProductPage() {
   };
 
   useEffect(() => {
+    // 페이지가 로드된 후에 실행되는 콜백 함수
+    document.documentElement.classList.remove("fp-enabled");
+  }, []);
+
+  useEffect(() => {
     if (contentList) {
       setAudioPath(contentList[0].recordPath);
     }
