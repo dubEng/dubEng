@@ -41,6 +41,6 @@ export enum DubType {
 }
 
 export enum LangType {
-  ENGLISH = "ENGLISH",
-  KOREAN = "KOREAN",
+  ENGLISH = "english",
+  KOREAN = "korean",
 }
