@@ -5,15 +5,19 @@ import useCommunityDetailQuery from "@/apis/community/queries/useCommunityDetail
 
 import Image from "next/image";
 import ShortsTitle from "@/features/community/molecules/ShortsTitle";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../stores/store";
+import { LangType } from "@/enum/statusType";
 
 export default function ShortsProductPage() {
   const router = useRouter();
 
-  //추후에 languageType도 같이 받아오면 좋을 듯!
-  const { data } = useCommunityDetailQuery(
-    router.query.id as string,
-    "english"
+  const langType = useSelector(
+    (state: RootState) => state.languageTab.langType
   );
+
+  //추후에 languageType도 같이 받아오면 좋을 듯!
+  const { data } = useCommunityDetailQuery(router.query.id as string, langType);
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
@@ -194,9 +198,11 @@ export default function ShortsProductPage() {
                       key={index}
                     >
                       <p className="text-16 text-white">{item.content}</p>
-                      <p className="text-14 text-[#8E8D8D]">
-                        {item.translateContent}
-                      </p>
+                      {langType === LangType.ENGLISH ? (
+                        <p className="text-14 text-[#8E8D8D]">
+                          {item.translateContent}
+                        </p>
+                      ) : null}
                     </div>
                   );
                 } else {
@@ -206,9 +212,11 @@ export default function ShortsProductPage() {
                       key={index}
                     >
                       <p className="text-16 text-white">{item.content}</p>
-                      <p className="text-14 text-[#8E8D8D]">
-                        {item.translateContent}
-                      </p>
+                      {langType === LangType.ENGLISH ? (
+                        <p className="text-14 text-[#8E8D8D]">
+                          {item.translateContent}
+                        </p>
+                      ) : null}
                     </div>
                   );
                 }

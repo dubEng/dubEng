@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { useMutation } from "react-query";
 import axios from "axios";
 import { userLogout } from "@/stores/user/userSlice";
+import { useRouter } from "next/navigation";
 
 const fetcher = async () =>{
   const {data} = await axios
@@ -12,10 +13,12 @@ const fetcher = async () =>{
 
 const useLogoutQuery = () => {
   const dispatch = useDispatch();
+  const route = useRouter();
 
   return useMutation(() => fetcher(), {
     onSuccess: (data) => {
       dispatch(userLogout);
+      route.push("/");
     },
     onError: (error) => {
       console.log("로그아웃 실패");

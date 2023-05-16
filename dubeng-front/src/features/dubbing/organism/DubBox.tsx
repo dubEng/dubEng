@@ -3,7 +3,7 @@ import "regenerator-runtime/runtime";
 import ListenButton from "../atoms/ListenButton";
 import PlayButton from "../atoms/PlayButton";
 import RecordButton from "../atoms/RecordButton";
-import { SoundType } from "../../../enum/statusType";
+import { LangType, SoundType } from "../../../enum/statusType";
 
 import { useEffect, useRef, useState } from "react";
 
@@ -37,6 +37,7 @@ export default function DubBox({
   youtubePlayer,
   speechToText,
   setSpeechToText,
+  langType,
   setTimerId,
   updateDubbingCompleteCheckList,
   timerId,
@@ -360,10 +361,15 @@ export default function DubBox({
         <p className="text-12 text-dubblack font-normal h-25">
           {scriptIndex}/{scriptLength}
         </p>
-        <div className="flex justify-end items-center h-25">
-          <span className="text-12 text-dubblack font-normal">번역</span>
-          <Switch checked={koSubTitle} onChange={handleSubTitleSwitchChange} />
-        </div>
+        {langType === LangType.ENGLISH ? (
+          <div className="flex justify-end items-center h-25">
+            <span className="text-12 text-dubblack font-normal">번역</span>
+            <Switch
+              checked={koSubTitle}
+              onChange={handleSubTitleSwitchChange}
+            />
+          </div>
+        ) : null}
       </div>
       <div className="flex justify-center">
         <PitchGraph moviePitchList={pitchList} myPitchList={myPitchList} />
@@ -371,34 +377,38 @@ export default function DubBox({
       <p className="text-14 text-dubblack font-normal flex justify-start mx-16">
         {content}
       </p>
-      {koSubTitle ? (
-        <p className="text-14 text-dubgray font-normal flex justify-start mx-16">
-          {translateContent}
-        </p>
-      ) : (
-        <p className="text-14 text-dubgray font-normal flex justify-start mx-16 invisible">
-          {translateContent}
-        </p>
-      )}
-      {listening ? (
-        <p className="text-14 text-dubblue font-normal flex justify-start h-34 mx-16 mb-16">
-          {transcript}
-        </p>
-      ) : answer ? (
-        <p className="text-14 text-[#0FA64B] font-normal flex flex-row justify-start items-center h-34 mx-16 mb-16">
-          {speechToText}
-          <Lottie
-            loop
-            path="/lottie/checked.json"
-            play
-            style={{ width: 35, height: 35 }}
-          />
-        </p>
-      ) : (
-        <p className="text-14 text-dubcoral font-normal flex justify-start h-34 mx-16 mb-16">
-          {speechToText}
-        </p>
-      )}
+      {langType === LangType.ENGLISH ? (
+        koSubTitle ? (
+          <p className="text-14 text-dubgray font-normal flex justify-start mx-16">
+            {translateContent}
+          </p>
+        ) : (
+          <p className="text-14 text-dubgray font-normal flex justify-start mx-16 invisible">
+            {translateContent}
+          </p>
+        )
+      ) : null}
+      {langType === LangType.ENGLISH ? (
+        listening ? (
+          <p className="text-14 text-dubblue font-normal flex justify-start h-34 mx-16 mb-16">
+            {transcript}
+          </p>
+        ) : answer ? (
+          <p className="text-14 text-[#0FA64B] font-normal flex flex-row justify-start items-center h-34 mx-16 mb-16">
+            {speechToText}
+            <Lottie
+              loop
+              path="/lottie/checked.json"
+              play
+              style={{ width: 35, height: 35 }}
+            />
+          </p>
+        ) : (
+          <p className="text-14 text-dubcoral font-normal flex justify-start h-34 mx-16 mb-16">
+            {speechToText}
+          </p>
+        )
+      ) : null}
       <audio
         ref={audioRef}
         style={{ display: "none" }}
