@@ -323,7 +323,7 @@ export default function DubbingPage() {
             ))}
         </Swiper>
       </div>
-      <div className="h-156 overflow-y-scroll bg-white mb-16 w-391">
+      <div className="h-156 overflow-y-scroll bg-white mb-16 w-391 scrollbar-thin scrollbar-thumb-blue-700 scrollbar-track-blue-300">
         <p className="flex justify-start mx-16 text-16 font-bold mt-16 mb-8">
           전체 스크립트
         </p>
