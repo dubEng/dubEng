@@ -15,7 +15,7 @@ const fetcher = async (accessToken : string) =>{
 const useLogoutQuery = (accessToken:string) => {
   // state먼저 
   const dispatch = useDispatch();
-  dispatch(userLogout);
+  dispatch(userLogout());
 
   const route = useRouter();
 
