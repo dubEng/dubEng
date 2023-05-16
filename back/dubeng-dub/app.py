@@ -270,6 +270,9 @@ def save():
     videoId = request.get_json()["videoId"]
     userId = request.get_json()["userId"]
     url = request.get_json()["url"]
+    totalRecordCount = request.get_json()["totalRecordCount"]
+    totalRecordTime = request.get_json()["totalRecordTime"]
+    runtime = request.get_json()["runtime"]
     date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     #DB 연결
@@ -295,32 +298,36 @@ def save():
     connection.commit()
 
 
-    #video 정보 가져오기
-    sql = "select start_time, end_time from video where id = %s "
-    cursor.execute(sql, [videoId])
-    rows = cursor.fetchall()
+    # #video 정보 가져오기
+    # sql = "select start_time, end_time from video where id = %s "
+    # cursor.execute(sql, [videoId])
+    # rows = cursor.fetchall()
     
-    recTime = 0
-    for r in rows:
-        recTime = r[1]-r[0]
+    # recTime = 0
+    # for r in rows:
+    #     recTime = r[1]-r[0]
 
-    #user 정보 가져오기
-    sql = "select record_count, total_rec_time from user where id = %s "
-    cursor.execute(sql, [userId])
-    rows = cursor.fetchall()
+    # #user 정보 가져오기
+    # sql = "select record_count, total_rec_time from user where id = %s "
+    # cursor.execute(sql, [userId])
+    # rows = cursor.fetchall()
 
-    recCnt = 0
-    totalTime = 0
-    for r in rows:
-        recCnt = r[0]
-        totalTime = r[1]
+    # recCnt = 0
+    # totalTime = 0
+    # for r in rows:
+    #     recCnt = r[0]
+    #     totalTime = r[1]
     
-    recCnt += 1
-    totalTime += recTime
+    # recCnt += 1
+    # totalTime += recTime
+
+    totalRecordCount += 1
+    totalRecordTime += runtime
+
 
     #user 정보 업데이트
     sql = "update user set record_count = %s , total_rec_time = %s where id = %s "
-    cursor.execute(sql, [recCnt, totalTime, userId])
+    cursor.execute(sql, [totalRecordCount, totalRecordTime, userId])
 
     connection.commit()
     connection.close()
