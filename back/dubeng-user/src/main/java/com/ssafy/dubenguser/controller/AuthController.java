@@ -147,4 +147,10 @@ public class AuthController {
 
         return new ResponseEntity<Boolean>(check, HttpStatus.OK);
     }
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(){
+        authService.kakaoLogout();
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
 }

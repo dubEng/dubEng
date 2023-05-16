@@ -96,6 +96,30 @@ public class AuthServiceImpl implements AuthService{
         }
         return (String) result.get("thumbnail_image");
     }
+
+    /**
+     *
+     */
+    @Value("${auth.logout_redirect_uri}")
+    private String LOGOUT_REDIRECT_URI;
+
+    @Override
+    public void kakaoLogout(){
+        WebClient webClient = WebClient.builder()
+                .baseUrl("https://kauth.kakao.com")
+                .build();
+
+        String response = webClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/oauth/logout")
+                        .queryParam("client_id", KAKAO_CLIENT_ID)
+                        .queryParam("logout_redirect_uri", LOGOUT_REDIRECT_URI)
+                        .build())
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+    }
     public UserLoginRes findUser(String accessToken){
         //토큰파싱
         String userId = parseToken(accessToken);

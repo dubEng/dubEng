@@ -16,4 +16,6 @@ public interface AuthService {
     Token requestRefresh(Token requestDTO);
 
     Set<String> getAttendanceByMonth(String accessToken, int month);
+
+    void kakaoLogout();
 }
