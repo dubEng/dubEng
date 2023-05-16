@@ -12,9 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -28,7 +26,7 @@ public class RedisService {
     private final VideoBookmarkRepository videoBookmarkRepository;
     private final DubKingRepository dubKingRepository;
     private final EntityManager em;
-    @Scheduled(fixedDelay = 300000, initialDelay = 2000)
+    @Scheduled(fixedDelay = 300000, initialDelay = 1000)
     @Transactional
     public void addPlayCountFromRedis(){
 
@@ -50,15 +48,15 @@ public class RedisService {
         }
     }
 
-//    @Scheduled(fixedDelay = 3600000, initialDelay = 6000)
+    @Scheduled(fixedDelay = 3600000, initialDelay = 15000)
     @Transactional
     public void updateLikeFromRedis(){
         recordLikeRepository.deleteAll();
         recordLikeRepository.flush();
-        em.flush();
-        em.clear();
+
         Set<String> redisKeys = redisTemplate.keys("like_userId*");
         Iterator<String> it = redisKeys.iterator();
+        List<RecordLike> likeList = new ArrayList<>();
         while(it.hasNext()){
             String data = it.next();
             String userId = data.split("::")[1]; // 유저 아이디들
@@ -77,11 +75,12 @@ public class RedisService {
                     throw new NotFoundException("존재하지 않는 녹음입니다!");
                 }
                 Record record1 = orecord.get();
-                recordLikeRepository.save(new RecordLike(user, record1, true));
+                likeList.add(new RecordLike(user, record1, true));
             }
         }
+        recordLikeRepository.saveAll(likeList);
     }
-//    @Scheduled(fixedDelay = 3600000, initialDelay = 120000)
+    @Scheduled(fixedDelay = 3600000, initialDelay = 240000)
     @Transactional
     public void updateScrapFromRedis(){
         videoBookmarkRepository.deleteAll();
@@ -121,7 +120,7 @@ public class RedisService {
     }
 
     // 매주 월요일 자정 업데이트 -> 일단 목요일로 변경
-//    @Scheduled(cron = "0 0 0 * * 4")
+    @Scheduled(cron = "0 0 0 * * 4")
     public void updateDubKing(){
         dubKingRepository.deleteAll();
         dubKingRepository.flush();
