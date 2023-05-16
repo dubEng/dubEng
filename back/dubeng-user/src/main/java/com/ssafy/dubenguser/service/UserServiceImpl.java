@@ -184,6 +184,10 @@ public class UserServiceImpl implements UserService {
 
         //JPA
         List<UserRecordRes> result = userRepository.findRecordByUserId(request.getUserId(), request.getIsPublic(), request.getIsLimit(), request.getLanType());
+
+        if(result == null){
+            result = new ArrayList<>();
+        }
         return result;
     }
 
@@ -209,6 +213,10 @@ public class UserServiceImpl implements UserService {
                 .map(Long::valueOf)
                 .collect(Collectors.toList());
         List<RecordLikeRes> result = userRepository.findLikedRecordByUserId(userId, isLimit,recordIds, langType);
+
+        if(result == null){
+            result = new ArrayList<>();
+        }
         return result;
     }
 
@@ -234,6 +242,10 @@ public class UserServiceImpl implements UserService {
                 .map(Long::valueOf)
                 .collect(Collectors.toList());
         List<VideoBookmarkRes> result = userRepository.findBookmarkedVideoByUserId(userId, isLimit, videoIds, langType);
+
+        if(result == null){
+            result = new ArrayList<>();
+        }
         return result;
     }
 

@@ -12,5 +12,5 @@ public interface UserService {
     public UserCalendarRes findCalendar(String accessToken, String refreshToken);
     public List<UserRecordRes> findRecord(UserRecordReq request);
     public List<RecordLikeRes> findRecordLike(String accessToken,String refreshToken, Boolean isLimit, String langType);
-    public List<VideoBookmarkRes> findVideoBookmark(String accessToken,String refreshToken, Boolean isLimit, String langType);
+    public List<VideoBookmarkRes> findVideoBookmark(String accessToken, String refreshToken, Boolean isLimit, String langType);
 }
