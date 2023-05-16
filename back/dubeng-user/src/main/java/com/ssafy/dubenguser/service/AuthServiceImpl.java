@@ -115,6 +115,37 @@ public class AuthServiceImpl implements AuthService{
                 .block();
         log.debug("로그아웃 정보 : {}", response);
     }
+
+    @Override
+    public String reissueATK(String refreshToken) {
+        WebClient webClient = WebClient.builder()
+                .baseUrl("https://kauth.kakao.com")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .build();
+        log.debug("KAKAO_CLIENT_ID : {}", KAKAO_CLIENT_ID);
+        String response = webClient
+                .post()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/oauth/token")
+                        .queryParam("grant_type","refresh_token")
+                        .queryParam("client_id",KAKAO_CLIENT_ID)
+                        .queryParam("refresh_token",refreshToken)
+                        .build())
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+        log.debug("Refresh : {}", response);
+
+        HashMap<String, Object> responseMap = parseTokenResponse(response);
+
+        if(responseMap.get("access_token") == null){
+            throw new UnAuthorizedException("리프레시 토큰 만료");
+        }
+        String accessToken = (String) responseMap.get("access_token");
+
+        return accessToken;
+    }
+
     public UserLoginRes findUser(String accessToken){
         //토큰파싱
         String userId = parseToken(accessToken);
