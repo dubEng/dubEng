@@ -14,6 +14,9 @@ const fetcher = (payload: RecordSave) =>
       videoId: payload.videoId,
       userId: payload.userId,
       url: payload.url,
+      totalRecordCount: payload.totalRecordCount,
+      totalRecordTime: payload.totalRecordTime,
+      runtime: payload.runtime
     })
     .then(({ data }) => data);
 
