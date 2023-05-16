@@ -1,6 +1,15 @@
 from pydantic import BaseModel
 
 class video(BaseModel):
+    title: str
+    thumbnail: str
+    runtime: int
+    videoPath: str
+    bgPath: str
+    voicePath: str
+    startTime: int
+    endTime: int
+    
     def __init__(self):
         self.title = ""
         self.thumbnail = ""
@@ -22,6 +31,10 @@ class video(BaseModel):
         self.endTime = endT
 
 class dbScript(BaseModel):
+    startTime: int
+    duration: int
+    isDub: bool
+
     def __init__(self):
         self.startTime = 0
         self.duration = 0
@@ -33,6 +46,9 @@ class dbScript(BaseModel):
         self.isDub = isDub
 
 class script(BaseModel): 
+    startTime: int
+    duration: int
+
     def __init__(self):
         self.startTime = 0
         self.duration = 0
