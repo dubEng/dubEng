@@ -59,7 +59,7 @@ def getData():
                 gender = "Male"
 
             newDf = newDf._append(pd.DataFrame([[row.id, row.title, row.producer, gender, row.play_count, tmpStr.rstrip(
-            ), row.thumbnail]], columns=['id', 'title', 'production', 'gender', 'playCount', 'genres', 'thumbnail']))
+            ), row.thumbnail]], columns=['id', 'title', 'production', 'gender', 'playCount', 'genres', 'thumbnail']), ignore_index=True)
             tmpStr = ""
             temp = row.id
 
