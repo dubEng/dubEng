@@ -132,6 +132,12 @@ public class AuthController {
         }
         log.debug("ATK : {}", accessToken);
 
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if(cookie.getName().equals("refreshToken")){
+                System.out.println(cookie.getValue());
+            }
+        }
         //ATK을 이용하여 회원정보 요청
         UserLoginRes user = authService.findUser(accessToken);
 
