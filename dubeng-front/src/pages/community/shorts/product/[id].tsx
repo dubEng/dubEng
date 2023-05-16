@@ -142,6 +142,7 @@ export default function ShortsProductPage() {
           onLeave={onLeave}
           pluginWrapper={pluginWrapper}
           debug={false}
+          scrollOverflow={false}
           credits={credits}
           render={(comp: any) => (
             <ReactFullpage.Wrapper>
@@ -150,7 +151,7 @@ export default function ShortsProductPage() {
                   <div key={content.recordId} className="section">
                     <div className="w-full h-screen bg-black flex flex-col items-center justify-center">
                       <>
-                        <div className="flex mb-8 flex flex-row mt-16 mb-16 items-center w-390 px-16">
+                        <div className="flex flex-row mt-16 mb-16 items-center w-390 px-16">
                           <Image
                             src={content.profileImage ?? profile_01}
                             alt="profileImage"
@@ -205,7 +206,7 @@ export default function ShortsProductPage() {
                             isScrap={false}
                           />
                         </div>
-                        <div className="h-250 pt-32 overflow-y-scroll bg-black container mx-auto mb-16 w-391 mt-15">
+                        <div className="h-250 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-391 mt-15">
                           {content.scriptList &&
                             content.scriptList.map(
                               (item: any, index: number) => {
