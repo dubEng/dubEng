@@ -15,7 +15,7 @@ public interface CommunityService {
 
     public Page<CommunitySearchRes> findCommunitySearch(String langType, String title, Pageable pageable, List<Long> contentsSearch);
 
-    public Page<CommunityDetailScriptRes> findCommunityDetail(String langType, Pageable pageable, Long recordId);
+    public Page<CommunityDetailScriptRes> findCommunityDetail(Pageable pageable, Long recordId);
 
     public Page<CommunityCommentRes> findCommunityComment(Pageable pageable, Long recordId);
 

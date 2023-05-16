@@ -55,12 +55,13 @@ public class ContentsServiceImpl implements ContentsService {
     }
 
     @Transactional
-    public Page<ContentsDetailScriptRes> findContentsDetails(String langType, Pageable pageable, Long videoId) {
+    public Page<ContentsDetailScriptRes> findContentsDetails(Pageable pageable, Long videoId) {
         Optional<Video> ovideo = videoRepository.findById(videoId);
         if(!ovideo.isPresent()){
             throw new NotFoundException("존재하지 않는 비디오입니다!");
         }
-        return videoRepository.findByAllContents(langType, pageable, videoId);
+
+        return videoRepository.findByAllContents(ovideo.get().getLangType(), pageable, videoId);
     }
 
     @Transactional
