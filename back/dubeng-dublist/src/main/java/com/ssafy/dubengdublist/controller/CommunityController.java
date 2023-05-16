@@ -43,9 +43,9 @@ public class CommunityController {
     }
 
     @ApiOperation(value = "선택한 더빙 작품 영상 자세히 보기")
-    @GetMapping("/detail/{recordId}/{langType}")
-    public Page<CommunityDetailScriptRes> CommunityDetails(@PathVariable("langType") String  langType, Pageable pageable, @PathVariable Long recordId){
-        return communityService.findCommunityDetail(langType, pageable, recordId);
+    @GetMapping("/detail/{recordId}")
+    public Page<CommunityDetailScriptRes> CommunityDetails(Pageable pageable, @PathVariable Long recordId){
+        return communityService.findCommunityDetail(pageable, recordId);
     }
 
 

@@ -100,11 +100,13 @@ public class CommunityServiceImpl implements CommunityService{
         return videoRepository.findByCategoryCommunity(langType, title, pageable, contentsSearch);
     }
 
-    public Page<CommunityDetailScriptRes> findCommunityDetail(String langType, Pageable pageable, Long recordId) {
+    public Page<CommunityDetailScriptRes> findCommunityDetail(Pageable pageable, Long recordId) {
         Optional<Record> orecord = recordRepository.findById(recordId);
         if(!orecord.isPresent()){
             throw new NotFoundException("존재하지 않는 녹음입니다!");
         }
+        // 언어 알기
+        String langType = orecord.get().getVideo().getLangType();
         return videoRepository.findByAllCommunity(langType, pageable, recordId);
 
     }
