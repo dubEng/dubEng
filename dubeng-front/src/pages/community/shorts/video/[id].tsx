@@ -123,7 +123,7 @@ export default function ShortsVideoPage() {
 
   function handleDubButton() {
     //로그인 하지 않은 사용자라면
-    if (userId == "") {
+    if (userId.length == 0) {
       MySwal.fire({
         icon: "info",
         title: "로그인 후 이용 가능한 서비스입니다.",

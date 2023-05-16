@@ -92,10 +92,10 @@ export default function NavigationBar() {
     );
   }
 
-  function handleNavigationButton(pathName: string) {
+  async function handleNavigationButton(pathName: string) {
     if (pathName === "/mypage") {
       if (userId.length == 0) {
-        MySwal.fire("로그인 후 이용 가능합니다.");
+        await MySwal.fire("로그인 후 이용 가능합니다.");
         route.push("/login");
       } else {
         route.push(pathName);

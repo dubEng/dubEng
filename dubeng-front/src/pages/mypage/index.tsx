@@ -140,11 +140,11 @@ export default function MyPage() {
         </Link>
       </div>
       <ScrapDubVideoList />
-      <div className="flex items-center justify-between" onClick={handleLogOutButton}>
-        <p className="flex justify-start text-19 font-bold mt-24 mb-16">
+      <div className="flex items-center justify-between">
+        <button className="flex justify-start text-19 font-bold mt-24 mb-16" onClick={handleLogOutButton}>
           로그아웃
-        </p>
-        <button className="mt-24 mb-16 flex justify-center items-center">
+        </button>
+        <button className="mt-24 mb-16 flex justify-center items-center" onClick={handleLogOutButton}>
           <MdArrowForwardIos width={16} height={16} className="text-dubgray" />
         </button>
       </div>
