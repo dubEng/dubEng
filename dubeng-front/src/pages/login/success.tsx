@@ -17,20 +17,14 @@ export default function loginSuccess(){
     const route = useRouter();
 
     useEffect(()=>{
-        console.log(cookie.load("accessToken"));
-        console.log(cookie.load("refreshToken"));
-        
         setAccessToken(cookie.load("accessToken"));
         dispatch(saveAccessToken(cookie.load("accessToken")));
         getUserInfo();
         
-      },[]);
+      },[accessToken]);
       const getUserInfo = useCallback(async()=>{  
         try{
-            const result = await mutation.mutateAsync(cookie.load("accessToken"));
-            console.log(result);
-            
-            
+            const result = await mutation.mutateAsync(cookie.load("accessToken"));            
             route.push('/');
         }catch(error){
             route.push('/login');
