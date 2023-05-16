@@ -28,8 +28,10 @@ export default function ShortsVideoPage() {
     (state: RootState) => state.languageTab.langType
   );
 
+  console.log('');
+
   //추후에 languageType도 같이 받아오면 좋을 듯!
-  const { data } = useContentsDetailQuery(langType, router.query.id as string);
+  const { data } = useContentsDetailQuery(router.query.id as string);
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 

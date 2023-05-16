@@ -2,11 +2,10 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import * as queryKeys from "@/constants/queryKeys";
 
-const fetcher = (recordId: string, langType : string) =>
+const fetcher = (recordId: string) =>
   axios
     .get(
-      process.env.NEXT_PUBLIC_BASE_URL +
-        `/dub/community/detail/${recordId}/${langType }`,
+      process.env.NEXT_PUBLIC_BASE_URL + `/dub/community/detail/${recordId} }`,
       {
         params: {
           page: 0,
@@ -18,9 +17,9 @@ const fetcher = (recordId: string, langType : string) =>
       return data.content[0];
     });
 
-const useCommunityDetailQuery = (recordId: string, langType : string) => {
-  return useQuery([queryKeys.COMMUNITY_DETAIL, recordId, langType ], () =>
-    fetcher(recordId, langType )
+const useCommunityDetailQuery = (recordId: string) => {
+  return useQuery([queryKeys.COMMUNITY_DETAIL, recordId], () =>
+    fetcher(recordId)
   );
 };
 

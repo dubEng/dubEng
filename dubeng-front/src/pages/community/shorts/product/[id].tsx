@@ -24,7 +24,7 @@ export default function ShortsProductPage() {
   const [isPlayed, setIsPlayed] = useState<null | boolean>(null);
 
   //추후에 languageType도 같이 받아오면 좋을 듯!
-  const { data } = useCommunityDetailQuery(router.query.id as string, langType);
+  const { data } = useCommunityDetailQuery(router.query.id as string);
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
