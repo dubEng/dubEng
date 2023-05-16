@@ -4,7 +4,7 @@ import Link from "next/link";
 import TimeAgo from "timeago-react";
 import * as timeago from "timeago.js";
 import koLocale from "timeago.js/lib/lang/ko";
-import profile_01 from "../../../public/images/dump/profile_01.svg";
+import profile_01 from "../../../public/images/default/mic_profile.png";
 
 interface Iprops {
   id?: number;
@@ -47,7 +47,7 @@ export default function DubProductListItem({
           alt={title}
           width={161}
           height={96}
-          className="rounded-4"
+          className="rounded-4 w-161 max-h-90.56"
         ></Image>
         <div className="flex flex-col ml-16 justify-between">
           <p className="leading-18 break-words text-14 font-semibold text-dubblack line-clamp-2 ">
@@ -70,13 +70,21 @@ export default function DubProductListItem({
             <div className="flex justify-end">
               {profileImage ? (
                 <Image
-                  src={profileImage ?? profile_01}
+                  src={profileImage}
                   alt={"profile"}
                   width={16}
                   height={16}
                   className="rounded-full"
                 />
-              ) : null}
+              ) : (
+                <Image
+                  src={profile_01}
+                  alt={"profile"}
+                  width={24}
+                  height={24}
+                  className="rounded-full"
+                />
+              )}
             </div>
             {nickname ? (
               <p className="pl-4 text-dubgray text-12">{nickname}</p>

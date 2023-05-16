@@ -107,8 +107,8 @@ export default function DubSituation() {
       setSituationId(35);
       setSliderTitle("미국 America");
     } else {
-      setSituationTitle("타짜");
-      setSliderTitle("타짜 더빙해볼까?");
+      setSituationTitle("재벌집 막내아들");
+      setSliderTitle("재벌집 막내아들은 바로 나");
     }
     setOpen(true);
   }
@@ -118,7 +118,7 @@ export default function DubSituation() {
       setSliderTitle("#기쁨");
     } else {
       setSituationTitle("더글로리");
-      setSliderTitle("더글로리 더빙해볼까?");
+      setSliderTitle("더글로리 따라잡기");
     }
     setOpen(true);
   }

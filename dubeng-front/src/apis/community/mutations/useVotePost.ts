@@ -1,5 +1,6 @@
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
+import * as queryKeys from "@/constants/queryKeys";
 
 // const config = {
 //   headers: { "Content-Type": "multipart/form-data" },
@@ -25,6 +26,10 @@ const fetcher = async (payload: requestParams) => {
 };
 
 const useVotePost = () => {
+  // const queryClient = useQueryClient();
+
+  // queryClient.invalidateQueries({ queryKey: [queryKeys.VOTE] });
+
   return useMutation(fetcher, {
     onSuccess: () => {
       console.log("투표가 정상적으로 등록되었습니다.");

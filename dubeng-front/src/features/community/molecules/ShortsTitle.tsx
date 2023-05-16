@@ -91,10 +91,10 @@ export default function ShortsTitle({
               </button>
             )}
             <p>{changedLike ? presentLikeCount : recordLikeCount}</p>
-            <button className="flex space-x-4" onClick={handleCommentButton}>
+            {/* <button className="flex space-x-4" onClick={handleCommentButton}>
               <MdOutlineModeComment size={20} />
             </button>
-            <p>{recordCommentCount}</p>
+            <p>{recordCommentCount}</p> */}
           </div>
         </div>
         <div className="flex mt-4 text-14 text-dubgray space-x-4">
@@ -120,10 +120,10 @@ export default function ShortsTitle({
               </button>
             )}
             <p>{changedLike ? presentLikeCount : recordLikeCount}</p>
-            <button className="flex space-x-4" onClick={handleCommentButton}>
+            {/* <button className="flex space-x-4" onClick={handleCommentButton}>
               <MdOutlineModeComment size={20} />
             </button>
-            <p>{recordCommentCount}</p>
+            <p>{recordCommentCount}</p> */}
             {/* <div className="relative">
               <MdMoreHoriz
                 className="absolute top-0 right-0 text-dubgraylight cursor-pointer"
