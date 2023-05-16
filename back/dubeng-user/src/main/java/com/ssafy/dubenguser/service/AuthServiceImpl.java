@@ -146,8 +146,14 @@ public class AuthServiceImpl implements AuthService{
         return accessToken;
     }
 
-    public UserLoginRes findUser(String accessToken){
+    @Override
+    public UserLoginRes findUser(String accessToken, String refreshToken){
         //토큰파싱
+        try{
+            parseToken(accessToken);
+        }catch(Exception e){
+            accessToken = reissueATK(refreshToken);
+        }
         String userId = parseToken(accessToken);
 
         log.debug("userId : {}", userId);
@@ -177,8 +183,13 @@ public class AuthServiceImpl implements AuthService{
 
         return userLoginRes;
     }
-    public Set<String> getAttendanceByMonth(String accessToken, int month){
+    public Set<String> getAttendanceByMonth(String accessToken,String refreshToken, int month){
         //토큰파싱
+        try{
+            parseToken(accessToken);
+        }catch(Exception e){
+            accessToken = reissueATK(refreshToken);
+        }
         String userId = parseToken(accessToken);
 
         List<UserCalendar> list = userCalenderRepository.findByUserIdAndMonth(userId, month);
@@ -226,19 +237,19 @@ public class AuthServiceImpl implements AuthService{
      * kakao Auth 서버에 parse 요청
      */
     public String parseToken(String accessToken){
-        WebClient webClient = WebClient.builder()
-                .baseUrl("https://kapi.kakao.com")
-                .defaultHeader("Authorization", "Bearer " + accessToken)
-                .build();
+            WebClient webClient = WebClient.builder()
+                    .baseUrl("https://kapi.kakao.com")
+                    .defaultHeader("Authorization", "Bearer " + accessToken)
+                    .build();
 
-        String response = webClient
-                .get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/v1/user/access_token_info")
-                        .build())
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+            String response = webClient
+                    .get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/v1/user/access_token_info")
+                            .build())
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
 
         // parse JSON
         HashMap<String, Object> result = parseTokenResponse(response);
@@ -249,42 +260,6 @@ public class AuthServiceImpl implements AuthService{
         log.debug("{}",id);
 
         return Long.toString(id);
-    }
-    /**
-     * refreshToken 을 통하여 token 갱신
-     * ATK RTK 둘 다 갱신된다.
-     */
-    public Token requestRefresh(Token requestDTO){
-        //
-        WebClient webClient = WebClient.builder()
-                .baseUrl("https://kauth.kakao.com")
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .build();
-
-        String response = webClient
-                .post()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/oauth/token")
-                        .queryParam("grant_type","refresh_token")
-                        .queryParam("client_id",KAKAO_CLIENT_ID)
-                        .queryParam("refresh_token",requestDTO.getRefreshToken())
-                        .build())
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-
-        // parse JSON
-        HashMap<String, Object> result = parseTokenResponse(response);
-
-        String refresh_token = requestDTO.getRefreshToken();
-
-        //기존 리프레시 토큰의 유효기간이 1개월 미만인 경우에만 갱신
-        if(result.get("refresh_token") != null){
-            refresh_token = (String) result.get("refresh_token");
-        }
-        Token responseDTO = new Token((String) result.get("access_token"), refresh_token);
-
-        return responseDTO;
     }
 
     /**

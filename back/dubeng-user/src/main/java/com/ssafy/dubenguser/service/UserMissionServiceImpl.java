@@ -22,15 +22,20 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserMissionServiceImpl implements UserMissionService{
-    private final AuthServiceImpl authService;
+    private final AuthService authService;
     private final UserRepository userRepository;
     private final UserMissionRepository userMissionRepository;
     private final VideoRepository videoRepository;
     private final MissionRepository missionRepository;
 
     @Override
-    public List<UserMissionRes> findUserMissions(String accessToken) {
-        //Token parsing
+    public List<UserMissionRes> findUserMissions(String accessToken, String refreshToken) {
+        //토큰 유효성 검사
+        try{
+            authService.parseToken(accessToken);
+        }catch(Exception e){
+            accessToken = authService.reissueATK(refreshToken);
+        }
         String userId = authService.parseToken(accessToken);
         if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");
 
@@ -45,8 +50,13 @@ public class UserMissionServiceImpl implements UserMissionService{
     }
 
     @Override
-    public List<String> findAssets(String accessToken) {
-        //Token parsing
+    public List<String> findAssets(String accessToken, String refreshToken) {
+        //토큰 유효성 검사
+        try{
+            authService.parseToken(accessToken);
+        }catch(Exception e){
+            accessToken = authService.reissueATK(refreshToken);
+        }
         String userId = authService.parseToken(accessToken);
         if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");
 
@@ -61,7 +71,14 @@ public class UserMissionServiceImpl implements UserMissionService{
 
     @Override
     @Transactional
-    public HashMap<String, Object> findMissionComplete(String accessToken, Long videoId) {
+    public HashMap<String, Object> findMissionComplete(String accessToken, String refreshToken, Long videoId) {
+        //토큰 유효성 검사
+        try{
+            authService.parseToken(accessToken);
+        }catch(Exception e){
+            accessToken = authService.reissueATK(refreshToken);
+        }
+        
         //Token parsing
         String userId = authService.parseToken(accessToken);
         if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");

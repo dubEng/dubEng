@@ -11,11 +11,10 @@ import java.util.Set;
 public interface AuthService {
     HashMap<String, Object> findAccessToken(String code);
     String getKakaoImageUrl(String accessToken);
-    UserLoginRes findUser(String accessToken);
+    UserLoginRes findUser(String accessToken, String refreshToken);
     String parseToken(String accessToken);
-    Token requestRefresh(Token requestDTO);
 
-    Set<String> getAttendanceByMonth(String accessToken, int month);
+    Set<String> getAttendanceByMonth(String accessToken, String refreshToken, int month);
 
     void kakaoLogout(String accessToken);
 
