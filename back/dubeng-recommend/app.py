@@ -80,11 +80,11 @@ def getSimilarity():
     gender_vect = CountVectorizer().fit_transform(movies_df['gender'])
 
     # 랜덤한 숫자 뽑기
-    randomWeight = [[0.3, 0.6, 0.1], [0.2, 0.7, 0.1], [0.4, 0.5, 0.1]]
+    randomWeight = [[0.7, 0.2, 0.1], [0.2, 0.7, 0.1], [0.4, 0.5, 0.1]]
     randomNum = random.randrange(0, 3)
+    logging.info(f"This random number: {randomNum}")
 
-    genre_sim = cosine_similarity(director_vect, director_vect) * randomWeight[randomNum][0] + cosine_similarity(
-        genre_mat, genre_mat) * randomWeight[randomNum][1] + cosine_similarity(gender_vect, gender_vect) * randomWeight[randomNum][2]
+    genre_sim = cosine_similarity(director_vect, director_vect) * randomWeight[randomNum][0] + cosine_similarity(genre_mat, genre_mat) * randomWeight[randomNum][1] + cosine_similarity(gender_vect, gender_vect) * randomWeight[randomNum][2]
 
     # [:, ::-1] axis = 1 기준으로 2차원 numpy 배열 뒤집기
     genre_sim_sorted_ind = genre_sim.argsort()[:, ::-1]
@@ -206,10 +206,13 @@ def dublistAPI():
     if usercheckDub:
         similar_movies = find_sim_movie(
             movies_df, getSimilarity(), getDubRecord(usercheckDub)[0], 10)
-        sm = similar_movies[['id', 'title', 'thumbnail']]
-        for index, row in sm.iterrows():
-            result.append({'id': row.id, 'title': row.title,
-                           'thumbnail': row.thumbnail})
+        # logging.info(f"Similar movies: {similar_movies}")
+        #Dataframe 형식일 경우에만 컬럼 추출
+        if isinstance(similar_movies, pd.DataFrame):
+            sm = similar_movies[['id', 'title', 'thumbnail']]
+            for index, row in sm.iterrows():
+                result.append({'id': row.id, 'title': row.title,
+                            'thumbnail': row.thumbnail})
     else:  # 없다면 회원이 선택한 장르로
         userCategoryId = getCategory(userId)
         if len(userCategoryId) != 0:
@@ -218,10 +221,10 @@ def dublistAPI():
                 getVideoFindByCategory(randomCategoryId))
             similar_movies = find_sim_movie(
                 movies_df, getSimilarity(), randomVideoTitle, 10)
-            sm = similar_movies[['id', 'title', 'thumbnail']]
-            for index, row in sm.iterrows():
-                result.append({'id': row.id, 'title': row.title,
-                               'thumbnail': row.thumbnail})
+            if isinstance(similar_movies, pd.DataFrame):
+                sm = similar_movies[['id', 'title', 'thumbnail']]
+                for index, row in sm.iterrows():
+                    result.append({'id': row.id, 'title': row.title,'thumbnail': row.thumbnail})
 
     return {'answer': result}
 
