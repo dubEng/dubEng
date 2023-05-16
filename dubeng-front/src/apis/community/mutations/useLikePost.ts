@@ -28,7 +28,6 @@ const fetcher = async (payload: requestParams) => {
 const useLikePost = () => {
   return useMutation(fetcher, {
     onSuccess: (data) => {
-      console.log(data);
       console.log("좋아요가 정상적으로 반영되었습니다.");
     },
     onError: (error) => {
