@@ -61,8 +61,6 @@ export default function DubTypeTap({ dubType, langType }: Iprops) {
       </div>
     );
   } else if (dubType === DubType.DUB_PRODUCT) {
-  }
-  {
     return (
       <div>
         <div className="flex ml-4 justify-between">
