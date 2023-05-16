@@ -1,5 +1,6 @@
 package com.ssafy.dubenguser.controller;
 
+import com.ssafy.dubenguser.config.CookieHandler;
 import com.ssafy.dubenguser.dto.Token;
 import com.ssafy.dubenguser.dto.UserJoinReq;
 import com.ssafy.dubenguser.dto.UserLoginRes;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 public class AuthController {
     private final UserService userService;
     private final AuthServiceImpl authService;
+    private final CookieHandler cookieHandler;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
@@ -93,13 +95,14 @@ public class AuthController {
         return new ResponseEntity<String>(userId, HttpStatus.OK);
     }
     @PostMapping("/refresh")
-    public ResponseEntity<Token> refreshTokenRequest(@RequestBody Token requestDTO){
-        log.debug("refreshToken : {}", requestDTO);
+    public ResponseEntity<Void> refreshTokenRequest(HttpServletRequest request){
+        log.debug("refreshToken Test");
 
-        //service - refresh
-        Token responseDTO = authService.requestRefresh(requestDTO);
+        String refreshToken = cookieHandler.getRefreshToken(request);
 
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+        authService.reissueATK(refreshToken);
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     /**
@@ -132,12 +135,8 @@ public class AuthController {
         }
         log.debug("ATK : {}", accessToken);
 
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if(cookie.getName().equals("refreshToken")){
-                System.out.println(cookie.getValue());
-            }
-        }
+        String refreshToken = cookieHandler.getRefreshToken(request);
+
         //ATK을 이용하여 회원정보 요청
         UserLoginRes user = authService.findUser(accessToken);
 

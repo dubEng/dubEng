@@ -18,4 +18,6 @@ public interface AuthService {
     Set<String> getAttendanceByMonth(String accessToken, int month);
 
     void kakaoLogout(String accessToken);
+
+    String reissueATK(String refreshToken);
 }
