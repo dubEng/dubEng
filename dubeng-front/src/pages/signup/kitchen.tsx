@@ -89,8 +89,8 @@ export default function kitchen(){
                                     <Model url="/assets/b2.glb" height={300} width={350}/>
                                 </Suspense>
                                 <ContactShadows position={[0, -4.5, 0]} scale={20} blur={2} far={4.5} />
-                                <OrbitControls makeDefault dampingFactor={0.9} minDistance={5} maxDistance={20}
-                                    minAzimuthAngle={-Math.PI/4} maxAzimuthAngle={Math.PI/4} minPolarAngle={0} maxPolarAngle={Math.PI/3}  />
+                                {/* <OrbitControls makeDefault dampingFactor={0.9} minDistance={5} maxDistance={20}
+                                    minAzimuthAngle={-Math.PI/4} maxAzimuthAngle={Math.PI/4} minPolarAngle={0} maxPolarAngle={Math.PI/3}  /> */}
                                 <ambientLight intensity={0.3} color={'#FFA07A'} /> 
                                 <pointLight position={[4, 1.75, 0.7]} intensity={1.7} color={'#FFAFA7'}/>
                                 <pointLight position={[0.7, 1.1, 0.4]} intensity={0.8} color={'#FFFACD'} />
