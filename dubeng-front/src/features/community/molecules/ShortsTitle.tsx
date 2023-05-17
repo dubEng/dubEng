@@ -103,19 +103,13 @@ export default function ShortsTitle({
               <button className="flex space-x-4" onClick={handleLikeButton}>
                 <MdFavoriteBorder size={20} />
               </button>
-            )}
-            <p>{recordLikeCount}</p>
-            {/* <button className="flex space-x-4" onClick={handleCommentButton}>
-              <MdOutlineModeComment size={20} />
-            </button>
-            <p>{recordCommentCount}</p> */}
-          </div>
-        </div>
-        <div className="flex mt-4 text-14 text-dubgray space-x-4">
-          {/* {playCount === undefined ? } */}
-          <p>조회수 {playCount}회</p>
-          <p>▪</p>
-          <TimeAgo datetime={createdDate} locale="ko" />
+              )<p>{recordLikeCount}</p>
+            </>
+          )}
+          {/* <button className="flex space-x-4" onClick={handleCommentButton}>
+            <MdOutlineModeComment size={20} />
+          </button>
+          <p>{recordCommentCount}</p> */}
         </div>
       </div>
       <div className="flex mt-4 text-14 text-dubgray space-x-4">
