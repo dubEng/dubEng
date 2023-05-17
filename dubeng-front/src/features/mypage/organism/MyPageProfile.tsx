@@ -39,7 +39,9 @@ export default function MyPageProfile({
       <p className="text-14 text-dubgray">{description}</p>
       <div className="mt-24 flex justify-center items-center space-x-60">
         <div>
-          <p className="text-14 text-dubblack font-semibold">{totalRecTime}초</p>
+          <p className="text-14 text-dubblack font-semibold">
+            {totalRecTime}초
+          </p>
           <p className="text-12 text-dubblack">총 녹음 시간</p>
         </div>
         <div className="bg-dubgray w-1 h-32"></div>
