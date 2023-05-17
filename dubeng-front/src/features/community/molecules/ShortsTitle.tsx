@@ -21,7 +21,7 @@ interface Iprops {
   playCount?: number;
   createdDate: number;
   recordCommentCount: number;
-  recordLikeCount: number;
+  recordLikeCount?: number;
   isLike?: boolean;
   isScrap: boolean;
 }
@@ -41,9 +41,9 @@ export default function ShortsTitle({
   const userIdData = useSelector((state: RootState) => state.user.userId);
   // const [isTaskButtonOpen, setIsTaskButtonOpen] = useState(false);
   const [isCommentSliderOpen, setIsCommentSliderOpen] = useState(false);
-  const [isLiked, setIsLiked] = useState(isLike);
-  const [presentLikeCount, setPresentLikeCount] =
-    useState<number>(recordLikeCount);
+  // const [isLiked, setIsLiked] = useState(isLike);
+  // const [presentLikeCount, setPresentLikeCount] =
+  //   useState<number>(recordLikeCount ?? 0);
   const [changedLike, setChangedLike] = useState(false);
 
   const router = useRouter();
@@ -88,84 +88,84 @@ export default function ShortsTitle({
 
   // console.log("isLike", isLike);
 
-  if (userIdData !== userId) {
-    return (
-      <div className="bg-black w-358">
-        <div className="flex items-center justify-between">
-          <p className="text-16 text-dubgraylight line-clamp-1">{title}</p>
-          <div className="flex text-14 text-dubgraylight space-x-8">
-            {isLike && (
-              <>
-                isLiked ? (
-                <button className="flex space-x-4" onClick={handleLikeButton}>
-                  <MdFavorite size={20} className="text-dubcoral" />
-                </button>
-                ) : (
-                <button className="flex space-x-4" onClick={handleLikeButton}>
-                  <MdFavoriteBorder size={20} />
-                </button>
-                )<p>{recordLikeCount}</p>
-              </>
-            )}
-            {/* <button className="flex space-x-4" onClick={handleCommentButton}>
-              <MdOutlineModeComment size={20} />
-            </button>
-            <p>{recordCommentCount}</p> */}
-          </div>
-        </div>
-        <div className="flex mt-4 text-14 text-dubgray space-x-4">
-          {playCount && (
+  return (
+    <div className="bg-black w-358">
+      <div className="flex items-center justify-between">
+        <p className="text-16 text-dubgraylight line-clamp-1">{title}</p>
+        <div className="flex text-14 text-dubgraylight space-x-8">
+          {isLike && (
             <>
-              <p>조회수 {playCount}회</p>
-              <p>▪</p>
-            </>
-          )}
-          <TimeAgo datetime={createdDate} locale="ko" />
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className="bg-black w-358">
-        <div className="flex items-center justify-between">
-          <p className="text-16 text-dubgraylight">{title}</p>
-          <div className="flex text-14 text-dubgraylight space-x-8">
-            {isLike ? (
+              isLiked ? (
               <button className="flex space-x-4" onClick={handleLikeButton}>
                 <MdFavorite size={20} className="text-dubcoral" />
               </button>
-            ) : (
+              ) : (
               <button className="flex space-x-4" onClick={handleLikeButton}>
                 <MdFavoriteBorder size={20} />
               </button>
-            )}
-            <p>{recordLikeCount}</p>
-            {/* <button className="flex space-x-4" onClick={handleCommentButton}>
-              <MdOutlineModeComment size={20} />
-            </button>
-            <p>{recordCommentCount}</p> */}
-            {/* <div className="relative">
-              <MdMoreHoriz
-                className="absolute top-0 right-0 text-dubgraylight cursor-pointer"
-                size={24}
-                onClick={handleTaskButton}
-              />
-              <div className="absolute right-0 top-24">
-                {isTaskButtonOpen && <DubProductTaskButton />}
-              </div>
-            </div> */}
-          </div>
+              )<p>{recordLikeCount}</p>
+            </>
+          )}
+          {/* <button className="flex space-x-4" onClick={handleCommentButton}>
+            <MdOutlineModeComment size={20} />
+          </button>
+          <p>{recordCommentCount}</p> */}
         </div>
-        <div className="flex mt-4 text-14 text-dubgray space-x-4">
-          <p>조회수 {playCount}회</p>
-          <p>▪</p>
-          <TimeAgo datetime={createdDate}  />
-        </div>
-        <CommentSlider
-          isCommentSliderOpen={isCommentSliderOpen}
-          setIsCommentSliderOpen={setIsCommentSliderOpen}
-        />
       </div>
-    );
-  }
+      <div className="flex mt-4 text-14 text-dubgray space-x-4">
+        {playCount && (
+          <>
+            <p>조회수 {playCount}회</p>
+            <p>▪</p>
+          </>
+        )}
+        <TimeAgo datetime={createdDate} locale="ko" />
+      </div>
+    </div>
+  );
+  // if (userIdData !== userId) {
+  // } else {
+  //   return (
+  //     <div className="bg-black w-358">
+  //       <div className="flex items-center justify-between">
+  //         <p className="text-16 text-dubgraylight">{title}</p>
+  //         <div className="flex text-14 text-dubgraylight space-x-8">
+  //           {isLike ? (
+  //             <button className="flex space-x-4" onClick={handleLikeButton}>
+  //               <MdFavorite size={20} className="text-dubcoral" />
+  //             </button>
+  //           ) : (
+  //             <button className="flex space-x-4" onClick={handleLikeButton}>
+  //               <MdFavoriteBorder size={20} />
+  //             </button>
+  //           )}
+  //           <p>{recordLikeCount}</p>
+  //           <button className="flex space-x-4" onClick={handleCommentButton}>
+  //             <MdOutlineModeComment size={20} />
+  //           </button>
+  //           <p>{recordCommentCount}</p>
+  //           <div className="relative">
+  //             <MdMoreHoriz
+  //               className="absolute top-0 right-0 text-dubgraylight cursor-pointer"
+  //               size={24}
+  //               onClick={handleTaskButton}
+  //             />
+  //             <div className="absolute right-0 top-24">
+  //               {isTaskButtonOpen && <DubProductTaskButton />}
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </div>
+  //       <div className="flex mt-4 text-14 text-dubgray space-x-4">
+  //         <p>조회수 {playCount}회</p>
+  //         <p>▪</p>
+  //         <TimeAgo datetime={createdDate}  />
+  //       </div>
+  //       <CommentSlider
+  //         isCommentSliderOpen={isCommentSliderOpen}
+  //         setIsCommentSliderOpen={setIsCommentSliderOpen}
+  //       />
+  //     </div>
+  //   );
+  // }
 }
