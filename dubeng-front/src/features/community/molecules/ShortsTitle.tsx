@@ -94,16 +94,19 @@ export default function ShortsTitle({
         <div className="flex items-center justify-between">
           <p className="text-16 text-dubgraylight line-clamp-1">{title}</p>
           <div className="flex text-14 text-dubgraylight space-x-8">
-            {isLike ? (
-              <button className="flex space-x-4" onClick={handleLikeButton}>
-                <MdFavorite size={20} className="text-dubcoral" />
-              </button>
-            ) : (
-              <button className="flex space-x-4" onClick={handleLikeButton}>
-                <MdFavoriteBorder size={20} />
-              </button>
+            {isLike && (
+              <>
+                isLiked ? (
+                <button className="flex space-x-4" onClick={handleLikeButton}>
+                  <MdFavorite size={20} className="text-dubcoral" />
+                </button>
+                ) : (
+                <button className="flex space-x-4" onClick={handleLikeButton}>
+                  <MdFavoriteBorder size={20} />
+                </button>
+                )<p>{recordLikeCount}</p>
+              </>
             )}
-            <p>{recordLikeCount}</p>
             {/* <button className="flex space-x-4" onClick={handleCommentButton}>
               <MdOutlineModeComment size={20} />
             </button>
@@ -111,8 +114,12 @@ export default function ShortsTitle({
           </div>
         </div>
         <div className="flex mt-4 text-14 text-dubgray space-x-4">
-          <p>조회수 {playCount}회</p>
-          <p>▪</p>
+          {playCount && (
+            <>
+              <p>조회수 {playCount}회</p>
+              <p>▪</p>
+            </>
+          )}
           <TimeAgo datetime={createdDate} locale="ko" />
         </div>
       </div>
@@ -152,7 +159,7 @@ export default function ShortsTitle({
         <div className="flex mt-4 text-14 text-dubgray space-x-4">
           <p>조회수 {playCount}회</p>
           <p>▪</p>
-          <TimeAgo datetime={createdDate} locale="ko" />
+          <TimeAgo datetime={createdDate}  />
         </div>
         <CommentSlider
           isCommentSliderOpen={isCommentSliderOpen}
