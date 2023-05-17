@@ -61,7 +61,7 @@ export default function ShortsTitle({
 
   console.log("isLike", isLike);
 
-  if (isLike) {
+  if (isLike!) {
     return (
       <div className="bg-black w-358">
         <div className="flex items-center justify-between">
