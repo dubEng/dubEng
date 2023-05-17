@@ -83,8 +83,6 @@ export default function ShortsVideoPage() {
     const watchTime = setInterval(() => {
       const time = Math.floor(Number(youtubePlayer?.getCurrentTime()));
 
-      console.log("time", time);
-
       //TODO: 21 -> endTime
       if (time == 0) {
         setSelectedScript(0);
