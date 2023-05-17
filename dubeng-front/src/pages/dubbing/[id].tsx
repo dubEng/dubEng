@@ -5,6 +5,10 @@ import DubBox from "@/features/dubbing/organism/DubBox";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import "swiper/css/navigation";
+
+import { Navigation } from "swiper";
+
 import PlayBar from "@/features/dubbing/atoms/PlayBar";
 import CommonButton from "@/components/atoms/CommonButton";
 import useDubRecordVideoInfoQuery from "@/apis/dubbing/queries/useDubRecordVideoInfoQuery";
@@ -291,7 +295,9 @@ export default function DubbingPage() {
       <PlayBar width={progressBarWidth} />
       <div className="w-390 my-8 py-8 bg-dubgraylight flex justify-center items-center">
         <Swiper
-          spaceBetween={4}
+          navigation={true}
+          modules={[Navigation]}
+          // spaceBetween={4}
           onSlideChange={handleSlideChange}
           onSwiper={(swiper) => console.log(swiper)}
           centeredSlides
