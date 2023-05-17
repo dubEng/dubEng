@@ -23,8 +23,8 @@ export default function MissionKitchen() {
                 <Plane args={[100, 100]} rotation={[-Math.PI / 2, 0, 0]} position={[0.1,0.1,0.1]}>
                     <meshStandardMaterial color="#FFB679" />
                 </Plane>
-                <KitchenModel url="/assets/ori3.glb" Rayss={rayTracing} myHeight={300} myWidth={350}/>
-                <KitchenTooltipBox />
+                <KitchenModel url="/assets/FinalModel.glb" Rayss={rayTracing} myHeight={300} myWidth={350}/>
+                {/* <KitchenTooltipBox /> */}
             </Suspense>
             <ContactShadows position={[0, -4.5, 0]} scale={20} blur={2} far={4.5} />
             <OrbitControls makeDefault dampingFactor={0.9}

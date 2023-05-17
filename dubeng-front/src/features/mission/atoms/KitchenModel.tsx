@@ -34,7 +34,7 @@ export default function KitchenModel({ url, Rayss }: Model) {
     const [missionClear, setMissionClear] = useState<Array<string>>([]);
     const [getData, setGetData] = useState<Array<MyMissionForm>>([]);
     const { accessToken } = useSelector((state: RootState) => state.user);
-    const {data} = useMissionListQuery('BrtlK8huUt56j9LcUI5rlRS2gE7vp-2y4Lw2aMXPCj10lwAAAYgmTrMk');
+    const {data} = useMissionListQuery('u1Moa41Syr-e0-xGsqd6HSfV8phTCbvVx5BVVtj9CisNIAAAAYgoQVxT');
     
     useEffect(()=>{
       if(data){
@@ -82,7 +82,8 @@ export default function KitchenModel({ url, Rayss }: Model) {
   
     // let getData:Array<MyMissionForm> = [];// axios get mission data 
 
-    function focusCameraOnObject(object:THREE.Object3D<THREE.Event>) {// zoom animation function 
+    // 클릭  >> 줌
+    function focusCameraOnObject(object:THREE.Object3D<THREE.Event>) {
   
       const cc:THREE.Vector3 = new THREE.Vector3().copy(camera.position);// my cam vec3 cp
       const target:THREE.Vector3 = new THREE.Vector3().copy(object.position);// clicked object vector cp 
@@ -95,17 +96,17 @@ export default function KitchenModel({ url, Rayss }: Model) {
   
       let closestPoint : THREE.Vector3;
       let minDist:number = Infinity;
-  for (let x = x0 - R; x <= x0 + R; x=x+0.01) {
-    for (let y = y0 - R; y <= y0 + R; y=y+0.01) {
-      for (let z = z0 - R; z <= z0 + R; z=z+0.01) {
-        const dist:number = new THREE.Vector3(x, y, z).distanceTo(cc);
-        if (dist < minDist) {
-          closestPoint = new THREE.Vector3(x, y, z);
-          minDist = dist;
+      for (let x = x0 - R; x <= x0 + R; x=x+0.01) {
+        for (let y = y0 - R; y <= y0 + R; y=y+0.01) {
+          for (let z = z0 - R; z <= z0 + R; z=z+0.01) {
+            const dist:number = new THREE.Vector3(x, y, z).distanceTo(cc);
+            if (dist < minDist) {
+              closestPoint = new THREE.Vector3(x, y, z);
+              minDist = dist;
+            }
+          }
         }
       }
-    }
-  }
       // origin code is catching a middle point each vectors but closest point is better than this now 
   
       //const middlePoint = new THREE.Vector3((cc.x + target.x) / 2, (cc.y + target.y) / 2, (cc.z + target.z) / 2);// middle point calculate
@@ -155,7 +156,7 @@ export default function KitchenModel({ url, Rayss }: Model) {
         //console.log("cam focused coord is = "+ camera.position.x+" "+ camera.position.y+" "+ camera.position.z+" md = "+middlePoint.x)
     }
     //func end 
-    const handleClick = (e:MouseEvent) => {// click event handler 
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {// click event handler 
       
       if (Rayss === true) { // if raytrace mode activated not action here  
         return;
