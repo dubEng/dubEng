@@ -51,6 +51,13 @@ export default function ShortsProductPage() {
     isPlayed
   );
 
+  const playCountRef = useRef<number>(playCountUp.playCount);
+
+  const [nowPlayCount, setNowPlayCount] = useState<number>();
+
+  // console.log("playCountUp", playCountUp);
+  // console.log("isLike", playCountUp.isLike);
+
   const onPlay: YouTubeProps["onPlay"] = (event) => {
     console.log("onPlay");
     console.log("event", event);
@@ -188,11 +195,11 @@ export default function ShortsProductPage() {
             <ShortsTitle
               userId={data.userId}
               title={data.title}
-              playCount={playCountUp?.playCount}
+              playCount={playCountRef.current}
               createdDate={data.createdDate}
               recordCommentCount={data.recordCommentCount}
-              recordLikeCount={playCountUp?.likeCount}
-              isLike={playCountUp?.like}
+              recordLikeCount={playCountUp.likeCount}
+              isLike={playCountUp.isLike}
               isScrap={false}
             />
           </div>

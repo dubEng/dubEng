@@ -21,7 +21,7 @@ interface Iprops {
   playCount?: number;
   createdDate: number;
   recordCommentCount: number;
-  recordLikeCount?: number;
+  recordLikeCount: number;
   isLike?: boolean;
   isScrap: boolean;
 }
@@ -42,7 +42,8 @@ export default function ShortsTitle({
   // const [isTaskButtonOpen, setIsTaskButtonOpen] = useState(false);
   const [isCommentSliderOpen, setIsCommentSliderOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(isLike);
-  const [presentLikeCount, setPresentLikeCount] = useState(recordLikeCount);
+  const [presentLikeCount, setPresentLikeCount] =
+    useState<number>(recordLikeCount);
   const [changedLike, setChangedLike] = useState(false);
 
   const router = useRouter();
@@ -54,26 +55,38 @@ export default function ShortsTitle({
   //   console.log(isTaskButtonOpen);
   // }
 
-  const { data, mutate, isSuccess, isError, mutateAsync } = useLikePost();
+  const { mutate, isSuccess, isError, mutateAsync } = useLikePost();
 
   function handleCommentButton() {
     // console.log("댓글 버튼 누름");
     setIsCommentSliderOpen(true);
   }
 
-  const handleLikeButton = () => {
-    setChangedLike(true);
+  const handleLikeButton = async () => {
+    // setChangedLike(true);
     // console.log("하트 누름", isLiked);
-    if (isLiked) {
-      setIsLiked(!isLiked);
-      setPresentLikeCount(presentLikeCount! - 1);
-    } else {
-      setIsLiked(!isLiked);
-      setPresentLikeCount(presentLikeCount! + 1);
-    }
+
+    // const response = await mutateAsync({
+    //   recordId: recordId,
+    //   userId: userIdData,
+    // });
+    // console.log("response", response);
+    // console.log("isLiked", isLiked);
+
+    // if (isLiked) {
+    //   setIsLiked(false);
+    //   // setPresentLikeCount(presentLikeCount - 1);
+    //   setPresentLikeCount(response);
+    // } else {
+    //   setIsLiked(true);
+    //   // setPresentLikeCount(presentLikeCount + 1);
+    //   setPresentLikeCount(response);
+    // }
 
     mutate({ recordId: recordId, userId: userIdData });
   };
+
+  // console.log("isLike", isLike);
 
   if (userIdData !== userId) {
     return (
@@ -81,7 +94,7 @@ export default function ShortsTitle({
         <div className="flex items-center justify-between">
           <p className="text-16 text-dubgraylight line-clamp-1">{title}</p>
           <div className="flex text-14 text-dubgraylight space-x-8">
-            {isLiked ? (
+            {isLike ? (
               <button className="flex space-x-4" onClick={handleLikeButton}>
                 <MdFavorite size={20} className="text-dubcoral" />
               </button>
@@ -90,7 +103,7 @@ export default function ShortsTitle({
                 <MdFavoriteBorder size={20} />
               </button>
             )}
-            <p>{changedLike ? presentLikeCount : recordLikeCount}</p>
+            <p>{recordLikeCount}</p>
             {/* <button className="flex space-x-4" onClick={handleCommentButton}>
               <MdOutlineModeComment size={20} />
             </button>
@@ -110,7 +123,7 @@ export default function ShortsTitle({
         <div className="flex items-center justify-between">
           <p className="text-16 text-dubgraylight">{title}</p>
           <div className="flex text-14 text-dubgraylight space-x-8">
-            {isLiked ? (
+            {isLike ? (
               <button className="flex space-x-4" onClick={handleLikeButton}>
                 <MdFavorite size={20} className="text-dubcoral" />
               </button>
@@ -119,7 +132,7 @@ export default function ShortsTitle({
                 <MdFavoriteBorder size={20} />
               </button>
             )}
-            <p>{changedLike ? presentLikeCount : recordLikeCount}</p>
+            <p>{recordLikeCount}</p>
             {/* <button className="flex space-x-4" onClick={handleCommentButton}>
               <MdOutlineModeComment size={20} />
             </button>
