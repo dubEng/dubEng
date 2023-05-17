@@ -7,15 +7,10 @@ import { OrbitControls,ContactShadows,Plane } from '@react-three/drei';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js';
 import { SSRPass } from 'three/examples/jsm/postprocessing/SSRPass.js';
-import KitchenModel from '../atoms/KitchenModel';
+import KitchenModel, { Model } from '../atoms/KitchenModel';
 import KitchenTooltipBox from '../atoms/KitchenTooltipBox';
 extend({ EffectComposer, RenderPass, UnrealBloomPass , ShaderPass, SSAOPass, SSRPass });
-export default function MissionKitchen() {
-     //미션 목록을 불러옵니다. API 요청이 들어갈 부분
-  
-    const [rayTracing, setRayTracing] = useState(false);
-    const [mywidth, setMyWidth] = useState(350);
-    const [myheight,setMyHeight] = useState(300);
+export default function MissionKitchen({ url, missionList, missionClear, missionYet, getData }: Model) {
   
     return (
         <Canvas id="Mycanvas" camera={{position: [1.1413,3.0704,1.95585] }} style={{borderRadius : 10, border: '1px solid #F5F6F8'}}>
@@ -23,13 +18,17 @@ export default function MissionKitchen() {
                 <Plane args={[100, 100]} rotation={[-Math.PI / 2, 0, 0]} position={[0.1,0.1,0.1]}>
                     <meshStandardMaterial color="#FFB679" />
                 </Plane>
-                <KitchenModel url="/assets/FinalModel.glb" Rayss={rayTracing} myHeight={300} myWidth={350}/>
+                <KitchenModel url={url}
+                    missionList={missionList}
+                    missionClear={missionClear}
+                    missionYet={missionYet}
+                    getData={getData}
+                />
                 {/* <KitchenTooltipBox /> */}
             </Suspense>
             <ContactShadows position={[0, -4.5, 0]} scale={20} blur={2} far={4.5} />
             <OrbitControls makeDefault dampingFactor={0.9}
                                     minAzimuthAngle={-Math.PI/4} maxAzimuthAngle={Math.PI/4} minPolarAngle={0} maxPolarAngle={Math.PI/3}  />
-            {/* <KitchenFilterEffect /> */}
             <ambientLight intensity={0.3} color={'#FFA07A'} /> 
             <pointLight position={[4, 1.75, 0.7]} intensity={1.7} color={'#FFAFA7'}/>
             <pointLight position={[0.7, 1.1, 0.4]} intensity={0.8} color={'#FFFACD'} />
