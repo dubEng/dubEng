@@ -42,3 +42,6 @@ export const CALENDAR_ATTENDANCE_LIST = "/mypage/attandance";
 
 // mission
 export const MISSION_LIST = "/user/mission/list";
+
+//shorts
+export const Shorts = "/community/shorts";
