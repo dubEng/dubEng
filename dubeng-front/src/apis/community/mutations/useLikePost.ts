@@ -1,7 +1,8 @@
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 import { RootState } from "@/stores/store";
 import { useSelector } from "react-redux";
+import * as queryKeys from "@/constants/queryKeys";
 
 interface requestParams {
   recordId: number;
@@ -24,8 +25,10 @@ const fetcher = async (payload: requestParams) => {
 };
 
 const useLikePost = () => {
+  const queryClient = useQueryClient();
   return useMutation(fetcher, {
     onSuccess: (data) => {
+      return queryClient.invalidateQueries(queryKeys.PLAY_COUNT);
       // console.log("좋아요가 정상적으로 반영되었습니다.");
     },
     onError: (error) => {

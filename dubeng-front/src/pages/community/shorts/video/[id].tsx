@@ -36,7 +36,6 @@ export default function ShortsVideoPage() {
     (state: RootState) => state.languageTab.langType
   );
 
-
   //추후에 languageType도 같이 받아오면 좋을 듯!
   const { data } = useContentsDetailQuery(router.query.id as string);
 
@@ -44,13 +43,16 @@ export default function ShortsVideoPage() {
 
   const [selectedScript, setSelectedScript] = useState<number>(0);
 
-  const { data: isScrapData } = useScrapQuery(data?.id, userId);
+  const { data: isScrapData, refetch } = useScrapQuery(data?.id, userId);
 
-  const { mutate } = useScrapPost();
+  const { data: changedScrap, mutate } = useScrapPost();
+
+  // const [presentIsScrap, setPresentIsScrap] = useState(isScrapData);
 
   function handleScrapButton() {
     // post해주기
     mutate({ userId: userId, videoId: data.id });
+    console.log("!!!!!changedScrap", changedScrap);
   }
   function transferYoutube(videoPath: string) {
     const originalUrl = videoPath;
@@ -100,8 +102,6 @@ export default function ShortsVideoPage() {
       if (selectedScript < data.scriptList.length && time > 0) {
         // 해당 스크립트 리스트의 startTime이 undefined가 아니라면
         if (data.scriptList[selectedScript]?.startTime != undefined) {
-
-
           // 현재 재생되고 있는 영상의 시간이 현재 스크립트의 시작 시간보다 크거나 같고
           // 현재 재생되고 있는 영상의 시간이 다음 스크립트의 시작 시간보다 작거나 같다면
           // selectedScript를 증가하지 않고 넘어간다.
@@ -164,7 +164,21 @@ export default function ShortsVideoPage() {
             <div className="flex max-w-200 space-x-4">
               <p className="text-16 text-white line-clamp-1">{data.title}</p>
               {userId &&
-                (isScrapData ? (
+                (changedScrap === 1 ? (
+                  <button
+                    className="text-dubgraylight"
+                    onClick={handleScrapButton}
+                  >
+                    <MdOutlineTurnedIn size={20} />
+                  </button>
+                ) : changedScrap === 0 ? (
+                  <button
+                    className="text-dubgraylight"
+                    onClick={handleScrapButton}
+                  >
+                    <MdOutlineTurnedInNot size={20} />
+                  </button>
+                ) : isScrapData ? (
                   <button
                     className="text-dubgraylight"
                     onClick={handleScrapButton}

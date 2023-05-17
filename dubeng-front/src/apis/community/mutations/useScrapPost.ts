@@ -16,18 +16,18 @@ const fetcher = async (payload: requestParams) => {
       },
     }
   );
-
+  console.log("post결과를 받겠다", data);
   return data;
 };
 
 const useScrapPost = () => {
   return useMutation(fetcher, {
     onSuccess: (data) => {
-      console.log('스크랩 성공');
+      console.log("스크랩 성공");
       // window.alert("스크랩 정상적으로 반영");
     },
     onError: (error) => {
-      console.log('스크랩 실패');
+      console.log("스크랩 실패");
       // window.alert("스크랩 실패");
     },
   });
