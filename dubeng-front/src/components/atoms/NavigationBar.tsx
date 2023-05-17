@@ -23,33 +23,28 @@ const menu = [
     label: "홈",
     icon: <MdHomeFilled size={24} color="#767676" />,
     clickedIcon: <MdHomeFilled size={24} color="#ff6d60" />,
-    isNavigatedButton: true,
   },
   {
-    href: "/community",
+    href: "/community/shorts",
     label: "Shorts",
     icon: <MdPlayCircleOutline size={24} color="#767676" />,
     clickedIcon: <MdPlayCircleOutline size={24} color="#ff6d60" />,
-    isNavigatedButton: true,
   },
   {
-    href: "/others",
+    href: "/community",
     label: "녹음버튼",
-    isNavigatedButton: false,
   },
   {
     href: "/mission",
     label: "도전과제",
     icon: <ImBook size={24} color="#767676" />,
     clickedIcon: <ImBook size={24} color="#ff6d60" />,
-    isNavigatedButton: true,
   },
   {
     href: "/mypage",
     label: "My",
     icon: <AiOutlineSmile size={24} color="#767676" />,
     clickedIcon: <AiOutlineSmile size={24} color="#ff6d60" />,
-    isNavigatedButton: true,
   },
 ];
 
@@ -71,8 +66,13 @@ export default function NavigationBar() {
         <ul className="flex justify-around">
           {menu.map((item) => (
             <li key={item.href}>
-              {item.isNavigatedButton === false ? (
-                <RecordingButton page={pathName} />
+              {item.href === "/community" ? (
+                <button
+                  className="flex flex-col justify-center items-center pt-4"
+                  onClick={() => handleNavigationButton(item.href)}
+                >
+                  <RecordingButton page={pathName} />
+                </button>
               ) : (
                 <button
                   className="flex flex-col justify-center items-center pt-4"

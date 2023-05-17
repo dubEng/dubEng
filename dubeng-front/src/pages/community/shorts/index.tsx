@@ -1,18 +1,16 @@
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer, YouTubeProps } from "react-youtube";
-import useCommunityDetailQuery from "@/apis/community/queries/useCommunityDetailQuery";
 
 import Image from "next/image";
 import ShortsTitle from "@/features/community/molecules/ShortsTitle";
-import { AiFillProfile } from "react-icons/ai";
-import profile_01 from "../../../../../public/images/dump/profile_01.svg";
+import DefaultImage from "../../../../public/images/default/mic_profile.png";
 import usePlayCountUpQuery from "@/apis/community/queries/usePlayCountUpQuery";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
-import { LangType } from "@/enum/statusType";
 
 import ReactFullpage from "@fullpage/react-fullpage";
+import useCommunityShortsQuery from "@/apis/community/queries/useCommunityShortsQuery";
 
 type Credits = {
   enabled?: boolean;
@@ -29,17 +27,11 @@ const pluginWrapper = () => {
 export default function ShortsProductPage() {
   const router = useRouter();
 
-  const langType = useSelector(
-    (state: RootState) => state.languageTab.langType
-  );
-
   const userId = useSelector((state: RootState) => state.user.userId);
 
   const [isPlayed, setIsPlayed] = useState<null | boolean>(null);
 
-  const { data: contentList } = useCommunityDetailQuery(
-    router.query.id as string
-  );
+  const { data: contentList } = useCommunityShortsQuery();
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
@@ -94,8 +86,11 @@ export default function ShortsProductPage() {
     const observer = new MutationObserver((mutationsList) => {
       mutationsList.forEach((mutation) => {
         const { target } = mutation;
-        if (target instanceof Element && target.classList.contains('fp-enabled')) {
-          target.classList.remove('fp-enabled');
+        if (
+          target instanceof Element &&
+          target.classList.contains("fp-enabled")
+        ) {
+          target.classList.remove("fp-enabled");
         }
       });
     });
@@ -105,8 +100,7 @@ export default function ShortsProductPage() {
     return () => {
       observer.disconnect();
     };
-  }, [contentList]);
-
+  }, []);
 
   useEffect(() => {
     if (contentList) {
@@ -148,7 +142,7 @@ export default function ShortsProductPage() {
                       <>
                         <div className="flex flex-row mt-16 mb-16 items-center w-390 px-16">
                           <Image
-                            src={content.profileImage ?? profile_01}
+                            src={content.profileImage ?? DefaultImage}
                             alt="profileImage"
                             width={24}
                             height={24}
@@ -156,9 +150,6 @@ export default function ShortsProductPage() {
                           />
                           <p className="ml-4 text-dubgraymedium">
                             {content.nickname}
-                          </p>
-                          <p className="ml-4 text-dubgraymedium">
-                            컨텐츠 번호 {index}
                           </p>
                         </div>
                         <YouTube
@@ -204,7 +195,7 @@ export default function ShortsProductPage() {
                             isScrap={false}
                           />
                         </div>
-                        <div className="h-200 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-391 mt-15">
+                        {/* <div className="h-200 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-391 mt-15">
                           {content.scriptList &&
                             content.scriptList.map(
                               (item: any, index: number) => {
@@ -223,7 +214,7 @@ export default function ShortsProductPage() {
                                 );
                               }
                             )}
-                        </div>
+                        </div> */}
                       </>
                     </div>
                   </div>

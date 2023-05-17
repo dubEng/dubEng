@@ -5,7 +5,7 @@ import useCommunityDetailQuery from "@/apis/community/queries/useCommunityDetail
 
 import Image from "next/image";
 import ShortsTitle from "@/features/community/molecules/ShortsTitle";
-import profile_01 from "../../../../../public/images/dump/profile_01.svg";
+import DefaultImage from "../../../../../public/images/default/mic_profile.png";
 import usePlayCountUpQuery from "@/apis/community/queries/usePlayCountUpQuery";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
@@ -143,7 +143,7 @@ export default function ShortsProductPage() {
         <>
           <div className="flex flex-row mt-16 mb-16 items-center w-390 px-16">
             <Image
-              src={data.profileImage ?? profile_01}
+              src={data.profileImage ?? DefaultImage}
               alt="profileImage"
               width={24}
               height={24}
