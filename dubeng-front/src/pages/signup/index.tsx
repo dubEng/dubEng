@@ -135,9 +135,10 @@ export default function SignUpPage(){
     <div className="container mx-auto">
       <div className="m-16 mt-100">
         <div className="my-40 grid">
-          <div className="mx-auto relative">
+          <p className="font-bold mb-6">프로필 이미지 선택</p>
+          <div className="mt-20 mx-auto flex">
+            {<Image className="rounded-full bg-none" src={"/images/login/default_profile.png"} alt="defaultImg" width={120} height={120}></Image>}
             {profileImage && <Image className="rounded-full" src={profileImage} alt="dubLogoImg" width={120} height={120}></Image>}
-            {/*profileImage && <button className="absolute right-12 bottom-4 z-2 rounded-full bg-white"><MdChangeCircle size={30}/></button>*/}
           </div>
 
           
