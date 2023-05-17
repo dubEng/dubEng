@@ -119,8 +119,8 @@ public class RedisService {
         redisTemplate.delete(redisKeys);
     }
 
-    // 매주 월요일 자정 업데이트 -> 일단 목요일로 변경
-    @Scheduled(cron = "0 0 0 * * 4")
+
+    @Scheduled(cron = "0 0 0 * * *")
     public void updateDubKing(){
         dubKingRepository.deleteAll();
         dubKingRepository.flush();
