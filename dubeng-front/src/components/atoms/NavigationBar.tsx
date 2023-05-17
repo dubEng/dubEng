@@ -68,7 +68,7 @@ export default function NavigationBar() {
             <li key={item.href}>
               {item.href === "/community" ? (
                 <button
-                  className="flex flex-col justify-center items-center pt-4"
+                  className="flex flex-col justify-center items-center"
                   onClick={() => handleNavigationButton(item.href)}
                 >
                   <RecordingButton page={pathName} />
