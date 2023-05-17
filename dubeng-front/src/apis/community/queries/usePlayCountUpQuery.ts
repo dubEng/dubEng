@@ -27,7 +27,6 @@ const fetcher = (recordId: number, userId: string) => {
 const usePlayCountUpQuery = (
   userId: string,
   recordId: number,
-  isPlayed: null | boolean
 ) => {
   return useQuery([queryKeys.PLAY_COUNT], () => fetcher(recordId, userId), {
     // refetchOnWindowFocus: false,

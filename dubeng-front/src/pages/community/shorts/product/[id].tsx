@@ -20,8 +20,6 @@ export default function ShortsProductPage() {
 
   const userId = useSelector((state: RootState) => state.user.userId);
 
-  const [isPlayed, setIsPlayed] = useState<null | boolean>(null);
-
   const { data } = useCommunityDetailQuery(router.query.id as string);
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
@@ -48,7 +46,6 @@ export default function ShortsProductPage() {
   const { data: playCountUp, refetch } = usePlayCountUpQuery(
     userId,
     Number(router.query.id),
-    isPlayed
   );
 
   const playCountRef = useRef<number | null>(null);
@@ -60,9 +57,6 @@ export default function ShortsProductPage() {
   }, [playCountUp]);
 
   const [nowPlayCount, setNowPlayCount] = useState<number>();
-
-  // console.log("playCountUp", playCountUp);
-  // console.log("isLike", playCountUp.isLike);
 
   const onPlay: YouTubeProps["onPlay"] = (event) => {
     console.log("onPlay");
@@ -79,8 +73,7 @@ export default function ShortsProductPage() {
       if (audioRef.current) {
         audioRef.current.play();
       }
-      setIsPlayed(true);
-      console.log("현재 IsPlayed", isPlayed);
+
       // 재생 중일 때
       console.log("영상 재생");
       refetch();
@@ -202,8 +195,8 @@ export default function ShortsProductPage() {
               playCount={playCountRef.current as number}
               createdDate={data.createdDate}
               recordCommentCount={data.recordCommentCount}
-              recordLikeCount={playCountUp.likeCount}
-              isLike={playCountUp.isLike}
+              recordLikeCount={playCountUp?.likeCount}
+              isLike={playCountUp?.isLike}
               isScrap={false}
             />
           </div>
