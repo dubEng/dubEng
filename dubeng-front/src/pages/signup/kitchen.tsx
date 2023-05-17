@@ -118,13 +118,11 @@ interface ModelThree {
     width : number;
     height : number;
 }
-function Model({url, width, height} : ModelThree) {
+export function Model({url, width, height} : ModelThree) {
     const gltf = useLoader(GLTFLoader, url);
     const { camera } = useThree();// camera var
   
     return (
-      <group>
         <primitive object={gltf.scene} />
-      </group>
     );
-  }
+}

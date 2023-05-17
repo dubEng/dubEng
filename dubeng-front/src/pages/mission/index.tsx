@@ -15,27 +15,30 @@ export interface MyMissionForm{
 
 export default function MissionPage() {
   const { accessToken } = useSelector((state: RootState) => state.user);
-  const {data} = useMissionListQuery('7CRwLFZmgZb5k4FTuaS3zZA4sQrWggVumiKaoIuhCiolEQAAAYgqbhSP');
+  const {data} = useMissionListQuery(accessToken);
   const [missionList, setMissionList] = useState<Array<string>>([]);
   const [missionYet, setMissionYet] = useState<Array<string>>([]);
   const [missionClear, setMissionClear] = useState<Array<string>>([]);
   const [getData, setGetData] = useState<Array<MyMissionForm>>([]);
+  const [missionClearData, setMissionClearData] = useState<Array<MyMissionForm>>([]);
   useEffect(()=>{
     if(data){
         const tempYetArray : Array<string> = [];
         const tempClearArray : Array<string> = [];
-
+        const tempDataArray : Array<MyMissionForm> = [];
         data.forEach((s:MyMissionForm)=>{  
           if(!s.isComplete){
             tempYetArray.push(s.assets);
           }else{
             tempClearArray.push(s.assets);
+            tempDataArray.push(s);
           }
 
         });
         setGetData(data);
         setMissionYet(tempYetArray);
         setMissionClear(tempClearArray);
+        setMissionClearData(tempDataArray);
     }
   },[data])
   return (
@@ -44,7 +47,7 @@ export default function MissionPage() {
         나의 주방
       </p>
       <div className="h-350 rounded-10 mx-20">
-        <MissionKitchen url={"/assets/FinalModel.glb"}
+        <MissionKitchen url={"/assets/kitchen.glb"}
           missionList={missionList}
           missionClear={missionClear}
           missionYet={missionYet}
@@ -54,7 +57,7 @@ export default function MissionPage() {
       <p className="flex justify-start mx-16 text-19 font-bold mt-24 mb-16">
         도전과제
       </p>
-      <MissionList />
+      <MissionList missionClearData={missionClearData}/>
     </div>
   );
 }

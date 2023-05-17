@@ -12,15 +12,11 @@ export interface Model{
     getData : Array<MyMissionForm>;
 }
 
-export default function KitchenModel({ url, missionList, missionClear, missionYet, getData }: Model) {
+export default function KitchenModel({ url, missionClear, missionYet, getData }: Model) {
   
     const gltf:any = useLoader(GLTFLoader, url);// model load var
-    const [selectedObject, setSelectedObject] = useState<any>(null);// raycasting object var
     const { camera }:any = useThree();// camera var
     const [isZoom, setIsZoom] = useState<boolean>(false);// state of zoom check 
-    const [isAni, setIsAni] = useState<boolean>(false); // animation activate checker 
-
-    const [lier, setlier]= useState(false);
     
     useEffect(()=>{
         gltf.scene.traverse((child:THREE.Object3D) => {// all object's child checking ...           
