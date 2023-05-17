@@ -3,6 +3,7 @@ import { MdHomeFilled } from "react-icons/md";
 import { MdHeadphones } from "react-icons/md";
 import { ImBook } from "react-icons/im";
 import { AiOutlineSmile } from "react-icons/ai";
+import { MdPlayCircleOutline } from "react-icons/md";
 
 import { usePathname } from "next/navigation";
 import RecordingButton from "./RecordingButton";
@@ -26,9 +27,9 @@ const menu = [
   },
   {
     href: "/community",
-    label: "더빙목록",
-    icon: <MdHeadphones size={24} color="#767676" />,
-    clickedIcon: <MdHeadphones size={24} color="#ff6d60" />,
+    label: "Shorts",
+    icon: <MdPlayCircleOutline size={24} color="#767676" />,
+    clickedIcon: <MdPlayCircleOutline size={24} color="#ff6d60" />,
     isNavigatedButton: true,
   },
   {

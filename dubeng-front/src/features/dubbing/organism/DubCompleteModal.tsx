@@ -80,25 +80,24 @@ export default function DubCompleteModal({
 
   const mutation = useRecordSave();
 
-    // 1초마다 영상 실행 시간 가져오기
-    useEffect(() => {
-      const watchTime = setInterval(() => {
-        // 영상이 재생중일 때만 실행
-        if (nowPlaying) {
-          const time = Math.floor(Number(youtubePlayer?.getCurrentTime()));
-  
-          const progress =
-            ((time - startTime) / (endTime - startTime)) * 100 +
-            "%";
-  
-            setProgressBar(progress);
-        }
-      }, 1000);
-  
-      return () => {
-        clearInterval(watchTime);
-      };
-    });
+  // 1초마다 영상 실행 시간 가져오기
+  useEffect(() => {
+    const watchTime = setInterval(() => {
+      // 영상이 재생중일 때만 실행
+      if (nowPlaying) {
+        const time = Math.floor(Number(youtubePlayer?.getCurrentTime()));
+
+        const progress =
+          ((time - startTime) / (endTime - startTime)) * 100 + "%";
+
+        setProgressBar(progress);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(watchTime);
+    };
+  });
 
   // const handleOptionChange = (value: string) => {
   //   setSelectedOption(value);
@@ -153,7 +152,7 @@ export default function DubCompleteModal({
       userId: userId,
       runtime,
       totalRecordCount,
-      totalRecordTime
+      totalRecordTime,
     };
 
     const response = await mutation.mutateAsync(payload);
@@ -175,32 +174,35 @@ export default function DubCompleteModal({
             </button>
           </div>
           <div className="flex flex-col justify-center items-center">
-            <YouTube
-              videoId={transferYoutube(videoPath)}
-              opts={{
-                height: "156",
-                width: "273",
-                playerVars: {
-                  start: startTime,
-                  end: endTime,
-                  autoplay: 0,
-                  modestbranding: 0, // 컨트롤 바에 youtube 로고를 표시하지 않음
-                  controls: 0,
-                },
-              }}
-              onReady={onPlayerReady}
-              onEnd={(e) => {
-                setIsPlaying(false);
+            <div className="relative">
+              <YouTube
+                videoId={transferYoutube(videoPath)}
+                opts={{
+                  height: "156",
+                  width: "273",
+                  playerVars: {
+                    start: startTime,
+                    end: endTime,
+                    autoplay: 0,
+                    modestbranding: 0, // 컨트롤 바에 youtube 로고를 표시하지 않음
+                    controls: 0,
+                  },
+                }}
+                onReady={onPlayerReady}
+                onEnd={(e) => {
+                  setIsPlaying(false);
 
-                youtubePlayer.pauseVideo();
-                youtubePlayer.seekTo(startTime);
-                if (audioRef.current) {
-                  audioRef.current.pause();
-                  audioRef.current.currentTime = 0;
-                }
-              }}
-              onStateChange={onStateChange}
-            />
+                  youtubePlayer.pauseVideo();
+                  youtubePlayer.seekTo(startTime);
+                  if (audioRef.current) {
+                    audioRef.current.pause();
+                    audioRef.current.currentTime = 0;
+                  }
+                }}
+                onStateChange={onStateChange}
+              />
+              <div className="opacity-100 absolute top-0 left-0 w-320 h-174"></div>
+            </div>
             <div className="w-261 h-30 border-1 border-dubgraymedium my-8 rounded-lg flex flex-row justify-between items-center px-8 mb-16">
               <PlayBarPreview width={progressBar} />
               <PlayButtonSmall
