@@ -57,8 +57,8 @@ public class ContentsController {
 
     @ApiOperation(value = "선택한 콘텐츠 영상 자세히 보기")
     @GetMapping("/detail/{videoId}")
-    public Page<ContentsDetailScriptRes> ContentsDetails(Pageable pageable, @PathVariable Long videoId){
-        return contentsService.findContentsDetails(pageable, videoId);
+    public ContentsDetailScriptRes ContentsDetails(@PathVariable Long videoId){
+        return contentsService.findContentsDetails(videoId);
     }
 
     @ApiOperation(value = "콘텐츠 영상 스크랩")

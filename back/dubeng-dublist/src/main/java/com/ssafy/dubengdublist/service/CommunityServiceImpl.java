@@ -100,21 +100,19 @@ public class CommunityServiceImpl implements CommunityService{
         return videoRepository.findByCategoryCommunity(langType, title, pageable, contentsSearch);
     }
 
-    public Page<CommunityDetailScriptRes> findCommunityDetail(Pageable pageable, Long recordId) {
+    public CommunityDetailScriptRes findCommunityDetail(Long recordId) {
         Optional<Record> orecord = recordRepository.findById(recordId);
         if(!orecord.isPresent()){
             throw new NotFoundException("존재하지 않는 녹음입니다!");
         }
         // 언어 알기
         String langType = orecord.get().getVideo().getLangType();
-        return videoRepository.findByAllCommunity(langType, pageable, recordId);
-
+        return videoRepository.findByAllCommunity(langType, recordId);
     }
 
-//    @Override
-//    public Page<CommunityCommentRes> CommunityCommentList(String langType, Pageable pageable, Long recordId) {
-//        return null;
-//    }
+    public Page<CommunityDetailScriptRes> findCommunityShorts(Pageable pageable) {
+        return videoRepository.findByAllShortsCommunity(pageable);
+    }
 
     public Page<CommunityCommentRes> findCommunityComment(Pageable pageable, Long recordId) {
         Optional<Record> orecord = recordRepository.findById(recordId);

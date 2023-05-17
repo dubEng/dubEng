@@ -113,46 +113,26 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
     }
 
     // 숏츠 컨텐츠 영상들
-    public Page<ContentsDetailScriptRes> findByAllContents(String langType, Pageable pageable, Long videoId){
+    public ContentsDetailScriptRes findByAllContents(Long videoId){
 
-        // 맨 처음은 해당 영상 + 뒤에는 랜덤 영상(추천)
-        NumberExpression<Integer> roleRankPath = new CaseBuilder()
-                .when(video.id.eq(videoId)).then(1)
-                .otherwise(2);
-
-        List<ContentsDetailRes> content = queryFactory
+        ContentsDetailRes content = queryFactory
                 .select(new QContentsDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.startTime, video.endTime))
                 .from(video)
-                .where(video.langType.eq(langType))
-                .orderBy(roleRankPath.asc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+                .where(video.id.eq(videoId))
+                .fetchOne();
+        ContentsDetailScriptRes contentsDetailScriptRes = new ContentsDetailScriptRes(content.getId(), content.getTitle(), content.getThumbnail(), content.getVideoPath(), selectAllScript(content.getId()), content.getStartTime(), content.getEndTime());
 
-        List<ContentsDetailScriptRes> contentsDetailScriptResList = new ArrayList<>();
-        for(ContentsDetailRes c : content){
-            ContentsDetailScriptRes cd = new ContentsDetailScriptRes(c.getId(), c.getTitle(), c.getThumbnail(), c.getVideoPath(), selectAllScript(c.getId()), c.getStartTime(), c.getEndTime());
-            contentsDetailScriptResList.add(cd);
-        }
-
-        JPAQuery<Video> countQuery = queryFactory
-                .select(video)
-                .from(video);
-
-        return PageableExecutionUtils.getPage(contentsDetailScriptResList, pageable, countQuery::fetchCount);
+        return contentsDetailScriptRes;
     }
 
     // 숏츠 더빙 영상들
-    public Page<CommunityDetailScriptRes> findByAllCommunity(String langType, Pageable pageable, Long recordId){
+    public CommunityDetailScriptRes findByAllCommunity(String langType,Long recordId){
         // 맨 처음은 해당 영상 + 뒤에는 랜덤 영상(추천)
-        NumberExpression<Integer> roleRankPath = new CaseBuilder()
-                .when(QRecord.record.id.eq(recordId)).then(1)
-                .otherwise(2);
 
-        List<CommunityDetailRes> content = queryFactory
+        CommunityDetailRes content = queryFactory
                 .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.id, user.nickname, QRecord.record.id, video.startTime, video.endTime, QRecord.record.recordPath, user.profileImage))
                 .from(video)
-                .where(video.langType.eq(langType), QRecord.record.isPublic.eq(true))
+                .where(QRecord.record.id.eq(recordId))
                 .join(QRecord.record)
                 .on(video.id.eq(QRecord.record.video.id))
                 .leftJoin(user)
@@ -160,7 +140,27 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .leftJoin(recordComment)
                 .on(recordComment.record.id.eq(QRecord.record.id))
                 .groupBy(QRecord.record.id)
-                .orderBy(roleRankPath.asc())
+                .fetchOne();
+
+        // 스크립트 리스트 가져오기
+        CommunityDetailScriptRes communityDetailScriptRes = new CommunityDetailScriptRes(content.getId(), content.getTitle(), content.getThumbnail(), content.getVideoPath(), content.getCreatedDate(), content.getRecordCommentCount(),content.getUserId(), content.getNickname(), content.getRecordId(), selectAllScript(content.getId()), content.getStartTime(), content.getEndTime(), content.getRecordPath(), content.getProfileImage());
+        return communityDetailScriptRes;
+    }
+
+    public Page<CommunityDetailScriptRes> findByAllShortsCommunity(Pageable pageable){
+
+        List<CommunityDetailRes> content = queryFactory
+                .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.id, user.nickname, QRecord.record.id, video.startTime, video.endTime, QRecord.record.recordPath, user.profileImage))
+                .from(video)
+                .where(QRecord.record.isPublic.eq(true))
+                .join(QRecord.record)
+                .on(video.id.eq(QRecord.record.video.id))
+                .leftJoin(user)
+                .on(QRecord.record.user.id.eq(user.id))
+                .leftJoin(recordComment)
+                .on(recordComment.record.id.eq(QRecord.record.id))
+                .groupBy(QRecord.record.id)
+                .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -178,6 +178,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
 
         return PageableExecutionUtils.getPage(communityDetailScriptResList, pageable, countQuery::fetchCount);
     }
+
 
     public List<ContentsScriptRes> selectAllScript(Long videoId){
         List<ContentsScriptRes> scriptList = queryFactory

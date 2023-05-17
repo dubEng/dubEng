@@ -44,10 +44,14 @@ public class CommunityController {
 
     @ApiOperation(value = "선택한 더빙 작품 영상 자세히 보기")
     @GetMapping("/detail/{recordId}")
-    public Page<CommunityDetailScriptRes> CommunityDetails(Pageable pageable, @PathVariable Long recordId){
-        return communityService.findCommunityDetail(pageable, recordId);
+    public CommunityDetailScriptRes CommunityDetails(@PathVariable Long recordId){
+        return communityService.findCommunityDetail(recordId);
     }
-
+    @ApiOperation(value = "숏츠 더빙 작품")
+    @GetMapping("/shorts")
+    public Page<CommunityDetailScriptRes> CommunityShorts(Pageable pageable){
+        return communityService.findCommunityShorts(pageable);
+    }
 
     @ApiOperation(value = "더빙한 작품 영상 댓글 보기")
     @GetMapping("/comment/{recordId}")
