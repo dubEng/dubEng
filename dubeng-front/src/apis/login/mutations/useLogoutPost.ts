@@ -25,7 +25,8 @@ const useLogoutPost = (accessToken:string) => {
       route.push("/");
     },
     onError: (error) => {
-      console.log("로그아웃 실패");
+      dispatch(userLogout());
+      route.push("/");
     },
   });
 };

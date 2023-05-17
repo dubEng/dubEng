@@ -22,6 +22,8 @@ export default function CheckMessage({status} : Iprops) {
     return <p className="text-12 -mt-8 ml-8 text-dubcoral h-16 leading-16"></p>
   } else if (status === CheckMessageStatus.NICKNAME_INVALID_SYNTAX){
     return <p className="text-12 -mt-8 ml-8 text-dubcoral h-16 leading-16"><ImCross className="inline-block mr-6 mb-4" size={14} />닉네임 형식이 올바르지 않습니다.</p>
+  } else if (status === CheckMessageStatus.KITCHENNAME_LIMIT_FIFTEEN){
+    return <p className="text-12 -mt-8 ml-8 text-dubcoral h-16 leading-16"><ImCross className="inline-block mr-6 mb-4" size={14} />큐티 뽀짝하게 15자 이내로 작성해주세요</p>
   }
   
   return <></>;
