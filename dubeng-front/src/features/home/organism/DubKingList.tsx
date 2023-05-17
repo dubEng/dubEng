@@ -12,20 +12,20 @@ export default function DubKingList() {
   const dubKingList: DubKing[] = [
     {
       ranking: 1,
-      nickname: "김자민",
-      totalCount: 38560,
+      nickname: "개발진뽕",
+      totalCount: 62,
       dubKingImageUrl: ProfileOne,
     },
     {
       ranking: 2,
-      nickname: "김동동",
-      totalCount: 3856,
+      nickname: "개발진J",
+      totalCount: 37,
       dubKingImageUrl: ProfileTwo,
     },
     {
       ranking: 3,
-      nickname: "김언도",
-      totalCount: 385,
+      nickname: "개발진짛",
+      totalCount: 20,
       dubKingImageUrl: ProfileThree,
     },
   ];

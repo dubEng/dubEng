@@ -160,7 +160,7 @@ export default function ShortsProductPage() {
                             playerVars: {
                               start: content.startTime,
                               end: content.endTime,
-                              autoplay: 0,
+                              autoplay: 1,
                               modestbranding: 0, //컨트롤 바에 youtube 로고를 표시하지 않음
                               controls: 0,
                             },
