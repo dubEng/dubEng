@@ -224,15 +224,14 @@ public class CommunityServiceImpl implements CommunityService{
         return 200;
     }
 
-    public ContentsPlayCountRes findPlayCounts(Long recordId, String userId){
+    public HashMap<String, Object> findPlayCounts(Long recordId, String userId){
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
         ValueOperations valueOperations = redisTemplate.opsForValue();
+        HashMap<String, Object> result = new HashMap<>();
 
         String key = "like_userId::"+userId;
         String key2 = "recordPlayCnt::"+recordId;
         String key3 = "recordLikeCnt::"+recordId;
-
-        boolean isLike = setOperations.isMember(key, Long.toString(recordId)); // 1: 있음, 0: 없음
 
         String o = (String) valueOperations.get(key2);
         Long playCount = 0L;
@@ -246,7 +245,15 @@ public class CommunityServiceImpl implements CommunityService{
             likeCount = Long.parseLong(o2);
         }
 
-        return new ContentsPlayCountRes(playCount, likeCount, isLike);
+        result.put("playCount", playCount);
+        result.put("likeCount", likeCount);
+        Optional<User> ouser = userRepository.findById(userId);
+        if(!ouser.isPresent()){
+            return result;
+        }
+        boolean isLike = setOperations.isMember(key, Long.toString(recordId)); // 1: 있음, 0: 없음
+        result.put("isLike", isLike);
+        return result;
     }
 
     public List<CommunityCategoryRes> findCategories(){
