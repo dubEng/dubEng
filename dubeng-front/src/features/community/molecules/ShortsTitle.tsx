@@ -95,7 +95,7 @@ export default function ShortsTitle({
         <div className="flex text-14 text-dubgraylight space-x-8">
           {isLike && (
             <>
-              isLiked ? (
+              isLike ? (
               <button className="flex space-x-4" onClick={handleLikeButton}>
                 <MdFavorite size={20} className="text-dubcoral" />
               </button>

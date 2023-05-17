@@ -51,7 +51,13 @@ export default function ShortsProductPage() {
     isPlayed
   );
 
-  const playCountRef = useRef<number>(playCountUp.playCount);
+  const playCountRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (playCountUp !== undefined && playCountRef.current === null) {
+      playCountRef.current = playCountUp.playCount;
+    }
+  }, [playCountUp]);
 
   const [nowPlayCount, setNowPlayCount] = useState<number>();
 
@@ -193,7 +199,7 @@ export default function ShortsProductPage() {
             <ShortsTitle
               userId={data.userId}
               title={data.title}
-              playCount={playCountRef.current}
+              playCount={playCountRef.current as number}
               createdDate={data.createdDate}
               recordCommentCount={data.recordCommentCount}
               recordLikeCount={playCountUp.likeCount}
@@ -210,7 +216,9 @@ export default function ShortsProductPage() {
                       className={`script-element-${index} mb-8 mx-20 flex flex-col items-center bg-dubblue`}
                       key={index}
                     >
-                      <p className="text-16 text-white">{item.content}</p>
+                      <p className="text-16 text-white text-center">
+                        {item.content}
+                      </p>
                       {langType === LangType.ENGLISH ? (
                         <p className="text-14 text-[#8E8D8D]">
                           {item.translateContent}
