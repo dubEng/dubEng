@@ -40,6 +40,5 @@ export const LIKE_DUB_PRODUCT_LIST = "mypage/like-product-list";
 export const SCRAP_DUB_VIDEO_LIST = "mypage/scrap-video-list";
 export const CALENDAR_ATTENDANCE_LIST = "/mypage/attandance";
 
-
-//shorts
-export const Shorts = "/community/shorts";
+// mission
+export const MISSION_LIST = "/user/mission/list";

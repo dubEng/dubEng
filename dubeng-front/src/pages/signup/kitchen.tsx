@@ -9,6 +9,8 @@ import { Canvas, useLoader, useThree, extend } from '@react-three/fiber';
 import * as THREE from 'three';
 import { OrbitControls, Stats,Html,ContactShadows,Plane } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import CheckMessage from "@/components/atoms/CheckMessage";
+import { CheckMessageStatus } from "@/enum/statusType";
 export interface SignupInfo{
     accessToken : string;
     nickname : string;
@@ -23,19 +25,24 @@ export default function kitchen(){
     const [kitchenName, setKitchenName] = useState<string>("");
     const mutation = useSignupPost();
     const route = useRouter();
+    const KITCHENNAME_LIMIT_SIZE = 15;
+    const [checkKitchenMsg, setCheckKitchenMsg] = useState<CheckMessageStatus>(CheckMessageStatus.INIT);
     //Redux
     const { nickname, accessToken, interest, introduce, gender, imageUrl} = useSelector((state: RootState) => state.signupInfo);
 
     useEffect(()=>{
+        setKitchenName(kitchenName);
         checkKitchenName(kitchenName);
     }, [kitchenName])
 
     const checkKitchenName = (kitchenName : string)=>{
         
-        if(!kitchenName || kitchenName.length < 1){
+        if(!kitchenName || kitchenName.length < 1 || kitchenName.length > 15){
             setNextBtnStatus(false);
+            setCheckKitchenMsg(CheckMessageStatus.KITCHENNAME_LIMIT_FIFTEEN)
             return;
         }
+        setCheckKitchenMsg(CheckMessageStatus.INIT);
         setNextBtnStatus(true);
     }
     //kitchenName Input Event
@@ -82,8 +89,8 @@ export default function kitchen(){
                                     <Model url="/assets/b2.glb" height={300} width={350}/>
                                 </Suspense>
                                 <ContactShadows position={[0, -4.5, 0]} scale={20} blur={2} far={4.5} />
-                                <OrbitControls makeDefault dampingFactor={0.9} minDistance={5} maxDistance={20}
-                                    minAzimuthAngle={-Math.PI/4} maxAzimuthAngle={Math.PI/4} minPolarAngle={0} maxPolarAngle={Math.PI/3}  />
+                                {/* <OrbitControls makeDefault dampingFactor={0.9} minDistance={5} maxDistance={20}
+                                    minAzimuthAngle={-Math.PI/4} maxAzimuthAngle={Math.PI/4} minPolarAngle={0} maxPolarAngle={Math.PI/3}  /> */}
                                 <ambientLight intensity={0.3} color={'#FFA07A'} /> 
                                 <pointLight position={[4, 1.75, 0.7]} intensity={1.7} color={'#FFAFA7'}/>
                                 <pointLight position={[0.7, 1.1, 0.4]} intensity={0.8} color={'#FFFACD'} />
@@ -92,6 +99,8 @@ export default function kitchen(){
                         </div>
                         <div className="mt-10">
                             <CommonInputBox type="text" placeholder="귀여운 이름을 지어주세요." name="" value={kitchenName} onChange={kitchenInputHandler} />
+                            <p className="text-right text-xs text-dubgray">{kitchenName.length}/{KITCHENNAME_LIMIT_SIZE}</p>
+                            <CheckMessage status={checkKitchenMsg}/>
                         </div>
                     </div>
                 </div>
