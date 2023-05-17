@@ -21,8 +21,9 @@ export default function SignUpPage(){
   const [nextBtnStatus, setNextBtnStatus] = useState<boolean>(false);
   const [checknicknameMsg, setchecknicknameMsg] = useState<CheckMessageStatus>(CheckMessageStatus.INIT);
   const [checkintroduceMsg, setcheckintroduceMsg] = useState<CheckMessageStatus>(CheckMessageStatus.INIT);
-  
-  const [profileImage, setProfileImage] = useState<string | null>(null); // 기본 이미지
+  const [isKakaoUrl, setIsKakaoUrl] = useState<boolean>(false); // 카카오 이미지를 사용하는지?
+  const [kakaoUrl, setKakaoUrl] = useState<string | null>(null); //카카오 이미지 Url
+  const [profileImage, setProfileImage] = useState<string>('/images/login/default_profile.png'); // 기본 이미지
   const { refetch } = userGetNicknameCheck(nickname);
   
   const nicknameLimitSize = 6;
@@ -35,7 +36,7 @@ export default function SignUpPage(){
     // null 처리 해야함
     const kakaoImageUrl = cookie.load("imageUrl");
     if(kakaoImageUrl){
-      setProfileImage(kakaoImageUrl);
+      setKakaoUrl(kakaoImageUrl);
     }
     
   },[]);
@@ -72,11 +73,11 @@ export default function SignUpPage(){
     }
     setchecknicknameMsg(CheckMessageStatus.NICKNAME_ISVALID);
   }
-  // useEffect(()=>{
-  //   // 첫 렌더링시 호출 막기
-  //   checkIntroduce(introduce);
+  useEffect(()=>{
+    // 첫 렌더링시 호출 막기
+    checkIntroduce(introduce);
 
-  // },[introduce]);
+  },[introduce]);
   const checkIntroduce = async (introduce: string) =>{
     if(!introdeuceMounted.current){
       introdeuceMounted.current = true;
@@ -94,10 +95,10 @@ export default function SignUpPage(){
   
   //nextBtn
   useEffect(()=>{
-    if(checknicknameMsg === CheckMessageStatus.NICKNAME_ISVALID && gender != undefined){
+    if(checknicknameMsg === CheckMessageStatus.NICKNAME_ISVALID && checkintroduceMsg === CheckMessageStatus.INTRODUCE_ISVALID && gender != undefined){
       setNextBtnStatus(true);
     }
-  },[checknicknameMsg, gender])
+  },[checknicknameMsg, checkintroduceMsg, gender])
 
   const nicknameChange = async (e : React.ChangeEvent<HTMLInputElement>) =>{
     const nickname = e.target.value;
@@ -118,6 +119,17 @@ export default function SignUpPage(){
 
     
   }
+  const imageChangeHandler = () =>{
+    setIsKakaoUrl(!isKakaoUrl);
+    // 이미지 change 이벤트
+    if(isKakaoUrl && kakaoUrl){
+      //카카오 이미지를 사용하고 카카오 이미지가 있다면
+      // setProfileImage(kakaoUrl);
+      setProfileImage(kakaoUrl);
+    }else{
+      setProfileImage('/images/login/default_profile.png');
+    }
+  }
   const singupNextHandler = () =>{
     // 리덕스 저장
     // dispatch해줄 것
@@ -136,9 +148,14 @@ export default function SignUpPage(){
       <div className="m-16 mt-100">
         <div className="my-40 grid">
           <p className="font-bold mb-6">프로필 이미지 선택</p>
-          <div className="mt-20 mx-auto flex">
-            {<Image className="rounded-full bg-none" src={"/images/login/default_profile.png"} alt="defaultImg" width={120} height={120}></Image>}
-            {profileImage && <Image className="rounded-full" src={profileImage} alt="dubLogoImg" width={120} height={120}></Image>}
+          <div className="mt-20 mx-auto flex" >
+            { !isKakaoUrl && <Image className="rounded-full bg-none" src={"/images/login/default_profile.png"} alt="defaultImg" width={120} height={120}></Image>}
+            { isKakaoUrl && kakaoUrl && <Image className="rounded-full mb-10" src={kakaoUrl} alt="dubLogoImg" width={90} height={90}></Image>}
+          </div>
+          <div className="flex mx-auto" onClick={imageChangeHandler}>  
+            { !isKakaoUrl && <span className="flex font-bold text-dubgray text-center items-center">카카오 이미지 사용하기</span>}
+            { isKakaoUrl && <span className="flex font-bold text-dubgray text-center items-center">기본 이미지 사용하기</span>}
+            <button className="rounded-full bg-white text-dubgray"><MdChangeCircle size={25}/></button>
           </div>
 
           
@@ -169,7 +186,6 @@ export default function SignUpPage(){
                 <input type="radio" name="gender" value="0" onChange={genderChange}/>
               </div>
             </div>
-            <CheckMessage status={checkintroduceMsg}/>
           </div>
         </div>
         <div className="mt-60">
