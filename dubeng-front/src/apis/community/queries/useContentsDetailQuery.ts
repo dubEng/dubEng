@@ -4,14 +4,9 @@ import * as queryKeys from "@/constants/queryKeys";
 
 const fetcher = (videoId: string) =>
   axios
-    .get(process.env.NEXT_PUBLIC_BASE_URL + `/dub/contents/detail/${videoId}`, {
-      params: {
-        page: 0,
-        size: 10,
-      },
-    })
+    .get(process.env.NEXT_PUBLIC_BASE_URL + `/dub/contents/detail/${videoId}`)
     .then(({ data }) => {
-      return data.content[0];
+      return data;
     });
 
 const useContentsDetailQuery = (videoId: string) => {

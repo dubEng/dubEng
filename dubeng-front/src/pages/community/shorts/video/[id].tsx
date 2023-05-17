@@ -136,7 +136,7 @@ export default function ShortsVideoPage() {
   }
 
   return (
-    <div className="w-full h-screen scrollbar-hide bg-black flex flex-col items-center justify-start">
+    <div className="w-full h-screen bg-black flex flex-col items-center justify-start">
       {data && (
         <>
           <YouTube
