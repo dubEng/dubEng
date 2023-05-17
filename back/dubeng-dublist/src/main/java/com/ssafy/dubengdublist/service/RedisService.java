@@ -92,7 +92,6 @@ public class RedisService {
         while(it.hasNext()){
             String data = it.next();
             String userId = data.split("::")[1]; // 유저 아이디들
-            log.info("heeeeeeeeeeeeeeeeeeeeeeer: {} ", userId);
             Set<Object> videos = redisTemplate.opsForSet().members(data);
 
             Optional<User> ouser = userRepository.findById(userId);
@@ -111,17 +110,13 @@ public class RedisService {
             }
         }
     }
-    // 매일 자정 갱신
-    @Scheduled(cron = "0 0 0 * * *")
-    @Transactional
-    public void deleteVoteCnt(){
-        Set<String> redisKeys = redisTemplate.keys("vote_userId*");
-        redisTemplate.delete(redisKeys);
-    }
-
 
     @Scheduled(cron = "0 0 0 * * *")
     public void updateDubKing(){
+
+        Set<String> voteCntKeys = redisTemplate.keys("vote_userId*");
+        redisTemplate.delete(voteCntKeys);
+
         dubKingRepository.deleteAll();
         dubKingRepository.flush();
         Set<String> redisKeys = redisTemplate.keys("dubKing_userId*");
