@@ -20,12 +20,10 @@ export default function LanguageSelectBox({ langType }: Iprops) {
   const dispatch = useDispatch();
 
   function handleKoreanTab() {
-    console.log("한국어탭 누름");
     // 실제로 작업할 때에는 밑에 주석 풀고 진행해야 함
     dispatch(setTabKorean());
   }
   function handleEnglishTab() {
-    console.log("영어탭 누름");
     dispatch(setTabEnglish());
   }
 

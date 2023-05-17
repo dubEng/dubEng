@@ -8,26 +8,27 @@ const fetcher = async (accessToken : string) =>{
   axios.defaults.headers.common['Authorization'] = accessToken;
   const {data} = await axios
     .post(process.env.NEXT_PUBLIC_BASE_URL + `/user/auth/logout`);
-    console.log(data);
     
     return data
 }
 
-const useLogoutQuery = (accessToken:string) => {
+const useLogoutPost = (accessToken:string) => {
+  
   // state먼저 
   const dispatch = useDispatch();
-  dispatch(userLogout);
-
   const route = useRouter();
 
   return useMutation(() => fetcher(accessToken), {
     onSuccess: () => {
+      
+      dispatch(userLogout());
       route.push("/");
     },
     onError: (error) => {
-      console.log("로그아웃 실패");
+      dispatch(userLogout());
+      route.push("/");
     },
   });
 };
 
-export default useLogoutQuery;
+export default useLogoutPost;

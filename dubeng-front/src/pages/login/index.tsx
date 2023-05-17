@@ -43,14 +43,16 @@ export default function LogInPage() {
           </Link>
           {/* <p className="text-dubgray text-xs text-center my-5">더빙으로 즐거움이 더블</p> */}
         </div>
-        <button onClick={loginHandler}>
-          <Image
-            className="mx-auto"
-            src={LoginBtnImage}
-            alt="kakaoLoginBtn"
-            width={350}
-          ></Image>
-        </button>
+        <div className="flex flex-row justify-center">
+          <button onClick={loginHandler}>
+            <Image
+              className="mx-auto"
+              src={LoginBtnImage}
+              alt="kakaoLoginBtn"
+              width={350}
+            ></Image>
+          </button>
+        </div>
       </div>
     </div>
   );

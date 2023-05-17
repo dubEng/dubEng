@@ -19,15 +19,12 @@ export default function DubTypeTap({ dubType, langType }: Iprops) {
   const dispatch = useDispatch();
 
   function handleDubVideoTab() {
-    console.log("더빙 콘텐츠 누름");
     dispatch(setTabDubVideo());
   }
   function handleDubProductTab() {
-    console.log("더빙 작품 누름");
     dispatch(setTabDubProduct());
   }
   function handleLanguageButton() {
-    console.log("언어버튼 눌렀다!");
     setIsLanguageButtonOpen(!isLanguageButtonOpen);
   }
 
@@ -40,13 +37,15 @@ export default function DubTypeTap({ dubType, langType }: Iprops) {
       <div>
         <div className="flex ml-4 justify-between">
           <div className="flex">
-            <p className="text-16 text-dubblack font-semibold">더빙 콘텐츠</p>
-            <p
+            <button className="text-16 text-dubblack font-semibold">
+              더빙 콘텐츠
+            </button>
+            <button
               className="ml-16 text-16 text-dubblack font-semibold"
               onClick={handleDubProductTab}
             >
               더빙 작품
-            </p>
+            </button>
           </div>
           <LanguageSelectTap
             langType={langType}
@@ -65,15 +64,15 @@ export default function DubTypeTap({ dubType, langType }: Iprops) {
       <div>
         <div className="flex ml-4 justify-between">
           <div className="flex">
-            <p
+            <button
               className="text-16 text-dubblack font-semibold"
               onClick={handleDubVideoTab}
             >
               더빙 콘텐츠
-            </p>
-            <p className="ml-16 text-16 text-dubblack font-semibold">
+            </button>
+            <button className="ml-16 text-16 text-dubblack font-semibold">
               더빙 작품
-            </p>
+            </button>
           </div>
           <LanguageSelectTap
             langType={langType}

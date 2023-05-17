@@ -12,7 +12,6 @@ const fetcher = (langType: string, userId: string, accessToken: string) => {
       userId: userId,
     })
     .then((res) => {
-      console.log(res);
       return res;
     });
 };

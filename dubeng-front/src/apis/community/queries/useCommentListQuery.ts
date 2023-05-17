@@ -14,7 +14,6 @@ const fetcher = (pageParam: string, recordId: number, size: string) =>
       }
     )
     .then(({ data }) => {
-      console.log("useCommentQuery안", data);
       return data;
     });
 

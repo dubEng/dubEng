@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 interface IDataList {
   playCount: number;
   likeCount: number;
-  like: boolean;
+  isLike: boolean;
 }
 const fetcher = (recordId: number, userId: string) => {
   return axios
@@ -19,9 +19,9 @@ const fetcher = (recordId: number, userId: string) => {
       }
     )
     .then(({ data }) => {
-      console.log("usePlayCountQuery안 playCount", data);
-      const dataList = data as IDataList;
-      return dataList;
+      console.log("usePlayCountUpQuery", data);
+      // const dataList = data as IDataList;
+      return data;
     });
 };
 const usePlayCountUpQuery = (
@@ -30,7 +30,7 @@ const usePlayCountUpQuery = (
   isPlayed: null | boolean
 ) => {
   return useQuery([queryKeys.PLAY_COUNT], () => fetcher(recordId, userId), {
-    refetchOnWindowFocus: false,
+    // refetchOnWindowFocus: false,
   });
 };
 

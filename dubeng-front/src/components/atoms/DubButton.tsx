@@ -9,7 +9,7 @@ export default function DubButton({ type, onClick }: Iprops) {
   if (type === "shorts") {
     return (
       <button
-        className="w-95 h-35 text-14 rounded-20 p-6 pl-16 pr-10 border-1 border-dubgraylight font-semibold text-dubgraylight"
+        className="w-95 h-35 text-14 rounded-20 p-4 pl-10 pr-6 border-1 border-dubgraylight font-semibold text-dubgraylight"
         onClick={onClick}
       >
         <div className="flex justify-center items-center">
@@ -21,7 +21,7 @@ export default function DubButton({ type, onClick }: Iprops) {
   } else {
     return (
       <button
-        className="w-95 h-35 text-14 rounded-20 p-6 pl-16 pr-10 border-1 border-dubgray font-semibold text-dubgray"
+        className="w-95 h-35 text-14 rounded-20 p-4 pl-10 pr-6 border-1 border-dubgray font-semibold text-dubgray"
         onClick={onClick}
       >
         <div className="flex justify-center items-center">

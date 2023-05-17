@@ -17,8 +17,6 @@ const fetcher = async (isLimit: boolean, accessToken: string, langType: string) 
     }
   );
 
-  console.log("useLikeDubProductListQuery", data);
-
   return data;
 };
 

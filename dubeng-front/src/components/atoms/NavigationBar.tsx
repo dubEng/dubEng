@@ -3,6 +3,7 @@ import { MdHomeFilled } from "react-icons/md";
 import { MdHeadphones } from "react-icons/md";
 import { ImBook } from "react-icons/im";
 import { AiOutlineSmile } from "react-icons/ai";
+import { MdPlayCircleOutline } from "react-icons/md";
 
 import { usePathname } from "next/navigation";
 import RecordingButton from "./RecordingButton";
@@ -22,33 +23,28 @@ const menu = [
     label: "홈",
     icon: <MdHomeFilled size={24} color="#767676" />,
     clickedIcon: <MdHomeFilled size={24} color="#ff6d60" />,
-    isNavigatedButton: true,
+  },
+  {
+    href: "/community/shorts",
+    label: "Shorts",
+    icon: <MdPlayCircleOutline size={24} color="#767676" />,
+    clickedIcon: <MdPlayCircleOutline size={24} color="#ff6d60" />,
   },
   {
     href: "/community",
-    label: "더빙목록",
-    icon: <MdHeadphones size={24} color="#767676" />,
-    clickedIcon: <MdHeadphones size={24} color="#ff6d60" />,
-    isNavigatedButton: true,
-  },
-  {
-    href: "/others",
     label: "녹음버튼",
-    isNavigatedButton: false,
   },
   {
     href: "/mission",
     label: "도전과제",
     icon: <ImBook size={24} color="#767676" />,
     clickedIcon: <ImBook size={24} color="#ff6d60" />,
-    isNavigatedButton: true,
   },
   {
     href: "/mypage",
     label: "My",
     icon: <AiOutlineSmile size={24} color="#767676" />,
     clickedIcon: <AiOutlineSmile size={24} color="#ff6d60" />,
-    isNavigatedButton: true,
   },
 ];
 
@@ -70,8 +66,13 @@ export default function NavigationBar() {
         <ul className="flex justify-around">
           {menu.map((item) => (
             <li key={item.href}>
-              {item.isNavigatedButton === false ? (
-                <RecordingButton page={pathName} />
+              {item.href === "/community" ? (
+                <button
+                  className="flex flex-col justify-center items-center"
+                  onClick={() => handleNavigationButton(item.href)}
+                >
+                  <RecordingButton page={pathName} />
+                </button>
               ) : (
                 <button
                   className="flex flex-col justify-center items-center pt-4"
@@ -92,10 +93,10 @@ export default function NavigationBar() {
     );
   }
 
-  function handleNavigationButton(pathName: string) {
+  async function handleNavigationButton(pathName: string) {
     if (pathName === "/mypage") {
       if (userId.length == 0) {
-        MySwal.fire("로그인 후 이용 가능합니다.");
+        await MySwal.fire("로그인 후 이용 가능합니다.");
         route.push("/login");
       } else {
         route.push(pathName);

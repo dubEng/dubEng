@@ -5,6 +5,10 @@ import DubBox from "@/features/dubbing/organism/DubBox";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import "swiper/css/navigation";
+
+import { Navigation } from "swiper";
+
 import PlayBar from "@/features/dubbing/atoms/PlayBar";
 import CommonButton from "@/components/atoms/CommonButton";
 import useDubRecordVideoInfoQuery from "@/apis/dubbing/queries/useDubRecordVideoInfoQuery";
@@ -40,8 +44,6 @@ export default function DubbingPage() {
   const { isLoading, isError, data } = useDubRecordVideoInfoQuery(
     parseInt(router.query.id as string)
   );
-
-  console.log("useDubRecordVideoInfoQuery", data);
 
   const scriptList = useDubRecordScriptQuery(
     parseInt(router.query.id as string)
@@ -293,7 +295,9 @@ export default function DubbingPage() {
       <PlayBar width={progressBarWidth} />
       <div className="w-390 my-8 py-8 bg-dubgraylight flex justify-center items-center">
         <Swiper
-          spaceBetween={4}
+          navigation={true}
+          modules={[Navigation]}
+          // spaceBetween={4}
           onSlideChange={handleSlideChange}
           onSwiper={(swiper) => console.log(swiper)}
           centeredSlides
@@ -325,7 +329,7 @@ export default function DubbingPage() {
             ))}
         </Swiper>
       </div>
-      <div className="h-156 overflow-y-scroll bg-white mb-16 w-391">
+      <div className="h-156 overflow-y-scroll bg-white mb-16 w-391 scrollbar-thin scrollbar-thumb-blue-700 scrollbar-track-blue-300">
         <p className="flex justify-start mx-16 text-16 font-bold mt-16 mb-8">
           전체 스크립트
         </p>

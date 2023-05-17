@@ -57,7 +57,6 @@ export default function CommunityPage() {
 
   // 태그 선택
   const handleClickCategory = (id: number) => {
-    console.log("fffff", searchDubVideoList);
     if (selectedCategory.includes(id)) {
       setSelectedCategory(selectedCategory.filter((tagId) => tagId !== id));
     } else {
@@ -107,7 +106,6 @@ export default function CommunityPage() {
     }
   };
   function handleSearchInputClear() {
-    console.log("검색어 지우기 눌렸다");
     setSearchValue("");
   }
 

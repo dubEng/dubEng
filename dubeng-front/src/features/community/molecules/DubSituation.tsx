@@ -60,7 +60,6 @@ export default function DubSituation() {
     situationTitle
   );
 
-  console.log("확인!!!!!!!1111", situationVideoList);
 
   // function getSituationVideo() {
   //   console.log("getSituationVideo로 들어옴");
@@ -89,7 +88,6 @@ export default function DubSituation() {
       setSituationTitle("하이킥");
       setSliderTitle("하이킥 시리즈");
     }
-    console.log("1번 카드 클릭");
     setOpen(true);
   }
   function handleSituationCard2() {

@@ -36,8 +36,6 @@ export default function interestPage(){
         
     };
     const singupNextHandler = () =>{
-        // 저장
-        console.log(selectedTag);
         
         // Redux 저장
         dispatch(saveInterest(selectedTag));

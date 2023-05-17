@@ -4,7 +4,7 @@ import axios from "axios";
 import { saveUserInfo } from "@/stores/user/userSlice";
 
 const fetcher = async (accessToken:string) =>{
-  console.log(accessToken);
+  // console.log(accessToken);
   
   axios.defaults.headers.common['Authorization'] = accessToken;
   const {data} = await axios

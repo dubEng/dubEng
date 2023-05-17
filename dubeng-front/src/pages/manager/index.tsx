@@ -92,10 +92,8 @@ export default function ManagerPage() {
     youtubePlayer.playVideo();
 
     setTimeout(() => {
-      console.log("setTimeOut으로 왔다");
       youtubePlayer.pauseVideo();
     }, (endSecond as number) * 1000);
-    console.log("여기까지 온아");
     // if (youtubePlayer.currentTime === startSecond + endSecond)
   };
 
@@ -148,7 +146,6 @@ export default function ManagerPage() {
 
   const handleClickGenderButton = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGender(parseInt(e.target.value));
-    console.log(gender);
   };
 
   // // 카테고리 조회 react-query
@@ -185,17 +182,15 @@ export default function ManagerPage() {
   // 지정 커스텀 타이틀 값 변경
   const onChangeTitleValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCustomTitle(e.target.value);
-    console.log(customTitle);
+    // console.log(customTitle);
   };
 
   useEffect(() => {}, [scripts]);
 
   // getVideoInfo 쿼리 호출 파트
   async function getVideoInfo() {
-    console.log("getVideoInfo");
     try {
       const videoInfoResult = await refetch();
-      console.log("videoInfoResult", videoInfoResult.data.scripts);
       setVideoInfo(videoInfoResult.data.videoInfo);
       setScripts(videoInfoResult.data.scripts);
     } catch (error) {
