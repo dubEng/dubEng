@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { useLoader, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import axios from "axios";
 import useMissionListQuery from '@/apis/mission/queries/useMissionListQuery';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/stores/store';
@@ -33,81 +32,41 @@ export default function KitchenModel({ url, Rayss }: Model) {
     const [missionList, setMissionList] = useState<Array<string>>([]);
     const [missionYet, setMissionYet] = useState<Array<string>>([]);
     const [missionClear, setMissionClear] = useState<Array<string>>([]);
-
+    const [getData, setGetData] = useState<Array<MyMissionForm>>([]);
     const { accessToken } = useSelector((state: RootState) => state.user);
     const {data} = useMissionListQuery('BrtlK8huUt56j9LcUI5rlRS2gE7vp-2y4Lw2aMXPCj10lwAAAYgmTrMk');
-    // console.log(data);
     
     useEffect(()=>{
-      
-      data.forEach((s:MyMissionForm)=>{  
-        if(!s.isComplete){
-          setMissionYet([...missionYet, s.assets]);
-        }else{
-          setMissionClear([...missionClear, s.assets]);
-        }       
-          getData.push(s);
-          // getData.forEach((s:MyMissionForm)=>{
-          //   if (s.isComplete) {
-          //     missionList.push( s.assets);
-          //   }
-          // });
-      });
-    },[data]);
-    //const MissionList = ['FRG','TABLE','CHAIR','OVEN','CABIMAIN','SINK','CABINET','LEFTSHELVE','SHELVE','cfm'];//success list
-    // const MissionList:Array<string> = [];//success list
-    // const missionYet:Array<string> = [];// need list 
-    // const missionClear:Array<string> = [];//elements
-    // API CALL arrays 
-  
-    let getData:Array<MyMissionForm> = [];// axios get mission data 
-  
-    async function ApiDataInit() {// before we rendered initiate first 
-      //  const {data} = await axios.get('http://localhost:9000/user/mission/list', {
-      //   headers: {
-      //     accessToken:'BrtlK8huUt56j9LcUI5rlRS2gE7vp-2y4Lw2aMXPCj10lwAAAYgmTrMk',
-      //   }
-      // });
-      
+      if(data){
+        console.log(data);
+        
+        setGetData(data);
+        const tempYetArray : Array<string> = [];
+        const tempClearArray : Array<string> = [];
 
-      
-  
-      for (let ii:number = 0; ii < missionClear.length; ii++){
-        let flag:boolean = true;
-        for (let jj:number = 0; jj < missionList.length; jj++){
-          if (missionList[jj] == missionClear[ii]) {
-            
-            flag = false;// comp mission exist 
+        data.forEach((s:MyMissionForm)=>{  
+          if(!s.isComplete){
+            tempYetArray.push(s.assets);
+          }else{
+            tempClearArray.push(s.assets);
           }
-        }
-        if (flag) { 
-          
-          missionYet.push(missionClear[ii]);// yet mission added
-        }
-      }// catching not fin mission to list
-  
-      console.log("mymission= " + missionList);
-      console.log("YET= " + missionYet);
+
+        });
+        setMissionYet(tempYetArray);
+        setMissionClear(tempClearArray);
       }
-      
-  
-  
-    async function a(){
-      await ApiDataInit();
-      
-    if (!isZoom) {// not zoom state 
-      console.log("TEST async");
+    },[data]);
+
+    useEffect(()=>{
       gltf.scene.traverse((child:THREE.Object3D) => {// all object's child checking ... 
-        console.log("yet check"+ missionYet);
         missionYet.forEach((mission : string) => {
-          console.log("TEST@@@@@@@@@@@@@@@@@");
+          
           if (child.name.includes(mission)) {
             child.visible = false;
           }
         });
-  
+        console.log(missionYet);
         if (child.name == 'raycast1') {// not important here 
-          console.log(child.name + ' NAME check');
           child.raycast = ( raycaster:THREE.Raycaster, intersects: Array<THREE.Intersection<THREE.Object3D<THREE.Event>>>) => {// raycast apply 
             if (intersects.length > 0) {
               const selected:THREE.Object3D<THREE.Event> = intersects[0].object;// rays first matching object registered
@@ -117,16 +76,12 @@ export default function KitchenModel({ url, Rayss }: Model) {
           };
         }
       });
-    }
       
       
-      
-     }
+    },[missionYet]);
   
-    
-    a();
-  
-  
+    // let getData:Array<MyMissionForm> = [];// axios get mission data 
+
     function focusCameraOnObject(object:THREE.Object3D<THREE.Event>) {// zoom animation function 
   
       const cc:THREE.Vector3 = new THREE.Vector3().copy(camera.position);// my cam vec3 cp
@@ -229,9 +184,9 @@ export default function KitchenModel({ url, Rayss }: Model) {
       
               function checkname():void {
                 setlier(false);
-                for (let qq = 0; qq < missionList.length; qq++){
+                for (let qq = 0; qq < missionClear.length; qq++){
                   console.log(selected.name + "nameofsels");
-                  if (selected.name.includes(missionList[qq])) {// check my fin mission and load asset
+                  if (selected.name.includes(missionClear[qq])) {// check my fin mission and load asset
       
                       setlier(true);
                     if (selected.name.includes('bg')) {// not activated but..? 
@@ -297,16 +252,8 @@ export default function KitchenModel({ url, Rayss }: Model) {
                 // add api elements write here 
               }
               else {// reset cam coord 
-      
-      
                 focusCameraOnBase(camera);
                 setIsZoom(false);
-                console.log(isAni + "else part ani checker");
-                console.log(lier + " res of liersAND FAILCHECK"+ "now cam is"+camera.position.x+" y= "+camera.position.y+"z= "+camera.position.z);
-               // let tempv = camera.getWorldDirection().Vector3;
-               // console.log( tempv+ "direction of cam");
-                // document.querySelector("#mission").innerHTML = '<a>업적 Helper</a>';
-                // document.querySelector("#desc").innerHTML = '<p>원하는 오브젝트를 클릭해주세요!</p>';
                 if (document.querySelector("#helper") != null) {
                   const helperElement: HTMLElement | null = document.querySelector("#helper");
                   if (helperElement !== null) {
@@ -319,20 +266,12 @@ export default function KitchenModel({ url, Rayss }: Model) {
   
         }
   
-   // at browser mouse cursor coordination value must normalization
-  
-      //  mouse.X = (e.clientX - rect.left) / rect.width;
-      //  mouse.Y = (e.clientY - rect.top) / rect.height;  
-  
-  
-  
       };
   
   
       
       return (
           <primitive object={gltf.scene} onClick={handleClick} />
-          // <primitive object={gltf.scene} />
         );
       
 }

@@ -1,19 +1,13 @@
-import React, { Suspense, useRef,useEffect,useState, useMemo,FC } from 'react';
+import React, { Suspense, useState } from 'react';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
-import { GLTFLoader,GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
-import { Canvas,ReactThreeFiber,Props, extend } from '@react-three/fiber';
-import { OrbitControls, Stats,Html,ContactShadows,Plane, Gltf } from '@react-three/drei';
-import * as THREE from 'three';
-import { BloomPass } from 'three/examples/jsm/postprocessing/BloomPass.js';
-import { CopyShader } from 'three/examples/jsm/shaders/CopyShader';
+import { Canvas, extend } from '@react-three/fiber';
+import { OrbitControls,ContactShadows,Plane } from '@react-three/drei';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js';
 import { SSRPass } from 'three/examples/jsm/postprocessing/SSRPass.js';
-import { WebGLRenderer } from 'three';
 import KitchenModel from '../atoms/KitchenModel';
-import KitchenFilterEffect from '../atoms/KitchenFilterEffect';
 import KitchenTooltipBox from '../atoms/KitchenTooltipBox';
 extend({ EffectComposer, RenderPass, UnrealBloomPass , ShaderPass, SSAOPass, SSRPass });
 export default function MissionKitchen() {
@@ -25,7 +19,7 @@ export default function MissionKitchen() {
   
     return (
         <Canvas id="Mycanvas" camera={{position: [1.1413,3.0704,1.95585] }} style={{borderRadius : 10, border: '1px solid #F5F6F8'}}>
-            <Suspense fallback={null}>
+            <Suspense fallback={"로딩중"}>
                 <Plane args={[100, 100]} rotation={[-Math.PI / 2, 0, 0]} position={[0.1,0.1,0.1]}>
                     <meshStandardMaterial color="#FFB679" />
                 </Plane>
