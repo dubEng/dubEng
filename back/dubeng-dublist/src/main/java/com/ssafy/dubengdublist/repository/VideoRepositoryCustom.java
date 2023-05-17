@@ -22,8 +22,9 @@ public interface VideoRepositoryCustom {
 
     public Page<ContentsSearchRes> findByCategoryContents(String langType, String title, Pageable pageable, List<Long> contentsSearch);
     Page<CommunitySearchRes> findByCategoryCommunity(String langType, String  title, Pageable pageable, List<Long> contentsSearch);
-    public Page<ContentsDetailScriptRes> findByAllContents(String langType, Pageable pageable, Long videoId);
-    public Page<CommunityDetailScriptRes> findByAllCommunity(String langType, Pageable pageable, Long recordId);
+    public ContentsDetailScriptRes findByAllContents(Long videoId);
+    public CommunityDetailScriptRes findByAllCommunity(String langType,Long recordId);
+    public Page<CommunityDetailScriptRes> findByAllShortsCommunity(Pageable pageable);
     public CommunityDubKingRes findByOneDubKing(String langType, String userId);
     Page<CommunityCommentRes> findAllCommunityComment(Pageable pageable, Long recordId);
     public RecordLike findByRecordLike(Long recordId, String userId);
