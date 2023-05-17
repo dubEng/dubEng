@@ -255,7 +255,7 @@ def maekPreviewAudio(item: videoClass.previewReq):
     for userVoice in userVoiceList:
         logging.info(f"링크: {userVoice}")
         user = AudioSegment.from_file(userVoice)
-        user = user.apply_gain(-20)
+        user = user.apply_gain(-12)
         userAudioList.append(user)
 
     logging.info(f"userAudioList length: {len(userAudioList)}")
