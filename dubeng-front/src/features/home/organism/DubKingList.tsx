@@ -3,6 +3,8 @@ import DubKingItem from "../molecules/DubKingItem";
 import useHomeDubKingQuery from "../../../apis/home/queries/useHomeDubKingQuery";
 import ErrorComponent from "../../../components/atoms/ErrorComponent";
 
+import DefaultImage from "../../../../public/images/default/mic_profile.png"
+
 import ProfileOne from "../../../../public/images/dump/profile_01.svg";
 import ProfileTwo from "../../../../public/images/dump/profile_02.svg";
 import ProfileThree from "../../../../public/images/dump/profile_03.svg";
@@ -72,19 +74,19 @@ export default function DubKingList() {
           <DubKingItem
             nickname={data[1].nickname?? ""}
             ranking={2}
-            dubKingImageUrl={data[1].profileImage ?? ""}
+            dubKingImageUrl={data[1].profileImage ?? DefaultImage}
             totalCount={data[1].totalVote}
           />
           <DubKingItem
             nickname={data[0].nickname ?? ""}
             ranking={1}
-            dubKingImageUrl={data[0].profileImage ?? ""}
+            dubKingImageUrl={data[0].profileImage ?? DefaultImage}
             totalCount={data[0].totalVote}
           />
           <DubKingItem
             nickname={data[2].nickname ?? ""}
             ranking={3}
-            dubKingImageUrl={data[2].profileImage ?? ""}
+            dubKingImageUrl={data[2].profileImage ?? DefaultImage}
             totalCount={data[2].totalVote}
           />
         </>
