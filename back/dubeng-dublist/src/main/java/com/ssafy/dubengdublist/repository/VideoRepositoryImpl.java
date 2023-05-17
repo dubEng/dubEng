@@ -64,6 +64,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .where(builder)
                 .join(videoCategory)
                 .on(videoCategory.video.id.eq(video.id))
+                .orderBy(video.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -101,6 +102,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .on(video.id.eq(QRecord.record.video.id))
                 .join(user)
                 .on(user.id.eq(QRecord.record.user.id))
+                .orderBy(QRecord.record.createdDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
