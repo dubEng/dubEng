@@ -6,6 +6,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 import { Autoplay, Pagination } from "swiper";
 
+import Link from "next/link";
+
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
@@ -25,19 +27,35 @@ export default function HomePage() {
           className="mySwiper"
         >
           <SwiperSlide>
-            <div className="p-16 ">
-              <img src={"/images/home/banner1.png"} alt={"banner"} className="rounded-6" />
-            </div>
+            <Link href="https://forms.gle/iRVTiCJFVAc9bBeH7">
+              <button className="p-16 ">
+                <img
+                  src={"/images/home/banner_review.png"}
+                  alt={"banner"}
+                  className="rounded-6"
+                />
+              </button>
+            </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="p-16 ">
-              <img src={"/images/home/banner2.png"} alt={"banner"} className="rounded-6" />
-            </div>
+            <Link href="https://instagram.com/dub.eng?igshid=NTc4MTIwNjQ2YQ==">
+              <button className="p-16 ">
+                <img
+                  src={"/images/home/banner_instagram.png"}
+                  alt={"banner"}
+                  className="rounded-6"
+                />
+              </button>
+            </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="p-16 ">
-              <img src={"/images/home/banner3.png"} alt={"banner"} className="rounded-6" />
-            </div>
+            <button className="p-16 ">
+              <img
+                src={"/images/home/banner2.png"}
+                alt={"banner"}
+                className="rounded-6"
+              />
+            </button>
           </SwiperSlide>
         </Swiper>
       </div>

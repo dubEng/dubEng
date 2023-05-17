@@ -247,7 +247,7 @@ export default function DubBox({
 
   function handleRecordButton() {
     setIsRecording(true);
-    // analyzeMicrophone(mediaStreamRef.current);
+    analyzeMicrophone(mediaStreamRef.current);
 
     // 녹음 전 유튜브 영상 멈추기
     setIsPlaying(false);
@@ -334,26 +334,26 @@ export default function DubBox({
     setAnswer(flag);
   };
 
-  // const analyzeMicrophone = (stream: MediaStream) => {
-  //   const audioCtx = new AudioContext();
-  //   const analyser = audioCtx.createAnalyser();
-  //   analyser.fftSize = 4096;
-  //   const dataArray = new Uint8Array(analyser.frequencyBinCount);
+  const analyzeMicrophone = (stream: MediaStream) => {
+    const audioCtx = new AudioContext();
+    const analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 4096;
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-  //   const source = audioCtx.createMediaStreamSource(stream);
-  //   source.connect(analyser);
-  //   const recordingTimer = setInterval(() => {
-  //     analyser.getByteFrequencyData(dataArray);
-  //     const maxIndex = dataArray.indexOf(Math.max(...dataArray));
-  //     const maxHz = (maxIndex * audioCtx.sampleRate) / analyser.fftSize;
-  //     console.log("maxHz", maxHz);
-  //     setMyPitchList((data) => [...data, maxHz]);
-  //   }, 500);
-  //   setTimeout(() => {
-  //     clearInterval(recordingTimer);
-  //     stream.getTracks().forEach((track) => track.stop());
-  //   }, duration);
-  // };
+    const source = audioCtx.createMediaStreamSource(stream);
+    source.connect(analyser);
+    const recordingTimer = setInterval(() => {
+      analyser.getByteFrequencyData(dataArray);
+      const maxIndex = dataArray.indexOf(Math.max(...dataArray));
+      const maxHz = (maxIndex * audioCtx.sampleRate) / analyser.fftSize;
+      console.log("maxHz", maxHz);
+      setMyPitchList((data) => [...data, maxHz]);
+    }, 500);
+    setTimeout(() => {
+      clearInterval(recordingTimer);
+      stream.getTracks().forEach((track) => track.stop());
+    }, duration);
+  };
 
   return (
     <div className="w-359 bg-white rounded-20 container mx-auto p-16">
@@ -372,7 +372,7 @@ export default function DubBox({
         ) : null}
       </div>
       <div className="flex justify-center">
-        <PitchGraph moviePitchList={pitchList} myPitchList={myPitchList} />
+        <PitchGraph moviePitchList={[]} myPitchList={myPitchList} />
       </div>
       <p className="text-14 text-dubblack font-normal flex justify-start mx-16">
         {content}

@@ -31,7 +31,7 @@ export default function ShortsProductPage() {
 
   const [isPlayed, setIsPlayed] = useState<null | boolean>(null);
 
-  const { data: contentList } = useCommunityShortsQuery();
+  const { data: contentList, refetch } = useCommunityShortsQuery();
 
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
@@ -54,11 +54,10 @@ export default function ShortsProductPage() {
     player.mute();
   };
 
-  const { data: playCountUp, refetch } = usePlayCountUpQuery(
-    userId,
-    Number(router.query.id),
-    isPlayed
-  );
+  // const { data: playCountUp, refetch } = usePlayCountUpQuery(
+  //   userId,
+  //   Number(router.query.id)
+  // );
 
   const onPlay: YouTubeProps["onPlay"] = (event) => {
     console.log("onPlay");
@@ -74,7 +73,6 @@ export default function ShortsProductPage() {
       }
       setIsPlayed(true);
       // 재생 중일 때
-      refetch();
     } else if (event.data === 2) {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -83,23 +81,7 @@ export default function ShortsProductPage() {
     }
   };
   useEffect(() => {
-    const observer = new MutationObserver((mutationsList) => {
-      mutationsList.forEach((mutation) => {
-        const { target } = mutation;
-        if (
-          target instanceof Element &&
-          target.classList.contains("fp-enabled")
-        ) {
-          target.classList.remove("fp-enabled");
-        }
-      });
-    });
-
-    observer.observe(document.documentElement, { attributes: true });
-
-    return () => {
-      observer.disconnect();
-    };
+    refetch();
   }, []);
 
   useEffect(() => {
@@ -187,11 +169,8 @@ export default function ShortsProductPage() {
                           <ShortsTitle
                             userId={content.userId}
                             title={content.title}
-                            playCount={playCountUp?.playCount}
                             createdDate={content.createdDate}
                             recordCommentCount={content.recordCommentCount}
-                            recordLikeCount={playCountUp?.likeCount}
-                            isLike={playCountUp?.like}
                             isScrap={false}
                           />
                         </div>
