@@ -201,7 +201,7 @@ def dublistAPI():
     # 있다면 더빙 목록으로
     result = []
 
-    logging.info(f"movies_df: {movies_df}")
+    # logging.info(f"movies_df: {movies_df}")
 
     if usercheckDub:
         similar_movies = find_sim_movie(
