@@ -9,17 +9,15 @@ import lombok.NoArgsConstructor;
 public class UserLoginRes {
     private String userId;
     private String accessToken;
-    private String refreshToken;
     private String nickname;
     private String imageUrl;
-
+    private String kitchenName;
     @Builder
-    public UserLoginRes(String userId, String accessToken, String refreshToken, String nickname, String imageUrl){
+    public UserLoginRes(String userId, String accessToken, String nickname, String imageUrl, String kitchenName){
         this.userId = userId;
         this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
         this.nickname = nickname;
         this.imageUrl = imageUrl;
-
+        this.kitchenName = kitchenName;
     }
 }
