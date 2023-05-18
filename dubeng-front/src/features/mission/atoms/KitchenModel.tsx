@@ -26,7 +26,8 @@ export default function KitchenModel({ url, missionClear, missionYet, getData }:
             }
           }
         });
-    },[]);
+        
+    },[missionYet]);
 
     // 클릭  >> 줌
     function focusCameraOnObject(object:THREE.Object3D<THREE.Event>) {
@@ -52,7 +53,7 @@ export default function KitchenModel({ url, missionClear, missionYet, getData }:
           }
         }
       }
-      camera.lookAt(object.position);
+      camera.lookAt(new THREE.Vector3(-0.55, 1.0, -0.55));
       let num:number = 0;// frame counter
       function animate():void {// 1 frame == 1 animate 
         num++;
@@ -72,7 +73,7 @@ export default function KitchenModel({ url, missionClear, missionYet, getData }:
     function focusCameraOnBase(camera: any) {// back to the base point from zoom point 
       const target:THREE.Vector3 = new THREE.Vector3(1.1413,3.0704,1.95585);
   
-      camera.lookAt([0, 0, 0]);
+      camera.lookAt([-0.55, -0.61, -0.55]);
       let num:number = 0;
       function animate2():void{
         num++;
@@ -85,7 +86,10 @@ export default function KitchenModel({ url, missionClear, missionYet, getData }:
       animate2();
     }//func end
 
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {// click event handler 
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {// click event handler
+      
+
+      console.log(" res of liersAND FAILCHECK"+ "now cam is"+camera.position.x+" y= "+camera.position.y+"z= "+camera.position.z);
       const canvas: Element | null = document.querySelector('#Mycanvas');
       if (canvas != null) {
         const rect:DOMRect = canvas.getBoundingClientRect();
