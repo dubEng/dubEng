@@ -59,8 +59,8 @@ export default function MissionPage() {
           getData={getData}
         />
       </div>
-      <p className="flex justify-start mx-16 text-19 font-bold mt-24 mb-16">
-        완료된 도전과제
+      <p className="flex justify-start text-19 font-bold mt-24 mb-16">
+        도전과제
       </p>
       <MissionList getData={getData} />
     </div>
