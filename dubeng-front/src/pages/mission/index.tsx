@@ -63,6 +63,7 @@ export default function MissionPage() {
         도전과제
       </p>
       <MissionList getData={getData} />
+      <div className="h-80"></div>
     </div>
   );
 }
