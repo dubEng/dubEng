@@ -29,8 +29,8 @@ const useRecordSave = () => {
     onSuccess: async (response) => {
       await MySwal.fire({icon: 'success',text: "더빙에 성공하였습니다." });
       console.log('useRecordSave response', response);
-      await queryClient.setQueryData(queryKeys.MISSION_COMPLETE, response);
-      await queryClient.invalidateQueries(queryKeys.MISSION_COMPLETE);
+      queryClient.setQueryData(queryKeys.MISSION_COMPLETE, response);
+      queryClient.invalidateQueries(queryKeys.MISSION_COMPLETE);
       route.push("/community");
     },
     onError: (error) => {
