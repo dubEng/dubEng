@@ -10,6 +10,8 @@ import useRecordSave from "@/apis/dubbing/mutations/useRecordSave";
 import { RecordSave } from "@/types/RecordSave";
 import useMissionCompleteQuery from "@/apis/mission/queries/useMissionCompleteQuery";
 import DubMissionCompleteModal from "./DubMissionCompleteModal";
+import { useDispatch } from "react-redux";
+import { setOpen } from "../../../stores/mission/missionModalSlice";
 
 const customStyles = {
   overlay: {
@@ -22,8 +24,8 @@ const customStyles = {
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
-    width: "350px",
-    height: "350px",
+    width: "370px",
+    height: "370px",
     transform: "translate(-50%, -50%)",
   },
 };
@@ -82,11 +84,10 @@ export default function DubCompleteModal({
 
   const mutation = useRecordSave();
 
-  const {data, refetch } = useMissionCompleteQuery(videoId);
+  const { data, refetch } = useMissionCompleteQuery(videoId);
 
-  const [missionTitle, setMissionTitle] = useState<string>("");
 
-  const [opendMissionModal, setOpendMissionModal] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   // 1초마다 영상 실행 시간 가져오기
   useEffect(() => {
@@ -162,25 +163,18 @@ export default function DubCompleteModal({
       totalRecordCount,
       totalRecordTime,
     };
-    try{
+    try {
       const response = await mutation.mutateAsync(payload);
-      console.log('response', response);
+      // console.log("response", response);
       const missionResponse = await refetch();
-      console.log('statusCode', missionResponse.data.code);
+      // console.log("statusCode", missionResponse.data.code);
 
       //미션 성공
-      if(missionResponse.data.code == 200){
-        setMissionTitle(missionResponse.data.mission.title);
-        setOpendMissionModal(true);
-        console.log('미션 성공!', missionResponse.data.mission.title);
-
-        setTimeout(() => {
-          setOpendMissionModal(false);
-        }, 9000);
+      if (missionResponse.data.code == 200) {
+        dispatch(setOpen(missionResponse.data.mission.title));
       }
-
-    } catch(e){
-      console.error('error', e);
+    } catch (e) {
+      console.error("error", e);
     }
 
     closeModal();
@@ -261,7 +255,6 @@ export default function DubCompleteModal({
             <audio ref={audioRef} style={{ display: "none" }} src={audioUrl} />
           </div>
         </div>
-      {opendMissionModal && <DubMissionCompleteModal title={missionTitle} />}
       </Modal>
     </>
   );

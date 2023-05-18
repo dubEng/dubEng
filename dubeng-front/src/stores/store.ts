@@ -7,6 +7,7 @@ import communityTabSlice from "./community/communityTabSlice";
 import languageTabSlice from "./community/languageTabSlice";
 import signupSlice from "./user/signupSlice";
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
+import missionModalSlice from "./mission/missionModalSlice";
 
 const createNoopStorage = () => {
   return {
@@ -33,6 +34,7 @@ const reducers = combineReducers({
   communityTab: communityTabSlice,
   languageTab: languageTabSlice,
   signupInfo: signupSlice,
+  missionModal: missionModalSlice,
 });
 
 const persistConfig = {

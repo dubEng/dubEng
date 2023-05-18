@@ -14,6 +14,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import Scripts from "@/components/Scripts";
 import Head from "next/head";
+import DubMissionCompleteModal from "@/features/dubbing/organism/DubMissionCompleteModal";
 
 const pretendard = localFont({
   src: [
@@ -103,6 +104,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <PersistGate loading={null} persistor={persistStore(store)}>
             <Header />
             <NavigationBar />
+            <DubMissionCompleteModal />
             <Component {...pageProps} />
           </PersistGate>
         </Provider>
