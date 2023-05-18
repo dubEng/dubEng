@@ -172,9 +172,11 @@ export default function DubCompleteModal({
       if(missionResponse.data.code == 200){
         setMissionTitle(missionResponse.data.mission.title);
         setOpendMissionModal(true);
+        console.log('미션 성공!', missionResponse.data.mission.title);
+
         setTimeout(() => {
           setOpendMissionModal(false);
-        }, 2500);
+        }, 9000);
       }
 
     } catch(e){
@@ -259,8 +261,8 @@ export default function DubCompleteModal({
             <audio ref={audioRef} style={{ display: "none" }} src={audioUrl} />
           </div>
         </div>
-      </Modal>
       {opendMissionModal && <DubMissionCompleteModal title={missionTitle} />}
+      </Modal>
     </>
   );
 }
