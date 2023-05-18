@@ -10,7 +10,6 @@ export default function DubKingItem({
   totalCount,
   dubKingImageUrl,
 }: DubKing) {
-  console.log("!!!!!!!!!!!!11userId", userId);
   if (ranking == 1) {
     return (
       <div className="container w-90 h-137">
@@ -44,7 +43,7 @@ export default function DubKingItem({
             className="rounded-full border-5 border-[#C6C6C6]"
           />
           <div className="flex flex-row justify-center items-center">
-            <Link href={`/mypage/${userId}}`}>
+            <Link href={`/mypage/${userId}`}>
               <p className="text-14 font-semibold">{nickname}</p>
             </Link>
           </div>
@@ -64,7 +63,7 @@ export default function DubKingItem({
             className="rounded-full border-5 border-[#B16B55]"
           />
           <div className="flex flex-row justify-center items-center">
-            <Link href={`/mypage/${userId}}`}>
+            <Link href={`/mypage/${userId}`}>
               <p className="text-14 font-semibold">{nickname}</p>
             </Link>
           </div>
