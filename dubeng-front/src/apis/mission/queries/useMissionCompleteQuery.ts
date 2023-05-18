@@ -28,11 +28,6 @@ const useMissionCompleteQuery = (videoId: number) => {
   return useQuery([queryKeys.MISSION_COMPLETE, videoId], () =>
     fetcher(accessToken, videoId), {
       enabled: false,
-      onSuccess: data => {
-        // 성공시 호출
-        console.log("useMissionCompleteQuery response", data);
-        alert("도전과제 호출 성공");
-      },
     }
   );
 };
