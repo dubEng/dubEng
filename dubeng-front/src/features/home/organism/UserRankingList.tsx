@@ -34,6 +34,7 @@ export default function UserRankingList() {
       {rank.data &&
         rank.data.map((item: any, index: number) => (
           <UserRankingListItem
+            userId={item.id}
             key={item.id}
             imageUrl={item.profileImage ?? DefaultImage}
             introduce={item.description}

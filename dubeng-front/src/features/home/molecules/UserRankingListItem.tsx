@@ -1,8 +1,10 @@
 import { UserRanking } from "@/types/UserRanking";
 import Image from "next/image";
 import DefaultImage from "../../../../public/images/default/mic_profile.png";
+import Link from "next/link";
 
 export default function UserRankingListItem({
+  userId,
   ranking,
   imageUrl,
   nickname,
@@ -25,10 +27,12 @@ export default function UserRankingListItem({
         />
       </div>
       <div className="col-span-5 space-y-10">
-        <div className="flex flex-col ">
-          <p className="text-14 text-dubblack">{nickname}</p>
-          <p className="text-10 text-dubgray">{introduce}</p>
-        </div>
+        <Link href={`/mypage/${userId}`}>
+          <div className="flex flex-col ">
+            <p className="text-14 text-dubblack">{nickname}</p>
+            <p className="text-10 text-dubgray">{introduce}</p>
+          </div>
+        </Link>
       </div>
       <div className="text-14 text-dubblack flex items-center justify-center col-span-2">
         {recordingTime}

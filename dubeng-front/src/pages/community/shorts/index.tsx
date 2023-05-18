@@ -11,6 +11,7 @@ import { RootState } from "@/stores/store";
 
 import ReactFullpage from "@fullpage/react-fullpage";
 import useCommunityShortsQuery from "@/apis/community/queries/useCommunityShortsQuery";
+import Link from "next/link";
 
 type Credits = {
   enabled?: boolean;
@@ -122,18 +123,20 @@ export default function ShortsProductPage() {
                   <div key={content.recordId} className="section">
                     <div className="w-full h-screen bg-black flex flex-col items-center justify-start">
                       <>
-                        <div className="flex flex-row mt-16 mb-16 items-center w-390 px-16">
-                          <Image
-                            src={content.profileImage ?? DefaultImage}
-                            alt="profileImage"
-                            width={24}
-                            height={24}
-                            className="rounded-full"
-                          />
-                          <p className="ml-4 text-dubgraymedium">
-                            {content.nickname}
-                          </p>
-                        </div>
+                        <Link href={`/mypage/${content.userId}`}>
+                          <div className="flex flex-row mt-16 mb-16 items-center w-390 px-16">
+                            <Image
+                              src={content.profileImage ?? DefaultImage}
+                              alt="profileImage"
+                              width={24}
+                              height={24}
+                              className="rounded-full"
+                            />
+                            <p className="ml-4 text-dubgraymedium">
+                              {content.nickname}
+                            </p>
+                          </div>
+                        </Link>
                         <YouTube
                           videoId={transferYoutube(content.videoPath)}
                           opts={{
