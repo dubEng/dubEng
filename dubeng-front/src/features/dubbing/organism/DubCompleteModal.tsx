@@ -8,6 +8,7 @@ import PlayBarPreview from "../atoms/PlayBarPreview";
 import PlayButtonSmall from "../atoms/PlayButtonSmall";
 import useRecordSave from "@/apis/dubbing/mutations/useRecordSave";
 import { RecordSave } from "@/types/RecordSave";
+import useMissionCompleteQuery from "@/apis/mission/queries/useMissionCompleteQuery";
 
 const customStyles = {
   overlay: {
@@ -79,6 +80,8 @@ export default function DubCompleteModal({
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const mutation = useRecordSave();
+
+  const {data, refetch } = useMissionCompleteQuery(videoId);
 
   // 1초마다 영상 실행 시간 가져오기
   useEffect(() => {
@@ -154,8 +157,16 @@ export default function DubCompleteModal({
       totalRecordCount,
       totalRecordTime,
     };
+    try{
+      const response = await mutation.mutateAsync(payload);
+      console.log('response', response);
+      const missionResponse = await refetch();
+      console.log('missionResponse', missionResponse);
 
-    const response = await mutation.mutateAsync(payload);
+    } catch(e){
+      console.error('error', e);
+    }
+
     closeModal();
   }
 
