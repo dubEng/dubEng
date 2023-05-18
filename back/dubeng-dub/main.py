@@ -325,7 +325,7 @@ async def save(item: videoClass.saveReq):
     connection.commit()
     connection.close()
 
-    return "done"
+    return str(videoId)
 
 
 if __name__ == '__main__':
