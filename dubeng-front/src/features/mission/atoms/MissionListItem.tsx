@@ -46,7 +46,7 @@ export default function MissionListItem({
             <p className=" text-dubgraylight text-12">더빙하고 아이템 얻기!</p>
           </div>
         </div>
-        <div className="w-150 h-55 flex justify-center items-center rounded-b-lg bg-dubgraylight border-1 border-dubgraydeep">
+        <div className="w-150 h-45 flex justify-center items-center rounded-b-lg bg-dubgraylight border-1 border-dubgraydeep">
           <p className="text-14 font-bold text-dubblack text-center break-keep">
             {title}
           </p>
