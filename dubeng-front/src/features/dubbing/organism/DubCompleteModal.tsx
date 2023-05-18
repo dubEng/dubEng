@@ -9,6 +9,7 @@ import PlayButtonSmall from "../atoms/PlayButtonSmall";
 import useRecordSave from "@/apis/dubbing/mutations/useRecordSave";
 import { RecordSave } from "@/types/RecordSave";
 import useMissionCompleteQuery from "@/apis/mission/queries/useMissionCompleteQuery";
+import DubMissionCompleteModal from "./DubMissionCompleteModal";
 
 const customStyles = {
   overlay: {
@@ -82,6 +83,10 @@ export default function DubCompleteModal({
   const mutation = useRecordSave();
 
   const {data, refetch } = useMissionCompleteQuery(videoId);
+
+  const [missionTitle, setMissionTitle] = useState<string>("");
+
+  const [opendMissionModal, setOpendMissionModal] = useState<boolean>(false);
 
   // 1초마다 영상 실행 시간 가져오기
   useEffect(() => {
@@ -161,7 +166,16 @@ export default function DubCompleteModal({
       const response = await mutation.mutateAsync(payload);
       console.log('response', response);
       const missionResponse = await refetch();
-      console.log('missionResponse', missionResponse);
+      console.log('statusCode', missionResponse.data.code);
+
+      //미션 성공
+      if(missionResponse.data.code == 200){
+        setMissionTitle(missionResponse.data.mission.title);
+        setOpendMissionModal(true);
+        setTimeout(() => {
+          setOpendMissionModal(false);
+        }, 2500);
+      }
 
     } catch(e){
       console.error('error', e);
@@ -246,6 +260,7 @@ export default function DubCompleteModal({
           </div>
         </div>
       </Modal>
+      {opendMissionModal && <DubMissionCompleteModal title={missionTitle} />}
     </>
   );
 }
