@@ -14,7 +14,7 @@ export interface MyMissionForm{
 }
 
 export default function MissionPage() {
-  const { accessToken } = useSelector((state: RootState) => state.user);
+  const { accessToken, nickname } = useSelector((state: RootState) => state.user);
   const {data} = useMissionListQuery(accessToken);
   const [missionList, setMissionList] = useState<Array<string>>([]);
   const [missionYet, setMissionYet] = useState<Array<string>>([]);
@@ -44,7 +44,7 @@ export default function MissionPage() {
   return (
     <div className="container mx-auto h-screen bg-white mt-57 mb-61">
       <p className="flex justify-start mx-16 text-19 font-bold mt-24 mb-16">
-        나의 주방
+        {nickname}님의 부엌
       </p>
       <div className="h-350 rounded-10 mx-20">
         <MissionKitchen url={"/assets/kitchen.glb"}
@@ -55,7 +55,7 @@ export default function MissionPage() {
         /> 
       </div>
       <p className="flex justify-start mx-16 text-19 font-bold mt-24 mb-16">
-        도전과제
+        완료된 도전과제
       </p>
       <MissionList missionClearData={missionClearData}/>
     </div>
