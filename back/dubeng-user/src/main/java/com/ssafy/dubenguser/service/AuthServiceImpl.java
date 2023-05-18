@@ -179,6 +179,7 @@ public class AuthServiceImpl implements AuthService{
                 .accessToken(accessToken)
                 .nickname(loginUser.getNickname())
                 .imageUrl(loginUser.getProfileImage())
+                .kitchenName(loginUser.getLandName())
                 .build();
 
         return userLoginRes;
