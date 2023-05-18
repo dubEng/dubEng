@@ -22,7 +22,9 @@ export default function MissionListItem({
             />
           </div>
         </div>
-        <p className="text-14 font-bold text-dubblack text-center">{title}</p>
+        <p className="flex justify-center items-center text-14 font-bold text-dubblack text-center break-words">
+          {title}
+        </p>
       </div>
     );
   } else {
@@ -37,20 +39,25 @@ export default function MissionListItem({
               height={80}
               className="rounded-lg"
             />
-            <div className="opacity-50 absolute top-0 left-0 w-80 h-80 rounded-18"></div>
-            <MdOutlineLock
-              size={20}
-              className="absolute top-40 left-40 text-dubgraylight"
-            />
           </div>
+          <div className="bg-black opacity-50 absolute top-0 left-0 w-80 h-80 rounded-18"></div>
+          <MdOutlineLock
+            size={20}
+            className="absolute top-40 left-40 text-dubgraylight"
+          />
+          <p className="text-dubgraylight text-12">
+            더빙하고 아이템을 얻어보세요!
+          </p>
         </div>
-        <p className="text-14 font-bold text-dubblack text-center">{title}</p>
+        <p className="flex justify-center items-center text-14 font-bold text-dubblack text-center break-words">
+          {title}
+        </p>
       </div>
     );
   }
 
   //TODO: twin.macro 적용 해야함
   function getBoxStyle(color: string): string {
-    return `w-150 h-150 rounded-tl-lg rounded-tr-lg bg-${color} flex justify-center items-center`;
+    return `w-150 h-150 rounded-tl-lg rounded-tr-lg bg-dubblue flex justify-center items-center`;
   }
 }
