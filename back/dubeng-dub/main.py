@@ -276,7 +276,7 @@ def maekPreviewAudio(item: videoClass.previewReq):
 
 
     #s3 버킷에 업로드하기
-    keyStr = userId + videoInfo.title + ".wav"
+    keyStr = userId + str(videoId) + ".wav"
     resultUrl = uploadToBucket(finalAudio, keyStr)
 
     return resultUrl
