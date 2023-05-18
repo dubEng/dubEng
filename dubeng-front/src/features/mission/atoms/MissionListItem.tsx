@@ -42,14 +42,12 @@ export default function MissionListItem({
           </div>
           <div className="bg-black opacity-50 absolute top-0 left-0 w-150 h-150 rounded-tl-lg"></div>
           <div className="absolute flex flex-col items-center justify-center">
-            <MdOutlineLock size={20} className=" text-dubgraylight" />
-            <p className=" text-dubgraylight text-12">
-              더빙하고 아이템을 얻어보세요!
-            </p>
+            <MdOutlineLock size={32} className=" text-dubgraylight" />
+            <p className=" text-dubgraylight text-12">더빙하고 아이템 얻기!</p>
           </div>
         </div>
-        <div className="flex justify-center items-center rounded-b-lg bg-dubgraylight border-1 border-dubgraydeep">
-          <p className="text-14 font-bold text-dubblack text-center break-words">
+        <div className="w-150 h-71 flex justify-center items-center rounded-b-lg bg-dubgraylight border-1 border-dubgraydeep">
+          <p className="text-14 font-bold text-dubblack text-center break-normal">
             {title}
           </p>
         </div>
