@@ -1,5 +1,6 @@
-export interface MissionItem{
-    assetUrl: string;
-    title: string;
-    color: string;
+export interface MissionItem {
+  isComplete: boolean;
+  assetUrl: string;
+  title: string;
+  color: string;
 }

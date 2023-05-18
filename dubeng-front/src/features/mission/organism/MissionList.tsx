@@ -1,26 +1,28 @@
 import MissionListItem from "../atoms/MissionListItem";
 import { MyMissionForm } from "@/pages/mission";
 import Link from "next/link";
-interface ClearDataList{
-  missionClearData:Array<MyMissionForm>;
+interface DataList {
+  getData: Array<MyMissionForm>;
 }
-export default function MissionList({missionClearData}:ClearDataList) {
-  console.log(missionClearData);
-  
+export default function MissionList({ getData }: DataList) {
+  console.log(getData);
+  console.log();
+
   return (
     <section className="mx-16 grid grid-cols-2 justify-items-center">
-      {missionClearData &&
-        missionClearData.map((item) => (
+      {getData &&
+        getData.map((item) => (
           <Link href={`/dubbing/${item.videoId}`}>
-          <MissionListItem
-            color={item.color}
-            title={item.title}
-            assetUrl={item.assets}
-            key={item.videoId}
-          />
+            <MissionListItem
+              isComplete={item.isComplete}
+              color={item.color}
+              title={item.title}
+              assetUrl={item.assets}
+              key={item.videoId}
+            />
           </Link>
         ))}
-        <div className="h-80"></div>
+      <div className="h-80"></div>
     </section>
   );
 }
