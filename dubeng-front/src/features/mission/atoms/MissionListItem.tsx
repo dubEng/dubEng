@@ -22,9 +22,11 @@ export default function MissionListItem({
             />
           </div>
         </div>
-        <p className="flex justify-center items-center text-14 font-bold text-dubblack text-center break-words">
-          {title}
-        </p>
+        <div className="w-150 h-51 flex justify-center items-center rounded-b-lg bg-dubgraylight border-1 border-dubgraydeep">
+          <p className="text-14 font-bold text-dubblack text-center break-keep">
+            {title}
+          </p>
+        </div>
       </div>
     );
   } else {
@@ -46,7 +48,7 @@ export default function MissionListItem({
             <p className=" text-dubgraylight text-12">더빙하고 아이템 얻기!</p>
           </div>
         </div>
-        <div className="w-150 h-45 flex justify-center items-center rounded-b-lg bg-dubgraylight border-1 border-dubgraydeep">
+        <div className="w-150 h-51 flex justify-center items-center rounded-b-lg bg-dubgraylight border-1 border-dubgraydeep">
           <p className="text-14 font-bold text-dubblack text-center break-keep">
             {title}
           </p>
