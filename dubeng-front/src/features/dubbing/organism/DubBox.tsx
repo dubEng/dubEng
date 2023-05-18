@@ -340,45 +340,67 @@ export default function DubBox({
     analyser.fftSize = 4096;
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
-    let previousValueToDisplay: number | null = null;
-    let smoothingCount = 0;
-    const smoothingThreshold = 10;
-    const smoothingCountThreshold = 5;
   
     const source = audioCtx.createMediaStreamSource(stream);
     source.connect(analyser);
     const recordingTimer = setInterval(() => {
       analyser.getByteTimeDomainData(dataArray);
       const pitch = autoCorrelate(dataArray, audioCtx.sampleRate);
-      // console.log("pitch", Math.round(pitch));
-  
-      if (pitch === -1) {
-        // console.log('Too quiet...');
-        return;
-      }
-  
-      let valueToDisplay = Math.round(pitch);
-      if (previousValueToDisplay !== null && Math.abs(valueToDisplay - previousValueToDisplay) < smoothingThreshold) {
-        if (smoothingCount < smoothingCountThreshold) {
-          smoothingCount++;
-          return;
-        } else {
-          previousValueToDisplay = valueToDisplay;
-          smoothingCount = 0;
-        }
-      } else {
-        previousValueToDisplay = valueToDisplay;
-        smoothingCount = 0;
-      }
-  
-      setMyPitchList((data) => [...data, valueToDisplay]);
+      console.log("pitch", pitch);
+      setMyPitchList((data) => [...data, pitch]);
     }, 50);
-  
     setTimeout(() => {
       clearInterval(recordingTimer);
       stream.getTracks().forEach((track) => track.stop());
     }, duration);
   };
+
+
+  // const analyzeMicrophone = (stream: MediaStream) => {
+  //   const audioCtx = new AudioContext();
+  //   const analyser = audioCtx.createAnalyser();
+  //   analyser.fftSize = 4096;
+  //   const bufferLength = analyser.frequencyBinCount;
+  //   const dataArray = new Uint8Array(bufferLength);
+  //   let previousValueToDisplay: number | null = null;
+  //   let smoothingCount = 0;
+  //   const smoothingThreshold = 10;
+  //   const smoothingCountThreshold = 5;
+  
+  //   const source = audioCtx.createMediaStreamSource(stream);
+  //   source.connect(analyser);
+  //   const recordingTimer = setInterval(() => {
+  //     analyser.getByteTimeDomainData(dataArray);
+  //     const pitch = autoCorrelate(dataArray, audioCtx.sampleRate);
+  //     // console.log("pitch", Math.round(pitch));
+  
+  //     if (pitch === -1) {
+  //       // console.log('Too quiet...');
+  //       return;
+  //     }
+  
+  //     let valueToDisplay = Math.round(pitch);
+  //     if (previousValueToDisplay !== null && Math.abs(valueToDisplay - previousValueToDisplay) < smoothingThreshold) {
+  //       if (smoothingCount < smoothingCountThreshold) {
+  //         smoothingCount++;
+  //         return;
+  //       } else {
+  //         previousValueToDisplay = valueToDisplay;
+  //         smoothingCount = 0;
+  //       }
+  //     } else {
+  //       previousValueToDisplay = valueToDisplay;
+  //       smoothingCount = 0;
+  //     }
+  
+  //     setMyPitchList((data) => [...data, valueToDisplay]);
+  //   }, 50);
+  
+  //   setTimeout(() => {
+  //     clearInterval(recordingTimer);
+  //     stream.getTracks().forEach((track) => track.stop());
+  //   }, duration);
+  // };
 
   return (
     <div className="w-359 bg-white rounded-20 container mx-auto p-16">

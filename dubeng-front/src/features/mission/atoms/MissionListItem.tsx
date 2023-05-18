@@ -24,7 +24,7 @@ export default function MissionListItem({
             />
           </div>
         </div>
-        <div className="w-150 h-51 flex justify-center items-center rounded-b-lg bg-dubgraylight border-1 border-dubgraydeep">
+        <div className="w-150 h-50 flex justify-center items-center rounded-b-lg bg-dubgraylight border-1 border-dubgraydeep">
           <p className="text-14 font-bold text-dubblack text-center break-keep">
             {title}
           </p>
@@ -65,6 +65,6 @@ export default function MissionListItem({
 
   //TODO: twin.macro 적용 해야함
   function getBoxStyle(color: string): string {
-    return `relative w-150 h-150 rounded-tl-lg rounded-tr-lg bg-[#FFAFA7] flex justify-center items-center`;
+    return `relative w-150 h-100 rounded-tl-lg rounded-tr-lg bg-[#FFAFA7] flex justify-center items-center`;
   }
 }
