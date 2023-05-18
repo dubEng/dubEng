@@ -12,5 +12,5 @@ export default meta;
 type Story = StoryObj<typeof MissionList>;
 
 export const Default: Story = {
-  render: () => <MissionList missionClearData={[]} />,
+  render: () => <MissionList getData={[]} />,
 };
