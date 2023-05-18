@@ -11,7 +11,7 @@ export default function MissionListItem({
       <div className={getBoxStyle(color)}>
         <div className="w-80 h-80 rounded-lg">
           <Image
-            src={`/assets/${assetUrl}.png`}
+            src={`/assets/${assetUrl}.PNG`}
             alt={"objectImage"}
             width={80}
             height={80}
