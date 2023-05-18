@@ -32,7 +32,7 @@ public class MissionController {
     @ApiOperation(value="도전과제 미션 목록 조회")
     @GetMapping("/list")
     public ResponseEntity<List<UserMissionRes>>  userMissionList(@RequestHeader HttpHeaders headers, HttpServletRequest request){
-        String accessToken = headers.getFirst("accessToken");
+        String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
             throw new UnAuthorizedException("토큰 전달 방식에 오류");
         }
@@ -45,7 +45,7 @@ public class MissionController {
     @ApiOperation(value="해결한 도전과제의 asset list 조회")
     @GetMapping("/asset")
     public ResponseEntity<List<String>>  userAssetList(@RequestHeader HttpHeaders headers, HttpServletRequest request){
-        String accessToken = headers.getFirst("accessToken");
+        String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
             throw new UnAuthorizedException("토큰 전달 방식에 오류");
         }
@@ -58,7 +58,7 @@ public class MissionController {
     @ApiOperation(value="도전과제 완료 여부 확인")
     @GetMapping("/complete")
     public ResponseEntity<HashMap<String, Object>>  userAssetList(@RequestHeader HttpHeaders headers, HttpServletRequest request, @RequestParam Long videoId){
-        String accessToken = headers.getFirst("accessToken");
+        String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
             throw new UnAuthorizedException("토큰 전달 방식에 오류");
         }
