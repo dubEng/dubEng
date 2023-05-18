@@ -102,7 +102,12 @@ export default function NavigationBar() {
         route.push(pathName);
       }
     } else if (pathName === "/mission") {
-      MySwal.fire("도전과제 Coming Soon👋");
+      if (userId.length == 0) {
+        await MySwal.fire("로그인 후 이용 가능합니다.");
+        route.push("/login");
+      } else {
+        route.push(pathName);
+      }
     } else {
       route.push(pathName);
     }

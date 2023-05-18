@@ -22,6 +22,7 @@ export default function MissionList({missionClearData}:ClearDataList) {
             key={item.videoId}
           />
         ))}
+        <div className="h-80"></div>
     </section>
   );
 }
