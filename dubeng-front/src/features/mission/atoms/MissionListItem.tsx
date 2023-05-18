@@ -2,8 +2,8 @@ import { MissionItem } from "@/types/MissionItem";
 import Image from "next/image";
 
 export default function MissionListItem({
-  imageUrl,
-  missionContent,
+  assetUrl,
+  title,
   color,
 }: MissionItem) {
   return (
@@ -11,7 +11,7 @@ export default function MissionListItem({
       <div className={getBoxStyle(color)}>
         <div className="w-80 h-80 rounded-lg">
           <Image
-            src={imageUrl}
+            src={`/assets/${assetUrl}.png`}
             alt={"objectImage"}
             width={80}
             height={80}
@@ -19,7 +19,7 @@ export default function MissionListItem({
           />
         </div>
       </div>
-      <p className="text-14 font-bold text-dubblack text-center">{missionContent}</p>
+      <p className="text-14 font-bold text-dubblack text-center">{title}</p>
     </div>
   );
 

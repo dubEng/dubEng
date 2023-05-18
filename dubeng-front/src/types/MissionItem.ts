@@ -1,5 +1,5 @@
 export interface MissionItem{
-    imageUrl: string;
-    missionContent: string;
+    assetUrl: string;
+    title: string;
     color: string;
 }
