@@ -10,6 +10,7 @@ import usePlayCountUpQuery from "@/apis/community/queries/usePlayCountUpQuery";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 import { LangType } from "@/enum/statusType";
+import Link from "next/link";
 
 export default function ShortsProductPage() {
   const router = useRouter();
@@ -45,7 +46,7 @@ export default function ShortsProductPage() {
 
   const { data: playCountUp, refetch } = usePlayCountUpQuery(
     userId,
-    Number(router.query.id),
+    Number(router.query.id)
   );
 
   const playCountRef = useRef<number | null>(null);
@@ -145,16 +146,18 @@ export default function ShortsProductPage() {
     <div className="w-full h-screen bg-black flex flex-col items-center justify-start">
       {data && (
         <>
-          <div className="flex flex-row mt-16 mb-16 items-center w-390 px-16">
-            <Image
-              src={data.profileImage ?? DefaultImage}
-              alt="profileImage"
-              width={24}
-              height={24}
-              className="rounded-full"
-            />
-            <p className="ml-4 text-dubgraymedium">{data.nickname}</p>
-          </div>
+          <Link href={`/mypage/${data.userId}`}>
+            <div className="flex flex-row mt-16 mb-16 items-center w-390 px-16">
+              <Image
+                src={data.profileImage ?? DefaultImage}
+                alt="profileImage"
+                width={24}
+                height={24}
+                className="rounded-full"
+              />
+              <p className="ml-4 text-dubgraymedium">{data.nickname}</p>
+            </div>
+          </Link>
           <YouTube
             videoId={transferYoutube(data.videoPath)}
             opts={{
