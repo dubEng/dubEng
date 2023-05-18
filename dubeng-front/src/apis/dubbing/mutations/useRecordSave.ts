@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 import { RecordSave } from "@/types/RecordSave";
 import { useRouter } from "next/navigation";
-import * as queryKeys from "../../../constants/queryKeys";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -23,14 +22,10 @@ const fetcher = (payload: RecordSave) =>
 
 const useRecordSave = () => {
   const route = useRouter();
-  const queryClient = useQueryClient();
 
   return useMutation(fetcher, {
     onSuccess: async (response) => {
       await MySwal.fire({icon: 'success',text: "더빙에 성공하였습니다." });
-      console.log('useRecordSave response', response);
-      queryClient.setQueryData(queryKeys.MISSION_COMPLETE, response);
-      queryClient.invalidateQueries(queryKeys.MISSION_COMPLETE);
       route.push("/community");
     },
     onError: (error) => {
