@@ -5,7 +5,7 @@ import Header from "@/components/atoms/Header";
 import DubTypeTap from "@/features/community/atoms/DubTypeTap";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
-import { DubType, LangType } from "@/enum/statusType";
+import { DubType, EmptyType, LangType } from "@/enum/statusType";
 import DubSituation from "@/features/community/molecules/DubSituation";
 import SearchInputBox from "@/features/community/atoms/SearchInputBox";
 import { useEffect, useState } from "react";
@@ -27,6 +27,7 @@ import useSearchDubProductQuery from "@/apis/community/queries/useSearchDubProdu
 import DubVideoList from "@/features/community/organism/DubVideoList";
 import DubProductListItem from "@/components/molecules/DubProductListItem";
 import { DubVideoSearch } from "@/types/DubVideoSearch";
+import EmptyComponent from "@/components/atoms/EmptyComponent";
 
 interface IDubVideoResult {
   content: DubVideoSearch[];
@@ -132,7 +133,12 @@ export default function CommunityPage() {
           <p className="flex justify-start text-19 font-bold mt-24 mb-16">
             {userNickname}님이 좋아하실 영상
           </p>
-          <DubVideoList />
+          {userId ? (
+            <DubVideoList />
+          ) : (
+            <EmptyComponent status={EmptyType.NO_RECOMMEND} />
+          )}
+
           {languageIndex === LangType.ENGLISH ? (
             <p className="flex justify-start text-19 font-bold mt-24 mb-16">
               상황별로 더빙해봐요
