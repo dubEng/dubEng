@@ -20,7 +20,7 @@ export default function MissionListItem({
               alt={"objectImage"}
               width={80}
               height={80}
-              className="rounded-lg"
+              className="rounded-lg w-80 h-80"
             />
           </div>
         </div>
@@ -42,7 +42,7 @@ export default function MissionListItem({
                 alt={"objectImage"}
                 width={80}
                 height={80}
-                className="rounded-lg"
+                className="rounded-lg w-80 h-80"
               />
             </div>
             <div className="bg-black opacity-50 absolute top-0 left-0 w-150 h-150 rounded-t-lg"></div>

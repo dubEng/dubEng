@@ -338,23 +338,21 @@ export default function DubBox({
     const audioCtx = new AudioContext();
     const analyser = audioCtx.createAnalyser();
     analyser.fftSize = 4096;
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-  
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
     const source = audioCtx.createMediaStreamSource(stream);
     source.connect(analyser);
     const recordingTimer = setInterval(() => {
-      analyser.getByteTimeDomainData(dataArray);
-      const pitch = autoCorrelate(dataArray, audioCtx.sampleRate);
-      console.log("pitch", pitch);
-      setMyPitchList((data) => [...data, pitch]);
-    }, 50);
+      analyser.getByteFrequencyData(dataArray);
+      const maxIndex = dataArray.indexOf(Math.max(...dataArray));
+      const maxHz = (maxIndex * audioCtx.sampleRate) / analyser.fftSize;
+      setMyPitchList((data) => [...data, maxHz]);
+    }, 500);
     setTimeout(() => {
       clearInterval(recordingTimer);
       stream.getTracks().forEach((track) => track.stop());
     }, duration);
   };
-
 
   // const analyzeMicrophone = (stream: MediaStream) => {
   //   const audioCtx = new AudioContext();
