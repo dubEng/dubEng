@@ -47,7 +47,7 @@ export default function MissionPage() {
         {nickname}님의 부엌
       </p>
       <div className="h-350 rounded-10 mx-20">
-        <MissionKitchen url={"/assets/KITCHEN.GLB"}
+        <MissionKitchen url={"/assets/kitchen.glb"}
           missionList={missionList}
           missionClear={missionClear}
           missionYet={missionYet}
