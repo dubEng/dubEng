@@ -46,7 +46,7 @@ export default function MissionPage() {
     }
   }, [data]);
   return (
-    <div className="container mx-auto h-screen bg-white mt-57 mb-61">
+    <div className="container mx-auto h-full bg-white mt-57 mb-61">
       <p className="flex justify-start mx-16 text-19 font-bold mt-24 mb-16">
         {nickname}님의 부엌
       </p>
