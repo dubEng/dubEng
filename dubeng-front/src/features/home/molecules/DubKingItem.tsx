@@ -1,8 +1,10 @@
 import { DubKing } from "@/types/DubKing";
 import Image from "next/image";
+import Link from "next/link";
 import { AiTwotoneCrown } from "react-icons/ai";
 
 export default function DubKingItem({
+  userId,
   ranking,
   nickname,
   totalCount,
@@ -21,7 +23,9 @@ export default function DubKingItem({
           />
           <div className="flex flex-row justify-center items-center">
             <AiTwotoneCrown color="#FFD02B" />
-            <p className="text-16 font-semibold">{nickname}</p>
+            <Link href={`/mypage/${userId}`}>
+              <p className="text-16 font-semibold">{nickname}</p>
+            </Link>
           </div>
           <p className="text-16 font-semibold">{totalCount}표</p>
         </div>
@@ -39,7 +43,9 @@ export default function DubKingItem({
             className="rounded-full border-5 border-[#C6C6C6]"
           />
           <div className="flex flex-row justify-center items-center">
-            <p className="text-14 font-semibold">{nickname}</p>
+            <Link href={`/mypage/${userId}`}>
+              <p className="text-14 font-semibold">{nickname}</p>
+            </Link>
           </div>
           <p className="text-14 font-semibold">{totalCount}표</p>
         </div>
@@ -57,7 +63,9 @@ export default function DubKingItem({
             className="rounded-full border-5 border-[#B16B55]"
           />
           <div className="flex flex-row justify-center items-center">
-            <p className="text-14 font-semibold">{nickname}</p>
+            <Link href={`/mypage/${userId}`}>
+              <p className="text-14 font-semibold">{nickname}</p>
+            </Link>
           </div>
           <p className="text-14 font-semibold">{totalCount}표</p>
         </div>

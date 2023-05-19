@@ -1,15 +1,24 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-interface UserState {
+export interface UserState {
   userId: string;
-  roleType: string;
+  accessToken: string;
+  nickname: string;
+  imageUrl: string;
 }
 
 const initialState: UserState = {
   userId: "",
+<<<<<<< HEAD
   roleType: "",
 }
+=======
+  accessToken: "",
+  nickname: "익명의 게스트",
+  imageUrl: "",
+};
+>>>>>>> develop-front
 
 export const userSlice = createSlice({
   name: 'user',
@@ -17,11 +26,26 @@ export const userSlice = createSlice({
   reducers: {
     saveUserInfo: (state, action) => {
       state.userId = action.payload.userId;
-      state.roleType = action.payload.roleType;
+      state.accessToken = action.payload.accessToken;
+      state.nickname = action.payload.nickname;
+      state.imageUrl = action.payload.imageUrl;
+    },
+    saveAccessToken: (state, action) => {
+      state.accessToken = action.payload.accessToken;
+    },
+    userLogout: (state) => {
+      state.userId = "";
+      state.accessToken = "";
+      state.nickname = "";
+      state.imageUrl = "";
     },
   },
 })
 
+<<<<<<< HEAD
 export const { saveUserInfo } = userSlice.actions
+=======
+export const { saveUserInfo, saveAccessToken, userLogout } = userSlice.actions;
+>>>>>>> develop-front
 
 export default userSlice.reducer

@@ -13,11 +13,14 @@ type Story = StoryObj<typeof DubButton>;
 
 export const Default: Story = {
   args: {
-    page: "/community/shorts",
+    type:"shorts",
+    onClick: ()=> {}
+
   },
 };
 export const Others: Story = {
   args: {
-    page: "/others",
+    type: "/others",
+    onClick: ()=> {}
   },
 };

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState } from "react";
 import useGetVideoInfoQuery from "@/apis/manager/queries/useGetVideoInfoQuery";
 import ScriptListItem from "@/features/manager/organism/ScriptListItem";
@@ -5,12 +6,114 @@ import useCategoryQuery from "@/apis/manager/queries/useCategoryQuery";
 
 export default function ManagerPage() {
   // 다중 input값 저장 객체
+=======
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import useGetVideoInfoQuery from "@/apis/manager/queries/useGetVideoInfoQuery";
+import ScriptListItem from "@/features/manager/organism/ScriptListItem";
+import useCategoryQuery from "@/apis/manager/queries/useCategoryQuery";
+import useVideoPost from "@/apis/manager/mutations/useVideoPost";
+import CommonInputBox from "@/components/atoms/CommonInputBox";
+import TagButton from "@/components/atoms/TagButton";
+import { RootState } from "@/stores/store";
+import { useDispatch } from "react-redux";
+import { clearScriptsInfo } from "@/stores/manager/scriptsPostSlice";
+
+import { ScriptsListItem } from "../../stores/manager/scriptsPostSlice";
+
+import YouTube, { YouTubePlayer, YouTubeProps } from "react-youtube";
+
+import Modal from "react-modal";
+import PlayBarRecording from "@/features/dubbing/atoms/PlayBarRecording";
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
+};
+
+Modal.setAppElement("#root");
+
+interface getVideoInfoType {
+  channelTitle: string;
+  thumbnails: string;
+  title: string;
+  url: string;
+}
+interface scriptsType {
+  duration: number;
+  start: number;
+  text: string;
+  translation: string;
+}
+
+interface categoryType {
+  id: number;
+}
+
+export default function ManagerPage() {
+  // // 스크립트 추가 버튼용 로직
+  // function handleAddScript(index: number) {
+  //   setScripts((prevScripts) => {
+  //     const newScripts = [...prevScripts];
+  //     newScripts.splice(index + 1, 0, {
+  //       duration: 0,
+  //       start: 0,
+  //       text: "",
+  //       translation: "",
+  //       handleAddScript: handleAddScript,
+  //     });
+
+  //     console.log("추가 함수 실행됐다", newScripts);
+  //     return newScripts;
+  //   });
+  // }
+
+  // 대사마다 플레이어 미리듣기
+  const handleListenScript = (start: number | string, end: number | string) => {
+    let startSecond = start;
+    let endSecond = end;
+
+    if (typeof start === "string") {
+      startSecond = parseFloat(start);
+    }
+    if (typeof end === "string") {
+      endSecond = parseFloat(end);
+    }
+
+    // let startSecond = start;
+    // let endSecond = end;
+
+    // if (typeof start === "string") {
+    //   startSecond = parseFloat(start);
+    // }
+    // if (typeof end === "string") {
+    //   endSecond = parseFloat(end);
+    // }
+
+    // youtubePlayer.pauseVideo();
+    youtubePlayer.seekTo(startSecond);
+    youtubePlayer.playVideo();
+
+    setTimeout(() => {
+      youtubePlayer.pauseVideo();
+    }, (endSecond as number) * 1000);
+    // if (youtubePlayer.currentTime === startSecond + endSecond)
+  };
+
+>>>>>>> develop-front
   const [inputs, setInputs] = useState({
     url: "",
     start: 0,
     end: 0,
     lang: "",
   });
+<<<<<<< HEAD
 
   const scripts = [
     {
@@ -59,6 +162,39 @@ export default function ManagerPage() {
 
   // // 다중 requestbody 값 저장 객체
   // const videoInfo, setVideoInfo] = useState({});
+=======
+  //Redux
+  const { userId } = useSelector((state: RootState) => state.user);
+
+  // 채워넣기 용 비디오 info
+  const [videoInfo, setVideoInfo] = useState<getVideoInfoType>();
+  const dispatch = useDispatch();
+
+  const [modalIsOpen, setIsOpen] = useState(false);
+
+  // const [playTime, setPlayTime] = useState([0, 0]);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  interface scriptsType {
+    duration: number | string;
+    start: number | string;
+    text: string;
+    translation: string;
+  }
+
+  // script 정보 관리하는 useState
+  const [scripts, setScripts] = useState<scriptsType[]>([]);
+
+  // // post용
+  const mutation = useVideoPost();
+>>>>>>> develop-front
 
   // 비구조화 할당
   const { url, start, end, lang } = inputs;
@@ -66,6 +202,7 @@ export default function ManagerPage() {
   // react-query
   const getVideoInfo = useGetVideoInfoQuery(url, start, end, lang);
 
+<<<<<<< HEAD
   // 카테고리 조회 react-query
   // const { data } = useCategoryQuery();
   const data = [
@@ -78,6 +215,34 @@ export default function ManagerPage() {
       name: "로맨스",
     },
   ];
+=======
+  // 영상 성별
+  const [gender, setGender] = useState(0);
+
+  const handleClickGenderButton = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGender(parseInt(e.target.value));
+  };
+
+  // // 카테고리 조회 react-query
+  const { data } = useCategoryQuery();
+
+  // 선택한 카테고리 태그
+  const [selectedTag, setSelectedTag] = useState<number[]>([]);
+
+  // 태그 선택
+  const handleClickTag = (id: number) => {
+    if (selectedTag.includes(id)) {
+      setSelectedTag(selectedTag.filter((tagId) => tagId !== id));
+    } else {
+      setSelectedTag([...selectedTag, id]);
+    }
+  };
+
+  const [audioFile, setAudioFile] = useState<FileList | null>(null);
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAudioFile(e.target.files);
+  };
+>>>>>>> develop-front
 
   // input값 onChange
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,18 +254,190 @@ export default function ManagerPage() {
     });
   };
 
+<<<<<<< HEAD
+=======
+  const [customTitle, setCustomTitle] = useState("");
+  // 지정 커스텀 타이틀 값 변경
+  const onChangeTitleValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomTitle(e.target.value);
+    // console.log(customTitle);
+  };
+
+  useEffect(() => {}, [scripts]);
+
+  // getVideoInfo 쿼리 호출 파트
+  async function getVideoInfo() {
+    try {
+      const videoInfoResult = await refetch();
+      setVideoInfo(videoInfoResult.data.videoInfo);
+      setScripts(videoInfoResult.data.scripts);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  // url 퍼가기 용으로 수정
+  const getIframeUrl = () => {
+    if (videoInfo) {
+      const originalUrl = videoInfo.url;
+      const splitUrl = originalUrl.split("watch?v=");
+      const newUrl =
+        splitUrl[0] +
+        "embed/" +
+        splitUrl[1] +
+        "?start=" +
+        start +
+        "&end=" +
+        end +
+        "&controls=0&rel=0&loop=1";
+
+      // console.log(newUrl);
+      return splitUrl[1];
+    }
+  };
+
+>>>>>>> develop-front
   // 요청 보내는 파트
   function handleGetVideo() {
     console.log(inputs);
   }
   function handleSaveVideo() {
     console.log("등록하기 버튼 눌렀다!");
+<<<<<<< HEAD
+=======
+    saveDubVideo();
   }
 
+  // function convertToFloatOrKeep(value: any) {
+  //   if (typeof value === "string") {
+  //     return parseFloat(value);
+  //   } else if (typeof value === "number") {
+  //     return value;
+  //   } else {
+  //     return value; // 혹은 다른 처리를 수행하고자 하는 경우에 원하는 로직을 추가해주세요.
+  //   }
+  // }
+
+  function handlePreviewButton() {
+    makeFormData();
+    openModal();
+  }
+
+  const userIdData = useSelector((state: RootState) => state.user.userId);
+  const scriptsData = useSelector(
+    (state: RootState) => state.scriptsPostInfo.scriptsList
+  );
+
+  function makeFormData() {
+    const formData = new FormData();
+
+    const video = {
+      videoPath: videoInfo?.url,
+      title: customTitle,
+      thumbnail: videoInfo?.thumbnails,
+      startTime: start,
+      endTime: end,
+      producer: videoInfo?.channelTitle,
+      gender: gender,
+      lang: lang,
+    };
+
+    if (scriptsData) {
+      const postData = {
+        video: video,
+        userId: userId,
+        scripts: scriptsData,
+        categories: selectedTag,
+      };
+
+      console.log(`userId : ${userId}`);
+
+      console.log("전송할 데이터", JSON.stringify(postData));
+
+      formData.append("data", JSON.stringify(postData));
+
+      if (audioFile) {
+        formData.append(`file`, audioFile[0]);
+      }
+
+      return formData;
+    }
+
+    return formData;
+  }
+
+  async function saveDubVideo() {
+    const formData = makeFormData();
+
+    if (formData) {
+      try {
+        const videoPostResult = await mutation.mutateAsync(formData);
+        // 스크립트 초기화
+        dispatch(clearScriptsInfo());
+      } catch (error) {}
+    } else {
+      console.log("formData가 존재하지 않습니다.");
+    }
+>>>>>>> develop-front
+  }
+
+  // Youtube 플레이어 관련 변수 및 함수 설정
+
+  const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
+
+  const [nowPlaying, setNowPlaying] = useState<boolean>(false);
+
+  const opts: YouTubeProps["opts"] = {
+    // height: "174",
+    // width: "326",
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      // start: 0,
+      // end: 27,
+      rel: 0, //관련 동영상 표시하지 않음 (근데 별로 쓸모 없는듯..)
+      modestbranding: 0, // 컨트롤 바에 youtube 로고를 표시하지 않음
+      controls: 0,
+    },
+  };
+
+  // 유튜브 플레이어 style 지정 (근데 적용이 안 됨)
+  const style: YouTubeProps["style"] = {
+    borderRadius: "20px",
+  };
+
+  // 플레이 함수들
+  // player 준비시 실행
+  const onPlayerReady: YouTubeProps["onReady"] = (event) => {
+    const player = event.target;
+    setYoutubePlayer(player);
+  };
+
+  const onPlay: YouTubeProps["onPlay"] = (event) => {
+    console.log("onPlay");
+    console.log("event", event);
+  };
+
+  const onStateChange: YouTubeProps["onStateChange"] = (event) => {
+    console.log("onStateChange");
+
+    if (event.data === 1) {
+      // 재생 중일 때
+      setNowPlaying(true);
+    } else if (event.data === 2 || event.data === 0) {
+      //영상이 종료되거나, 일시 정지 시
+      setNowPlaying(false);
+    }
+  };
+
   return (
+<<<<<<< HEAD
     <div>
       <p className="text-24 font-bold">더빙 콘텐츠 불러오기</p>
       <div className="flex">
+=======
+    <div className="w-screen h-full absolute top-57 left-16">
+      <p className="text-24 font-bold mt-32 mb-16">더빙 콘텐츠 불러오기</p>
+      <div className="flex space-x-32">
+>>>>>>> develop-front
         <div>
           <label htmlFor="url">비디오 링크</label>
           <br />
@@ -122,7 +459,11 @@ export default function ManagerPage() {
             placeholder="시작 시간"
             onChange={onChangeValue}
           />
+<<<<<<< HEAD
           ~
+=======
+          -
+>>>>>>> develop-front
           <input
             type="number"
             id="end"
@@ -160,6 +501,7 @@ export default function ManagerPage() {
           불러오기
         </button>
       </div>
+<<<<<<< HEAD
       <p className="text-24 font-bold">더빙 콘텐츠 정보</p>
 
       <p>콘텐츠 미리보기</p>
@@ -170,6 +512,85 @@ export default function ManagerPage() {
 
       <p>썸네일</p>
       <img src="#" alt="videoThumbnail" />
+=======
+      <p className="text-24 font-bold mt-32 mb-16">더빙 콘텐츠 정보</p>
+      {videoInfo && (
+        <div>
+          <div className="flex mt-16 grid grid-cols-2">
+            <div>
+              <p>썸네일</p>
+              <img src={videoInfo!.thumbnails} alt="videoThumbnails" />
+            </div>
+            <div className="flex flex-col ml-16 justify-between">
+              <div>
+                <label htmlFor="videoTitle">콘텐츠 제목</label>
+                <input
+                  className="text-16 rounded-5 font-normal placeholder-dubgray text-dubblack outline-none h-43 w-full border border-[#E9ECEF] pl-16 py-12"
+                  type="text"
+                  defaultValue={videoInfo!.title}
+                />
+              </div>
+              <div>
+                <label htmlFor="videoRuntime">런타임</label>
+                <br />
+                <input
+                  className="text-16 rounded-5 font-normal placeholder-dubgray text-dubblack outline-none h-43 w-100 border border-[#E9ECEF] pl-16 py-12"
+                  type="number"
+                  defaultValue={end - start}
+                />
+              </div>
+              <div>
+                <label htmlFor="videoProduction">제작사</label>
+                <br />
+                <input
+                  className="text-16 rounded-5 font-normal placeholder-dubgray text-dubblack outline-none h-43 w-100 border border-[#E9ECEF] pl-16 py-12"
+                  type="text"
+                  defaultValue={videoInfo!.channelTitle}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p>콘텐츠 미리보기</p>
+            <div>
+              <YouTube
+                videoId={getIframeUrl()}
+                opts={opts}
+                style={style}
+                onReady={onPlayerReady}
+                onEnd={(e) => {
+                  console.log("onEnd 발생");
+
+                  youtubePlayer.pauseVideo();
+                  youtubePlayer.seekTo(opts.start);
+                }}
+                onPlay={onPlay}
+                onStateChange={onStateChange}
+              />
+            </div>
+            {/* <iframe
+              src={getIframeUrl()}
+              className="w-full aspect-video"
+            ></iframe> */}
+          </div>
+
+          <p className="text-24 font-bold mt-32 mb-16">스크립트</p>
+          {scripts.map((script, index) => (
+            <ScriptListItem
+              // index={index}
+              start={script.start}
+              duration={script.duration}
+              text={script.text}
+              translation={script.translation}
+              key={index}
+              // handleAddScript={handleAddScript}
+              handleListenScript={handleListenScript}
+            />
+          ))}
+        </div>
+      )}
+>>>>>>> develop-front
 
       <label htmlFor="videoTitle">콘텐츠 제목</label>
       <input type="text" />
@@ -177,10 +598,33 @@ export default function ManagerPage() {
       <label htmlFor="videoRuntime">런타임</label>
       <input type="number" />
 
+<<<<<<< HEAD
       <label htmlFor="videoLanguage">영상 언어</label>
       <br />
       <div>
         <label htmlFor="english">English</label>
+=======
+      <div className="mt-16">
+        <p>카테고리</p>
+        <div className="flex flex-wrap">
+          {data?.map((tag: { id: number; name: string }, idx: number) => (
+            <TagButton
+              onClick={() => handleClickTag(tag.id)}
+              id={tag.id}
+              key={idx}
+              name={tag.name}
+              isSelected={selectedTag.includes(tag.id) ? true : false}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-16">
+        <p>음성 파일 첨부</p>
+        <p className="text-dubcoral">
+          ⨀ mp3 파일명은 본인 id로 변경하여서 첨부해주세요.
+        </p>
+>>>>>>> develop-front
         <input
           type="radio"
           value="english"
@@ -211,11 +655,46 @@ export default function ManagerPage() {
       {data.map((category: { name: any }, idx: any) => category.name)}
       <p>음성 파일 첨부</p>
       <button
+<<<<<<< HEAD
         className="rounded-[8px] bg-dubblue px-16"
         onClick={handleSaveVideo}
+=======
+        className="rounded-[8px] bg-dubblue px-16 h-43 pb-0 text-white mt-23 mr-16"
+        onClick={handleSaveVideoButton}
+>>>>>>> develop-front
       >
         등록하기
       </button>
+      <button
+        className="rounded-[8px] bg-dubblue px-16 h-43 pb-0 text-white mt-23"
+        onClick={handlePreviewButton}
+      >
+        확정된 스크립트 보기
+      </button>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="미리보기 Modal"
+      >
+        {/* <button onClick={closeModal}>close</button> */}
+        <div>
+          {scriptsData &&
+            scriptsData.map((item, index) => {
+              return (
+                <div className="m-16 text-dubblack" key={index}>
+                  <h3>스크립트 {index + 1}</h3>
+                  <p>content: {item.content}</p>
+                  <p>translateContent: {item.translateContent}</p>
+                  <p>startTime: {item.startTime}</p>
+                  <p>duration: {item.duration}</p>
+                  <p>isDub: {item.isDub}</p>
+                  <p>-----------------------------------------</p>
+                </div>
+              );
+            })}
+        </div>
+      </Modal>
     </div>
   );
 }

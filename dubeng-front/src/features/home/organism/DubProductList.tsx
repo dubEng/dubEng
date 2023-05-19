@@ -1,56 +1,41 @@
 import DubVideoThumbnail from "../../../components/atoms/DubVideoThumbnail";
 
-import { DubProduct } from "@/types/DubProduct";
 import { Swiper, SwiperSlide } from "swiper/react";
+import useHomePopularityQuery from "../../../apis/home/queries/useHomePopularityQuery";
+import ScaleLoader from "react-spinners/ScaleLoader";
+import ErrorComponent from "../../../components/atoms/ErrorComponent";
 import "swiper/css";
+import Link from "next/link";
 
 export default function DubProductList() {
-  const dubProductList: DubProduct[] = [
-    { videoId: 0, title: "New Year, New Bears | We Bare Bears", url: "0" },
-    { videoId: 1, title: "겨울 왕국", url: "1" },
-    { videoId: 2, title: "라이언킹", url: "2" },
-    { videoId: 3, title: "워킹데드", url: "3" },
-    { videoId: 4, title: "해리포터", url: "4" },
-    { videoId: 5, title: "아따맘마", url: "5" },
-  ];
+  const popularity = useHomePopularityQuery();
+
+  if (popularity.isLoading) {
+    return (
+      <div className="flex justify-center items-center my-16">
+        <ScaleLoader color="#FF6D60" />
+      </div>
+    );
+  }
+
+  if (popularity.isError) {
+    return <ErrorComponent onClick={() => popularity.refetch} retry={true} />;
+  }
 
   return (
     <Swiper
-      slidesPerView={1.4}
-      spaceBetween={16}
-      onSlideChange={() => console.log("slide change")}
-      onSwiper={(swiper) => console.log(swiper)}
-      breakpoints={{
-        655: {
-          slidesPerView: 1.4,
-          spaceBetween: 16,
-        },
-        1000: {
-          slidesPerView: 2,
-          spaceBetween: 16,
-        },
-        1300: {
-          slidesPerView: 3,
-          spaceBetween: 16,
-        },
-        1650: {
-          slidesPerView: 4,
-          spaceBetween: 16,
-        },
-        3000: {
-          slidesPerView: 5,
-          spaceBetween: 16,
-        },
-      }}
+    slidesPerView={1.25}
     >
-      {dubProductList &&
-        dubProductList.map((item, index) => (
-          <SwiperSlide key={item.videoId}>
-            <DubVideoThumbnail
-              title={item.title}
-              url={item.url}
-              videoId={item.videoId}
-            />
+      {popularity.data &&
+        popularity.data.map((item: any, index: number) => (
+          <SwiperSlide key={item.recordId}>
+            <Link href={`/community/shorts/product/${item.recordId}`}>
+              <DubVideoThumbnail
+                title={item.title}
+                thumbnail={item.thumbnail ?? ""}
+                id={item.recordId}
+              />
+            </Link>
           </SwiperSlide>
         ))}
     </Swiper>

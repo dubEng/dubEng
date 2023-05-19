@@ -7,6 +7,7 @@ import { AiOutlineEdit } from "react-icons/ai";
 export default function Header() {
   const pathName = usePathname();
 
+<<<<<<< HEAD
   if (pathName === "/") {
     return (
       <div className="fixed left-0 right-0 top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-start pl-16 items-center bg-white">
@@ -64,19 +65,166 @@ export default function Header() {
     return (
       <div className="fixed left-0 right-0 top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-between px-16 items-center bg-white">
         <div className="flex justify-start items-center">
+=======
+  if(pathName){
+    if (pathName === "/") {
+      return (
+        <div className={getHeaderBarStyle()}>
+          <Image src={Logo} alt={"logo"} width={98} height={41} />
+        </div>
+      );
+    } else if (pathName === "/community") {
+      return <div className={getHeaderBarStyle()}>더빙목록</div>;
+    } else if (pathName === "/mypage") {
+      return (
+        <div className="fixed min-w-390 top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-between px-16 items-center bg-white">
+          My
+          {/* <button>
+            <AiOutlineEdit size={19} />
+          </button> */}
+        </div>
+      );
+    } else if (pathName === "/mission") {
+      return <div className={getHeaderBarStyle()}>도전과제</div>;
+    } else if (pathName === "/mypage/myDubbingProduct") {
+      return (
+        <div className={getHeaderBarStyle()}>
+>>>>>>> develop-front
           <button>
             <MdOutlineArrowBackIos className="mr-8 mb-2" />
           </button>
-          프로필 수정
+          나의 상영관
         </div>
-        <button>완료</button>
-      </div>
+      );
+    } else if (pathName === "/signup") {
+      return (
+        <div className={getHeaderBarStyle()}>
+          <button
+            onClick={() => {
+              route.back();
+            }}
+          >
+            <MdOutlineArrowBackIos className="mr-8 mb-2" />
+          </button>
+          회원가입
+        </div>
+      );
+    } else if (pathName === "/signup/interest") {
+      return (
+        <div className={getHeaderBarStyle()}>
+          <button
+            onClick={() => {
+              route.back();
+            }}
+          >
+            <MdOutlineArrowBackIos className="mr-8 mb-2" />
+          </button>
+          회원가입
+        </div>
+      );
+    } else if (pathName === "/signup/kitchen") {
+      return (
+        <div className={getHeaderBarStyle()}>
+          <button
+            onClick={() => {
+              route.back();
+            }}
+          >
+            <MdOutlineArrowBackIos className="mr-8 mb-2" />
+          </button>
+          나의 관심사
+        </div>
+      );
+    } else if (pathName === "/mypage/edit") {
+      return (
+        <div className="fixed min-w-384 top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-between px-16 items-center bg-white">
+          <div className="flex justify-start items-center">
+            <button
+              onClick={() => {
+                route.back();
+              }}
+            >
+              <MdOutlineArrowBackIos className="mr-8 mb-2" />
+            </button>
+            프로필 수정
+          </div>
+          <button>완료</button>
+        </div>
+      );
+    } else if (pathName === "/mypage/my-dubbing-product") {
+      return (
+        <div className="fixed min-w-384 top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-start px-16 items-center bg-white">
+          <div className="flex justify-start items-center">
+            <button
+              onClick={() => {
+                route.back();
+              }}
+            >
+              <MdOutlineArrowBackIos className="mr-8 mb-2" />
+            </button>
+            나의 상영관
+          </div>
+        </div>
+      );
+    } else if (pathName === "/mypage/like-dubbing-list") {
+      return (
+        <div className="fixed min-w-384 top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-start px-16 items-center bg-white">
+          <div className="flex justify-start items-center">
+            <button
+              onClick={() => {
+                route.back();
+              }}
+            >
+              <MdOutlineArrowBackIos className="mr-8 mb-2" />
+            </button>
+            좋아요한 더빙 목록
+          </div>
+        </div>
+      );
+    } else if (pathName === "/mypage/save-contents-list") {
+      return (
+        <div className="fixed min-w-384 top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-start px-16 items-center bg-white">
+          <div className="flex justify-start items-center">
+            <button
+              onClick={() => {
+                route.back();
+              }}
+            >
+              <MdOutlineArrowBackIos className="mr-8 mb-2" />
+            </button>
+            저장한 콘텐츠 목록
+          </div>
+        </div>
+      );
+    } else if (pathName === "/manager") {
+      return <></>;
+    } else if (pathName.includes("shorts")) {
+      return <div className="min-w-390 h-57 bg-black"></div>;
+    } else if (pathName?.includes("dubbing")) {
+      return <></>;
+    } else if (pathName === "/login") {
+      return <></>;
+    } else {
+      return (
+        <button className={getHeaderBarStyle()} onClick={handleLogoButtonClick}>
+          <Image src={Logo} alt={"logo"} width={98} height={41} />
+        </button>
+      );
+    }
+  } else {
+    return (
+      <button className={getHeaderBarStyle()} onClick={handleLogoButtonClick}>
+        <Image src={Logo} alt={"logo"} width={98} height={41} />
+      </button>
     );
   }
 
-  return (
-    <div className="fixed left-0 right-0 top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-start pl-16 items-center bg-white">
-      <Image src={Logo} alt={"logo"} width={98} height={41} />
-    </div>
-  );
+
+  function handleLogoButtonClick() {
+    route.push("/");
+  }
+
+  function getHeaderBarStyle(): string {
+    return "fixed min-w-390 top-0 z-50 h-57 p-16 rounded-2 text-16 font-semibold bg-white";
+  }
 }

@@ -13,5 +13,13 @@ export default meta;
 type Story = StoryObj<typeof MissionListItem>;
 
 export const Default: Story = {
-  render: () => <MissionListItem color="#A6BAF5" imageUrl={MissionImageOne} missionContent="미션내용입니다." />,
+  render: () => (
+    <MissionListItem
+      videoId={123}
+      isComplete={false}
+      color="#A6BAF5"
+      assetUrl={MissionImageOne}
+      title="미션내용입니다."
+    />
+  ),
 };

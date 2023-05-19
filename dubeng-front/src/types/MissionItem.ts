@@ -1,5 +1,7 @@
-export interface MissionItem{
-    imageUrl: string;
-    missionContent: string;
-    color: string;
+export interface MissionItem {
+  isComplete: boolean;
+  assetUrl: string;
+  title: string;
+  color: string;
+  videoId: number;
 }
