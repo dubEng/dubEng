@@ -103,7 +103,6 @@ export default function Vote({ languageIndex, userId }: Iprops) {
 
   function handleVoteUser1Button() {
     setIsSelected1(true);
-    console.log("이제 버튼 여부 바뀌어야 true되어야 함", isSelected1);
     const payload = {
       userId: userId,
       votedId: voteData.result.user1.id as string,
@@ -218,12 +217,12 @@ export default function Vote({ languageIndex, userId }: Iprops) {
   };
 
   const onPlay: YouTubeProps["onPlay"] = (event) => {
-    console.log("onPlay");
-    console.log("event", event);
+    // console.log("onPlay");
+    // console.log("event", event);
   };
 
   const onStateChange: YouTubeProps["onStateChange"] = (event) => {
-    console.log("onStateChange");
+    // console.log("onStateChange");
 
     if (event.data === 1) {
       // 재생 중일 때
@@ -256,7 +255,7 @@ export default function Vote({ languageIndex, userId }: Iprops) {
                 style={style}
                 onReady={onPlayerReady}
                 onEnd={(e) => {
-                  console.log("onEnd 발생");
+                  // console.log("onEnd 발생");
 
                   youtubePlayer.pauseVideo();
                   youtubePlayer.seekTo(opts.start);

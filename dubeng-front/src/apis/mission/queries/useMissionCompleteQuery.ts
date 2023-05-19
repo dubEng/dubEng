@@ -6,8 +6,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 
 const fetcher = async (accessToken: string, videoId: number) => {
-  console.log('useMissionCompleteQuery fetcher');
-
   axios.defaults.headers.common["Authorization"] = accessToken;
   const { data } = await axios.get(
     process.env.NEXT_PUBLIC_BASE_URL + `/user/mission/complete`,
@@ -17,7 +15,6 @@ const fetcher = async (accessToken: string, videoId: number) => {
       },
     }
   );
-  console.log("useMissionCompleteQuery", data);
 
   return data;
 };

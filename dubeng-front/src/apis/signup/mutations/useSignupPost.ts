@@ -8,7 +8,7 @@ const config = {
 
 const fetcher = async (signupInfo: SignupInfo) => {
   const accessToken = signupInfo.accessToken;
-  console.log(accessToken);
+  // console.log(accessToken);
 
   axios.defaults.headers.common['Authorization'] = accessToken;
   const { data } = await axios

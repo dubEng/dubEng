@@ -19,7 +19,7 @@ const fetcher = (videoId: number, userId: string) =>
       }
     )
     .then(({ data }) => {
-      console.log("isScrap", data);
+      // console.log("isScrap", data);
       return data;
     });
 

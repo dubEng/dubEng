@@ -19,7 +19,7 @@ const fetcher = (recordId: number, userId: string) => {
       }
     )
     .then(({ data }) => {
-      console.log("usePlayCountUpQuery", data);
+      // console.log("usePlayCountUpQuery", data);
       // const dataList = data as IDataList;
       return data;
     });

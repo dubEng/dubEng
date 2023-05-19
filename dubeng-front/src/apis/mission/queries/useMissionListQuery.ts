@@ -6,7 +6,6 @@ const fetcher = async (accessToken:string) =>{
     axios.defaults.headers.common['Authorization'] = accessToken;
     const {data} = await axios
         .get(process.env.NEXT_PUBLIC_BASE_URL + `/user/mission/list`);
-        console.log(data);
         
     return data;
 }

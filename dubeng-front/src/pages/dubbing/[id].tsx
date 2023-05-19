@@ -173,8 +173,8 @@ export default function DubbingPage() {
   };
 
   const onPlay: YouTubeProps["onPlay"] = (event) => {
-    console.log("onPlay");
-    console.log("event", event);
+    // console.log("onPlay");
+    // console.log("event", event);
   };
 
   const onStateChange: YouTubeProps["onStateChange"] = (event) => {
@@ -281,7 +281,7 @@ export default function DubbingPage() {
           }}
           onReady={onPlayerReady}
           onEnd={(e) => {
-            console.log("onEnd");
+            // console.log("onEnd");
 
             youtubePlayer.pauseVideo();
             youtubePlayer.seekTo(data.startTime);

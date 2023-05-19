@@ -52,7 +52,7 @@ export default function ShortsVideoPage() {
   function handleScrapButton() {
     // post해주기
     mutate({ userId: userId, videoId: data.id });
-    console.log("!!!!!changedScrap", changedScrap);
+    // console.log("!!!!!changedScrap", changedScrap);
   }
   function transferYoutube(videoPath: string) {
     const originalUrl = videoPath;

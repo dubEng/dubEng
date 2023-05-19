@@ -59,8 +59,6 @@ export default function ShortsTitle({
     mutate({ recordId: recordId, userId: userIdData });
   };
 
-  console.log("isLike", isLike);
-
   if (isLike === undefined) {
     return (
       <div className="bg-black w-358">
