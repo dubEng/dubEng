@@ -15,6 +15,7 @@ type Story = StoryObj<typeof MissionListItem>;
 export const Default: Story = {
   render: () => (
     <MissionListItem
+      videoId={123}
       isComplete={false}
       color="#A6BAF5"
       assetUrl={MissionImageOne}

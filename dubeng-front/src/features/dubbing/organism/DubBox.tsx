@@ -247,6 +247,7 @@ export default function DubBox({
 
   function handleRecordButton() {
     setIsRecording(true);
+    setMyPitchList([]);
     analyzeMicrophone(mediaStreamRef.current);
 
     // 녹음 전 유튜브 영상 멈추기
@@ -340,15 +341,40 @@ export default function DubBox({
     analyser.fftSize = 4096;
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
+    let previousValueToDisplay: number | null = null;
+    let smoothingCount = 0;
+    const smoothingThreshold = 10;
+    const smoothingCountThreshold = 5;
   
     const source = audioCtx.createMediaStreamSource(stream);
     source.connect(analyser);
     const recordingTimer = setInterval(() => {
       analyser.getByteTimeDomainData(dataArray);
       const pitch = autoCorrelate(dataArray, audioCtx.sampleRate);
-      console.log("pitch", pitch);
-      setMyPitchList((data) => [...data, pitch]);
-    }, 500);
+      // console.log("pitch", Math.round(pitch));
+  
+      if (pitch === -1) {
+        // console.log('Too quiet...');
+        return;
+      }
+  
+      let valueToDisplay = Math.round(pitch);
+      if (previousValueToDisplay !== null && Math.abs(valueToDisplay - previousValueToDisplay) < smoothingThreshold) {
+        if (smoothingCount < smoothingCountThreshold) {
+          smoothingCount++;
+          return;
+        } else {
+          previousValueToDisplay = valueToDisplay;
+          smoothingCount = 0;
+        }
+      } else {
+        previousValueToDisplay = valueToDisplay;
+        smoothingCount = 0;
+      }
+  
+      setMyPitchList((data) => [...data, valueToDisplay]);
+    }, 50);
+  
     setTimeout(() => {
       clearInterval(recordingTimer);
       stream.getTracks().forEach((track) => track.stop());

@@ -35,7 +35,7 @@ export default function UserRankingListItem({
         </Link>
       </div>
       <div className="text-14 text-dubblack flex items-center justify-center col-span-2">
-        {recordingTime}
+        {recordingTime}초
       </div>
       <div className="text-14 text-dubblack flex items-center justify-center col-span-2">
         {dubingCount}
