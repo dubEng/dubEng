@@ -28,7 +28,6 @@ DB_USER = f_conn.readline().strip()
 DB_DATABASE_NAME = f_conn.readline().strip()
 DB_PASSWORD = f_conn.readline().strip()
 DB_CHARSET = "utf8mb4"
-# CURSORCLASS = pymysql.cursors.Cursor
 BUCKET_NAME = f_conn.readline().strip()
 AWS_ACCESS_KEY_ID = f_conn.readline().strip()
 AWS_SECRET_ACCESS_KEY = f_conn.readline().strip()
@@ -45,15 +44,15 @@ logging.basicConfig(
 )
 
 
-def cleanDownloadFolder(userId):
+def clean_download_folder(user_id):
     time.sleep(3)
-    path = './download/output/'+userId+'/*'
-    if os.path.exists('download/output/'+userId):
-        dwnDir = glob.glob(path)
-        for file in dwnDir:
+    path = './download/output/'+user_id+'/*'
+    if os.path.exists('download/output/'+user_id):
+        dwn_dir = glob.glob(path)
+        for file in dwn_dir:
             os.remove(file)
         logging.info(f"I cleaned the download directory")
-        path = './download/'+userId+'.mp3'
+        path = './download/'+user_id+'.mp3'
         if os.path.exists(path):
             os.remove(path)
             logging.info(f"I cleaned the original mp3")
@@ -61,7 +60,7 @@ def cleanDownloadFolder(userId):
     return False
 
 
-def deletIllegalSymbols(name):
+def delet_illegal_symbols(name):
     # 허용되지 않는 문자 제거
     name = name.replace(r'[^\w\s-]', '').strip()
     # 공백을 언더바로 변경
@@ -70,7 +69,7 @@ def deletIllegalSymbols(name):
 
 
 # 장르/상황 카테고리 목록 가져오는 함수
-def getCategories():
+def get_categories():
     categories = []  # DB에서 가져온 카테고리 정보를 저장할 객체를 담을 리스트
 
     # DB 연결
@@ -97,13 +96,13 @@ def getCategories():
     return categories
 
 
-def uploadToBucket(filePath, uploadName):
-    key = uploadName
+def upload_to_bucket(file_path, upload_name):
+    key = upload_name
    # 음원 데이터를 메모리 내에서 처리하기 위해 BytesIO 객체 생성
     audio_bytesio = BytesIO()
 
     # AudioSegment 객체 생성
-    audio_segment = AudioSegment.from_file(filePath)
+    audio_segment = AudioSegment.from_file(file_path)
 
     # AudioSegment 객체를 BytesIO에 기록
     audio_segment.export(audio_bytesio, format="wav")
@@ -122,7 +121,7 @@ def uploadToBucket(filePath, uploadName):
 
 
 # 비디오 및 스크립트 Table에 저장하는 함수
-def saveVideoAndScript(video, scripts, userId, categories, file_exist):
+def save_video_and_script(video, scripts, user_id, categories, file_exist):
     # DB 연결
     try:
         cursorclass = pymysql.cursors.Cursor
@@ -137,20 +136,20 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
                   str(video['endTime']), video['producer'], str(video['gender']), video['lang'])
         cursor.execute(sql, values)
 
-        videoId = cursor.lastrowid
+        video_id = cursor.lastrowid
         # 비디오 카테고리 테이블에 데이터 삽입
         for cate in categories:
             sql = "insert into video_category (video_id, category_id) values (%s, %s)"
-            values = (videoId, cate)
+            values = (video_id, cate)
             cursor.execute(sql, values)
         # 영상 음원 배경음, 보컬 분리, 주파수 계산
-        data = seperateMp3(video['videoPath'], userId,
-                           video['title'], file_exist, videoId)
+        data = seperateMp3(video['videoPath'], user_id,
+                           video['title'], file_exist, video_id)
         # 음원 저장 경로 테이블에 저장
         if data is not None:
             sql = "UPDATE video SET background_path=%s, voice_path=%s, pitch=%s WHERE id=%s"
             cursor.execute(
-                sql, (data['backUrl'], data['vocalUrl'], data['pitch'], str(videoId)))
+                sql, (data['backUrl'], data['vocalUrl'], data['pitch'], str(video_id)))
         else:
             return False
         pitch = json.loads(data['pitch'])
@@ -175,7 +174,7 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
             dur = float(sc['duration'])*1000
             st = float(sc['startTime'])*1000
             values = (str(st), str(dur), sc['content'],
-                      sc['translateContent'], str(videoId), sc['isDub'], pitch_text)
+                      sc['translateContent'], str(video_id), sc['isDub'], pitch_text)
             cursor.execute(sql, values)
 
         connection.commit()
@@ -188,10 +187,10 @@ def saveVideoAndScript(video, scripts, userId, categories, file_exist):
 
 
 # 음원 추출 및 분리하는 함수
-def seperateMp3(url, userId, videoTitle, file_exist, videoId):
+def seperateMp3(url, user_id, video_title, file_exist, video_id):
     import os
     cnt = 0
-    newname = userId+'.mp3'
+    newname = user_id+'.mp3'
     # pytube로 영상 정보 가져오기
     yt = YouTube(url, on_progress_callback=None)
     result = None
@@ -213,7 +212,7 @@ def seperateMp3(url, userId, videoTitle, file_exist, videoId):
                 logging.info(f"retrying.....{cnt}")
 
     # 음원이 저장된 경로로 이동
-    newname = "./download/"+userId+".mp3"
+    newname = "./download/"+user_id+".mp3"
 
     # # 배경음과 보컬 분리해서 로컬에 저장
     spl_command = ['spleeter', 'separate', '-p',
@@ -222,18 +221,18 @@ def seperateMp3(url, userId, videoTitle, file_exist, videoId):
     subprocess.run(spl_command, check=True)
 
     # 사람 소리 주파수 추출해서 배열 정제하라?
-    pitch_result = getPitches(userId)
+    pitch_result = getPitches(user_id)
 
     # 로컬 음원 S3 버킷 업로드
-    videoTitle = deletIllegalSymbols(videoTitle)
-    videoIdStr = str(videoId)
-    backgroundPath = "./download/output/"+userId+"/accompaniment.wav"
-    backgroundName = userId+"_"+videoIdStr+"_accompaniment.wav"
-    vocalPath = "./download/output/"+userId+"/vocals.wav"
-    vocalName = userId+"_"+videoIdStr+"_vocals.wav"
+    video_title = delet_illegal_symbols(video_title)
+    videoIdStr = str(video_id)
+    background_path = "./download/output/"+user_id+"/accompaniment.wav"
+    background_name = user_id+"_"+videoIdStr+"_accompaniment.wav"
+    vocal_path = "./download/output/"+user_id+"/vocals.wav"
+    vocal_name = user_id+"_"+videoIdStr+"_vocals.wav"
 
-    backUrl = uploadToBucket(backgroundPath, backgroundName)
-    vocalUrl = uploadToBucket(vocalPath, vocalName)
+    backUrl = upload_to_bucket(background_path, background_name)
+    vocalUrl = upload_to_bucket(vocal_path, vocal_name)
     result = {
         "backUrl": backUrl,  # 배경음원 저장 주소
         "vocalUrl": vocalUrl,  # 보컬 음원 저장 주소
@@ -295,7 +294,7 @@ def saveApi():
         req = json.loads(request.form['data'])
         video = req['video']
         scripts = req.get('scripts')
-        userId = req.get('userId')
+        user_id = req.get('userId')
         categories = req.get('categories')
 
         file_exist = False
@@ -305,13 +304,13 @@ def saveApi():
                 logging.info(f"no file, i will download from youtube")
                 file_exist = False
             else:
-                os.makedirs('download/output/'+userId, exist_ok=True)
-                file.save('download/'+userId+'.mp3')
+                os.makedirs('download/output/'+user_id, exist_ok=True)
+                file.save('download/'+user_id+'.mp3')
                 file_exist = True
-        flag = saveVideoAndScript(
-            video, scripts, userId, categories, file_exist)
+        flag = save_video_and_script(
+            video, scripts, user_id, categories, file_exist)
         if flag:
-            cleanDownloadFolder(userId)
+            clean_download_folder(user_id)
             return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
         elif flag == False:
             return json.dumps({'success': "False, Tried too many. Save again."}), 405, {'ContentType': 'application/json'}
@@ -332,8 +331,8 @@ def downloadApi():
 
 @ app.route('/admin/cleanDir', methods=['POST', 'GET'])
 def cleanDir():
-    userId = request.args.get('userId')
-    if cleanDownloadFolder(userId):
+    user_id = request.args.get('userId')
+    if clean_download_folder(user_id):
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
     else:
@@ -343,7 +342,7 @@ def cleanDir():
 @ app.route('/admin/category', methods=['GET'])
 def getCate():
     try:
-        result = getCategories()
+        result = get_categories()
     except:
         return json.dumps({'success': "not found"}), 404, {'ContentType': 'application/json'}
     return jsonify(result)

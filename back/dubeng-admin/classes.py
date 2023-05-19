@@ -1,29 +1,29 @@
 class video:
     def __init__(self):
         self.title = ""
-        self.videoPath = ""
-        self.bgPath = ""       
+        self.video_path = ""
+        self.bg_path = ""       
         self.runtime = 0        
         self.thumbnail = ""
-        self.startTime = 0
-        self.endTime = 0
+        self.start_time = 0
+        self.end_time = 0
         self.producer = ""
         self.gender = ""
-        self.voicePath = ""
+        self.voice_path = ""
 
 
     
-    def set(self, title, thumbnail, runtime, videoPath, bgPath, voicePath, startT, endT, producer, gender):
+    def set(self, title, thumbnail, runtime, video_path, bg_path, voice_path, start_time, end_time, producer, gender):
         self.title = title
-        self.videoPath = videoPath
-        self.bgPath = bgPath   
+        self.video_path = video_path
+        self.bg_path = bg_path   
         self.runtime = runtime       
         self.thumbnail = thumbnail
-        self.startTime = startT
-        self.endTime = endT
+        self.start_time = start_time
+        self.end_time = end_time
         self.producer = producer
         self.gender = gender
-        self.voicePath = voicePath
+        self.voice_path = voice_path
 
 class category:
     def __init__(self):
