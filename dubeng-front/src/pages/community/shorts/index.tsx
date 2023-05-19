@@ -61,12 +61,12 @@ export default function ShortsProductPage() {
   // );
 
   const onPlay: YouTubeProps["onPlay"] = (event) => {
-    console.log("onPlay");
-    console.log("event", event);
+    // console.log("onPlay");
+    // console.log("event", event);
   };
 
   const onStateChange: YouTubeProps["onStateChange"] = (event) => {
-    console.log("onStateChange");
+    // console.log("onStateChange");
 
     if (event.data === 1) {
       if (audioRef.current) {
@@ -92,8 +92,8 @@ export default function ShortsProductPage() {
   }, [contentList]);
 
   const onLeave = (origin: any, destination: any, direction: any) => {
-    console.log("onLeave", { origin, destination, direction });
-    console.log("destination index", destination.index);
+    // console.log("onLeave", { origin, destination, direction });
+    // console.log("destination index", destination.index);
     // console.log("recordPath", contentList[destination.index].recordPath);
 
     setAudioPath(contentList[destination.index].recordPath);

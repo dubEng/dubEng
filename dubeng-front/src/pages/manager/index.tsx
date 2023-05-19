@@ -212,7 +212,7 @@ export default function ManagerPage() {
         end +
         "&controls=0&rel=0&loop=1";
 
-      console.log(newUrl);
+      // console.log(newUrl);
       return splitUrl[1];
     }
   };

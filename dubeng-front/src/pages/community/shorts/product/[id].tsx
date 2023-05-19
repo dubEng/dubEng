@@ -60,15 +60,15 @@ export default function ShortsProductPage() {
   const [nowPlayCount, setNowPlayCount] = useState<number>();
 
   const onPlay: YouTubeProps["onPlay"] = (event) => {
-    console.log("onPlay");
-    console.log("event", event);
+    // console.log("onPlay");
+    // console.log("event", event);
     // if (audioRef.current) {
     //   audioRef.current.play();
     // }
   };
 
   const onStateChange: YouTubeProps["onStateChange"] = (event) => {
-    console.log("onStateChange");
+    // console.log("onStateChange");
 
     if (event.data === 1) {
       if (audioRef.current) {
@@ -76,14 +76,14 @@ export default function ShortsProductPage() {
       }
 
       // 재생 중일 때
-      console.log("영상 재생");
+      // console.log("영상 재생");
       refetch();
     } else if (event.data === 2) {
       if (audioRef.current) {
         audioRef.current.pause();
       }
       //일시 정지 시
-      console.log("일시 정지");
+      // console.log("일시 정지");
     }
   };
 
@@ -118,19 +118,17 @@ export default function ShortsProductPage() {
       if (selectedScript < data.scriptList.length && time > 0) {
         // 해당 스크립트 리스트의 startTime이 undefined가 아니라면
         if (data.scriptList[selectedScript]?.startTime != undefined) {
-          console.log("현재 시간", currentTimeSecond);
-          console.log("다음 시간", nextTimeSecond);
+
 
           // 현재 재생되고 있는 영상의 시간이 현재 스크립트의 시작 시간보다 크거나 같고
           // 현재 재생되고 있는 영상의 시간이 다음 스크립트의 시작 시간보다 작거나 같다면
           // selectedScript를 증가하지 않고 넘어간다.
           if (currentTimeSecond <= time && time <= nextTimeSecond) {
-            console.log("selectedScript", selectedScript);
-            console.log("현재 스크립트가 재생중인 영상과 일치합니다.");
+            // console.log("현재 스크립트가 재생중인 영상과 일치합니다.");
           }
           // 현재 선택된 스크립트의 시간보다 진행중인 시간이 더 크다면
           else if (time > currentTimeSecond) {
-            console.log("다음 스크립트로 넘어가자");
+            // console.log("다음 스크립트로 넘어가자");
             setSelectedScript(selectedScript + 1);
           }
         }

@@ -19,11 +19,11 @@ const useUserInfoPost = (accessToken:string) => {
   return useMutation(() => fetcher(accessToken), {
     onSuccess: (data) => {
       dispatch(saveUserInfo(data));
-      console.log("로그인 완료");
+      // console.log("로그인 완료");
       
     },
     onError: (error) => {
-      console.log("로그인 실패");
+      // console.log("로그인 실패");
     },
   });
 };

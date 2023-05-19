@@ -4,8 +4,8 @@ interface DataList {
   getData: Array<MyMissionForm>;
 }
 export default function MissionList({ getData }: DataList) {
-  console.log(getData);
-  console.log();
+  // console.log(getData);
+  // console.log();
 
   return (
     <section className="mx-16 grid grid-cols-2 gap-x-4 gap-y-8 justify-items-center">
