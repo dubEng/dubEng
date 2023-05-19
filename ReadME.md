@@ -6,6 +6,7 @@
 **영어로 연기하며 스피킹을 배우는 서비스**
 
 ![Untitled](img/logo.png)
+</br>
 
 ## 😀 프로젝트 소개 😀
 
@@ -14,6 +15,9 @@
 ✏ **프로젝트명**
 
 - **dubEng [덥잉]**
+
+
+
 
 🖥 **서비스 주소**
 
@@ -144,7 +148,7 @@
 
 - 더빙된 작품을 숏츠 형태로 살펴보기
 
-![Untitled](shortsGIF.gif)
+![Untitled](img/shortsGIF.gif)
 
 ## 더빙하기
 
