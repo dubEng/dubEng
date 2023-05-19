@@ -122,9 +122,8 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .from(video)
                 .where(video.id.eq(videoId))
                 .fetchOne();
-        ContentsDetailScriptRes contentsDetailScriptRes = new ContentsDetailScriptRes(content.getId(), content.getTitle(), content.getThumbnail(), content.getVideoPath(), selectAllScript(content.getId()), content.getStartTime(), content.getEndTime());
 
-        return contentsDetailScriptRes;
+        return new ContentsDetailScriptRes(content.getId(), content.getTitle(), content.getThumbnail(), content.getVideoPath(), selectAllScript(content.getId()), content.getStartTime(), content.getEndTime());
     }
 
     // 숏츠 더빙 영상들
@@ -145,8 +144,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .fetchOne();
 
         // 스크립트 리스트 가져오기
-        CommunityDetailScriptRes communityDetailScriptRes = new CommunityDetailScriptRes(content.getId(), content.getTitle(), content.getThumbnail(), content.getVideoPath(), content.getCreatedDate(), content.getRecordCommentCount(),content.getUserId(), content.getNickname(), content.getRecordId(), selectAllScript(content.getId()), content.getStartTime(), content.getEndTime(), content.getRecordPath(), content.getProfileImage());
-        return communityDetailScriptRes;
+        return new CommunityDetailScriptRes(content.getId(), content.getTitle(), content.getThumbnail(), content.getVideoPath(), content.getCreatedDate(), content.getRecordCommentCount(),content.getUserId(), content.getNickname(), content.getRecordId(), selectAllScript(content.getId()), content.getStartTime(), content.getEndTime(), content.getRecordPath(), content.getProfileImage());
     }
 
     public Page<CommunityDetailScriptRes> findByAllShortsCommunity(Pageable pageable){

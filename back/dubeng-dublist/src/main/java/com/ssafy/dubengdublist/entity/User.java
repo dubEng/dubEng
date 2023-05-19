@@ -23,12 +23,12 @@ public class User extends Time{
     private String description;
     private String landName;
     private Long recordCount;
-    private Long IsVoted;
+    private Long isVoted;
     private Long totalRecTime;
     private Boolean gender;
 
-    public void updateDubKingUser(Long IsVoted){
-        this.IsVoted = IsVoted + 1;
+    public void updateDubKingUser(Long isVoted){
+        this.isVoted = isVoted + 1;
     }
 
 }

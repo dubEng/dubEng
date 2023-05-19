@@ -30,8 +30,6 @@ public interface VideoRepositoryCustom {
     public RecordLike findByRecordLike(Long recordId, String userId);
     public VideoBookmark findByVideoBookmark(Long videoId, String userId);
 
-    // 여기는 녹음 상세 페이지     
-//    public RecordVideo selectRecordVideo(Long videoId);
     List<RecordScriptPitchRes> findByRecordScript(Long videoId);
     
     // 여기는 홈 화면들

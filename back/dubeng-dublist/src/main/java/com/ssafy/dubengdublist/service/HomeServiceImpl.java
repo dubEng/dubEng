@@ -16,18 +16,15 @@ public class HomeServiceImpl implements HomeService{
     private final VideoRepository videoRepository;
 
     public List<HomePopularityRes> findHomePopularity(){
-        List<HomePopularityRes> homePopularityRes = videoRepository.findAllHomePopularity();
-        return homePopularityRes;
+        return videoRepository.findAllHomePopularity();
     }
 
     public List<HomeRankRes> findHomeRank(){
-        List<HomeRankRes> homeRankRes = videoRepository.findAllHomeRank();
-        return homeRankRes;
+        return videoRepository.findAllHomeRank();
     }
 
     public List<HomeDubKingRes> findHomeDubKing(){
-        List<HomeDubKingRes> homeDubKingRes = videoRepository.findHomeDubKing();
-        return homeDubKingRes;
+        return videoRepository.findHomeDubKing();
     }
 
 }

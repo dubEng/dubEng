@@ -26,6 +26,9 @@ public class RedisService {
     private final VideoBookmarkRepository videoBookmarkRepository;
     private final DubKingRepository dubKingRepository;
     private final EntityManager em;
+
+    private final String MESSAGE = "존재하지 않는 유저입니다!";
+
     @Scheduled(fixedDelay = 300000, initialDelay = 1000)
     @Transactional
     public void addPlayCountFromRedis(){
@@ -64,12 +67,12 @@ public class RedisService {
 
             Optional<User> ouser = userRepository.findById(userId);
             if(!ouser.isPresent()){
-                throw new NotFoundException("존재하지 않는 유저입니다!");
+                throw new NotFoundException(MESSAGE);
             }
             User user = ouser.get();
             if(records.isEmpty()) return;
-            for(Object record : records){
-                Long recordId = Long.parseLong((String) record);
+            for(Object o : records){
+                Long recordId = Long.parseLong((String) o);
                 Optional<Record> orecord = recordRepository.findById(recordId);
                 if(!orecord.isPresent()){
                     throw new NotFoundException("존재하지 않는 녹음입니다!");
@@ -96,13 +99,13 @@ public class RedisService {
 
             Optional<User> ouser = userRepository.findById(userId);
             if(!ouser.isPresent()){
-                throw new NotFoundException("존재하지 않는 유저입니다!");
+                throw new NotFoundException(MESSAGE);
             }
             User user = ouser.get();
             for(Object ovideo : videos){
                 Long videoId = Long.parseLong((String) ovideo);
                 Optional<Video> video1 = videoRepository.findById(videoId);
-                if(!ouser.isPresent()){
+                if(!video1.isPresent()){
                     throw new NotFoundException("존재하지 않는 비디오입니다!");
                 }
                 Video video = video1.get();
@@ -127,7 +130,7 @@ public class RedisService {
             Long voteCnt = Long.parseLong((String) redisTemplate.opsForValue().get(data));
             Optional<User> ouser = userRepository.findById(userId);
             if(!ouser.isPresent()){
-                throw new NotFoundException("존재하지 않는 유저입니다!");
+                throw new NotFoundException(MESSAGE);
             }
             User user = ouser.get();
             dubKingRepository.save(new DubKing(user, voteCnt, true));

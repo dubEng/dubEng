@@ -15,10 +15,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http.csrf().disable();
-//        http.cors().disable();
-//        return http.authorizeRequests().antMatchers("/").permitAll().and().build();
-
         return http
                 .cors().configurationSource(corsConfigurationSource())
                 .and()

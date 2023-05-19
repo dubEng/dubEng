@@ -22,16 +22,16 @@ public class RecordController {
 
     @ApiOperation(value = "더빙하기 비디오 보여주기")
     @GetMapping("/{videoId}")
-    public ResponseEntity<?> RecordVideoList(@PathVariable("videoId") Long  videoId, @RequestParam String userId){
+    public ResponseEntity<?> recordVideoList(@PathVariable("videoId") Long  videoId, @RequestParam String userId){
         RecordVideoRes recordVideoRes = recordService.findRecordVideo(videoId, userId);
-        return new ResponseEntity(recordVideoRes, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(recordVideoRes, HttpStatus.ACCEPTED);
     }
 
     @ApiOperation(value = "더빙하기 자막 보여주기")
     @GetMapping("/script/{videoId}")
-    public ResponseEntity<?> RecordScriptList(@PathVariable("videoId") Long  videoId){
+    public ResponseEntity<?> recordScriptList(@PathVariable("videoId") Long  videoId){
         List<RecordScriptPitchRes> recordScriptRes = recordService.findRecordScript(videoId);
-        return new ResponseEntity(recordScriptRes, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(recordScriptRes, HttpStatus.ACCEPTED);
     }
 
 

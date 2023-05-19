@@ -23,12 +23,11 @@ public class RecordRepositoryImpl implements RecordRepositoryCustom{
 
     @Override
     public Long findPlayCount(Long recordId) {
-        Long playCnt = queryFactory
+        return queryFactory
                 .select(record.playCount)
                 .from(record)
                 .where(record.id.eq(recordId))
                 .fetchFirst();
-        return playCnt;
     }
 
 }

@@ -28,29 +28,22 @@ public class ContentsServiceImpl implements ContentsService {
 
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;
-    private final VideoBookmarkRepository videoBookmarkRepository;
-    private final RecordRepository recordRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final String MESSAGE = "존재하지 않는 비디오입니다!";
 
     @Transactional
     public HashMap<String, Object> findContentsRecommend(String langType, Pageable pageable){
         Slice<ContentsRecommendRes> contentsRecommendSlice = videoRepository.findAllByLangType(langType, pageable);
-        List<ContentsRecommendRes> ContentsRecommendList = contentsRecommendSlice.getContent().stream()
+        List<ContentsRecommendRes> contentsRecommendList = contentsRecommendSlice.getContent().stream()
                 .collect(Collectors.toList());
         HashMap<String, Object> result = new HashMap<>();
-        result.put("ContentsRecommendList", ContentsRecommendList);
+        result.put("ContentsRecommendList", contentsRecommendList);
         result.put("hasNextPage", contentsRecommendSlice.hasNext());
         return result;
     }
 
     @Transactional
     public Page<ContentsSearchRes> findContentsSearch(String langType, String title, Pageable pageable, List<Long> contentsSearch) {
-//        for(Long c : contentsSearch){
-//            Optional<Category> category = categoryRepository.findById(c);
-//            if(!category.isPresent()){
-//                throw new NotFoundException("존재하지 않는 카테고리입니다!");
-//            }
-//        }
         return videoRepository.findByCategoryContents(langType, title, pageable, contentsSearch);
     }
 
@@ -58,7 +51,7 @@ public class ContentsServiceImpl implements ContentsService {
     public ContentsDetailScriptRes findContentsDetails(Long videoId) {
         Optional<Video> ovideo = videoRepository.findById(videoId);
         if(!ovideo.isPresent()){
-            throw new NotFoundException("존재하지 않는 비디오입니다!");
+            throw new NotFoundException(MESSAGE);
         }
         return videoRepository.findByAllContents(videoId);
     }
@@ -69,10 +62,9 @@ public class ContentsServiceImpl implements ContentsService {
         if(!ouser.isPresent()){
             throw new NotFoundException("존재하지 않는 유저입니다!");
         }
-        User user = ouser.get();
         Optional<Video> ovideo = videoRepository.findById(videoId);
         if(!ovideo.isPresent()){
-            throw new NotFoundException("존재하지 않는 비디오입니다!");
+            throw new NotFoundException(MESSAGE);
         }
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
         String key = "scrap_userId::"+userId;
@@ -94,10 +86,9 @@ public class ContentsServiceImpl implements ContentsService {
         }
         Optional<Video> ovideo = videoRepository.findById(videoId);
         if(!ovideo.isPresent()){
-            throw new NotFoundException("존재하지 않는 비디오입니다!");
+            throw new NotFoundException(MESSAGE);
         }
-        boolean isScrap = setOperations.isMember(key, Long.toString(videoId)); // 1: 있음, 0: 없음
-        return isScrap;
+        return setOperations.isMember(key, Long.toString(videoId)); // 1: 있음, 0: 없음
     }
 
 

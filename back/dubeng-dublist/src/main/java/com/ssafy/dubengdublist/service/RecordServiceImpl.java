@@ -29,10 +29,14 @@ public class RecordServiceImpl implements RecordService{
         Video video = optionalVideo.get();
 
         Optional<User> optionalUser = userRepository.findById(userId);
+
+        if(!optionalUser.isPresent())
+            throw new NotFoundException("존재하지 않는 유저입니다!");
+
         Long totalRecordCount = optionalUser.get().getRecordCount();
         Long totalRecordTime = optionalUser.get().getTotalRecTime();
 
-        RecordVideoRes recordVideoRes = RecordVideoRes.builder()
+        return RecordVideoRes.builder()
                 .id(video.getId())
                 .title(video.getTitle())
                 .videoPath(video.getVideoPath())
@@ -43,8 +47,6 @@ public class RecordServiceImpl implements RecordService{
                 .totalRecordTime(totalRecordTime)
                 .runtime(video.getRuntime())
                 .build();
-
-        return recordVideoRes;
     }
 
     public List<RecordScriptPitchRes> findRecordScript(Long videoId){
@@ -52,8 +54,7 @@ public class RecordServiceImpl implements RecordService{
         if(!optionalVideo.isPresent()){
             throw new NotFoundException("존재하지 않는 비디오입니다!");
         }
-        List<RecordScriptPitchRes> recordScriptRes = videoRepository.findByRecordScript(videoId);
-        return recordScriptRes;
+        return videoRepository.findByRecordScript(videoId);
     }
 
 }
