@@ -30,7 +30,7 @@ export default function LogInPage() {
         src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js"
         defer
       ></Script>
-      <div className="mt-64">
+      <div className="mt-180">
         <div className="mb-16">
           <Link href={"/"}>
             <Image

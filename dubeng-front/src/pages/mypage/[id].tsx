@@ -12,10 +12,8 @@ export default function DifferentUserPage() {
   const router = useRouter();
   const { data: differentProfileData, mutate } = useProfileMutation();
   useEffect(() => {
-    // console.log("확인용", String(router.query.id));
     mutate({ userId: String(router.query.id) });
   }, []);
-  console.log("different 컴포넌트에서 값", differentProfileData);
   return (
     <div className="static h-full px-16 bg-white mt-57 mb-61">
       <MyPageProfile
@@ -61,6 +59,7 @@ export default function DifferentUserPage() {
         </Link>
       </div>
       <DifferentUserDubProductList userId={String(router.query.id)} />
+      <div className="h-80"></div>
     </div>
     // <div className="static h-full px-16 bg-white mt-57 mb-61">
     //   <MyPageProfile

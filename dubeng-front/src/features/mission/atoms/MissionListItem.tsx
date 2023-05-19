@@ -59,7 +59,12 @@ export default function MissionListItem({
             </p>
           </div>
         </div>
-      </Link>
+        <div className="w-150 h-51 flex justify-center items-center rounded-b-lg bg-white border-1 border-dubgraymedium">
+          <p className="text-14 font-bold text-dubblack text-center break-keep">
+            {title}
+          </p>
+        </div>
+      </div>
     );
   }
 
