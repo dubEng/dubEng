@@ -5,7 +5,7 @@
 
 **영어로 연기하며 스피킹을 배우는 서비스**
 
-exec/img/logo.png
+![Untitled](img/logo.png)
 
 ## 😀 프로젝트 소개 😀
 
@@ -99,7 +99,7 @@ exec/img/logo.png
 
 👨‍👧‍👧 **팀 소개 - 🙋‍♀️도비🙋‍♂️**
 
-| https://github.com/chahk03 | https://github.com/joen00 | https://github.com/kimjinho-dev | https://github.com/4priltwntsx | https://github.com/seoyoon528 | https://github.com/GangYunGit | https://github.com/GangYunGit |
+| [김아영](https://github.com/joen00) | [김도언](https://github.com/eondo) | [김동률](https://github.com/lancelot1672) | [김지희](https://github.com/4priltwntsx) | [백자민](https://github.com/sdflksjf2683) | [최정온](https://github.com/choijeongon) | [임경찬](https://github.com/rudcks5562) |
 | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |
 
@@ -121,7 +121,7 @@ exec/img/logo.png
 
 - 이번주 투표수가 가장 많은 유저 랭킹 Top 3
 
-exec/img/homeGIF.gif
+![Untitled](img/homeGIF.gif)
 
 ## 목록
 
@@ -138,13 +138,13 @@ exec/img/homeGIF.gif
 
 - 하루에 4번 더빙왕을 투표할 수 있습니다. 하나의 작품에 대해 2명의 유저가 경쟁하여 더빙왕이 될 수 있습니다.
 
-exec/img/dublistGIF.gif
+![Untitled](img/dublistGIF.gif)
 
 ## 숏츠
 
 - 더빙된 작품을 숏츠 형태로 살펴보기
 
-exec/img/shortsGIF.gif
+![Untitled](shortsGIF.gif)
 
 ## 더빙하기
 
@@ -162,7 +162,7 @@ exec/img/shortsGIF.gif
 
 - 저장 후 미리 보기를 통해 잘 더빙이 됐는지 확인할 수 있습니다. 완벽하게 더빙이 됐으면 올려주세요.
 
-exec/img/dubingGIF.gif
+![Untitled](img/dubingGIF.gif)
 
 ## 도전과제
 
@@ -171,9 +171,9 @@ exec/img/dubingGIF.gif
 - 도전과제를 하나씩 완료하면 alert창과 함께 각 도전과제에 매핑된 에셋이 잠금 해제되고, 해제된 에셋은 나만의 부엌에 활성화됩니다.
 - 도전과제를 모두 완료하면 나만의 부엌이 완성됩니다.
 
-exec/img/missionGIF.gif
+![Untitled](img/missionGIF.gif)
 
-exec/img/missionCompleteGIF.gif
+![Untitled](img/missionCompleteGIF.gif)
 
 ## 마이페이지
 
@@ -202,7 +202,7 @@ exec/img/missionCompleteGIF.gif
     - 해당 콘텐츠를 클릭하면 상세 페이지로 이동하여 작품을 재생해볼 수 있습니다.
     - 마이페이지에서는 상위 다섯개의 콘텐츠를 확인할 수 있고, 상세보기로 이동하면 영어/한국어 별로 나눠 확인할 수 있습니다.
 
-exec/img/myPageGIF.gif
+![Untitled](img/myPageGIF.gif)
 
 ## 🔧 기술 스택 🔧
 
@@ -262,25 +262,25 @@ exec/img/myPageGIF.gif
 
 ---
 
-exec/img/architecture.png
+![Untitled](img/architecture1.png)
 
 ## 💾 ERD 💾
 
 ---
 
-exec/img/ERD.png
+![Untitled](img/ERD.png)
 
 ## 🎨 [와이어프레임](https://www.figma.com/file/Msveb7oPds2U2LY5FJ1BpM/%EB%8D%A5eng%EB%8D%A5ing?type=design&node-id=1-3&t=qM4juPakMBlRVNdt-0) 🎨
 
 ---
 
-exec/img/wireframe.png
+![Untitled](img/wireframe.png)
 
 ## 📜 [API 명세서](https://www.notion.so/a43bcf1b23784bad89f8930726acdf06) 📜
 
 ---
 
-exec/img/API.png
+![Untitled](img/API.png)
 
 ## 📁 디렉토리 구조 📁
 
