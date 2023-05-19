@@ -10,12 +10,14 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 public class CommunityCommentRes {
 
+    private String userId;
     private String nickName;
     private String content;
     private ZonedDateTime updatedDate;
 
     @QueryProjection
-    public CommunityCommentRes(String nickName, String content, ZonedDateTime updatedDate){
+    public CommunityCommentRes(String userId, String nickName, String content, ZonedDateTime updatedDate){
+        this.userId = userId;
         this.nickName = nickName;
         this.content = content;
         this.updatedDate = updatedDate;

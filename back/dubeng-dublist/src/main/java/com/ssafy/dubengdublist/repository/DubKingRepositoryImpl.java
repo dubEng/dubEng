@@ -3,6 +3,7 @@ package com.ssafy.dubengdublist.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.dubengdublist.entity.DubKing;
 import com.ssafy.dubengdublist.entity.QDubKing;
+import com.ssafy.dubengdublist.exception.NotFoundException;
 
 import java.util.List;
 
@@ -16,13 +17,17 @@ public class DubKingRepositoryImpl implements DubKingRepositoryCustom{
         this.queryFactory = queryFactory;
     }
 
-    public DubKing idDubKingVotedId(String votedId){
+    // dubking에 투표자자 찾기
+    public DubKing findByVotedId(String votedId){
         List<DubKing> dubKings = queryFactory
                 .select(dubKing)
                 .from(dubKing)
                 .where(dubKing.user.id.eq(votedId))
                 .fetch();
-        System.out.println("사이즈 -----" + dubKings.size());
+
+        if(dubKings.isEmpty())
+            throw new NotFoundException("아이디가 없습니다!");
+
         if(dubKings.size() > 0)
             return dubKings.get(0);
         else

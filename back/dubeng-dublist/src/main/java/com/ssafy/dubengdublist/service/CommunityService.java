@@ -5,19 +5,27 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CommunityService {
 
-    public CommunityDubKingRes SelectOneDubKing(String langType, String userId);
-    public Integer insertDubKing(String userId,String votedId);
-    public Page<CommunitySearchRes> SelectAllSearch(String langType, String  title, Pageable pageable, List<Long> contentsSearch);
-    public Page<CommunityDetailScriptRes> SelectAllDetail(String langType, Pageable pageable, Long videoId);
-    public Page<CommunityCommentRes> SelectAllDetailComment(String langType, Pageable pageable, Long recordId);
+    public Map<String, Object> findDubKing(String langType, String userId);
 
-    public Integer insertDetailComment(String userId, Long recordId, CommunityDetailCommentReq communityDetailCommentReq);
-    public Integer updateDetailComment(String userId, Long recordCommentId, CommunityDetailCommentReq communityDetailCommentReq);
+    public Integer addDubKing(String userId, String votedId);
 
-    public Integer deleteDetailComment(String userId, Long recordCommentId, CommunityDetailCommentReq communityDetailCommentReq);
+    public Page<CommunitySearchRes> findCommunitySearch(String langType, String title, Pageable pageable, List<Long> contentsSearch);
 
-    public Integer selectOneDetailLike(String userId, Long recordId);
+    public CommunityDetailScriptRes findCommunityDetail(Long recordId);
+    public Page<CommunityDetailScriptRes> findCommunityShorts(Pageable pageable);
+
+    public Page<CommunityCommentRes> findCommunityComment(Pageable pageable, Long recordId);
+
+    public Integer addCommunityComment(String userId, Long recordId, CommunityDetailCommentReq communityDetailCommentReq);
+
+    public Integer modifyCommunityComment(String userId, Long recordCommentId, CommunityDetailCommentReq communityDetailCommentReq);
+
+    public Integer removeCommunityComment(String userId, Long recordCommentId, CommunityDetailCommentReq communityDetailCommentReq);
+
+    public Integer addCommunityLike(String userId, Long recordId);
+
 }

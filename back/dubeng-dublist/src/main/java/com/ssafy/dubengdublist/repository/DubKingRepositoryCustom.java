@@ -4,5 +4,5 @@ import com.ssafy.dubengdublist.entity.DubKing;
 
 public interface DubKingRepositoryCustom {
 
-    public DubKing idDubKingVotedId(String votedId);
+    public DubKing findByVotedId(String votedId);
 }

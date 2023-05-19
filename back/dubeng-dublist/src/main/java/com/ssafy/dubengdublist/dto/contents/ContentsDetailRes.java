@@ -15,13 +15,17 @@ public class ContentsDetailRes {
     private String title;
     private String thumbnail;
     private String videoPath;
+    private Long startTime;
+    private Long endTime;
 
     @QueryProjection
-    public ContentsDetailRes(Long id, String title, String thumbnail,String videoPath) {
+    public ContentsDetailRes(Long id, String title, String thumbnail,String videoPath,Long startTime,Long endTime) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
         this.videoPath = videoPath;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
 }

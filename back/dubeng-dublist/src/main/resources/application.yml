@@ -1,3 +1,7 @@
+server:
+  servlet:
+    context-path: /dub
+
 # JPA
 spring:
   jpa:
@@ -6,12 +10,6 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: update
-    # open-in-view: false
-    properties:
-      hibernate:
-        format_sql: true
-        use_sql_comments: true
-        show_sql: true
   main:
     allow-bean-definition-overriding: true
 
@@ -30,3 +28,4 @@ logging:
     root: info
     com:
       temp: debug
+

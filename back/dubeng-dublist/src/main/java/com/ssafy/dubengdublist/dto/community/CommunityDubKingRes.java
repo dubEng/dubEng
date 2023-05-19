@@ -15,15 +15,19 @@ public class CommunityDubKingRes {
     private String videoPath;
     CommunityDubKingUserRes user1;
     CommunityDubKingUserRes user2;
+    private Long startTime;
+    private Long endTime;
 
     @QueryProjection
-    public CommunityDubKingRes(Long id, String title, String thumbnail,String videoPath, CommunityDubKingUserRes user1, CommunityDubKingUserRes user2 ) {
+    public CommunityDubKingRes(Long id, String title, String thumbnail,String videoPath, CommunityDubKingUserRes user1, CommunityDubKingUserRes user2,Long startTime,Long endTime ) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
         this.videoPath = videoPath;
         this.user1 = user1;
         this.user2 = user2;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
 

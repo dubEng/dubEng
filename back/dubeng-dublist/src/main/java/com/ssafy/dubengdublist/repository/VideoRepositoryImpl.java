@@ -9,8 +9,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.dubengdublist.dto.community.*;
 import com.ssafy.dubengdublist.dto.contents.*;
 import com.ssafy.dubengdublist.dto.home.*;
-import com.ssafy.dubengdublist.dto.record.QRecordScript;
-import com.ssafy.dubengdublist.dto.record.RecordScript;
+import com.ssafy.dubengdublist.dto.record.QRecordScriptRes;
+import com.ssafy.dubengdublist.dto.record.RecordScriptPitchRes;
+import com.ssafy.dubengdublist.dto.record.RecordScriptRes;
 import com.ssafy.dubengdublist.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,9 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.ssafy.dubengdublist.entity.QDubKing.dubKing;
 import static com.ssafy.dubengdublist.entity.QRecordComment.recordComment;
@@ -38,7 +41,8 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
     }
 
     // 컨텐츠 페이지
-    public Page<ContentsSearchRes> selectAllContentsSearchRes(String langType, String title,Pageable pageable,List<Long> contentsSearch){
+    // 검색과 카테고리로 찾은 컨텐츠 영상들
+    public Page<ContentsSearchRes> findByCategoryContents(String langType, String title,Pageable pageable,List<Long> contentsSearch){
 
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -55,11 +59,12 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         }
 
         List<ContentsSearchRes> content = queryFactory
-                .select(new QContentsSearchRes(video.id, video.title, video.thumbnail, video.runtime))
+                .selectDistinct(new QContentsSearchRes(video.id, video.title, video.thumbnail, video.runtime))
                 .from(video)
                 .where(builder)
-                .leftJoin(videoCategory)
+                .join(videoCategory)
                 .on(videoCategory.video.id.eq(video.id))
+                .orderBy(video.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -71,7 +76,8 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
-    public Page<CommunitySearchRes> selectAllCommunitySearchRes(String langType, String  title, Pageable pageable, List<Long> contentsSearch){
+    // 검색과 카테고리로 찾은 더빙 영상들
+    public Page<CommunitySearchRes> findByCategoryCommunity(String langType, String  title, Pageable pageable, List<Long> contentsSearch){
         BooleanBuilder builder = new BooleanBuilder();
 
         if (!StringUtils.isEmpty(contentsSearch)) {
@@ -87,65 +93,47 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         }
 
         List<CommunitySearchRes> content = queryFactory
-                .select(new QCommunitySearchRes(video.id, video.title,video.thumbnail,video.runtime, user.nickname, QRecord.record.playCount, QRecord.record.createdDate))
+                .selectDistinct(new QCommunitySearchRes(video.id, video.title,video.thumbnail,video.runtime, user.nickname, user.profileImage, QRecord.record.playCount, QRecord.record.createdDate, QRecord.record.id))
                 .from(video)
                 .where(builder)
                 .leftJoin(videoCategory)
                 .on(videoCategory.video.id.eq(video.id))
-                .leftJoin(QRecord.record)
+                .join(QRecord.record)
                 .on(video.id.eq(QRecord.record.video.id))
-                .leftJoin(user)
+                .join(user)
                 .on(user.id.eq(QRecord.record.user.id))
+                .orderBy(QRecord.record.createdDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Video> countQuery = queryFactory
-                .select(video)
-                .from(video);
+        JPAQuery<Record> countQuery = queryFactory
+                .select(QRecord.record)
+                .from(QRecord.record);
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
-    public Page<ContentsDetailScriptRes> selectAllContentsDetailRes(String langType, Pageable pageable, Long videoId){
+    // 숏츠 컨텐츠 영상들
+    public ContentsDetailScriptRes findByAllContents(Long videoId){
 
-        // 맨 처음은 해당 영상 + 뒤에는 랜덤 영상(추천)
-        NumberExpression<Integer> roleRankPath = new CaseBuilder()
-                .when(video.id.eq(videoId)).then(1)
-                .otherwise(2);
-
-        List<ContentsDetailRes> content = queryFactory
-                .select(new QContentsDetailRes(video.id, video.title, video.thumbnail, video.videoPath))
+        ContentsDetailRes content = queryFactory
+                .select(new QContentsDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.startTime, video.endTime))
                 .from(video)
-                .where(video.langType.eq(langType))
-                .orderBy(roleRankPath.asc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+                .where(video.id.eq(videoId))
+                .fetchOne();
 
-        List<ContentsDetailScriptRes> contentsDetailScriptResList = new ArrayList<>();
-        for(ContentsDetailRes c : content){
-            ContentsDetailScriptRes cd = new ContentsDetailScriptRes(c.getId(), c.getTitle(), c.getThumbnail(), c.getVideoPath(), selectAllScript(c.getId()));
-            contentsDetailScriptResList.add(cd);
-        }
-
-        JPAQuery<Video> countQuery = queryFactory
-                .select(video)
-                .from(video);
-
-        return PageableExecutionUtils.getPage(contentsDetailScriptResList, pageable, countQuery::fetchCount);
+        return new ContentsDetailScriptRes(content.getId(), content.getTitle(), content.getThumbnail(), content.getVideoPath(), selectAllScript(content.getId()), content.getStartTime(), content.getEndTime());
     }
 
-    public Page<CommunityDetailScriptRes> selectAllCommunityDetailRes(String langType, Pageable pageable, Long videoId){
+    // 숏츠 더빙 영상들
+    public CommunityDetailScriptRes findByAllCommunity(String langType,Long recordId){
         // 맨 처음은 해당 영상 + 뒤에는 랜덤 영상(추천)
-        NumberExpression<Integer> roleRankPath = new CaseBuilder()
-                .when(video.id.eq(videoId)).then(1)
-                .otherwise(2);
 
-        List<CommunityDetailRes> content = queryFactory
-                .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.nickname, QRecord.record.id))
+        CommunityDetailRes content = queryFactory
+                .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.id, user.nickname, QRecord.record.id, video.startTime, video.endTime, QRecord.record.recordPath, user.profileImage))
                 .from(video)
-                .where(video.langType.eq(langType), QRecord.record.isPublic.eq(true))
+                .where(QRecord.record.id.eq(recordId))
                 .join(QRecord.record)
                 .on(video.id.eq(QRecord.record.video.id))
                 .leftJoin(user)
@@ -153,14 +141,34 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .leftJoin(recordComment)
                 .on(recordComment.record.id.eq(QRecord.record.id))
                 .groupBy(QRecord.record.id)
-                .orderBy(roleRankPath.asc())
+                .fetchOne();
+
+        // 스크립트 리스트 가져오기
+        return new CommunityDetailScriptRes(content.getId(), content.getTitle(), content.getThumbnail(), content.getVideoPath(), content.getCreatedDate(), content.getRecordCommentCount(),content.getUserId(), content.getNickname(), content.getRecordId(), selectAllScript(content.getId()), content.getStartTime(), content.getEndTime(), content.getRecordPath(), content.getProfileImage());
+    }
+
+    public Page<CommunityDetailScriptRes> findByAllShortsCommunity(Pageable pageable){
+
+        List<CommunityDetailRes> content = queryFactory
+                .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.id, user.nickname, QRecord.record.id, video.startTime, video.endTime, QRecord.record.recordPath, user.profileImage))
+                .from(video)
+                .where(QRecord.record.isPublic.eq(true))
+                .join(QRecord.record)
+                .on(video.id.eq(QRecord.record.video.id))
+                .leftJoin(user)
+                .on(QRecord.record.user.id.eq(user.id))
+                .leftJoin(recordComment)
+                .on(recordComment.record.id.eq(QRecord.record.id))
+                .groupBy(QRecord.record.id)
+                .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
+        // 스크립트 리스트 가져오기
         List<CommunityDetailScriptRes> communityDetailScriptResList = new ArrayList<>();
         for(CommunityDetailRes c : content){
-            CommunityDetailScriptRes cd = new CommunityDetailScriptRes(c.getId(), c.getTitle(), c.getThumbnail(), c.getVideoPath(), c.getCreatedDate(), c.getRecordLikeCount(), c.getRecordCommentCount(),c.getNickname(), c.getRecordId(), selectAllScript(c.getId()));
+            CommunityDetailScriptRes cd = new CommunityDetailScriptRes(c.getId(), c.getTitle(), c.getThumbnail(), c.getVideoPath(), c.getCreatedDate(), c.getRecordCommentCount(),c.getUserId(), c.getNickname(), c.getRecordId(), selectAllScript(c.getId()), c.getStartTime(), c.getEndTime(), c.getRecordPath(), c.getProfileImage());
             communityDetailScriptResList.add(cd);
         }
 
@@ -171,6 +179,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         return PageableExecutionUtils.getPage(communityDetailScriptResList, pageable, countQuery::fetchCount);
     }
 
+
     public List<ContentsScriptRes> selectAllScript(Long videoId){
         List<ContentsScriptRes> scriptList = queryFactory
                 .select(new QContentsScriptRes(script.startTime, script.duration, script.content, script.translateContent))
@@ -180,10 +189,11 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         return scriptList;
     }
 
-    public CommunityDubKingRes SelectOneDubKing(String langType, String userId){
+    // 더빙왕 보여주기
+    public CommunityDubKingRes findByOneDubKing(String langType, String userId){
 
         ContentsDetailRes content = queryFactory
-                .select(new QContentsDetailRes(video.id, video.title, video.thumbnail, video.videoPath))
+                .select(new QContentsDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.startTime, video.endTime))
                 .from(video)
                 .join(QRecord.record)
                 .on(QRecord.record.video.id.eq(video.id))
@@ -204,15 +214,16 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .fetch();
         CommunityDubKingUserRes users1 = new CommunityDubKingUserRes(users.get(0).getId(), users.get(0).getNickname(), users.get(0).getProfileImage(), users.get(0).getDescription(), users.get(0).getRecordPath());
         CommunityDubKingUserRes users2 = new CommunityDubKingUserRes(users.get(1).getId(), users.get(1).getNickname(), users.get(1).getProfileImage(), users.get(1).getDescription(), users.get(1).getRecordPath());
-        CommunityDubKingRes communityDubKingRes = new CommunityDubKingRes(content.getId(), content.getTitle(), content.getThumbnail(), content.getVideoPath(), users1, users2);
+        CommunityDubKingRes communityDubKingRes = new CommunityDubKingRes(content.getId(), content.getTitle(), content.getThumbnail(), content.getVideoPath(), users1, users2, content.getStartTime(), content.getEndTime());
 
         return communityDubKingRes;
     }
 
-    public Page<CommunityCommentRes> selectAllCommunityDetailCommentRes(Pageable pageable, Long recordId){
+    // 더빙 댓글 전체 리스트 보기
+    public Page<CommunityCommentRes> findAllCommunityComment(Pageable pageable, Long recordId){
 
         List<CommunityCommentRes> content = queryFactory
-                .select(new QCommunityCommentRes(user.nickname, recordComment.content, recordComment.updatedDate))
+                .select(new QCommunityCommentRes(user.id, user.nickname, recordComment.content, recordComment.updatedDate))
                 .from(recordComment)
                 .leftJoin(user)
                 .on(recordComment.user.id.eq(user.id))
@@ -229,7 +240,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
     }
 
     // JPA로 빼기
-    public RecordLike selectOneRecordLike(Long recordId, String userId){
+    public RecordLike findByRecordLike(Long recordId, String userId){
         RecordLike recordLike= queryFactory
                 .select(QRecordLike.recordLike)
                 .from(QRecordLike.recordLike)
@@ -240,7 +251,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
     }
 
     // JPA로 빼기
-    public VideoBookmark selectOneVideoBookmark(Long videoId, String userId){
+    public VideoBookmark findByVideoBookmark(Long videoId, String userId){
         VideoBookmark videoBookmark= queryFactory
                 .select(QVideoBookmark.videoBookmark)
                 .from(QVideoBookmark.videoBookmark)
@@ -251,53 +262,74 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
     }
 
     // 녹음 상세 페이지
-    public List<RecordScript> selectRecordScript(Long videoId){
-        List<RecordScript> recordScript = queryFactory
-                .select(new QRecordScript(script.id, script.startTime, script.duration, script.content,script.translateContent))
+    public List<RecordScriptPitchRes> findByRecordScript(Long videoId){
+        List<RecordScriptRes> recordScriptRes = queryFactory
+                .select(new QRecordScriptRes(script.id, script.startTime, script.duration, script.content,script.translateContent, script.pitch))
                 .from(script)
                 .join(video)
                 .on(video.id.eq(script.video.id))
-                .where(video.id.eq(videoId))
+                .where(video.id.eq(videoId), script.isDub.eq(true))
                 .fetch();
-        return recordScript;
+
+        List<RecordScriptPitchRes> recordScriptPitchRes = new ArrayList<>();
+        for(RecordScriptRes r : recordScriptRes){
+            if (r.getPitch().equals("[]")) {
+                List<Integer> newList = new ArrayList<>();
+                RecordScriptPitchRes res = new RecordScriptPitchRes(r.getId(), r.getStartTime(), r.getDuration(), r.getContent(),r.getTranslateContent(), newList);
+                recordScriptPitchRes.add(res);
+            }else {
+                String[] pl =  r.getPitch().split(", ");
+                List<String> pitchList = Arrays.asList(pl);
+                List<Integer> newList = pitchList.stream()
+                        .map(s -> Integer.parseInt(s))
+                        .collect(Collectors.toList());
+                RecordScriptPitchRes res = new RecordScriptPitchRes(r.getId(), r.getStartTime(), r.getDuration(), r.getContent(),r.getTranslateContent(), newList);
+                recordScriptPitchRes.add(res);
+            }
+        }
+        return recordScriptPitchRes;
     }
 
     
     // 홈 화면에 필요한 데이터 query문    
-    public List<HomePopularity> selectAllHomePopularity(){
-        List<HomePopularity> homePopularities = queryFactory
-                .select(new QHomePopularity(video.id, video.title, video.thumbnail,video.videoPath, QRecord.record.user.id, user.nickname, QRecord.record.id))
+    public List<HomePopularityRes> findAllHomePopularity(){
+        List<HomePopularityRes> homePopularities = queryFactory
+                .select(new QHomePopularityRes(video.id, video.title, video.thumbnail,video.videoPath, QRecord.record.user.id, user.nickname, QRecord.record.id))
                 .from(video)
                 .join(QRecord.record)
                 .on(QRecord.record.video.id.eq(video.id))
                 .leftJoin(user)
                 .on(QRecord.record.user.id.eq(user.id))
                 .orderBy(QRecord.record.playCount.desc())
+                .where(QRecord.record.isPublic.eq(true))
                 .limit(10)
                 .fetch();
         return  homePopularities;
     }
 
-    public List<HomeDubKing> selectAllHomeDubKing(){
-        List<HomeDubKing> homeDubKings = queryFactory
-                .select(new QHomeDubKing(dubKing.id, dubKing.user.id, user.nickname, user.profileImage, dubKing.totalVote))
+    public List<HomeDubKingRes> findHomeDubKing(){
+        List<HomeDubKingRes> homeDubKingRes = queryFactory
+                .select(new QHomeDubKingRes(dubKing.id, dubKing.user.id, user.nickname, user.profileImage, dubKing.totalVote))
                 .from(dubKing)
                 .join(user)
                 .on(dubKing.user.id.eq(user.id))
                 .orderBy(dubKing.totalVote.desc())
+                .where(user.isPublic.eq(true))
                 .limit(3)
                 .fetch();
-        return homeDubKings;
+        return homeDubKingRes;
     }
 
-    public List<HomeRank> selectAllHomeRank(){
-        List<HomeRank> homeRanks = queryFactory
-                .select(new QHomeRank(user.id, user.nickname, user.description, user.profileImage, user.totalRecTime, user.recordCount))
+    public List<HomeRankRes> findAllHomeRank(){
+        List<HomeRankRes> homeRankRes = queryFactory
+                .select(new QHomeRankRes(user.id, user.nickname, user.description, user.profileImage, user.totalRecTime, user.recordCount))
                 .from(user)
                 .orderBy(user.totalRecTime.desc(), user.recordCount.desc())
+                .where(user.isPublic.eq(true))
                 .limit(5)
                 .fetch();
-        return homeRanks;
+
+        return homeRankRes;
     }
 
 }

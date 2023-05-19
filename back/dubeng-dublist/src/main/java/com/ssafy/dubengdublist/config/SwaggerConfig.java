@@ -3,6 +3,7 @@ package com.ssafy.dubengdublist.config;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,41 +15,38 @@ import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import com.fasterxml.classmate.TypeResolver;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.List;
 
-@Configuration
 @EnableSwagger2
-public class SwaggerConfiguration {
+@Configuration
+@RequiredArgsConstructor
+public class SwaggerConfig {
 
     private final TypeResolver typeResolver;
 
-    public SwaggerConfiguration(TypeResolver typeResolver) {
-        this.typeResolver = typeResolver;
-    }
-
     private ApiInfo commonInfo() {
         return new ApiInfoBuilder()
-                .title("목록 API")
-                //.description("")
-                //.license("leeys")
-                //.licenseUrl("http://leeys.tistory.com")
-                .version("1.0")
+                .title("Dubeng List REST API Server")
+                .description("더빙 목록API")
+                .version("2.0")
                 .build();
     }
 
     @Bean
     public Docket allApi() {
+
         return new Docket(DocumentationType.SWAGGER_2)
                 .alternateTypeRules(AlternateTypeRules
                         .newRule(typeResolver.resolve(Pageable.class), typeResolver.resolve(Page.class)))
+//                .host("k8b208.p.ssafy.io")
+
                 .groupName("list")
                 .useDefaultResponseMessages(false)
                 .select()
-                //.apis(RequestHandlerSelectors.any())
-                .apis(RequestHandlerSelectors.basePackage("com.ssafy.dubengdublist.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.ssafy.dubengdublist"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(commonInfo());
@@ -64,7 +62,5 @@ public class SwaggerConfiguration {
         @ApiModelProperty(value = "페이지 크기", allowableValues="range[0, 100]")
         private String size;
 
-        @ApiModelProperty(value = "정렬(사용법: 컬럼명,ASC|DESC)")
-        private List<String> sort;
     }
 }
