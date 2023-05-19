@@ -377,7 +377,8 @@ export default function DubBox({
   
     setTimeout(() => {
       clearInterval(recordingTimer);
-      stream.getTracks().forEach((track) => track.stop());
+      // 아랫놈이 문제였다.
+      // stream.getTracks().forEach((track) => track.stop());
     }, duration);
   };
 
