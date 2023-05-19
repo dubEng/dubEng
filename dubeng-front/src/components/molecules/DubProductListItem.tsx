@@ -42,13 +42,15 @@ export default function DubProductListItem({
   return (
     <Link href={`/community/shorts/product/${recordId}`}>
       <div className="grid grid-cols-2 p-16 w-358 mb-16 bg-white rounded-8 border-1 border-dubgraymedium">
-        <Image
-          src={thumbnail}
-          alt={title}
-          width={161}
-          height={96}
-          className="rounded-4 w-161 max-h-90.56"
-        ></Image>
+        <div className="relative object-cover rounded-4">
+          <Image
+            src={thumbnail}
+            alt={title}
+            width={161}
+            height={96}
+            className="rounded-4 w-161 h-90.56"
+          ></Image>
+        </div>
         <div className="flex flex-col ml-16 justify-between">
           <p className="leading-18 break-words text-14 font-semibold text-dubblack line-clamp-2 ">
             {title}

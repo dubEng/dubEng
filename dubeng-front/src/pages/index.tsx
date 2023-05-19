@@ -28,18 +28,18 @@ export default function HomePage() {
         >
           <SwiperSlide>
             <Link href="https://forms.gle/iRVTiCJFVAc9bBeH7">
-              <button className="p-16 ">
+              <button className="mt-16">
                 <img
                   src={"/images/home/banner_review.png"}
                   alt={"banner"}
-                  className="rounded-6"
+                  className="rounded-6 w-358 h-auto"
                 />
               </button>
             </Link>
           </SwiperSlide>
           <SwiperSlide>
             <Link href="https://instagram.com/dub.eng?igshid=NTc4MTIwNjQ2YQ==">
-              <button className="p-16 ">
+              <button className="mt-16">
                 <img
                   src={"/images/home/banner_instagram.png"}
                   alt={"banner"}
@@ -49,7 +49,7 @@ export default function HomePage() {
             </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <button className="p-16 ">
+            <button className="mt-16">
               <img
                 src={"/images/home/banner2.png"}
                 alt={"banner"}

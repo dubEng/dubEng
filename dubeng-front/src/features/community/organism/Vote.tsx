@@ -37,6 +37,9 @@ export default function Vote({ languageIndex, userId }: Iprops) {
 
   const [oncePlayed, setOncePlayed] = useState(false);
 
+  const [isSelected1, setIsSelected1] = useState(false);
+  const [isSelected2, setIsSelected2] = useState(false);
+
   useEffect(() => {
     refetch();
   }, []);
@@ -99,7 +102,8 @@ export default function Vote({ languageIndex, userId }: Iprops) {
   const { mutate, isSuccess, isError } = useVotePost();
 
   function handleVoteUser1Button() {
-
+    setIsSelected1(true);
+    console.log("이제 버튼 여부 바뀌어야 true되어야 함", isSelected1);
     const payload = {
       userId: userId,
       votedId: voteData.result.user1.id as string,
@@ -109,11 +113,18 @@ export default function Vote({ languageIndex, userId }: Iprops) {
     //     votedId: voteData.result.user1.id as string,
     // }
 
-    mutate(payload);
-    refetch();
+    setTimeout(() => {
+      refetch();
+      setIsSelected1(false);
+    }, 3000);
   }
+  // useEffect(() => {
+  //   return (
 
+  //   )
+  // })
   function handleVoteUser2Button() {
+    setIsSelected2(true);
 
     const payload = {
       userId: userId,
@@ -123,6 +134,11 @@ export default function Vote({ languageIndex, userId }: Iprops) {
     //     userId: userId,
     //     votedId: voteData.result.user1.id as string,
     // }
+
+    setTimeout(() => {
+      refetch();
+      setIsSelected2(false);
+    }, 3000);
 
     mutate(payload);
     refetch();
@@ -168,7 +184,6 @@ export default function Vote({ languageIndex, userId }: Iprops) {
 
   // 유저2 플레이 함수
   function handlePlayUser2Button() {
-
     if (audioRef2.current && audioRef2.current?.currentTime === opts.start) {
       // console.log("2 끝났따");
       youtubePlayer.seekTo(opts.start);
@@ -263,7 +278,10 @@ export default function Vote({ languageIndex, userId }: Iprops) {
                 isPlaying={!audioRef1.current?.paused}
                 onClick={handlePlayUser1Button}
               />
-              <VoteButton isSelected={false} onClick={handleVoteUser1Button} />
+              <VoteButton
+                isSelected={isSelected1}
+                onClick={handleVoteUser1Button}
+              />
             </div>
             <p className="text-16 font-semibold text-dubgray mt-55 mx-13">vs</p>
             <div className="space-y-16">
@@ -274,7 +292,10 @@ export default function Vote({ languageIndex, userId }: Iprops) {
                 isPlaying={!audioRef2.current?.paused}
                 onClick={handlePlayUser2Button}
               />
-              <VoteButton isSelected={false} onClick={handleVoteUser2Button} />
+              <VoteButton
+                isSelected={isSelected2}
+                onClick={handleVoteUser2Button}
+              />
             </div>
           </div>
         </div>

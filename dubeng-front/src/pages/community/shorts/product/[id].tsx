@@ -209,10 +209,10 @@ export default function ShortsProductPage() {
                 if (index === selectedScript) {
                   return (
                     <div
-                      className={`script-element-${index} mb-8 mx-20 flex flex-col items-center bg-dubblue`}
+                      className={`script-element-${index} mb-8 mx-20 flex flex-col items-center`}
                       key={index}
                     >
-                      <p className="text-16 text-white text-center">
+                      <p className="text-16 text-dubblue text-center">
                         {item.content}
                       </p>
                       {langType === LangType.ENGLISH ? (

@@ -202,10 +202,10 @@ export default function ShortsVideoPage() {
                 if (index === selectedScript) {
                   return (
                     <div
-                      className={`script-element-${index} mb-8 mx-20 flex flex-col items-center bg-dubblue`}
+                      className={`script-element-${index} mb-8 mx-20 flex flex-col items-center`}
                       key={index}
                     >
-                      <p className="text-16 text-white">{item.content}</p>
+                      <p className="text-16 text-dubblue">{item.content}</p>
                       {langType === LangType.ENGLISH ? (
                         <p className="text-14 text-[#8E8D8D]">
                           {item.translateContent}
