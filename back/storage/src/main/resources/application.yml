@@ -1,7 +1,9 @@
 server:
   port: 9001
   servlet:
-    context-path: /api
+    context-path: /file
+
+
 
 # log level setting
 logging:
@@ -13,8 +15,19 @@ logging:
 spring:
   # import application-local.yml
   profiles:
-    include: local
+    default: local
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  # Swagger
+  # Spring boot 2.6 이후 ant_path_matcher -> path_pattern_parser로
+  # 변경되면서 몇몇 라이브러리 오류 -> 아래로 지정
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+#
+#servers:
+#  - url: https://k8b208.p.ssafy.io
+#    description: Production server
+

@@ -4,6 +4,9 @@ import com.ssafy.storage.dto.SaveFileRequestDTO;
 import com.ssafy.storage.service.SaveFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -13,24 +16,27 @@ import java.util.Set;
 
 @Slf4j
 @RestController
-@RequestMapping("/dub")
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class FileController {
     private final SaveFileService fileService;
 
-    @PostMapping("/upload")
-    public void fileUpload(@ModelAttribute SaveFileRequestDTO requestDTO) throws IOException {
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> fileUpload(@ModelAttribute SaveFileRequestDTO requestDTO) throws IOException {
         log.debug(requestDTO.toString());
 
         fileService.fileSave(requestDTO);
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
-    @GetMapping("/get/file")
-    public Set<Object> getfilePath(@RequestParam String videoId, @RequestParam String userId){
-        log.debug("videoId : {}, userId : {}", videoId, userId);
+    @GetMapping("/dublist")
+    public ResponseEntity<List<String>> getfilePath(@RequestParam Long videoId, @RequestParam String nickname){
+        log.debug("videoId : {}, userId : {}", videoId, nickname);
 
-        String key = videoId + "_" + userId;
-        Set<Object> pathList = fileService.getPathInCache(key);
+        String key = fileService.getKey(videoId, nickname);
 
-        return pathList;
+        List<String> fileList = fileService.getPathInCache(key);
+
+        return new ResponseEntity<List<String>>(fileList, HttpStatus.OK);
     }
 }
