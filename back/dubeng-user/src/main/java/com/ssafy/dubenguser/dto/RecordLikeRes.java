@@ -1,7 +1,6 @@
 package com.ssafy.dubenguser.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,20 +8,22 @@ import lombok.NoArgsConstructor;
 import java.time.ZonedDateTime;
 @Data
 @NoArgsConstructor
-public class UserLikedRecordRes {
+public class RecordLikeRes {
+    private Long id;
     private String title;
     private String thumbnail;
     private String nickname;
     private Long playCount;
-    private ZonedDateTime updatedDate;
+//    private ZonedDateTime updatedDate;
 
     @Builder
     @QueryProjection
-    public UserLikedRecordRes(String title, String thumbnail, String nickname, Long playCount, ZonedDateTime updatedDate) {
+    public RecordLikeRes(Long id, String title, String thumbnail, String nickname, Long playCount) {
+        this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
         this.nickname = nickname;
         this.playCount = playCount;
-        this.updatedDate = updatedDate;
+//        this.updatedDate = updatedDate;
     }
 }

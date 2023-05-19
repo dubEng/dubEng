@@ -8,6 +8,6 @@ import java.util.List;
 
 @Data
 @Setter
-public class UserCalenderRes {
+public class UserCalendarRes {
     List<ZonedDateTime> dates;
 }

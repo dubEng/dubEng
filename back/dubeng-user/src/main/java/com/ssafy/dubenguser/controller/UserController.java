@@ -1,20 +1,22 @@
 package com.ssafy.dubenguser.controller;
 
+import com.ssafy.dubenguser.config.CookieHandler;
 import com.ssafy.dubenguser.dto.*;
-import com.ssafy.dubenguser.entity.User;
-import com.ssafy.dubenguser.service.UserServiceImpl;
+import com.ssafy.dubenguser.exception.UnAuthorizedException;
+import com.ssafy.dubenguser.service.AuthService;
+import com.ssafy.dubenguser.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 
 @Slf4j
@@ -23,47 +25,78 @@ import java.util.List;
 @RequiredArgsConstructor
 @Api("마이페이지 API")
 public class UserController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
+    private final AuthService authService;
+    private final CookieHandler cookieHandler;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
     @ApiOperation(value = "프로필 보여주기")
-    @GetMapping()
-    public ResponseEntity<UserProfileRes> getUserProfile(HttpServletRequest httpServletRequest) {
-        User user = (User) httpServletRequest.getAttribute("user");
-        UserProfileRes result = userService.getProfile(user.getId());
+    @PostMapping("/profile")
+    public ResponseEntity<UserProfileRes> userProfileDetails(@RequestBody UserProfileReq request) {
+        String userId = request.getUserId();
+        UserProfileRes result = userService.findProfile(userId);
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @ApiOperation(value = "캘린더 날짜 보여주기")
     @GetMapping("/calendar")
-    public ResponseEntity<UserCalenderRes> getUserCalendar(HttpServletRequest httpServletRequest) {
-        User user = (User) httpServletRequest.getAttribute("user");
-        UserCalenderRes result = userService.getCalender(user.getId());
+    public ResponseEntity<UserCalendarRes> userCalenderDetails(@RequestHeader HttpHeaders headers, HttpServletRequest request) {
+        String accessToken = headers.getFirst("Authorization");
+        if(accessToken == null){
+            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+        }
+        String refreshToken = cookieHandler.getRefreshToken(request);
+
+        UserCalendarRes result = userService.findCalendar(accessToken, refreshToken);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @ApiOperation(value = "더빙 목록 보여주기")
-    @PostMapping("/recordList")
-    public ResponseEntity<List<UserRecordRes>> getUserRecordList(HttpServletRequest httpServletRequest, @RequestBody UserRecordReq request) {
-        User user = (User) httpServletRequest.getAttribute("user");
-        List<UserRecordRes> recordList = userService.getRecords(user.getId(), request);
+    @PostMapping("/record/list")
+    public ResponseEntity<List<UserRecordRes>> userRecordList(@RequestBody UserRecordReq request) {
+        List<UserRecordRes> recordList = userService.findRecord(request);
         return new ResponseEntity<>(recordList, HttpStatus.OK);
     }
 
     @ApiOperation(value = "좋아요 누른 더빙 목록 보여주기")
-    @GetMapping("/recordLikeList/{isLimit}")
-    public ResponseEntity<List<UserLikedRecordRes>> getUserRecordList(HttpServletRequest httpServletRequest, @PathVariable Boolean isLimit) {
-        User user = (User) httpServletRequest.getAttribute("user");
-        List<UserLikedRecordRes> recordList = userService.getLikedRecords(user.getId(), isLimit);
+    @GetMapping("/record/likes")
+    public ResponseEntity<List<RecordLikeRes>> userRecordList(@RequestHeader HttpHeaders headers, HttpServletRequest request,@RequestParam Boolean isLimit, @RequestParam String langType) {
+        String accessToken = headers.getFirst("Authorization");
+        if(accessToken == null){
+            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+        }
+        String refreshToken = cookieHandler.getRefreshToken(request);
+
+        List<RecordLikeRes> recordList = userService.findRecordLike(accessToken, refreshToken, isLimit, langType);
         return new ResponseEntity<>(recordList, HttpStatus.OK);
     }
 
     @ApiOperation(value = "북마크 비디오 보여주기")
-    @GetMapping("/bookmark/{isLimit}")
-    public ResponseEntity<List<UserBookmarkedVideoRes>> getUserBookmarkList(HttpServletRequest httpServletRequest, @PathVariable Boolean isLimit) {
-        User user = (User) httpServletRequest.getAttribute("user");
-        List<UserBookmarkedVideoRes> bookmarkList = userService.getBookmarkedVideos(user.getId(), isLimit);
+    @GetMapping("/bookmark")
+    public ResponseEntity<List<VideoBookmarkRes>> userBookmarkList(@RequestHeader HttpHeaders headers, HttpServletRequest request, @RequestParam Boolean isLimit, @RequestParam String langType) {
+        String accessToken = headers.getFirst("Authorization");
+        if(accessToken == null){
+            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+        }
+        String refreshToken = cookieHandler.getRefreshToken(request);
+
+        List<VideoBookmarkRes> bookmarkList = userService.findVideoBookmark(accessToken, refreshToken, isLimit, langType);
         return new ResponseEntity<>(bookmarkList, HttpStatus.OK);
+    }
+    @GetMapping("/attendance")
+    @ApiOperation(value = "출석 정보 확인하기")
+    public ResponseEntity<?> getAttendance(@RequestHeader HttpHeaders headers, HttpServletRequest request, @RequestParam int month){
+        String accessToken = headers.getFirst("Authorization");
+        if(accessToken == null){
+            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+        }
+
+        String refreshToken = cookieHandler.getRefreshToken(request);
+
+        Set<String> dateList = authService.getAttendanceByMonth(accessToken, refreshToken, month);
+
+        return new ResponseEntity<Set<String>>(dateList, HttpStatus.OK);
     }
 }

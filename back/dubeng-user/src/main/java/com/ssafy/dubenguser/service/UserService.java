@@ -5,12 +5,12 @@ import com.ssafy.dubenguser.dto.*;
 import java.util.List;
 
 public interface UserService {
-    public void save(UserJoinReq requestDTO);
-    public boolean checkEnrolledMember(Long id);
-    public boolean isExistNickname(String nickname);
-    public UserProfileRes getProfile(Long id);
-    public UserCalenderRes getCalender(Long userId);
-    public List<UserRecordRes> getRecords(Long userId, UserRecordReq request);
-    public List<UserLikedRecordRes> getLikedRecords(Long userId, Boolean isLimit);
-    public List<UserBookmarkedVideoRes> getBookmarkedVideos(Long userId, Boolean isLimit);
+    public void addUser(UserJoinReq requestDTO, String accessToken, String refreshToken);
+    public boolean checkEnrolledMember(String id);
+    public boolean checkExistNickname(String nickname);
+    public UserProfileRes findProfile(String accessToken);
+    public UserCalendarRes findCalendar(String accessToken, String refreshToken);
+    public List<UserRecordRes> findRecord(UserRecordReq request);
+    public List<RecordLikeRes> findRecordLike(String accessToken,String refreshToken, Boolean isLimit, String langType);
+    public List<VideoBookmarkRes> findVideoBookmark(String accessToken, String refreshToken, Boolean isLimit, String langType);
 }
