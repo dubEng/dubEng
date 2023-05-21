@@ -8,7 +8,9 @@ interface Iprops {
   title: string;
   thumbnail: string;
   playCount: number;
-  updatedDate?: string;
+  updatedDate: string;
+  nickname?: string;
+  userProfileImg?: string;
 }
 
 export default function DubProductCard({
@@ -16,6 +18,8 @@ export default function DubProductCard({
   thumbnail,
   playCount,
   updatedDate,
+  nickname,
+  userProfileImg,
 }: Iprops) {
   timeago.register("ko", koLocale);
 
@@ -26,12 +30,22 @@ export default function DubProductCard({
         alt="thumbnail"
         width={240}
         height={152}
-        className="rounded-8 bg-dubgray"
+        className="rounded-8 bg-dubgray w-240 h-152"
       />
       <p className="mt-8 text-16 text-dubblack font-semibold line-clamp-1">
         {title}
       </p>
       <div className="flex items-center space-x-4">
+        {userProfileImg ? (
+          <Image
+            src={userProfileImg}
+            alt="userProfileImg"
+            width={18}
+            height={18}
+            className="w-18 h-18 rounded-full"
+          />
+        ) : null}
+        {nickname ? <p className="text-14 text-dubgray">{nickname}</p> : null}
         <p className="text-14 text-dubgray">조회수 {playCount}회</p>
         <p className="text-10 text-dubgray"> ▪ </p>
         {updatedDate ? (
