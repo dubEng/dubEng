@@ -13,7 +13,14 @@ export default function MissionListItem({
   if (isComplete) {
     return (
       <div className="w-150 h-201 relative rounded-tl-lg bg-white rounded-lg mx-12 mb-8">
-        <div className={getBoxStyle(color)}>
+        <div
+          className={getBoxStyle(color)}
+          css={[
+            {
+              color: color,
+            },
+          ]}
+        >
           <div className="w-80 h-80 rounded-lg">
             <img
               src={`/assets/${assetUrl}.PNG`}
@@ -36,7 +43,14 @@ export default function MissionListItem({
       <div>
         <Link href={`/dubbing/${videoId}`}>
           <div className="w-150 h-201 relative rounded-tl-lg bg-white rounded-lg mx-12 mb-8">
-            <div className={getBoxStyle(color)}>
+            <div
+              className={getBoxStyle(color)}
+              css={[
+                {
+                  color: color,
+                },
+              ]}
+            >
               <div className="w-80 h-80 rounded-lg">
                 <img
                   src={`/assets/${assetUrl}.PNG`}
@@ -67,6 +81,6 @@ export default function MissionListItem({
 
   //TODO: twin.macro 적용 해야함
   function getBoxStyle(color: string): string {
-    return `relative w-150 h-150 rounded-tl-lg rounded-tr-lg bg-dubivory flex justify-center items-center`;
+    return `relative w-150 h-150 rounded-tl-lg rounded-tr-lg flex justify-center items-center`;
   }
 }
