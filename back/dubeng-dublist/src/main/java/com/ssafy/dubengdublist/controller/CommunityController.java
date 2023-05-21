@@ -85,7 +85,7 @@ public class CommunityController {
         return new ResponseEntity<>(communityService.addCommunityLike(userId, recordId), HttpStatus.ACCEPTED);
     }
     @ApiOperation(value = "선택한 영상 콘텐츠 조회수 증가")
-    @GetMapping("/playCount/{recordId}")
+    @GetMapping("/viewCount/{recordId}")
     public ResponseEntity<?> contentPlayCount(@PathVariable("recordId") Long recordId){
         return new ResponseEntity<>(communityService.addPlayCntToRedis(recordId), HttpStatus.ACCEPTED);
     }
@@ -95,6 +95,16 @@ public class CommunityController {
     public ResponseEntity<CommunityLikeRes> communityLikeFind(@RequestParam String userId, @PathVariable("recordId") Long recordId){
         return new ResponseEntity<>(communityService.findLikeInfo(recordId, userId), HttpStatus.ACCEPTED);
     }
+
+    @ApiOperation(value = "기존 조회수 증가 API 리턴으로 조회수, 좋아요 수, 좋아요 여부 리턴")
+    @GetMapping("/playCount/{recordId}")
+    public ResponseEntity<?> contentPlayCount(@PathVariable("recordId") Long recordId, @RequestParam String userId){
+        // 1. 레디스에 조회수 증가
+        communityService.addPlayCntToRedis(recordId);
+        // 2. 리턴으로 캐시에서 조회수, 좋아요 수, 좋아요 여부
+        return new ResponseEntity<>(communityService.findPlayCounts(recordId, userId), HttpStatus.ACCEPTED);
+    }
+
 
     @ApiOperation(value="카테고리 리턴")
     @GetMapping("/category")

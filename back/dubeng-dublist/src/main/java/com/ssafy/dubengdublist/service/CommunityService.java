@@ -31,6 +31,6 @@ public interface CommunityService {
 
     public CommunityLikeRes findLikeInfo(Long recordId, String userId);
     public Long addPlayCntToRedis(Long recordId);
-
+    public Map<String, Object> findPlayCounts(Long recordId, String userId);
     public List<CommunityCategoryRes> findCategories();
 }
