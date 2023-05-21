@@ -26,20 +26,18 @@ export default function DubVideoThumbnail({
         width={272}
         height={152}
       />
-      <div className="opacity-50 absolute top-0 left-0 w-251 h-152 rounded-18"></div>
-      <div className="line-clamp-1 flex space-x-8 items-center absolute bottom-16 left-16 right-16 text-white font-semibold text-12">
+      <div className="opacity-50 absolute top-0 left-0 w-272 h-152 rounded-18"></div>
+      <div className="w-272 line-clamp-1 flex space-x-8 items-center absolute bottom-16 left-16 right-16 text-white font-semibold text-12">
         {userProfileImg && (
-          <Image
-            src={userProfileImg}
-            alt={"userProfileImg"}
-            width={16}
-            height={16}
-            className="rounded-full w-16 h-16"
-          />
-        )}
-        {nickname && (
           <div className="flex">
-            <p>{nickname}</p>
+            <Image
+              src={userProfileImg}
+              alt={"userProfileImg"}
+              width={16}
+              height={16}
+              className="rounded-full w-16 h-16 mr-4"
+            />
+            <p className="mr-8">{nickname}</p>
             <p>|</p>
           </div>
         )}
