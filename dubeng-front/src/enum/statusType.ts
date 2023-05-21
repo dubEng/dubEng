@@ -28,6 +28,7 @@ export enum EmptyType {
   EMPTY_COMMENT = "EMPTY_COMMENT",
   EMPTY_VOTE = "EMPTY_VOTE",
   NO_RECOMMEND = "NO_RECOMMEND",
+  KOREAN_VOTE = "KOREAN_VOTE",
 }
 
 export enum SituationType {
