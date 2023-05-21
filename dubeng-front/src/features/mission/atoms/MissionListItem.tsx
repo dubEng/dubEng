@@ -17,7 +17,7 @@ export default function MissionListItem({
           className={getBoxStyle(color)}
           css={[
             {
-              color: color,
+              backgroundColor: color,
             },
           ]}
         >
@@ -47,7 +47,7 @@ export default function MissionListItem({
               className={getBoxStyle(color)}
               css={[
                 {
-                  color: color,
+                  backgroundColor: color,
                 },
               ]}
             >
