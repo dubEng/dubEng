@@ -16,6 +16,7 @@ public interface CommunityService {
     public Page<CommunitySearchRes> findCommunitySearch(String langType, String title, Pageable pageable, List<Long> contentsSearch);
 
     public CommunityDetailScriptRes findCommunityDetail(Long recordId);
+
     public Page<CommunityDetailScriptRes> findCommunityShorts(Pageable pageable);
 
     public Page<CommunityCommentRes> findCommunityComment(Pageable pageable, Long recordId);
@@ -28,4 +29,8 @@ public interface CommunityService {
 
     public Integer addCommunityLike(String userId, Long recordId);
 
+    public CommunityLikeRes findLikeInfo(Long recordId, String userId);
+    public Long addPlayCntToRedis(Long recordId);
+
+    public List<CommunityCategoryRes> findCategories();
 }
