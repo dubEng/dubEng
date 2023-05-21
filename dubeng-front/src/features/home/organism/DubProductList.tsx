@@ -23,9 +23,7 @@ export default function DubProductList() {
   }
 
   return (
-    <Swiper
-    slidesPerView={1.25}
-    >
+    <Swiper slidesPerView={1.25}>
       {popularity.data &&
         popularity.data.map((item: any, index: number) => (
           <SwiperSlide key={item.recordId}>
@@ -34,6 +32,8 @@ export default function DubProductList() {
                 title={item.title}
                 thumbnail={item.thumbnail ?? ""}
                 id={item.recordId}
+                nickname={item.nickname}
+                userProfileImg={item.userProfileImg}
               />
             </Link>
           </SwiperSlide>
