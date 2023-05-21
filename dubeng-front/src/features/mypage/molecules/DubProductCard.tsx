@@ -46,7 +46,7 @@ export default function DubProductCard({
           />
         ) : null}
         {nickname ? (
-          <p className="text-14 text-dubgray mr-16">{nickname}</p>
+          <p className="text-14 text-dubgray mr-30">{nickname}</p>
         ) : null}
         <p className="text-14 text-dubgray">조회수 {playCount}회</p>
         <p className="text-10 text-dubgray"> ▪ </p>
