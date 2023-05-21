@@ -45,9 +45,11 @@ public class RedisService {
 
             Optional<Record> orecord = recordRepository.findById(recordId);
             if(!orecord.isPresent()){
-                throw new NotFoundException("존재하지 않는 녹음입니다!");
+                redisTemplate.delete(data);
             }
-            recordRepository.updatePlayCount(recordId, playCnt);
+            else {
+                recordRepository.updatePlayCount(recordId, playCnt);
+            }
         }
     }
 
@@ -67,7 +69,7 @@ public class RedisService {
 
             Optional<User> ouser = userRepository.findById(userId);
             if(!ouser.isPresent()){
-                throw new NotFoundException(MESSAGE);
+                redisTemplate.delete(data);
             }
             User user = ouser.get();
             if(records.isEmpty()) return;
@@ -75,10 +77,12 @@ public class RedisService {
                 Long recordId = Long.parseLong((String) o);
                 Optional<Record> orecord = recordRepository.findById(recordId);
                 if(!orecord.isPresent()){
-                    throw new NotFoundException("존재하지 않는 녹음입니다!");
+                    redisTemplate.opsForSet().remove(data, o);
                 }
-                Record record1 = orecord.get();
-                likeList.add(new RecordLike(user, record1, true));
+                else {
+                    Record record1 = orecord.get();
+                    likeList.add(new RecordLike(user, record1, true));
+                }
             }
         }
         recordLikeRepository.saveAll(likeList);
@@ -99,26 +103,32 @@ public class RedisService {
 
             Optional<User> ouser = userRepository.findById(userId);
             if(!ouser.isPresent()){
-                throw new NotFoundException(MESSAGE);
+                redisTemplate.delete(data);
             }
-            User user = ouser.get();
-            for(Object ovideo : videos){
-                Long videoId = Long.parseLong((String) ovideo);
-                Optional<Video> video1 = videoRepository.findById(videoId);
-                if(!video1.isPresent()){
-                    throw new NotFoundException("존재하지 않는 비디오입니다!");
+            else {
+                User user = ouser.get();
+                for (Object ovideo : videos) {
+                    Long videoId = Long.parseLong((String) ovideo);
+                    Optional<Video> video1 = videoRepository.findById(videoId);
+                    if (!video1.isPresent()) {
+                        redisTemplate.opsForSet().remove(data, ovideo);
+                    }
+                    Video video = video1.get();
+                    videoBookmarkRepository.save(new VideoBookmark(user, video, true));
                 }
-                Video video = video1.get();
-                videoBookmarkRepository.save(new VideoBookmark(user, video, true));
             }
         }
     }
 
     @Scheduled(cron = "0 0 0 * * *")
-    public void updateDubKing(){
-
+    public void initVoteCount(){
         Set<String> voteCntKeys = redisTemplate.keys("vote_userId*");
         redisTemplate.delete(voteCntKeys);
+    }
+
+    //    @Scheduled(cron = "30 0 0 * * 1") // 매주 일요일 밤 자정 + 30초 갱신
+    @Scheduled(cron = "30 0 0 * * *") // 모니터링용 initVoteCount랑 동시 실행 방지로 30초에 작동
+    public void updateDubKing(){
 
         dubKingRepository.deleteAll();
         dubKingRepository.flush();
@@ -130,18 +140,13 @@ public class RedisService {
             Long voteCnt = Long.parseLong((String) redisTemplate.opsForValue().get(data));
             Optional<User> ouser = userRepository.findById(userId);
             if(!ouser.isPresent()){
-                throw new NotFoundException(MESSAGE);
+                redisTemplate.delete(data); // 해당 user 없으면 레디스에서 지움.
             }
-            User user = ouser.get();
-            dubKingRepository.save(new DubKing(user, voteCnt, true));
+            else {
+                User user = ouser.get();
+                dubKingRepository.save(new DubKing(user, voteCnt, true));
+            }
         }
     }
 
-    @Transactional
-    public void deleteLikeTable(){
-        recordLikeRepository.deleteAll();
-        em.flush();
-        em.clear();
-
-    }
 }
