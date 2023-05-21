@@ -26,7 +26,7 @@ export default function DubVideoThumbnail({
         width={272}
         height={152}
       />
-      <div className="opacity-50 absolute top-0 left-0 w-272 h-152 rounded-18"></div>
+      <div className="bg-gradient-to-r from-black opacity-50 absolute top-0 left-0 w-272 h-152 rounded-18"></div>
       <div className="w-272 line-clamp-1 flex space-x-8 items-center absolute bottom-16 left-16 right-16 text-white font-semibold text-12">
         {userProfileImg && (
           <div className="flex">
