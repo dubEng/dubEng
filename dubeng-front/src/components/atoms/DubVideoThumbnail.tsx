@@ -27,7 +27,7 @@ export default function DubVideoThumbnail({
         height={152}
       />
       <div className="opacity-50 absolute top-0 left-0 w-251 h-152 rounded-18"></div>
-      <div className="flex space-x-8 justify-center absolute bottom-16 left-16 right-16 text-white font-semibold text-12">
+      <div className="line-clamp-1 flex space-x-8 items-center absolute bottom-16 left-16 right-16 text-white font-semibold text-12">
         {userProfileImg && (
           <Image
             src={userProfileImg}
