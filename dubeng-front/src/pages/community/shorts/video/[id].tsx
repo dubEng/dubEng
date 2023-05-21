@@ -159,8 +159,10 @@ export default function ShortsVideoPage() {
             }}
           />
           <div className="flex flex-row justify-between mt-16 mb-16 items-center w-390 px-16">
-            <div className="flex max-w-200 space-x-4">
-              <p className="text-16 text-white line-clamp-1">{data.title}</p>
+            <div className="flex space-x-4">
+              <p className="text-16 max-w-[85%] text-white line-clamp-1">
+                {data.title}
+              </p>
               {userId &&
                 (changedScrap === 1 ? (
                   <button
