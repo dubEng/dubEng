@@ -41,7 +41,7 @@ export default function DubVideoThumbnail({
             <p>|</p>
           </div>
         )}
-        <p className="line-clamp-1">{title}</p>
+        <p className="line-clamp-1 max-w-[50%]">{title}</p>
       </div>
     </div>
   );
