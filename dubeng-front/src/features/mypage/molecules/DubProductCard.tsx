@@ -42,7 +42,7 @@ export default function DubProductCard({
             alt="userProfileImg"
             width={16}
             height={16}
-            className="w-18 h-18 rounded-full"
+            className="w-16 h-16 rounded-full"
           />
         ) : null}
         {nickname ? (
