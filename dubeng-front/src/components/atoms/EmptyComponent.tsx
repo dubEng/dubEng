@@ -67,6 +67,15 @@ export default function EmptyComponent({ status }: Iprops) {
         </Link>
       </div>
     );
+  } else if (status === EmptyType.KOREAN_VOTE) {
+    return (
+      <div className="flex flex-col justify-center items-center">
+        <Image src={EmptyImage} alt="EmptyImage" />
+        <p className="mt-10 text-14 font-semibold text-dubgray">
+          한국어 콘텐츠는 투표를 제공하지 않습니다
+        </p>
+      </div>
+    );
   }
   return <></>;
 }

@@ -151,12 +151,19 @@ export default function CommunityPage() {
 
           <DubSituation />
         </div>
-      ) : (
+      ) : languageIndex === LangType.ENGLISH ? (
         <div>
           <p className="flex justify-start text-19 font-bold mt-24 mb-16">
             오늘의 더빙왕은?
           </p>
           <Vote userId={userId} languageIndex={languageIndex} />
+        </div>
+      ) : (
+        <div>
+          <p className="flex justify-start text-19 font-bold mt-24 mb-16">
+            오늘의 더빙왕은?
+          </p>
+          <EmptyComponent status={EmptyType.KOREAN_VOTE} />
         </div>
       )}
 
