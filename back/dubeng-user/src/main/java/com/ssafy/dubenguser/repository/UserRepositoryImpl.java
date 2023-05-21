@@ -110,7 +110,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
         if(isLimit){
             result = jpaQueryFactory
-                    .select(new QRecordLikeRes(record.id, video.title, video.thumbnail, record.user.nickname, record.playCount))
+                    .select(new QRecordLikeRes(record.id, video.title, video.thumbnail, record.user.nickname, record.playCount, record.user.profileImage, record.updatedDate))
                     .from(record)
                     .innerJoin(video).on(record.video.id.eq(video.id))
                     .where(builder)
@@ -119,7 +119,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                     .fetch();
         } else {
             result = jpaQueryFactory
-                    .select(new QRecordLikeRes(record.id, video.title, video.thumbnail, record.user.nickname, record.playCount))
+                    .select(new QRecordLikeRes(record.id, video.title, video.thumbnail, record.user.nickname, record.playCount, record.user.profileImage, record.updatedDate))
                     .from(record)
                     .innerJoin(video).on(record.video.id.eq(video.id))
                     .where(builder)
