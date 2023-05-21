@@ -27,7 +27,7 @@ export default function DubVideoThumbnail({
         height={152}
       />
       <div className="opacity-50 absolute top-0 left-0 w-251 h-152 rounded-18"></div>
-      <div className="flex space-x-8 justify-center items-center absolute bottom-16 left-16 right-16 text-white font-semibold text-12">
+      <div className="flex space-x-8 justify-center absolute bottom-16 left-16 right-16 text-white font-semibold text-12">
         {userProfileImg && (
           <Image
             src={userProfileImg}
@@ -37,7 +37,12 @@ export default function DubVideoThumbnail({
             className="rounded-full w-16 h-16"
           />
         )}
-        <p>{nickname} | </p>
+        {nickname && (
+          <div className="flex">
+            <p>{nickname}</p>
+            <p>|</p>
+          </div>
+        )}
         <p className="line-clamp-1">{title}</p>
       </div>
     </div>
