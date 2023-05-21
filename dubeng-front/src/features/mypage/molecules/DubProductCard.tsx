@@ -40,12 +40,14 @@ export default function DubProductCard({
           <Image
             src={userProfileImg}
             alt="userProfileImg"
-            width={18}
-            height={18}
+            width={16}
+            height={16}
             className="w-18 h-18 rounded-full"
           />
         ) : null}
-        {nickname ? <p className="text-14 text-dubgray">{nickname}</p> : null}
+        {nickname ? (
+          <p className="text-14 text-dubgray mr-16">{nickname}</p>
+        ) : null}
         <p className="text-14 text-dubgray">조회수 {playCount}회</p>
         <p className="text-10 text-dubgray"> ▪ </p>
         {updatedDate ? (
