@@ -30,7 +30,7 @@ export default function DubProductCard({
         alt="thumbnail"
         width={240}
         height={152}
-        className="rounded-8 bg-dubgray w-238.4 h-134.1"
+        className="rounded-8 bg-dubgray w-239 h-134"
       />
       <p className="mt-8 text-16 text-dubblack font-semibold line-clamp-1">
         {title}
