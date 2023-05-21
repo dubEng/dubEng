@@ -57,7 +57,7 @@ export default function DubVideoListItem({
           alt={title}
           width={161}
           height={96}
-          className="rounded-4"
+          className="rounded-4 w-161 h-96"
         />
       </Link>
       <div className="flex flex-col ml-16 justify-between">
