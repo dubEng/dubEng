@@ -36,6 +36,8 @@ public class AuthController {
     private final CookieHandler cookieHandler;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
+    private String accessToken;
+    private String unAuthorizedException = "토큰 전달 방식에 오류";
 
     @Value("${auth.redirectUrl}")
     private String SEND_REDIRECT_URL;
@@ -45,7 +47,6 @@ public class AuthController {
 
     @GetMapping("/kakao/callback")
     public void authCodeDetails(@RequestParam String code, HttpServletResponse response, RedirectAttributes attributes) throws IOException {
-        log.debug("auth code : {}", code);
 
         //code로 access-token 요청
         HashMap<String, Object> result = authService.findAccessToken(code);
@@ -88,8 +89,6 @@ public class AuthController {
 
     @PostMapping("/parse")
     public ResponseEntity<String> accessTokenParse(@RequestBody Token requestDTO){
-        log.debug("accessToken : {}", requestDTO.getAccessToken());
-
         //service - parseToken
         String userId = authService.parseToken(requestDTO.getAccessToken());
 
@@ -97,7 +96,6 @@ public class AuthController {
     }
     @PostMapping("/refresh")
     public ResponseEntity<Void> refreshTokenRequest(HttpServletRequest request){
-        log.debug("refreshToken Test");
 
         String refreshToken = cookieHandler.getRefreshToken(request);
 
@@ -113,13 +111,10 @@ public class AuthController {
     @PostMapping("/join")
     @ApiOperation(value = "회원가입하기")
     public ResponseEntity<String> userAdd(@RequestHeader HttpHeaders headers, HttpServletRequest request, @RequestBody UserJoinReq req){
-        String accessToken = headers.getFirst("Authorization");
+        accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+            throw new UnAuthorizedException(unAuthorizedException);
         }
-        log.debug("=====회원가입하기=====");
-        log.debug("ATK : {}", accessToken);
-        log.info("userAdd : {}", request.toString());
 
         String refreshToken = cookieHandler.getRefreshToken(request);
 
@@ -130,37 +125,32 @@ public class AuthController {
     @PostMapping("/login")
     @ApiOperation(value = "회원정보 가져오기")
     public ResponseEntity<UserLoginRes> getLoginInfo(HttpServletRequest request, @RequestHeader HttpHeaders headers){
-        log.debug("======로그인======");
-        String accessToken = headers.getFirst("Authorization");
+
+        accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+            throw new UnAuthorizedException(unAuthorizedException);
         }
-        log.debug("ATK : {}", accessToken);
 
         String refreshToken = cookieHandler.getRefreshToken(request);
 
         //ATK을 이용하여 회원정보 요청
         UserLoginRes user = authService.findUser(accessToken, refreshToken);
 
-        log.debug("loginUser : {}", user);
         return new ResponseEntity<UserLoginRes>(user, HttpStatus.OK);
     }
     @GetMapping("/check/{nickname}")
     @ApiOperation(value = "닉네임 중복체크")
     public ResponseEntity<Boolean> duplicateNicknameCheck(@PathVariable String nickname){
-        log.debug("nickname : {}", nickname);
-
         boolean check = userService.checkExistNickname(nickname);
 
         return new ResponseEntity<Boolean>(check, HttpStatus.OK);
     }
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader HttpHeaders headers){
-        String accessToken = headers.getFirst("Authorization");
+        accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+            throw new UnAuthorizedException(unAuthorizedException);
         }
-        log.debug("ATK : {}", accessToken);
         authService.kakaoLogout(accessToken);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
