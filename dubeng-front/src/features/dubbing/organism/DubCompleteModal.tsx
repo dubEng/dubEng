@@ -193,14 +193,16 @@ export default function DubCompleteModal({
               <MdClose className="my-8 mr-8" size={24} />
             </button>
           </div>
-          <p className="flex flex-row justify-center text-32 font-semibold">미리 보기</p>
+          <p className="flex flex-row justify-center text-24 font-semibold">
+            미리 보기
+          </p>
           <div className="flex flex-col justify-center items-center">
             <div className="relative">
               <YouTube
                 videoId={transferYoutube(videoPath)}
                 opts={{
-                  height: "201",
-                  width: "360",
+                  height: "196",
+                  width: "350",
                   playerVars: {
                     start: startTime,
                     end: endTime,
