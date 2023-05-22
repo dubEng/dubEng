@@ -73,7 +73,7 @@ export default function HomePage() {
         이주의 더빙왕
       </p>
       <DubKingList />
-      <div className="h-80"></div>
+      <div className="h-60"></div>
     </div>
   );
 }
