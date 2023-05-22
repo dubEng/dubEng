@@ -27,6 +27,8 @@ public class UserMissionServiceImpl implements UserMissionService{
     private final UserMissionRepository userMissionRepository;
     private final VideoRepository videoRepository;
     private final MissionRepository missionRepository;
+    private String unAuthorizedException = "토큰 파싱과정에서 오류";
+    private String noUser = "존재하지 않는 유저입니다!";
 
     @Override
     public List<UserMissionRes> findUserMissions(String accessToken, String refreshToken) {
@@ -37,12 +39,12 @@ public class UserMissionServiceImpl implements UserMissionService{
             accessToken = authService.reissueATK(refreshToken);
         }
         String userId = authService.parseToken(accessToken);
-        if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");
+        if(userId == null) throw new UnAuthorizedException(unAuthorizedException);
 
         Optional<User> user = userRepository.findById(userId);
 
         if(!user.isPresent()) {
-            throw new NotFoundException("존재하지 않는 유저입니다!");
+            throw new NotFoundException(noUser);
         }
 
         List<UserMissionRes> result = userMissionRepository.findUserMissionsByUser(user.get());
@@ -58,12 +60,12 @@ public class UserMissionServiceImpl implements UserMissionService{
             accessToken = authService.reissueATK(refreshToken);
         }
         String userId = authService.parseToken(accessToken);
-        if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");
+        if(userId == null) throw new UnAuthorizedException(unAuthorizedException);
 
         Optional<User> user = userRepository.findById(userId);
 
         if(!user.isPresent()) {
-            throw new NotFoundException("존재하지 않는 유저입니다!");
+            throw new NotFoundException(noUser);
         }
         List<String> result = userMissionRepository.findAssetsByUser(user.get());
         return result;
@@ -81,12 +83,12 @@ public class UserMissionServiceImpl implements UserMissionService{
         
         //Token parsing
         String userId = authService.parseToken(accessToken);
-        if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");
+        if(userId == null) throw new UnAuthorizedException(unAuthorizedException);
 
         Optional<User> user = userRepository.findById(userId);
 
         if(!user.isPresent()) {
-            throw new NotFoundException("존재하지 않는 유저입니다!");
+            throw new NotFoundException(noUser);
         }
         Optional<Video> video = videoRepository.findById(videoId);
 

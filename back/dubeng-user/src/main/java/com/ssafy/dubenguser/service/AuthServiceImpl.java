@@ -36,12 +36,14 @@ public class AuthServiceImpl implements AuthService{
 
     private final UserRepository userRepository;
     private final UserCalenderRepository userCalenderRepository;
+    private String baseUrl = "https://kauth.kakao.com";
+
 
     public HashMap<String, Object> findAccessToken(String code){
 
         // 인가 코드를 통해 access-token 요청
         WebClient webClient = WebClient.builder()
-                .baseUrl("https://kauth.kakao.com")
+                .baseUrl(baseUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .build();
         log.debug("KAKAO_CLIENT_ID : {}", KAKAO_CLIENT_ID);
@@ -119,7 +121,7 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public String reissueATK(String refreshToken) {
         WebClient webClient = WebClient.builder()
-                .baseUrl("https://kauth.kakao.com")
+                .baseUrl(baseUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .build();
         log.debug("KAKAO_CLIENT_ID : {}", KAKAO_CLIENT_ID);
