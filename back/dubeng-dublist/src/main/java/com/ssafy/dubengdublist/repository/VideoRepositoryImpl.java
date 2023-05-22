@@ -181,12 +181,12 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
 
 
     public List<ContentsScriptRes> selectAllScript(Long videoId){
-        List<ContentsScriptRes> scriptList = queryFactory
+        List<ContentsScriptRes> contentsScriptRes = queryFactory
                 .select(new QContentsScriptRes(script.startTime, script.duration, script.content, script.translateContent))
                 .from(script)
                 .where(script.video.id.eq(videoId))
                 .fetch();
-        return scriptList;
+        return contentsScriptRes;
     }
 
     // 더빙왕 보여주기
