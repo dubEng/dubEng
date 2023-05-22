@@ -28,13 +28,14 @@ import java.util.Objects;
 public class MissionController {
     private final UserMissionService userMissionService;
     private final CookieHandler cookieHandler;
+    private String unAuthorizedException = "토큰 전달 방식에 오류";
 
     @ApiOperation(value="도전과제 미션 목록 조회")
     @GetMapping("/list")
     public ResponseEntity<List<UserMissionRes>>  userMissionList(@RequestHeader HttpHeaders headers, HttpServletRequest request){
         String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+            throw new UnAuthorizedException(unAuthorizedException);
         }
         String refreshToken = cookieHandler.getRefreshToken(request);
 
@@ -47,7 +48,7 @@ public class MissionController {
     public ResponseEntity<List<String>>  userAssetList(@RequestHeader HttpHeaders headers, HttpServletRequest request){
         String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+            throw new UnAuthorizedException(unAuthorizedException);
         }
         String refreshToken = cookieHandler.getRefreshToken(request);
 
@@ -60,7 +61,7 @@ public class MissionController {
     public ResponseEntity<HashMap<String, Object>>  userAssetList(@RequestHeader HttpHeaders headers, HttpServletRequest request, @RequestParam Long videoId){
         String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+            throw new UnAuthorizedException(unAuthorizedException);
         }
         String refreshToken = cookieHandler.getRefreshToken(request);
 

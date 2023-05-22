@@ -30,7 +30,7 @@ public class UserController {
     private final CookieHandler cookieHandler;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
-
+    private String unAuthorizedException = "토큰 전달 방식에 오류";
     @ApiOperation(value = "프로필 보여주기")
     @PostMapping("/profile")
     public ResponseEntity<UserProfileRes> userProfileDetails(@RequestBody UserProfileReq request) {
@@ -45,7 +45,7 @@ public class UserController {
     public ResponseEntity<UserCalendarRes> userCalenderDetails(@RequestHeader HttpHeaders headers, HttpServletRequest request) {
         String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+            throw new UnAuthorizedException(unAuthorizedException);
         }
         String refreshToken = cookieHandler.getRefreshToken(request);
 
@@ -65,7 +65,7 @@ public class UserController {
     public ResponseEntity<List<RecordLikeRes>> userRecordList(@RequestHeader HttpHeaders headers, HttpServletRequest request,@RequestParam Boolean isLimit, @RequestParam String langType) {
         String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+            throw new UnAuthorizedException(unAuthorizedException);
         }
         String refreshToken = cookieHandler.getRefreshToken(request);
 
@@ -78,7 +78,7 @@ public class UserController {
     public ResponseEntity<List<VideoBookmarkRes>> userBookmarkList(@RequestHeader HttpHeaders headers, HttpServletRequest request, @RequestParam Boolean isLimit, @RequestParam String langType) {
         String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+            throw new UnAuthorizedException(unAuthorizedException);
         }
         String refreshToken = cookieHandler.getRefreshToken(request);
 
@@ -90,7 +90,7 @@ public class UserController {
     public ResponseEntity<?> getAttendance(@RequestHeader HttpHeaders headers, HttpServletRequest request, @RequestParam int month){
         String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+            throw new UnAuthorizedException(unAuthorizedException);
         }
 
         String refreshToken = cookieHandler.getRefreshToken(request);

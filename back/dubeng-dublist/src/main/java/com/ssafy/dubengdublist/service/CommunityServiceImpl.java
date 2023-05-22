@@ -31,15 +31,15 @@ public class CommunityServiceImpl implements CommunityService{
     private final RecordRepository recordRepository;
     private final CategoryRepository categoryRepository;
     private final RedisTemplate<String, Object> redisTemplate;
-    private final String MESSAGE1 = "존재하지 않는 유저입니다!";
-    private final String MESSAGE2 = "존재하지 않는 녹음입니다!";
+    private final String MESSAGEUser = "존재하지 않는 유저입니다!";
+    private final String MESSAGERecord = "존재하지 않는 녹음입니다!";
 
 
 
     public Map<String, Object> findDubKing(String langType, String userId) {
         Optional<User> ouser = userRepository.findById(userId);
         if(!ouser.isPresent()) {
-            throw new NotFoundException(MESSAGE1);
+            throw new NotFoundException(MESSAGEUser);
         }
         Map<String, Object> result = new HashMap<>();
         // 하루 3번 투표 여부 확인
@@ -63,11 +63,11 @@ public class CommunityServiceImpl implements CommunityService{
 
         Optional<User> user = userRepository.findById(userId);
         if(!user.isPresent()){
-            throw new NotFoundException(MESSAGE1);
+            throw new NotFoundException(MESSAGEUser);
         }
         Optional<User> voted = userRepository.findById(votedId);
         if(!voted.isPresent()){
-            throw new NotFoundException(MESSAGE1);
+            throw new NotFoundException(MESSAGEUser);
         }
 
         // 투표 하는 사람.
@@ -103,7 +103,7 @@ public class CommunityServiceImpl implements CommunityService{
     public CommunityDetailScriptRes findCommunityDetail(Long recordId) {
         Optional<Record> orecord = recordRepository.findById(recordId);
         if(!orecord.isPresent()){
-            throw new NotFoundException(MESSAGE2);
+            throw new NotFoundException(MESSAGERecord);
         }
         // 언어 알기
         String langType = orecord.get().getVideo().getLangType();
@@ -117,7 +117,7 @@ public class CommunityServiceImpl implements CommunityService{
     public Page<CommunityCommentRes> findCommunityComment(Pageable pageable, Long recordId) {
         Optional<Record> orecord = recordRepository.findById(recordId);
         if(!orecord.isPresent()){
-            throw new NotFoundException(MESSAGE2);
+            throw new NotFoundException(MESSAGERecord);
         }
         return videoRepository.findAllCommunityComment(pageable, recordId);
     }
@@ -125,13 +125,13 @@ public class CommunityServiceImpl implements CommunityService{
     public Integer addCommunityComment(String userId, Long recordId, CommunityDetailCommentReq communityDetailCommentReq) {
         Optional<User> ouser = userRepository.findById(userId);
         if(!ouser.isPresent()){
-            throw new NotFoundException(MESSAGE1);
+            throw new NotFoundException(MESSAGEUser);
         }
         User user = ouser.get();
         
         Optional<Record> orecord = recordRepository.findById(recordId);
         if(!orecord.isPresent()){
-            throw new NotFoundException(MESSAGE1);
+            throw new NotFoundException(MESSAGEUser);
         }
         Record record1 = orecord.get();
         recordCommentRepository.save(new RecordComment(user, record1, false, communityDetailCommentReq.getContent()));
@@ -142,7 +142,7 @@ public class CommunityServiceImpl implements CommunityService{
     public Integer modifyCommunityComment(String userId, Long recordCommentId, CommunityDetailCommentReq communityDetailCommentReq) {
         Optional<User> ouser = userRepository.findById(userId);
         if(!ouser.isPresent()){
-            throw new NotFoundException(MESSAGE1);
+            throw new NotFoundException(MESSAGEUser);
         }
         Optional<RecordComment> orecordComment = recordCommentRepository.findById(recordCommentId);
         if(!orecordComment.isPresent()){
@@ -157,7 +157,7 @@ public class CommunityServiceImpl implements CommunityService{
     public Integer removeCommunityComment(String userId, Long recordCommentId, CommunityDetailCommentReq communityDetailCommentReq) {
         Optional<User> ouser = userRepository.findById(userId);
         if(!ouser.isPresent()){
-            throw new NotFoundException(MESSAGE1);
+            throw new NotFoundException(MESSAGEUser);
         }
         Optional<RecordComment> orecordComment = recordCommentRepository.findById(recordCommentId);
         if(!orecordComment.isPresent()){
@@ -173,11 +173,11 @@ public class CommunityServiceImpl implements CommunityService{
     public Integer addCommunityLike(String userId, Long recordId) {
         Optional<User> ouser = userRepository.findById(userId);
         if(!ouser.isPresent()){
-            throw new NotFoundException(MESSAGE1);
+            throw new NotFoundException(MESSAGEUser);
         }
         Optional<Record> orecord = recordRepository.findById(recordId);
         if(!orecord.isPresent()){
-            throw new NotFoundException(MESSAGE2);
+            throw new NotFoundException(MESSAGERecord);
         }
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
         String key = "like_userId::"+userId;

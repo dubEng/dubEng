@@ -28,7 +28,7 @@ public class DubKingRepositoryImpl implements DubKingRepositoryCustom{
         if(dubKings.isEmpty())
             throw new NotFoundException("아이디가 없습니다!");
 
-        if(dubKings.size() > 0)
+        if(dubKings.isEmpty())
             return dubKings.get(0);
         else
             return null;
