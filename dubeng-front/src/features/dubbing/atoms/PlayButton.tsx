@@ -19,12 +19,14 @@ export default function PlayButton({
     return (
       <button onClick={stopVideo} disabled={disable}>
         <Image src={StopIcon} alt={"stopButton"} width={44} height={44} />
+        <p className="text-12 text-dubgray mt-4">원본듣기</p>
       </button>
     );
   } else {
     return (
       <button onClick={playVideo} disabled={disable}>
         <Image src={PlayIcon} alt={"playButton"} width={44} height={44} />
+        <p className="text-12 text-dubgray mt-4">원본듣기</p>
       </button>
     );
   }
