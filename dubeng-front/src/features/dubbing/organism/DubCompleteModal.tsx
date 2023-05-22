@@ -24,8 +24,8 @@ const customStyles = {
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
-    width: "370px",
-    height: "370px",
+    width: "375px",
+    height: "380px",
     transform: "translate(-50%, -50%)",
   },
 };
@@ -188,12 +188,12 @@ export default function DubCompleteModal({
         contentLabel="미리보기 Modal"
       >
         <div className="container mx-auto">
-          {/* <div className="flex flex-row justify-end mb-8">
+          <div className="flex flex-row justify-end mb-8">
             <button onClick={closeModal}>
               <MdClose className="my-8 mr-8" size={24} />
             </button>
-          </div> */}
-          <p className="text-16 font-semibold">미리 보기</p>
+          </div>
+          <p className="flex flex-row justify-center text-32 font-semibold">미리 보기</p>
           <div className="flex flex-col justify-center items-center">
             <div className="relative">
               <YouTube
@@ -251,15 +251,7 @@ export default function DubCompleteModal({
                 ))}
                 </div>
               </div> */}
-            <div className="flex flex-row justify-center">
-              <button
-                className="rounded-8 border-1 border-dubgraydeep bg-white text-dubgraydeep text-16 px-48 py-8 mr-16"
-                onClick={closeModal}
-              >
-                다시하기
-              </button>
-              <CommonButton children={"완료하기"} onClick={handleComplete} />
-            </div>
+            <CommonButton children={"완료하기"} onClick={handleComplete} />
             <audio ref={audioRef} style={{ display: "none" }} src={audioUrl} />
           </div>
         </div>
