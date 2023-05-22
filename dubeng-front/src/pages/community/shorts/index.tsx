@@ -177,7 +177,7 @@ export default function ShortsProductPage() {
                             isScrap={false}
                           />
                         </div>
-                        {/* <div className="h-200 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-391 mt-15">
+                        <div className="h-200 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-391 mt-15">
                           {content.scriptList &&
                             content.scriptList.map(
                               (item: any, index: number) => {
@@ -196,7 +196,7 @@ export default function ShortsProductPage() {
                                 );
                               }
                             )}
-                        </div> */}
+                        </div>
                       </>
                     </div>
                   </div>
