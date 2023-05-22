@@ -34,10 +34,7 @@ export default function DubVideoList() {
 
   return (
     <Swiper
-      slidesPerView={1.4}
-      spaceBetween={16}
-      onSlideChange={() => console.log("slide change")}
-      onSwiper={(swiper) => console.log(swiper)}
+      slidesPerView={1.25}
       // breakpoints={{
       //   655: {
       //     slidesPerView: 1.4,
