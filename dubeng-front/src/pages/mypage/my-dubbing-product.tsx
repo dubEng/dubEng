@@ -57,7 +57,6 @@ export default function myDubbingProductPage() {
   }, [userId]);
 
   function handleMyPageLangIndex(presentIndex: LangType) {
-
     setMyPageLangIndex(presentIndex);
   }
 
@@ -109,6 +108,7 @@ export default function myDubbingProductPage() {
             />
           </Link>
         ))}
+      <div className="h-60"></div>
     </div>
   );
 }

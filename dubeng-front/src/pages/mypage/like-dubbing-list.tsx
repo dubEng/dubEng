@@ -11,11 +11,13 @@ import { ScaleLoader } from "react-spinners";
 
 export default function LikeDubbingListPage() {
   const [myPageLangIndex, setMyPageLangIndex] = useState(LangType.ENGLISH);
-  
-  const { data, isLoading, error, refetch } = useLikeDubProductListQuery(false, myPageLangIndex);
+
+  const { data, isLoading, error, refetch } = useLikeDubProductListQuery(
+    false,
+    myPageLangIndex
+  );
 
   function handleMyPageLangIndex(presentIndex: LangType) {
-
     setMyPageLangIndex(presentIndex);
   }
 
@@ -67,6 +69,7 @@ export default function LikeDubbingListPage() {
             />
           </Link>
         ))}
+      <div className="h-60"></div>
     </div>
   );
 }
