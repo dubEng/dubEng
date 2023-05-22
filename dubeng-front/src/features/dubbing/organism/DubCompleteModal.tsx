@@ -188,7 +188,7 @@ export default function DubCompleteModal({
         contentLabel="미리보기 Modal"
       >
         <div className="container mx-auto">
-          <div className="flex flex-row justify-between mb-8">
+          <div className="flex flex-row justify-between mb-8 items-center">
             <p className="text-16 font-semibold">미리 보기</p>
             <button onClick={closeModal}>
               <MdClose className="my-8 mr-8" size={24} />
