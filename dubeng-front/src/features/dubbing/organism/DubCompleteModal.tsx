@@ -86,7 +86,6 @@ export default function DubCompleteModal({
 
   const { data, refetch } = useMissionCompleteQuery(videoId);
 
-
   const dispatch = useDispatch();
 
   // 1초마다 영상 실행 시간 가져오기
@@ -189,18 +188,19 @@ export default function DubCompleteModal({
         contentLabel="미리보기 Modal"
       >
         <div className="container mx-auto">
-          <div className="flex flex-row justify-end mb-8">
+          {/* <div className="flex flex-row justify-end mb-8">
             <button onClick={closeModal}>
               <MdClose className="my-8 mr-8" size={24} />
             </button>
-          </div>
+          </div> */}
+          <p className="text-16 font-semibold">미리 보기</p>
           <div className="flex flex-col justify-center items-center">
             <div className="relative">
               <YouTube
                 videoId={transferYoutube(videoPath)}
                 opts={{
-                  height: "156",
-                  width: "273",
+                  height: "201",
+                  width: "360",
                   playerVars: {
                     start: startTime,
                     end: endTime,
@@ -251,7 +251,15 @@ export default function DubCompleteModal({
                 ))}
                 </div>
               </div> */}
-            <CommonButton children={"완료하기"} onClick={handleComplete} />
+            <div className="flex flex-row justify-center">
+              <button
+                className="rounded-8 border-1 border-dubgraydeep bg-white text-dubgraydeep text-16 px-48 py-8 mr-16"
+                onClick={closeModal}
+              >
+                다시하기
+              </button>
+              <CommonButton children={"완료하기"} onClick={handleComplete} />
+            </div>
             <audio ref={audioRef} style={{ display: "none" }} src={audioUrl} />
           </div>
         </div>
