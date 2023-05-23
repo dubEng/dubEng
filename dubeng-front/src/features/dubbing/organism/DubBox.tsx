@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-export default function DubBox() {
-  return <></>;
-=======
 "use client";
 import "regenerator-runtime/runtime";
 import ListenButton from "../atoms/ListenButton";
@@ -260,6 +256,14 @@ export default function DubBox({
 
     // 녹음 시작하기
     startRecording(duration);
+    youtubePlayer.seekTo(startTime / 1000);
+    youtubePlayer.mute();
+    youtubePlayer.playVideo();
+
+    window.setTimeout(() => {
+      youtubePlayer.pauseVideo();
+      youtubePlayer.unMute();
+    }, duration);
   }
 
   function handleListenButton() {
@@ -271,6 +275,14 @@ export default function DubBox({
 
     // 내 소리 듣기
     listenMyVoice();
+    youtubePlayer.seekTo(startTime / 1000);
+    youtubePlayer.mute();
+    youtubePlayer.playVideo();
+
+    window.setTimeout(() => {
+      youtubePlayer.pauseVideo();
+      youtubePlayer.unMute();
+    }, duration);
   }
 
   function handleAudioEnded() {
@@ -349,21 +361,24 @@ export default function DubBox({
     let smoothingCount = 0;
     const smoothingThreshold = 10;
     const smoothingCountThreshold = 5;
-  
+
     const source = audioCtx.createMediaStreamSource(stream);
     source.connect(analyser);
     const recordingTimer = setInterval(() => {
       analyser.getByteTimeDomainData(dataArray);
       const pitch = autoCorrelate(dataArray, audioCtx.sampleRate);
       // console.log("pitch", Math.round(pitch));
-  
+
       if (pitch === -1) {
         // console.log('Too quiet...');
         return;
       }
-  
+
       let valueToDisplay = Math.round(pitch);
-      if (previousValueToDisplay !== null && Math.abs(valueToDisplay - previousValueToDisplay) < smoothingThreshold) {
+      if (
+        previousValueToDisplay !== null &&
+        Math.abs(valueToDisplay - previousValueToDisplay) < smoothingThreshold
+      ) {
         if (smoothingCount < smoothingCountThreshold) {
           smoothingCount++;
           return;
@@ -375,10 +390,10 @@ export default function DubBox({
         previousValueToDisplay = valueToDisplay;
         smoothingCount = 0;
       }
-  
+
       setMyPitchList((data) => [...data, valueToDisplay]);
     }, 50);
-  
+
     setTimeout(() => {
       clearInterval(recordingTimer);
       // 아랫놈이 문제였다.
@@ -487,45 +502,45 @@ export default function DubBox({
     const SIZE = buffer.length;
     const sumOfSquares = buffer.reduce((sum, val) => sum + val * val, 0);
     const rootMeanSquare = Math.sqrt(sumOfSquares / SIZE);
-  
+
     if (rootMeanSquare < 0.01) {
       return -1;
     }
-  
+
     let r1 = 0;
     let r2 = SIZE - 1;
     const threshold = 0.2;
-  
+
     for (let i = 0; i < SIZE / 2; i++) {
       if (Math.abs(buffer[i]) < threshold) {
         r1 = i;
         break;
       }
     }
-  
+
     for (let i = 1; i < SIZE / 2; i++) {
       if (Math.abs(buffer[SIZE - i]) < threshold) {
         r2 = SIZE - i;
         break;
       }
     }
-  
+
     buffer = buffer.slice(r1, r2);
     const newSize = buffer.length;
-  
+
     const c = new Array(newSize).fill(0);
-  
+
     for (let i = 0; i < newSize; i++) {
       for (let j = 0; j < newSize - i; j++) {
         c[i] += buffer[j] * buffer[j + i];
       }
     }
-  
+
     let d = 0;
     while (c[d] > c[d + 1]) {
       d++;
     }
-  
+
     let maxValue = -1;
     let maxIndex = -1;
     for (let i = d; i < newSize; i++) {
@@ -534,21 +549,20 @@ export default function DubBox({
         maxIndex = i;
       }
     }
-  
+
     let T0 = maxIndex;
-  
+
     const x1 = c[T0 - 1];
     const x2 = c[T0];
     const x3 = c[T0 + 1];
-  
+
     const a = (x1 + x3 - 2 * x2) / 2;
     const b = (x3 - x1) / 2;
-  
+
     if (a) {
       T0 -= b / (2 * a);
     }
-  
+
     return sampleRate / T0;
   }
->>>>>>> develop-front
 }

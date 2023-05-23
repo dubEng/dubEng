@@ -4,16 +4,6 @@ import * as queryKeys from "../../../constants/queryKeys";
 
 const fetcher = (url: string, start: number, end: number, lang: string) =>
   axios
-<<<<<<< HEAD
-    .get("www" + `/admin/videoInfo`, {
-      params: {
-        url: url,
-        start: start,
-        end: end,
-      },
-    })
-    .then(({ data }) => data);
-=======
     .get(
       process.env.NEXT_PUBLIC_BASE_URL + `/admin/videoInfo/${start}/${end}`,
       {
@@ -26,7 +16,6 @@ const fetcher = (url: string, start: number, end: number, lang: string) =>
     .then(({ data }) => {
       return data;
     });
->>>>>>> develop-front
 
 const useGetVideoInfoQuery = (
   url: string,

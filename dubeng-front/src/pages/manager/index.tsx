@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-import { useState } from "react";
-import useGetVideoInfoQuery from "@/apis/manager/queries/useGetVideoInfoQuery";
-import ScriptListItem from "@/features/manager/organism/ScriptListItem";
-import useCategoryQuery from "@/apis/manager/queries/useCategoryQuery";
-
-export default function ManagerPage() {
-  // 다중 input값 저장 객체
-=======
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useGetVideoInfoQuery from "@/apis/manager/queries/useGetVideoInfoQuery";
@@ -106,63 +97,12 @@ export default function ManagerPage() {
     // if (youtubePlayer.currentTime === startSecond + endSecond)
   };
 
->>>>>>> develop-front
   const [inputs, setInputs] = useState({
     url: "",
     start: 0,
     end: 0,
     lang: "",
   });
-<<<<<<< HEAD
-
-  const scripts = [
-    {
-      duration: 1.126,
-      start: 49.007,
-      text: "Oh, my God. He's..",
-      subTitle: "안녕",
-    },
-    {
-      duration: 1.836,
-      start: 50.216,
-      text: "Look at the way\nhe's just staring at me.",
-      subTitle: "안녕",
-    },
-    {
-      duration: 1.502,
-      start: 53.219,
-      text: "I think he's tryin'\nto mouth something at me",
-      subTitle: "안녕",
-    },
-    {
-      duration: 1.335,
-      start: 54.804,
-      text: "but I can't make it out.",
-      subTitle: "안녕",
-    },
-    {
-      duration: 1.627,
-      start: 60.393,
-      text: "Okay, dinner's ready.",
-      subTitle: "안녕",
-    },
-    {
-      duration: 1.21,
-      start: 62.103,
-      text: "- Good game.\n- Yeah.",
-      subTitle: "안녕",
-    },
-    {
-      duration: 1.669,
-      start: 63.354,
-      text: "Yeah, solid effort,\nsolid effort.",
-      subTitle: "안녕",
-    },
-  ];
-
-  // // 다중 requestbody 값 저장 객체
-  // const videoInfo, setVideoInfo] = useState({});
-=======
   //Redux
   const { userId } = useSelector((state: RootState) => state.user);
 
@@ -194,28 +134,13 @@ export default function ManagerPage() {
 
   // // post용
   const mutation = useVideoPost();
->>>>>>> develop-front
 
   // 비구조화 할당
   const { url, start, end, lang } = inputs;
 
-  // react-query
-  const getVideoInfo = useGetVideoInfoQuery(url, start, end, lang);
+  // get용 react-query
+  const { refetch } = useGetVideoInfoQuery(url, start, end, lang);
 
-<<<<<<< HEAD
-  // 카테고리 조회 react-query
-  // const { data } = useCategoryQuery();
-  const data = [
-    {
-      id: 1,
-      name: "판타지",
-    },
-    {
-      id: 2,
-      name: "로맨스",
-    },
-  ];
-=======
   // 영상 성별
   const [gender, setGender] = useState(0);
 
@@ -242,7 +167,6 @@ export default function ManagerPage() {
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAudioFile(e.target.files);
   };
->>>>>>> develop-front
 
   // input값 onChange
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -254,8 +178,6 @@ export default function ManagerPage() {
     });
   };
 
-<<<<<<< HEAD
-=======
   const [customTitle, setCustomTitle] = useState("");
   // 지정 커스텀 타이틀 값 변경
   const onChangeTitleValue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -295,15 +217,14 @@ export default function ManagerPage() {
     }
   };
 
->>>>>>> develop-front
   // 요청 보내는 파트
-  function handleGetVideo() {
+  function handleGetVideoButton() {
     console.log(inputs);
+    getVideoInfo();
   }
-  function handleSaveVideo() {
+
+  function handleSaveVideoButton() {
     console.log("등록하기 버튼 눌렀다!");
-<<<<<<< HEAD
-=======
     saveDubVideo();
   }
 
@@ -377,7 +298,6 @@ export default function ManagerPage() {
     } else {
       console.log("formData가 존재하지 않습니다.");
     }
->>>>>>> develop-front
   }
 
   // Youtube 플레이어 관련 변수 및 함수 설정
@@ -429,53 +349,46 @@ export default function ManagerPage() {
   };
 
   return (
-<<<<<<< HEAD
-    <div>
-      <p className="text-24 font-bold">더빙 콘텐츠 불러오기</p>
-      <div className="flex">
-=======
     <div className="w-screen h-full absolute top-57 left-16">
       <p className="text-24 font-bold mt-32 mb-16">더빙 콘텐츠 불러오기</p>
       <div className="flex space-x-32">
->>>>>>> develop-front
         <div>
           <label htmlFor="url">비디오 링크</label>
           <br />
           <input
+            className="text-16 rounded-5 font-normal placeholder-dubgray text-dubblack outline-none h-43 w-400 border border-[#E9ECEF] pl-16 py-12"
             type="text"
-            id="url"
             name="url"
-            placeholder="비디오 url을 입력하세요."
             onChange={onChangeValue}
+            value={url}
+            placeholder="비디오 url을 입력하세요."
           />
         </div>
         <div>
           <label htmlFor="videoInterval">비디오 구간 설정</label>
           <br />
           <input
+            className="text-16 rounded-5 font-normal placeholder-dubgray text-dubblack outline-none h-43 w-100 border border-[#E9ECEF] pl-16 py-12"
             type="number"
-            id="start"
             name="start"
+            onChange={onChangeValue}
+            value={start}
             placeholder="시작 시간"
-            onChange={onChangeValue}
           />
-<<<<<<< HEAD
-          ~
-=======
           -
->>>>>>> develop-front
           <input
+            className="text-16 rounded-5 font-normal placeholder-dubgray text-dubblack outline-none h-43 w-100 border border-[#E9ECEF] pl-16 py-12"
             type="number"
-            id="end"
             name="end"
-            placeholder="종료 시간"
             onChange={onChangeValue}
+            value={end}
+            placeholder="종료 시간"
           />
         </div>
         <div>
-          <label htmlFor="lang">언어</label>
+          <label htmlFor="lang">콘텐츠 언어</label>
           <br />
-          <div>
+          <div className="flex space-x-8 mt-10">
             <label htmlFor="english">English</label>
             <input
               type="radio"
@@ -495,24 +408,12 @@ export default function ManagerPage() {
           </div>
         </div>
         <button
-          className="rounded-[8px] bg-dubblue px-16"
-          onClick={handleGetVideo}
+          className="rounded-[8px] bg-dubblue px-16 h-43 pb-0 text-white mt-23"
+          onClick={handleGetVideoButton}
         >
           불러오기
         </button>
       </div>
-<<<<<<< HEAD
-      <p className="text-24 font-bold">더빙 콘텐츠 정보</p>
-
-      <p>콘텐츠 미리보기</p>
-      {/* <iframe
-        src="https://www.youtube.com/watch?v=vQM7qLK0fV0&t=2s"
-        frameBorder="0"
-      ></iframe> */}
-
-      <p>썸네일</p>
-      <img src="#" alt="videoThumbnail" />
-=======
       <p className="text-24 font-bold mt-32 mb-16">더빙 콘텐츠 정보</p>
       {videoInfo && (
         <div>
@@ -590,20 +491,47 @@ export default function ManagerPage() {
           ))}
         </div>
       )}
->>>>>>> develop-front
 
-      <label htmlFor="videoTitle">콘텐츠 제목</label>
-      <input type="text" />
+      <p className="text-24 font-bold mt-32 mb-16">콘텐츠 정보 입력하기</p>
+      <div className="flex space-x-40">
+        <div>
+          <label htmlFor="videoTitle">콘텐츠 제목 지정</label>
+          <br />
+          <CommonInputBox
+            type="text"
+            name="videoTitle"
+            value={customTitle}
+            placeholder="콘텐츠 제목을 입력해주세요."
+            onChange={onChangeTitleValue}
+          />
+        </div>
 
-      <label htmlFor="videoRuntime">런타임</label>
-      <input type="number" />
+        <div>
+          <label htmlFor="videoGender">더빙 성우 성별</label>
+          <br />
+          <div className="flex space-x-8 mt-8">
+            <label htmlFor="0">남성</label>
+            <input
+              type="radio"
+              value={0}
+              checked={gender === 0}
+              id="0"
+              name="0"
+              onChange={handleClickGenderButton}
+            />
+            <label htmlFor="1">여성</label>
+            <input
+              type="radio"
+              value={1}
+              checked={gender === 1}
+              id="1"
+              name="1"
+              onChange={handleClickGenderButton}
+            />
+          </div>
+        </div>
+      </div>
 
-<<<<<<< HEAD
-      <label htmlFor="videoLanguage">영상 언어</label>
-      <br />
-      <div>
-        <label htmlFor="english">English</label>
-=======
       <div className="mt-16">
         <p>카테고리</p>
         <div className="flex flex-wrap">
@@ -624,44 +552,16 @@ export default function ManagerPage() {
         <p className="text-dubcoral">
           ⨀ mp3 파일명은 본인 id로 변경하여서 첨부해주세요.
         </p>
->>>>>>> develop-front
         <input
-          type="radio"
-          value="english"
-          id="english"
-          name="lang"
-          onChange={onChangeValue}
-        />
-        <label htmlFor="korean">한국어</label>
-        <input
-          type="radio"
-          value="korean"
-          id="korean"
-          name="lang"
-          onChange={onChangeValue}
+          type="file"
+          name="file"
+          id="uploadAudio"
+          onChange={handleFileInput}
         />
       </div>
-
-      <label htmlFor="videoProduction">제작사</label>
-      <input type="text" />
-
-      <p className="text-24 font-bold">스크립트</p>
-      {scripts.map((script, idx) => (
-        <ScriptListItem {...script} key={script.start} />
-      ))}
-
-      <p className="text-24 font-bold">콘텐츠 정보 입력하기</p>
-      <p>카테고리</p>
-      {data.map((category: { name: any }, idx: any) => category.name)}
-      <p>음성 파일 첨부</p>
       <button
-<<<<<<< HEAD
-        className="rounded-[8px] bg-dubblue px-16"
-        onClick={handleSaveVideo}
-=======
         className="rounded-[8px] bg-dubblue px-16 h-43 pb-0 text-white mt-23 mr-16"
         onClick={handleSaveVideoButton}
->>>>>>> develop-front
       >
         등록하기
       </button>

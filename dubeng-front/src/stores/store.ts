@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-import { configureStore, combineReducers } from '@reduxjs/toolkit'
-import userReducer from '../stores/user/userSlice'
-
-const reducers = combineReducers({
-    user: userReducer,
-  });
-=======
 // import storage from "redux-persist/lib/storage";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
@@ -44,7 +36,6 @@ const reducers = combineReducers({
   signupInfo: signupSlice,
   missionModal: missionModalSlice,
 });
->>>>>>> develop-front
 
 const persistConfig = {
   timeout: 100,
@@ -55,15 +46,10 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, reducers);
 
 export const store = configureStore({
-<<<<<<< HEAD
-  reducer: reducers
-})
-=======
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
 });
->>>>>>> develop-front
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

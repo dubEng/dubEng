@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-export default function CommunityPage(){
-  return (<>커뮤니티</>);
-}
-=======
 import CommentListItem from "@/features/community/molecules/CommentListItem";
 import ProfileOne from "@/public/images/dump/profile_01.svg";
 import Dummy from "../../../public/images/dump/webarebears_image.png";
@@ -135,14 +130,18 @@ export default function CommunityPage() {
       </div>
       {tabIndex === DubType.DUB_VIDEO ? (
         <div>
-          <p className="flex justify-start text-19 font-bold mt-24 mb-16">
-            {userNickname}님이 좋아하실 영상
-          </p>
-          {userId ? (
-            <DubVideoList />
-          ) : (
-            <EmptyComponent status={EmptyType.NO_RECOMMEND} />
-          )}
+          {languageIndex === LangType.ENGLISH ? (
+            <div>
+              <p className="flex justify-start text-19 font-bold mt-24 mb-16">
+                {userNickname}님이 좋아하실 영상
+              </p>
+              {userId ? (
+                <DubVideoList />
+              ) : (
+                <EmptyComponent status={EmptyType.NO_RECOMMEND} />
+              )}
+            </div>
+          ) : null}
 
           {languageIndex === LangType.ENGLISH ? (
             <p className="flex justify-start text-19 font-bold mt-24 mb-16">
@@ -156,12 +155,19 @@ export default function CommunityPage() {
 
           <DubSituation />
         </div>
-      ) : (
+      ) : languageIndex === LangType.ENGLISH ? (
         <div>
           <p className="flex justify-start text-19 font-bold mt-24 mb-16">
             오늘의 더빙왕은?
           </p>
           <Vote userId={userId} languageIndex={languageIndex} />
+        </div>
+      ) : (
+        <div>
+          <p className="flex justify-start text-19 font-bold mt-24 mb-16">
+            오늘의 더빙왕은?
+          </p>
+          <EmptyComponent status={EmptyType.KOREAN_VOTE} />
         </div>
       )}
 
@@ -317,4 +323,3 @@ export default function CommunityPage() {
     </div>
   );
 }
->>>>>>> develop-front

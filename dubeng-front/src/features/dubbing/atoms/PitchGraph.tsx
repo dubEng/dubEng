@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-export default function PitchGraph() {
-  return <></>;
-=======
 import dynamic from "next/dynamic";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
@@ -38,7 +34,6 @@ const options: ApexOptions = {
   yaxis: {
     show: false,
   },
->>>>>>> develop-front
 }
 
 export default function PitchGraph({moviePitchList, myPitchList}: PitchDataList) {

@@ -24,8 +24,8 @@ const customStyles = {
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
-    width: "370px",
-    height: "370px",
+    width: "375px",
+    height: "390px",
     transform: "translate(-50%, -50%)",
   },
 };
@@ -85,7 +85,6 @@ export default function DubCompleteModal({
   const mutation = useRecordSave();
 
   const { data, refetch } = useMissionCompleteQuery(videoId);
-
 
   const dispatch = useDispatch();
 
@@ -189,7 +188,8 @@ export default function DubCompleteModal({
         contentLabel="미리보기 Modal"
       >
         <div className="container mx-auto">
-          <div className="flex flex-row justify-end mb-8">
+          <div className="flex flex-row justify-between mb-8 items-center">
+            <p className="text-16 font-semibold">미리 보기</p>
             <button onClick={closeModal}>
               <MdClose className="my-8 mr-8" size={24} />
             </button>
@@ -199,8 +199,8 @@ export default function DubCompleteModal({
               <YouTube
                 videoId={transferYoutube(videoPath)}
                 opts={{
-                  height: "156",
-                  width: "273",
+                  height: "196",
+                  width: "350",
                   playerVars: {
                     start: startTime,
                     end: endTime,
@@ -224,7 +224,7 @@ export default function DubCompleteModal({
               />
               <div className="opacity-100 absolute top-0 left-0 w-320 h-174"></div>
             </div>
-            <div className="w-261 h-30 border-1 border-dubgraymedium my-8 rounded-lg flex flex-row justify-between items-center px-8 mb-16">
+            <div className="w-290 h-30 border-1 border-dubgraymedium my-8 rounded-lg flex flex-row justify-between items-center px-8 mb-16">
               <PlayBarPreview width={progressBar} />
               <PlayButtonSmall
                 isPlaying={isPlaying}

@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-export default function CommentListItem() {
-  return <></>;
-=======
 import { useSelector } from "react-redux";
 import { RootState } from "../../../stores/store";
 import Image from "next/image";
@@ -83,5 +79,4 @@ export default function CommentListItem({
       </div>
     );
   }
->>>>>>> develop-front
 }

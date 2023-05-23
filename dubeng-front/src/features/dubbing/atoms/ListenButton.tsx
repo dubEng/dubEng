@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-export default function ListenButton() {
-  return <></>;
-=======
 import Image from "next/image";
 import SoundIcon from "../../../../public/icons/dubbing-icon/sound.svg";
 import SoundPlayIcon from "../../../../public/icons/dubbing-icon/sound-play.svg";
@@ -23,23 +19,27 @@ export default function ListenButton({
     return (
       <button onClick={startListening} disabled={disable}>
         <Image src={SoundIcon} alt={"defaultButton"} width={44} height={44} />
+        <p className="text-12 text-dubgray mt-4">들어보기</p>
       </button>
     );
   } else if (soundStatus == SoundType.PLAYING) {
     return (
       <button disabled={disable}>
         <Image src={SoundPlayIcon} alt={"playButton"} width={44} height={44} />
+        <p className="text-12 text-dubgray mt-4">들어보기</p>
       </button>
     );
   } else {
     return (
-      <Image
-        src={SoundDisableIcon}
-        alt={"disableButton"}
-        width={44}
-        height={44}
-      />
+      <div>
+        <Image
+          src={SoundDisableIcon}
+          alt={"disableButton"}
+          width={44}
+          height={44}
+        />
+        <p className="text-12 text-dubgray mt-4 ml-1">들어보기</p>
+      </div>
     );
   }
->>>>>>> develop-front
 }

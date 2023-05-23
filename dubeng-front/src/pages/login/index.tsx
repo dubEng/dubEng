@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-export default function LogInPage(){
-  return (<>로그인 페이지</>);
-}
-=======
 import Image from "next/image";
 import DubLogoImage from "../../../public/images/login/LoginImage.svg";
 import LoginBtnImage from "../../../public/images/login/KakaoLoginButton.svg";
@@ -62,4 +57,3 @@ export default function LogInPage() {
     </div>
   );
 }
->>>>>>> develop-front

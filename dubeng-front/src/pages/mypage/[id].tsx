@@ -59,7 +59,7 @@ export default function DifferentUserPage() {
         </Link>
       </div>
       <DifferentUserDubProductList userId={String(router.query.id)} />
-      <div className="h-80"></div>
+      <div className="h-60"></div>
     </div>
     // <div className="static h-full px-16 bg-white mt-57 mb-61">
     //   <MyPageProfile

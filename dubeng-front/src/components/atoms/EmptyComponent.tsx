@@ -1,34 +1,14 @@
 import Image from "next/image";
 import EmptyImage from "../../../public/images/logo/EmptyImage.png";
-<<<<<<< HEAD
-=======
 import { EmptyType } from "../../enum/statusType";
 import CommonButton from "./CommonButton";
 import DirectLoginButton from "./DirectLoginButton";
 import Link from "next/link";
->>>>>>> develop-front
 
 interface Iprops {
   status: string;
 }
 
-<<<<<<< HEAD
-export default function EmptyComponent() {
-  const emptyMessages = [
-    {
-      message: "",
-    },
-  ];
-
-  return (
-    <div>
-      <Image src={EmptyImage} alt="EmptyImage" />
-      <p className="text-14 text-semiBold text-dubgray">
-        더빙 목록이 없습니다.
-      </p>
-    </div>
-  );
-=======
 export default function EmptyComponent({ status }: Iprops) {
   if (status === EmptyType.EMPTY_DUB_PRODUCT) {
     return (
@@ -87,7 +67,15 @@ export default function EmptyComponent({ status }: Iprops) {
         </Link>
       </div>
     );
+  } else if (status === EmptyType.KOREAN_VOTE) {
+    return (
+      <div className="flex flex-col justify-center items-center">
+        <Image src={EmptyImage} alt="EmptyImage" />
+        <p className="mt-10 text-14 font-semibold text-dubgray">
+          한국어 콘텐츠는 투표를 제공하지 않습니다
+        </p>
+      </div>
+    );
   }
   return <></>;
->>>>>>> develop-front
 }

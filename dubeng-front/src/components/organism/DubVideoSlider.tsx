@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-export default function DubVideoSlider() {
-  return <></>;
-=======
 import Sheet from "react-modal-sheet";
 import DubVideoListItem from "../molecules/DubVideoListItem";
 import { useSelector } from "react-redux";
@@ -132,5 +128,4 @@ export default function DubVideoSlider({ isOpen, setOpen }: Iprops) {
       </Sheet>
     </>
   );
->>>>>>> develop-front
 }

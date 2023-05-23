@@ -9,15 +9,12 @@ import { store } from "../stores/store";
 import { QueryClientProvider, QueryClient } from "react-query";
 import NavigationBar from "@/components/atoms/NavigationBar";
 import Header from "@/components/atoms/Header";
-<<<<<<< HEAD
-=======
 import "regenerator-runtime/runtime";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import Scripts from "@/components/Scripts";
 import Head from "next/head";
 import DubMissionCompleteModal from "@/features/dubbing/organism/DubMissionCompleteModal";
->>>>>>> develop-front
 
 const pretendard = localFont({
   src: [

@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-}
-=======
 const withTwin = require("./withTwin.js");
 
 /**
@@ -15,5 +9,4 @@ module.exports = withTwin({
     domains: ["i.ytimg.com", "k.kakaocdn.net", "dubingdubing.s3.ap-northeast-2.amazonaws.com"]
   },
 });
->>>>>>> develop-front
 

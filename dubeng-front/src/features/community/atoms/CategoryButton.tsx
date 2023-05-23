@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-export default function CategoryButton() {
-  return <></>;
-=======
 interface Iprops {
   id: number;
   name: string;
@@ -34,5 +30,4 @@ export default function CategoryButton({
       </span>
     );
   }
->>>>>>> develop-front
 }

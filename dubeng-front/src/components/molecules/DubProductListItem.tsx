@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-export default function DubProductListItem() {
-  return <></>;
-=======
 import Image from "next/image";
 import Link from "next/link";
 
@@ -108,5 +104,4 @@ export default function DubProductListItem({
       </div>
     </Link>
   );
->>>>>>> develop-front
 }

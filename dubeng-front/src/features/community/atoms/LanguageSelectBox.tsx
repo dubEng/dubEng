@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-export default function LanguageSelectBox() {
-=======
 import { useDispatch } from "react-redux";
 import { LangType } from "../../../enum/statusType";
 import {
@@ -65,6 +62,5 @@ export default function LanguageSelectBox({ langType }: Iprops) {
       </div>
     );
   }
->>>>>>> develop-front
   return <></>;
 }

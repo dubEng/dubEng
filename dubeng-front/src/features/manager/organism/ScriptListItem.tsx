@@ -1,52 +1,58 @@
+import { addScriptsInfo } from "../../../stores/manager/scriptsPostSlice";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 interface Iprops {
   duration: number | string;
   start: number | string;
   text: string;
-<<<<<<< HEAD
-  subTitle: string;
-=======
   translation: string;
   handleListenScript: (e: number | string, s: number | string) => void;
->>>>>>> develop-front
 }
 
 export default function ScriptListItem({
   duration,
   start,
   text,
-<<<<<<< HEAD
-  subTitle,
-=======
   translation,
   handleListenScript,
->>>>>>> develop-front
 }: Iprops) {
-  const [newTexts, setNewTexts] = useState({
-    english: text,
-    korean: subTitle,
+  const [newScript, setNewScript] = useState({
+    content: text,
+    translateContent: translation,
+    startTime: start,
+    duration: duration,
   });
+  const [isDub, setIsDub] = useState(1);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
-  const handleNewTexts = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNewScript = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    setNewTexts({
-      ...newTexts,
+    setNewScript({
+      ...newScript,
       [name]: value,
     });
   };
 
+  // 라디오버튼 조작
+  const handleClickRadioButton = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsDub(parseInt(e.target.value));
+  };
+
+  const dispatch = useDispatch();
+
+  const handleSubmitButton = () => {
+    // dispatch해줄 것
+    const scriptsToSubmit = { ...newScript, isDub: isDub };
+    dispatch(addScriptsInfo(scriptsToSubmit));
+
+    // const test = useSelector((state) => state);
+    // console.log(test);
+    setIsConfirmed(true);
+  };
+
   return (
-<<<<<<< HEAD
-    <div>
-      <p>시작시간 : {start}</p>
-      <p>지속시간 : {duration}</p>
-      <div className="flex justify-between">
-        <p>언어</p>
-        <p>원본 스크립트</p>
-        <p>스크립트 수정</p>
-=======
     <div className="p-16">
       <div className="space-y-8">
         <div className="flex grid grid-cols-7">
@@ -151,32 +157,8 @@ export default function ScriptListItem({
             </p>
           )}
         </div>
->>>>>>> develop-front
       </div>
-      <div className="flex justify-between">
-        <p>영어</p>
-        <p>{text}</p>
-        <input
-          type="text"
-          name="english"
-          value={newTexts.english}
-          onChange={handleNewTexts}
-        />
-      </div>
-      <div className="flex justify-between">
-        <p>한국어</p>
-        <p>{subTitle}</p>
-        <input
-          type="text"
-          name="korean"
-          value={newTexts.korean}
-          onChange={handleNewTexts}
-        />
-      </div>
-      <p>문장별 구간 설정</p>
-      <input type="number" />
-      ~
-      <input type="number" />
+      <br />
       <hr />
     </div>
   );

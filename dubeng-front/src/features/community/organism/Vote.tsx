@@ -107,15 +107,16 @@ export default function Vote({ languageIndex, userId }: Iprops) {
       userId: userId,
       votedId: voteData.result.user1.id as string,
     };
+    mutate(payload);
     // const payload = {
     //     userId: userId,
     //     votedId: voteData.result.user1.id as string,
     // }
 
     setTimeout(() => {
-      refetch();
       setIsSelected1(false);
-    }, 3000);
+      refetch();
+    }, 1500);
   }
   // useEffect(() => {
   //   return (
@@ -129,18 +130,15 @@ export default function Vote({ languageIndex, userId }: Iprops) {
       userId: userId,
       votedId: voteData.result.user2.id as string,
     };
-    // const payload = {
-    //     userId: userId,
-    //     votedId: voteData.result.user1.id as string,
-    // }
-
-    setTimeout(() => {
-      refetch();
-      setIsSelected2(false);
-    }, 3000);
 
     mutate(payload);
-    refetch();
+
+    setTimeout(() => {
+      setIsSelected2(false);
+      refetch();
+    }, 1500);
+
+    // refetch();
   }
 
   // 유저1 플레이 함수

@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-export default function VoteCard() {
-  return <></>;
-=======
 import Image from "next/image";
 import { MdPlayArrow } from "react-icons/md";
 import { MdPause } from "react-icons/md";
@@ -72,5 +68,4 @@ export default function VoteCard({
       </div>
     );
   }
->>>>>>> develop-front
 }

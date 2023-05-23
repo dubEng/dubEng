@@ -12,9 +12,5 @@ export default meta;
 type Story = StoryObj<typeof CommonButton>;
 
 export const Default: Story = {
-<<<<<<< HEAD
-  render: () => <CommonButton />,
-=======
   render: () => <CommonButton isDisabled={true} children="저장하기" onClick={() => {}} />,
->>>>>>> develop-front
 };

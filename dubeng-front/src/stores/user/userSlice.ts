@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 
 export interface UserState {
   userId: string;
@@ -10,18 +10,13 @@ export interface UserState {
 
 const initialState: UserState = {
   userId: "",
-<<<<<<< HEAD
-  roleType: "",
-}
-=======
   accessToken: "",
   nickname: "익명의 게스트",
   imageUrl: "",
 };
->>>>>>> develop-front
 
 export const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     saveUserInfo: (state, action) => {
@@ -40,12 +35,8 @@ export const userSlice = createSlice({
       state.imageUrl = "";
     },
   },
-})
+});
 
-<<<<<<< HEAD
-export const { saveUserInfo } = userSlice.actions
-=======
 export const { saveUserInfo, saveAccessToken, userLogout } = userSlice.actions;
->>>>>>> develop-front
 
-export default userSlice.reducer
+export default userSlice.reducer;

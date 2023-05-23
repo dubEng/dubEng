@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-export default function DubSituationCard() {
-=======
 import { LangType, SituationType } from "../../../enum/statusType";
 
 interface Iprops {
@@ -77,6 +74,5 @@ export default function DubSituationCard({ type, langType }: Iprops) {
       );
     }
   }
->>>>>>> develop-front
   return <></>;
 }

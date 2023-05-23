@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-export default function SignUpPage(){
-  return (<>회원가입 페이지</>);
-}
-=======
 import {useEffect,useRef, useState} from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -201,4 +196,3 @@ export default function SignUpPage(){
   );
 }
 
->>>>>>> develop-front

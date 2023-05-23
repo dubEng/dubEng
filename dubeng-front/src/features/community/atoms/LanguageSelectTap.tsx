@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-export default function LanguageSelectTap() {
-=======
 import { AiOutlineGlobal } from "react-icons/ai";
 import { LangType } from "../../../enum/statusType";
 interface Iprops {
@@ -24,6 +21,5 @@ export default function LanguageSelectTap({ langType, onClick }: Iprops) {
       </div>
     );
   }
->>>>>>> develop-front
   return <></>;
 }

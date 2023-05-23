@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-export default function VoteButton() {
-  return <></>;
-=======
 import { MdCheckCircle } from "react-icons/md";
 
 interface Iprops {
@@ -30,5 +26,4 @@ export default function VoteButton({ isSelected, onClick }: Iprops) {
       </button>
     );
   }
->>>>>>> develop-front
 }

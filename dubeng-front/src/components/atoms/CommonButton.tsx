@@ -7,12 +7,6 @@ interface Iprops {
   onClick: () => void;
 }
 
-<<<<<<< HEAD
-export default function CommonButton({ children, isDisabled }: Iprops) {
-  return (
-    <button className="rounded-8 bg-dubblue text-dubgraylight text-16 px-48 py-8">
-      저장하기
-=======
 export default function CommonButton({
   children,
   isDisabled,
@@ -35,7 +29,6 @@ export default function CommonButton({
       onClick={onClick}
     >
       {children}
->>>>>>> develop-front
     </button>
   );
 }

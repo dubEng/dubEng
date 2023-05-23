@@ -12,10 +12,12 @@ import { ScaleLoader } from "react-spinners";
 export default function SaveContentsListPage() {
   const [myPageLangIndex, setMyPageLangIndex] = useState(LangType.ENGLISH);
 
-  const { data, isLoading, error, refetch } = useScrapDubVideoListQuery(false, myPageLangIndex);
+  const { data, isLoading, error, refetch } = useScrapDubVideoListQuery(
+    false,
+    myPageLangIndex
+  );
 
   function handleMyPageLangIndex(presentIndex: LangType) {
-
     setMyPageLangIndex(presentIndex);
   }
 
@@ -48,9 +50,9 @@ export default function SaveContentsListPage() {
   return (
     <div className="static h-full px-16 bg-white mt-57 mb-61">
       <LanguageTap
-    myPageLangIndex={myPageLangIndex}
-    handleMyPageLangIndex={handleMyPageLangIndex}
-  />
+        myPageLangIndex={myPageLangIndex}
+        handleMyPageLangIndex={handleMyPageLangIndex}
+      />
       {data &&
         data.map((item: any) => (
           <Link href={`/community/shorts/video/${item.id}`}>
@@ -62,6 +64,7 @@ export default function SaveContentsListPage() {
             />
           </Link>
         ))}
+      <div className="h-60"></div>
     </div>
   );
 }

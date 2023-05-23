@@ -5,12 +5,15 @@ import "swiper/css";
 import Link from "next/link";
 import DubProductCard from "../molecules/DubProductCard";
 import useLikeDubProductListQuery from "@/apis/mypage/queries/useLikeDubProductListQuery";
-import axios from 'axios';
+import axios from "axios";
 import EmptyComponent from "@/components/atoms/EmptyComponent";
 import { EmptyType } from "@/enum/statusType";
 
 export default function LikeDubProductList() {
-  const {data, isLoading, refetch, error} = useLikeDubProductListQuery(true, "all");
+  const { data, isLoading, refetch, error } = useLikeDubProductListQuery(
+    true,
+    "all"
+  );
 
   if (isLoading) {
     return (
@@ -22,8 +25,8 @@ export default function LikeDubProductList() {
 
   if (error) {
     if (axios.isAxiosError(error)) {
-      if(error.response?.status === 404){
-        return <EmptyComponent status={EmptyType.EMPTY_LIKE_DUB_PRODUCT} />
+      if (error.response?.status === 404) {
+        return <EmptyComponent status={EmptyType.EMPTY_LIKE_DUB_PRODUCT} />;
       }
     } else {
       return <ErrorComponent onClick={() => refetch} retry={true} />;
@@ -40,6 +43,9 @@ export default function LikeDubProductList() {
                 title={item.title}
                 thumbnail={item.thumbnail ?? ""}
                 playCount={item.playCount}
+                updatedDate={item.updatedDate}
+                nickname={item.nickname}
+                userProfileImg={item.userProfileImg}
               />
             </Link>
           </SwiperSlide>

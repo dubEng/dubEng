@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-export default function RecordButton() {
-  return <></>;
-=======
 import Image from "next/image";
 import RecordIcon from "../../../../public/icons/dubbing-icon/record.svg";
 import RecordingIcon from "../../../../public/icons/dubbing-icon/recording.svg";
@@ -26,14 +22,15 @@ export default function RecordButton({
           width={44}
           height={44}
         />
+                  <p className="text-12 text-dubgray mt-4">녹음하기</p>
       </button>
     )
   } else {
     return (
       <button onClick={startRecording} disabled={disable}>
         <Image src={RecordIcon} alt={"RecordButton"} width={44} height={44} />
+        <p className="text-12 text-dubgray mt-4">녹음하기</p>
       </button>
     )
   }
->>>>>>> develop-front
 }

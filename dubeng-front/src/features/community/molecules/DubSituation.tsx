@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-export default function DubSituation() {
-  return <></>;
-=======
 import DubSituationCard from "../atoms/DubSituationCard";
 import { LangType, SituationType } from "../../../enum/statusType";
 import { useState } from "react";
@@ -194,5 +190,4 @@ export default function DubSituation() {
           )}
     </div>
   );
->>>>>>> develop-front
 }

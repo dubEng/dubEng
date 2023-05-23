@@ -12,9 +12,6 @@ export default meta;
 type Story = StoryObj<typeof ScriptListItem>;
 
 export const Default: Story = {
-<<<<<<< HEAD:dubeng-front/src/features/manager/organism/ScriptListIem.stories.tsx
-  render: () => <ScriptListItem />,
-=======
   render: () => (
     <ScriptListItem
       start={0}
@@ -24,5 +21,4 @@ export const Default: Story = {
       handleListenScript={() => {}}
     />
   ),
->>>>>>> develop-front:dubeng-front/src/features/manager/organism/ScriptListItem.stories.tsx
 };

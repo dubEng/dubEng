@@ -1,17 +1,4 @@
 export enum CheckMessageStatus {
-<<<<<<< HEAD
-    ISVALID = "ISVALID",
-    NICKNAME_DUPLICATION = "NICKNAME_DUPLICATION",
-    NICKNAME_LIMIT_SIX = "NICKNAME_LIMIT_SIX",
-    INTRODUCE_LIMIT_FIFTEEN = "INTRODUCE_LIMIT_FIFTEEN"
-}
-
-export enum CommonAlertType {
-    DUBBING_OUT = "DUBBING_OUT",
-    COMMENT_DELETE = "COMMENT_DELETE",
-    CONTENTS_DELETE = "CONTENTS_DELETE",
-}
-=======
   INIT = "",
   NICKNAME_ISVALID = "ISVALID",
   NICKNAME_DUPLICATION = "NICKNAME_DUPLICATION",
@@ -41,6 +28,7 @@ export enum EmptyType {
   EMPTY_COMMENT = "EMPTY_COMMENT",
   EMPTY_VOTE = "EMPTY_VOTE",
   NO_RECOMMEND = "NO_RECOMMEND",
+  KOREAN_VOTE = "KOREAN_VOTE",
 }
 
 export enum SituationType {
@@ -59,4 +47,3 @@ export enum LangType {
   ENGLISH = "english",
   KOREAN = "korean",
 }
->>>>>>> develop-front

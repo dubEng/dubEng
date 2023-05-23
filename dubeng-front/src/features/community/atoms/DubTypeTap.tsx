@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-export default function DubTypeTap() {
-=======
 import {
   setTabDubProduct,
   setTabDubVideo,
@@ -91,6 +88,5 @@ export default function DubTypeTap({ dubType, langType }: Iprops) {
     );
   }
 
->>>>>>> develop-front
   return <></>;
 }
