@@ -95,7 +95,7 @@
 | Application | Language | Framework |
 | --- | --- | --- |
 | ✅ Desktop Web | ✅ JavaScript | 🔲 Vue.js |
-| ✅ Mobile Web | ✅ TypeScript | ✅ React |
+| ✅ Mobile Web | ✅ TypeScript | ✅ Next.js |
 | 🔲 Responsive Web | 🔲 C/C++ | 🔲 Angular |
 | 🔲 Android App | 🔲 C# | 🔲 Node.js |
 | 🔲 iOS App | ✅ Python | ✅ Flask/FastAPI |
@@ -105,7 +105,7 @@
 
 | [김아영](https://github.com/joen00) | [김도언](https://github.com/eondo) | [김동률](https://github.com/lancelot1672) | [김지희](https://github.com/4priltwntsx) | [백자민](https://github.com/sdflksjf2683) | [최정온](https://github.com/choijeongon) | [임경찬](https://github.com/rudcks5562) |
 | --- | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  |  |  |
+| BE | FE | BE / Infra | BE | BE | FE | FE |
 
 ## 📢 주요 기능 📢
 
@@ -240,11 +240,12 @@
 **[ DB ]**
 - MySQL `8.0.30`
 
-**[ DevOpe ]**
-- Docker
+**[ DevOps ]**
+- Docker, containerd
 - Nginx
 - Jenkins
 - AWS EC2
+- AWS EKS, ECR, ALB, EFS
 
 **[ Storage ]**
 - S3 Bucket
