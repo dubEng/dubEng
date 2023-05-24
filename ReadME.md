@@ -148,7 +148,7 @@
 
 - 더빙된 작품을 숏츠 형태로 살펴보기
 
-![Untitled](img/shortsGIF.gif)
+![Untitled](img/shortGIF.gif)
 
 ## 더빙하기
 
@@ -177,7 +177,6 @@
 
 ![Untitled](img/missionGIF.gif)
 
-![Untitled](img/missionCompleteGIF.gif)
 
 ## 마이페이지
 
