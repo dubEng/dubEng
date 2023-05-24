@@ -23,6 +23,8 @@
 
 [DubEng](https://dub-eng.com/)
 
+## 🎥 [소개 영상 보기 : UCC 링크](https://youtu.be/w0EPj1LV1sI)
+
 💖 **서비스 소개**
 
 > **영어로 더빙하며 스피킹을 배우는 서비스**
