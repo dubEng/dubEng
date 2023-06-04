@@ -9,3 +9,8 @@ services:
       - "9002:8080"
     volumes:    # Connect Local Volume
       - /home/ubuntu/file_volume:/Home
+    networks:
+      - dub-network
+networks:
+  dub-network:
+     external: true
