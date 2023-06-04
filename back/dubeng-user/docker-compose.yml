@@ -9,3 +9,8 @@ services:
       - "9000:9000"
     volumes:    # Connect Local Volume
       - /home/ubuntu/file_volume:/Home
+    networks:
+      - dub-network
+networks:
+  dub-network:
+     external: true
