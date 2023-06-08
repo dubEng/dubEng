@@ -7,7 +7,7 @@ import CommonInputBox from "@/components/atoms/CommonInputBox";
 import useSignupPost from "@/apis/signup/mutations/useSignupPost";
 import { Canvas, useLoader, useThree, extend } from '@react-three/fiber';
 import * as THREE from 'three';
-import { OrbitControls, Stats,Html,ContactShadows,Plane } from '@react-three/drei';
+// import { OrbitControls, Stats,Html,ContactShadows,Plane } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import CheckMessage from "@/components/atoms/CheckMessage";
 import { CheckMessageStatus } from "@/enum/statusType";
@@ -83,12 +83,12 @@ export default function kitchen(){
                         <div className="h-350 rounded-10">
                             <Canvas camera={{position: [1.625,2.4665,2.516] }} id="Mycanvas" style={{borderRadius : 10, border: '1px solid #F5F6F8'}}>
                                 <Suspense fallback={null}>
-                                    <Plane args={[100, 100]} rotation={[-Math.PI / 2, 0, 0]} position={[0.1,0.1,0.1]}>
+                                    {/* <Plane args={[100, 100]} rotation={[-Math.PI / 2, 0, 0]} position={[0.1,0.1,0.1]}>
                                     <meshStandardMaterial color="#FFB679" />
-                                    </Plane>
+                                    </Plane> */}
                                     <Model url="/assets/b2.glb" height={300} width={350}/>
                                 </Suspense>
-                                <ContactShadows position={[0, -4.5, 0]} scale={20} blur={2} far={4.5} />
+                                {/* <ContactShadows position={[0, -4.5, 0]} scale={20} blur={2} far={4.5} /> */}
                                 {/* <OrbitControls makeDefault dampingFactor={0.9} minDistance={5} maxDistance={20}
                                     minAzimuthAngle={-Math.PI/4} maxAzimuthAngle={Math.PI/4} minPolarAngle={0} maxPolarAngle={Math.PI/3}  /> */}
                                 <ambientLight intensity={0.3} color={'#FFA07A'} /> 
