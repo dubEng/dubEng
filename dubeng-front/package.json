@@ -17,7 +17,7 @@
     "@emotion/styled": "^11.11.0",
     "@fullpage/react-fullpage": "^0.1.39",
     "@mui/material": "^5.12.3",
-    "@react-three/drei": "^9.68.2",
+    "@react-three/drei": "^9.74.6",
     "@react-three/fiber": "^8.13.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/node": "18.16.1",
