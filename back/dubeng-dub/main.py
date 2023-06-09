@@ -300,7 +300,9 @@ async def save(item: videoClass.saveReq):
     #record 테이블에 해당 콘텐츠를 녹음한 기록이 있는지 검사
     sql = "SELECT id from record where video_id = %s and user_id = %s "
     cursor.execute(sql, [videoId, userId])
-    result = cursor.fetchone()  
+    result = cursor.fetchone()
+
+    logging.info(f"Is Exist?: {result[0]}")
 
     if result:
         # 이미 녹음한 기록이 있을 경우 
@@ -308,9 +310,9 @@ async def save(item: videoClass.saveReq):
         cursor.execute(update_sql, [url, date, result[0]])
     else:
         #record 테이블에 녹음 데이터 넣기
-        sql = "INSERT INTO record (video_id, user_id, is_public, is_active, play_count, record_path, like_count, vote_count, created_date, updated_date) VALUES (%s, %s, 1, 1, 0, %s, 0, 0, %s, %s)"
+        insert_sql = "INSERT INTO record (video_id, user_id, is_public, is_active, play_count, record_path, like_count, vote_count, created_date, updated_date) VALUES (%s, %s, 1, 1, 0, %s, 0, 0, %s, %s)"
         values = (videoId, userId, url, date, date)
-        cursor.execute(sql, values)
+        cursor.execute(insert_sql, values)
 
     # 변경사항을 커밋
     connection.commit()
