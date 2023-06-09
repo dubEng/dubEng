@@ -45,55 +45,58 @@ export default function DubKingList() {
     return <ErrorComponent onClick={() => refetch} retry={true} />;
   }
 
-  return (
-    <section className="mx-16 flex justify-around">
-      {/* {dubKingList && (
-        <>
-          <DubKingItem
-            nickname={dubKingList[1].nickname?? ""}
-            ranking={dubKingList[1].ranking}
-            dubKingImageUrl={dubKingList[1].dubKingImageUrl ?? ""}
-            totalCount={dubKingList[1].totalCount}
-          />
-          <DubKingItem
-            nickname={dubKingList[0].nickname ?? ""}
-            ranking={dubKingList[0].ranking}
-            dubKingImageUrl={dubKingList[0].dubKingImageUrl ?? ""}
-            totalCount={dubKingList[0].totalCount}
-          />
-          <DubKingItem
-            nickname={dubKingList[2].nickname ?? ""}
-            ranking={dubKingList[2].ranking}
-            dubKingImageUrl={dubKingList[2].dubKingImageUrl ?? ""}
-            totalCount={dubKingList[2].totalCount}
-          />
-        </>
-      )} */}
-      {data && (
-        <>
-          <DubKingItem
-            userId={data[1].userId}
-            nickname={data[1].nickname ?? ""}
-            ranking={2}
-            dubKingImageUrl={data[1].profileImage ?? DefaultImage}
-            totalCount={data[1].totalVote}
-          />
-          <DubKingItem
-            userId={data[0].userId}
-            nickname={data[0].nickname ?? ""}
-            ranking={1}
-            dubKingImageUrl={data[0].profileImage ?? DefaultImage}
-            totalCount={data[0].totalVote}
-          />
-          <DubKingItem
-            userId={data[2].userId}
-            nickname={data[2].nickname ?? ""}
-            ranking={3}
-            dubKingImageUrl={data[2].profileImage ?? DefaultImage}
-            totalCount={data[2].totalVote}
-          />
-        </>
-      )}
-    </section>
-  );
+  if (data.length >= 3) {
+    return (
+      <section className="mx-16 flex justify-around">
+        {/* {dubKingList && (
+          <>
+            <DubKingItem
+              nickname={dubKingList[1].nickname?? ""}
+              ranking={dubKingList[1].ranking}
+              dubKingImageUrl={dubKingList[1].dubKingImageUrl ?? ""}
+              totalCount={dubKingList[1].totalCount}
+            />
+            <DubKingItem
+              nickname={dubKingList[0].nickname ?? ""}
+              ranking={dubKingList[0].ranking}
+              dubKingImageUrl={dubKingList[0].dubKingImageUrl ?? ""}
+              totalCount={dubKingList[0].totalCount}
+            />
+            <DubKingItem
+              nickname={dubKingList[2].nickname ?? ""}
+              ranking={dubKingList[2].ranking}
+              dubKingImageUrl={dubKingList[2].dubKingImageUrl ?? ""}
+              totalCount={dubKingList[2].totalCount}
+            />
+          </>
+        )} */}
+        {data && (
+          <>
+            <DubKingItem
+              userId={data[1].userId}
+              nickname={data[1].nickname ?? ""}
+              ranking={2}
+              dubKingImageUrl={data[1].profileImage ?? DefaultImage}
+              totalCount={data[1].totalVote}
+            />
+            <DubKingItem
+              userId={data[0].userId}
+              nickname={data[0].nickname ?? ""}
+              ranking={1}
+              dubKingImageUrl={data[0].profileImage ?? DefaultImage}
+              totalCount={data[0].totalVote}
+            />
+            <DubKingItem
+              userId={data[2].userId}
+              nickname={data[2].nickname ?? ""}
+              ranking={3}
+              dubKingImageUrl={data[2].profileImage ?? DefaultImage}
+              totalCount={data[2].totalVote}
+            />
+          </>
+        )}
+      </section>
+    );
+  }
+  return <></>;
 }
