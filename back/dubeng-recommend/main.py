@@ -1,3 +1,7 @@
+from fastapi import FastAPI
+import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
+
 # Library load
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
@@ -12,12 +16,38 @@ import random
 import traceback
 import logging
 
-app = Flask(__name__)
-CORS(app)
+# app = Flask(__name__)
+# CORS(app)
+
+#커스텀 객체 클래스 import
+import recommendClass
+
+
+app = FastAPI()
+origins = [
+    "https://k8b208.p.ssafy.io",
+    "https://k8b208.p.ssafy.io/",
+    "https://dub-eng.com/",
+    "https://dub-eng.com",
+    "http://127.0.0.1:8000/"
+]
+
+# 미들웨어 추가
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+
 
 warnings.filterwarnings('ignore')
 
 
+#env.txt 파일에서 정보 읽어오기
 f_conn = open("./env.txt")
 
 DB_HOST = f_conn.readline().strip()
@@ -38,7 +68,7 @@ logging.basicConfig(
 def getData():
     conn = pymysql.connect(host=DB_HOST, user=DB_USER,
                            password=DB_PASSWORD, db=DB_DATABASE_NAME, charset='utf8')
-    query = ' select v.id, v.title, v.producer, v.gender, v.play_count, c.name as genre, v.thumbnail from category c inner join video_category vc on c.id = vc.category_id inner join video v on v.id = vc.video_id where v.lang_type = "english" order by v.id'
+    query = ' select v.id, v.title, v.producer, v.gender, v.play_count, c.name as genre, v.thumbnail from category c inner join video_category vc on c.id = vc.category_id inner join video v on v.id = vc.video_id order by v.id '
     oldDf = pd.read_sql_query(query, conn)
 
     pd.set_option('max_colwidth', 100)
@@ -55,7 +85,6 @@ def getData():
             gender = ""
             if (row.gender == 1):
                 gender = "Female"
-
             else:
                 gender = "Male"
 
@@ -85,8 +114,7 @@ def getSimilarity():
     randomNum = random.randrange(0, 3)
     logging.info(f"This random number: {randomNum}")
 
-    genre_sim = cosine_similarity(director_vect, director_vect) * randomWeight[randomNum][0] + cosine_similarity(
-        genre_mat, genre_mat) * randomWeight[randomNum][1] + cosine_similarity(gender_vect, gender_vect) * randomWeight[randomNum][2]
+    genre_sim = cosine_similarity(director_vect, director_vect) * randomWeight[randomNum][0] + cosine_similarity(genre_mat, genre_mat) * randomWeight[randomNum][1] + cosine_similarity(gender_vect, gender_vect) * randomWeight[randomNum][2]
 
     # [:, ::-1] axis = 1 기준으로 2차원 numpy 배열 뒤집기
     genre_sim_sorted_ind = genre_sim.argsort()[:, ::-1]
@@ -194,9 +222,10 @@ def getVideoFindByCategory(categoryId):
 
 
 # 추천 API
-@app.route('/recommend/contents', methods=['POST'])
-def dublistAPI():
-    userId = request.get_json()["userId"]
+@app.post('/recommend/contents')
+async def dublistAPI(item: recommendClass.recommendReq):
+    userId = item.userId
+    
     # 회원 조회해서 회원의 더빙 영상이 있는지 체크
     usercheckDub = getCheckDub(userId)
 
@@ -209,12 +238,12 @@ def dublistAPI():
         similar_movies = find_sim_movie(
             movies_df, getSimilarity(), getDubRecord(usercheckDub)[0], 10)
         # logging.info(f"Similar movies: {similar_movies}")
-        # Dataframe 형식일 경우에만 컬럼 추출
+        #Dataframe 형식일 경우에만 컬럼 추출
         if isinstance(similar_movies, pd.DataFrame):
             sm = similar_movies[['id', 'title', 'thumbnail']]
             for index, row in sm.iterrows():
                 result.append({'id': row.id, 'title': row.title,
-                               'thumbnail': row.thumbnail})
+                            'thumbnail': row.thumbnail})
     else:  # 없다면 회원이 선택한 장르로
         userCategoryId = getCategory(userId)
         if len(userCategoryId) != 0:
@@ -226,11 +255,10 @@ def dublistAPI():
             if isinstance(similar_movies, pd.DataFrame):
                 sm = similar_movies[['id', 'title', 'thumbnail']]
                 for index, row in sm.iterrows():
-                    result.append(
-                        {'id': row.id, 'title': row.title, 'thumbnail': row.thumbnail})
+                    result.append({'id': row.id, 'title': row.title,'thumbnail': row.thumbnail})
 
     return {'answer': result}
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    uvicorn.run(app, host="0.0.0.0", port=5000)
