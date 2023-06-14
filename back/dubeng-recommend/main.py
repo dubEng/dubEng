@@ -224,10 +224,7 @@ def getVideoFindByCategory(categoryId):
 # 추천 API
 @app.post('/recommend/contents')
 async def dublistAPI(item: recommendClass.recommendReq):
-    # userId = request.get_json()["userId"]
-    
     userId = item.userId
-    # userId = "2780795332"
     
     # 회원 조회해서 회원의 더빙 영상이 있는지 체크
     usercheckDub = getCheckDub(userId)
