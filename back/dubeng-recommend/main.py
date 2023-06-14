@@ -1,3 +1,7 @@
+from fastapi import FastAPI
+import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
+
 # Library load
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
@@ -12,12 +16,38 @@ import random
 import traceback
 import logging
 
-app = Flask(__name__)
-CORS(app)
+# app = Flask(__name__)
+# CORS(app)
+
+#커스텀 객체 클래스 import
+import recommendClass
+
+
+app = FastAPI()
+origins = [
+    "https://k8b208.p.ssafy.io",
+    "https://k8b208.p.ssafy.io/",
+    "https://dub-eng.com/",
+    "https://dub-eng.com",
+    "http://127.0.0.1:8000/"
+]
+
+# 미들웨어 추가
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+
 
 warnings.filterwarnings('ignore')
 
 
+#env.txt 파일에서 정보 읽어오기
 f_conn = open("./env.txt")
 
 DB_HOST = f_conn.readline().strip()
@@ -192,9 +222,13 @@ def getVideoFindByCategory(categoryId):
 
 
 # 추천 API
-@app.route('/recommend/contents', methods=['POST'])
-def dublistAPI():
-    userId = request.get_json()["userId"]
+@app.post('/recommend/contents')
+async def dublistAPI(item: recommendClass.recommendReq):
+    # userId = request.get_json()["userId"]
+    
+    userId = item.userId
+    # userId = "2780795332"
+    
     # 회원 조회해서 회원의 더빙 영상이 있는지 체크
     usercheckDub = getCheckDub(userId)
 
@@ -230,4 +264,4 @@ def dublistAPI():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    uvicorn.run(app, host="0.0.0.0", port=5000)
