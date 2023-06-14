@@ -11,13 +11,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 import { LangType } from "@/enum/statusType";
 import Link from "next/link";
+import DubScriptListItem from "@/components/molecules/DubScriptListItem";
 
 export default function ShortsProductPage() {
   const router = useRouter();
 
-  const langType = useSelector(
-    (state: RootState) => state.languageTab.langType
-  );
+  const langType = useSelector((state: RootState) => state.languageTab.langType);
 
   const userId = useSelector((state: RootState) => state.user.userId);
 
@@ -44,10 +43,7 @@ export default function ShortsProductPage() {
     player.mute();
   };
 
-  const { data: playCountUp, refetch } = usePlayCountUpQuery(
-    userId,
-    Number(router.query.id)
-  );
+  const { data: playCountUp, refetch } = usePlayCountUpQuery(userId, Number(router.query.id));
 
   const playCountRef = useRef<number | null>(null);
 
@@ -88,12 +84,8 @@ export default function ShortsProductPage() {
   };
 
   useEffect(() => {
-    if (
-      document.querySelector<HTMLElement>(`.script-element-${selectedScript}`)
-    ) {
-      const element = document.querySelector<HTMLElement>(
-        `.script-element-${selectedScript}`
-      );
+    if (document.querySelector<HTMLElement>(`.script-element-${selectedScript}`)) {
+      const element = document.querySelector<HTMLElement>(`.script-element-${selectedScript}`);
       element?.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, [selectedScript]);
@@ -108,18 +100,14 @@ export default function ShortsProductPage() {
         setSelectedScript(0);
       }
 
-      const currentTimeSecond =
-        data.scriptList[selectedScript]?.startTime / 1000;
-      const nextTimeSecond =
-        data.scriptList[selectedScript + 1]?.startTime / 1000;
+      const currentTimeSecond = data.scriptList[selectedScript]?.startTime / 1000;
+      const nextTimeSecond = data.scriptList[selectedScript + 1]?.startTime / 1000;
 
       /* 실시간 하이라이팅 */
       // 선택된 스크립트의 idx값이 전체 스크립트의 길이보다 작고 time이 0 보다 크면 실행
       if (selectedScript < data.scriptList.length && time > 0) {
         // 해당 스크립트 리스트의 startTime이 undefined가 아니라면
         if (data.scriptList[selectedScript]?.startTime != undefined) {
-
-
           // 현재 재생되고 있는 영상의 시간이 현재 스크립트의 시작 시간보다 크거나 같고
           // 현재 재생되고 있는 영상의 시간이 다음 스크립트의 시작 시간보다 작거나 같다면
           // selectedScript를 증가하지 않고 넘어간다.
@@ -184,11 +172,7 @@ export default function ShortsProductPage() {
               setSelectedScript(0);
             }}
           />
-          <audio
-            ref={audioRef}
-            style={{ display: "none" }}
-            src={data.recordPath}
-          />
+          <audio ref={audioRef} style={{ display: "none" }} src={data.recordPath} />
           <div className="mt-16">
             <ShortsTitle
               userId={data.userId}
@@ -206,33 +190,25 @@ export default function ShortsProductPage() {
               data.scriptList.map((item: any, index: number) => {
                 if (index === selectedScript) {
                   return (
-                    <div
-                      className={`script-element-${index} mb-8 mx-20 flex flex-col items-center`}
+                    <DubScriptListItem
                       key={index}
-                    >
-                      <p className="text-16 text-dubblue text-center">
-                        {item.content}
-                      </p>
-                      {langType === LangType.ENGLISH ? (
-                        <p className="text-14 text-[#8E8D8D]">
-                          {item.translateContent}
-                        </p>
-                      ) : null}
-                    </div>
+                      index={index}
+                      content={item.content}
+                      isSelected={true}
+                      langType={langType}
+                      translateContent={item.translateContent}
+                    />
                   );
                 } else {
                   return (
-                    <div
-                      className={`script-element-${index} mb-8 mx-20 flex flex-col items-center`}
+                    <DubScriptListItem
                       key={index}
-                    >
-                      <p className="text-16 text-white">{item.content}</p>
-                      {langType === LangType.ENGLISH ? (
-                        <p className="text-14 text-[#8E8D8D]">
-                          {item.translateContent}
-                        </p>
-                      ) : null}
-                    </div>
+                      index={index}
+                      content={item.content}
+                      isSelected={false}
+                      langType={langType}
+                      translateContent={item.translateContent}
+                    />
                   );
                 }
               })}
