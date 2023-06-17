@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @Component
 public class CookieHandler {
-    public String getRefreshToken(HttpServletRequest request){
+    public static String getRefreshToken(HttpServletRequest request){
         String refreshToken = null;
         Cookie[] cookies = request.getCookies();
         if(cookies == null) throw new UnAuthorizedException("RTK 가져오는 과정에서 오류");
@@ -20,7 +20,7 @@ public class CookieHandler {
                 refreshToken = cookie.getValue();
             }
         }
-        log.debug("RTK : {}", refreshToken);
+        log.debug("CookieHandler >> RTK : {}", refreshToken);
         return refreshToken;
     }
 }

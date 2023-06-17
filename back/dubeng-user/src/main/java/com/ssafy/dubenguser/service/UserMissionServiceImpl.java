@@ -29,13 +29,7 @@ public class UserMissionServiceImpl implements UserMissionService{
     private final MissionRepository missionRepository;
 
     @Override
-    public List<UserMissionRes> findUserMissions(String accessToken, String refreshToken) {
-        //토큰 유효성 검사
-        try{
-            authService.parseToken(accessToken);
-        }catch(Exception e){
-            accessToken = authService.reissueATK(refreshToken);
-        }
+    public List<UserMissionRes> findUserMissions(String accessToken) {
         String userId = authService.parseToken(accessToken);
         if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");
 

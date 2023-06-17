@@ -31,24 +31,18 @@ public class MissionController {
 
     @ApiOperation(value="도전과제 미션 목록 조회")
     @GetMapping("/list")
-    public ResponseEntity<List<UserMissionRes>>  userMissionList(@RequestHeader HttpHeaders headers, HttpServletRequest request){
-        String accessToken = headers.getFirst("Authorization");
-        if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
-        }
-        String refreshToken = cookieHandler.getRefreshToken(request);
+    public ResponseEntity<List<UserMissionRes>> userMissionList(HttpServletRequest request){
+        String accessToken = (String) request.getAttribute("Authorization");
 
-        List<UserMissionRes> result = userMissionService.findUserMissions(accessToken, refreshToken);
+        List<UserMissionRes> result = userMissionService.findUserMissions(accessToken);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @ApiOperation(value="해결한 도전과제의 asset list 조회")
     @GetMapping("/asset")
-    public ResponseEntity<List<String>>  userAssetList(@RequestHeader HttpHeaders headers, HttpServletRequest request){
-        String accessToken = headers.getFirst("Authorization");
-        if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
-        }
+    public ResponseEntity<List<String>>  userAssetList(HttpServletRequest request){
+        String accessToken = request.getHeader("Authorization");
+
         String refreshToken = cookieHandler.getRefreshToken(request);
 
         List<String> result = userMissionService.findAssets(accessToken,refreshToken);
@@ -57,11 +51,9 @@ public class MissionController {
 
     @ApiOperation(value="도전과제 완료 여부 확인")
     @GetMapping("/complete")
-    public ResponseEntity<HashMap<String, Object>>  userAssetList(@RequestHeader HttpHeaders headers, HttpServletRequest request, @RequestParam Long videoId){
-        String accessToken = headers.getFirst("Authorization");
-        if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
-        }
+    public ResponseEntity<HashMap<String, Object>>  userAssetList(HttpServletRequest request, @RequestParam Long videoId){
+        String accessToken = request.getHeader("Authorization");
+
         String refreshToken = cookieHandler.getRefreshToken(request);
 
         HashMap<String, Object> result = userMissionService.findMissionComplete(accessToken, refreshToken, videoId);
