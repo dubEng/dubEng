@@ -44,13 +44,7 @@ public class UserMissionServiceImpl implements UserMissionService{
     }
 
     @Override
-    public List<String> findAssets(String accessToken, String refreshToken) {
-        //토큰 유효성 검사
-        try{
-            authService.parseToken(accessToken);
-        }catch(Exception e){
-            accessToken = authService.reissueATK(refreshToken);
-        }
+    public List<String> findAssets(String accessToken) {
         String userId = authService.parseToken(accessToken);
         if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");
 
@@ -65,14 +59,7 @@ public class UserMissionServiceImpl implements UserMissionService{
 
     @Override
     @Transactional
-    public HashMap<String, Object> findMissionComplete(String accessToken, String refreshToken, Long videoId) {
-        //토큰 유효성 검사
-        try{
-            authService.parseToken(accessToken);
-        }catch(Exception e){
-            accessToken = authService.reissueATK(refreshToken);
-        }
-        
+    public HashMap<String, Object> findMissionComplete(String accessToken, Long videoId) {
         //Token parsing
         String userId = authService.parseToken(accessToken);
         if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");

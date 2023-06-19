@@ -41,22 +41,18 @@ public class MissionController {
     @ApiOperation(value="해결한 도전과제의 asset list 조회")
     @GetMapping("/asset")
     public ResponseEntity<List<String>>  userAssetList(HttpServletRequest request){
-        String accessToken = request.getHeader("Authorization");
+        String accessToken = (String) request.getAttribute("Authorization");
 
-        String refreshToken = cookieHandler.getRefreshToken(request);
-
-        List<String> result = userMissionService.findAssets(accessToken,refreshToken);
+        List<String> result = userMissionService.findAssets(accessToken);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @ApiOperation(value="도전과제 완료 여부 확인")
     @GetMapping("/complete")
     public ResponseEntity<HashMap<String, Object>>  userAssetList(HttpServletRequest request, @RequestParam Long videoId){
-        String accessToken = request.getHeader("Authorization");
+        String accessToken = (String) request.getAttribute("Authorization");
 
-        String refreshToken = cookieHandler.getRefreshToken(request);
-
-        HashMap<String, Object> result = userMissionService.findMissionComplete(accessToken, refreshToken, videoId);
+        HashMap<String, Object> result = userMissionService.findMissionComplete(accessToken, videoId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
