@@ -143,9 +143,10 @@ public class RedisService {
             Long voteCnt = Long.parseLong((String) redisTemplate.opsForValue().get(data));
             Optional<User> ouser = userRepository.findById(userId);
             if (!ouser.isPresent()) {
-                redisTemplate.delete(data); // 해당 user 없으면 레디스에서 지움.
+                redisTemplate.delete(data); // 해당 user 없으면 add 로직 건너뛰기
             } else {
                 priorityDubkingVotes.add(new dubKingVote(userId, voteCnt));
+                redisTemplate.delete(data);
             }
         }
         // pQ에 있는거 top3만 넣을거야 아니 혹시 모르니까 8명..
