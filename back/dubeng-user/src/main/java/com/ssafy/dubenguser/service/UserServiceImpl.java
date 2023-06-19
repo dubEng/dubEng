@@ -38,16 +38,9 @@ public class UserServiceImpl implements UserService {
      *
      */
     @Override
-    public void addUser(UserJoinReq request, String accessToken, String refreshToken){
+    public void addUser(UserJoinReq request, String accessToken){
         if(checkExistNickname(request.getNickname()))
             throw new DuplicateException("이미 등록된 닉네임입니다.");
-
-        //토큰 유효성 검사
-        try{
-            authService.parseToken(accessToken);
-        }catch(Exception e){
-            accessToken = authService.reissueATK(refreshToken);
-        }
 
         //parseToken
         String userId = authService.parseToken(accessToken);

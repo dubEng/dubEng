@@ -5,7 +5,7 @@ import com.ssafy.dubenguser.dto.*;
 import java.util.List;
 
 public interface UserService {
-    public void addUser(UserJoinReq requestDTO, String accessToken, String refreshToken);
+    public void addUser(UserJoinReq requestDTO, String accessToken);
     public boolean checkEnrolledMember(String id);
     public boolean checkExistNickname(String nickname);
     public UserProfileRes findProfile(String accessToken);

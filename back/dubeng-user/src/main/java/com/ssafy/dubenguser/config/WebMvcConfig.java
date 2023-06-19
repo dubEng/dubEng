@@ -16,7 +16,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new JwtInterceptor(authService))
-                .addPathPatterns("/**/mission/*");    // mission에 모든 EndPoint에 적용
+                .addPathPatterns("/**/mission/*", "/**/auth/join");    // mission에 모든 EndPoint에 적용
+
     }
 
     @Override

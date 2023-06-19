@@ -147,16 +147,11 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public UserLoginRes findUser(String accessToken, String refreshToken){
-        //토큰파싱
-        try{
-            parseToken(accessToken);
-        }catch(Exception e){
-            accessToken = reissueATK(refreshToken);
-        }
+    public UserLoginRes findUser(String accessToken){
         String userId = parseToken(accessToken);
 
         log.debug("userId : {}", userId);
+
         // 회원 정보 가져오기
         Optional<User> findUser = userRepository.findById(userId);
         if(!findUser.isPresent()) throw new UnAuthorizedException();
