@@ -14,7 +14,7 @@ public interface AuthService {
     UserLoginRes findUser(String accessToken);
     String parseToken(String accessToken);
 
-    Set<String> getAttendanceByMonth(String accessToken, String refreshToken, int month);
+    Set<String> getAttendanceByMonth(String accessToken, int month);
 
     void kakaoLogout(String accessToken);
 

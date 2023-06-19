@@ -9,14 +9,19 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Configuration
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
     private final AuthService authService;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        List<String> authList = Arrays.asList("/**/mission/*", "/**/auth/login", "/**/auth/join", "/**/mypage/*");
         registry.addInterceptor(new JwtInterceptor(authService))
-                .addPathPatterns("/**/mission/*", "/**/auth/join");    // mission에 모든 EndPoint에 적용
+                .addPathPatterns(authList)   //EndPoint에 적용
+                .excludePathPatterns("/**/mypage/profile", "/**/mypage/record/list");
 
     }
 

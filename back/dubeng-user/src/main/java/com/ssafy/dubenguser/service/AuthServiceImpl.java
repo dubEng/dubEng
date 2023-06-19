@@ -179,13 +179,8 @@ public class AuthServiceImpl implements AuthService{
 
         return userLoginRes;
     }
-    public Set<String> getAttendanceByMonth(String accessToken,String refreshToken, int month){
-        //토큰파싱
-        try{
-            parseToken(accessToken);
-        }catch(Exception e){
-            accessToken = reissueATK(refreshToken);
-        }
+    @Override
+    public Set<String> getAttendanceByMonth(String accessToken, int month){
         String userId = parseToken(accessToken);
 
         List<UserCalendar> list = userCalenderRepository.findByUserIdAndMonth(userId, month);
@@ -232,6 +227,7 @@ public class AuthServiceImpl implements AuthService{
      * accessToken을 받아
      * kakao Auth 서버에 parse 요청
      */
+    @Override
     public String parseToken(String accessToken){
             WebClient webClient = WebClient.builder()
                     .baseUrl("https://kapi.kakao.com")
