@@ -33,9 +33,7 @@ import java.util.HashMap;
 public class AuthController {
     private final UserService userService;
     private final AuthService authService;
-    private final CookieHandler cookieHandler;
     private static final String SUCCESS = "success";
-    private static final String FAIL = "fail";
 
     @Value("${auth.redirectUrl}")
     private String SEND_REDIRECT_URL;
@@ -108,7 +106,7 @@ public class AuthController {
     }
     @PostMapping("/login")
     @ApiOperation(value = "회원정보 가져오기")
-    public ResponseEntity<UserLoginRes> getLoginInfo(HttpServletRequest request, @RequestHeader HttpHeaders headers){
+    public ResponseEntity<UserLoginRes> getLoginInfo(HttpServletRequest request){
         String accessToken = (String) request.getAttribute("Authorization");
 
         //ATK을 이용하여 회원정보 요청
