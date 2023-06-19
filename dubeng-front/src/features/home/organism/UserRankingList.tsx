@@ -54,6 +54,6 @@ export async function getStaticProps() {
   
   return {
     props: { homeRanking },
-    revalidate: 60,
+    revalidate: 300,
   };
 }

@@ -48,6 +48,6 @@ export async function getStaticProps() {
   
   return {
     props: { popularity },
-    revalidate: 60,
+    revalidate: 300,
   };
 }
