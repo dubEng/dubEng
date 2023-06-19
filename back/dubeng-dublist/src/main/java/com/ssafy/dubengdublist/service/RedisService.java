@@ -130,8 +130,6 @@ public class RedisService {
     public void updateDubKing() {
         PriorityQueue<dubKingVote> priorityDubkingVotes = new PriorityQueue<>();
 
-        dubKingRepository.deleteAll();
-        dubKingRepository.flush();
         Set<String> redisKeys = redisTemplate.keys("dubKing_userId*");
 
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
