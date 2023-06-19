@@ -35,10 +35,10 @@ public class HomeServiceImpl implements HomeService{
         Set<String> redisKeys = redisTemplate.keys("dubKingTop3");
         Iterator<String> it = redisKeys.iterator();
         Long i = 0L;
-        while (it.hasNext()) {
-            if(result.size()>3) break;
+        Set<Object> users = redisTemplate.opsForSet().members("dubKingTop3");
 
-            String data = it.next();
+        for(Object o : users){
+            String data = o.toString();
             String userId = data.split("::")[0];
             Long voteCnt = Long.parseLong(data.split("::")[1]);
             Optional<User> ouser = userRepository.findById(userId);
@@ -49,7 +49,9 @@ public class HomeServiceImpl implements HomeService{
             result.add(new HomeDubKingRes(i++, userId, user.getNickname(), user.getProfileImage(), voteCnt));
         }
 
+        result.sort(HomeDubKingRes::compareTo);
         return result;
+
     }
 
 }

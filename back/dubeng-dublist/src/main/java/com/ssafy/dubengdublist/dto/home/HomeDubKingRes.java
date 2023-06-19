@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class HomeDubKingRes {
+public class HomeDubKingRes implements Comparable<HomeDubKingRes>{
 
     private Long id;
     private String userId;
@@ -23,4 +23,10 @@ public class HomeDubKingRes {
         this.totalVote = totalVote;
     }
 
+    @Override
+    public int compareTo(HomeDubKingRes o) {
+        if (o.totalVote - this.totalVote >= 0L) {
+            return 0;
+        } else return 1;
+    }
 }

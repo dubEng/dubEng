@@ -125,8 +125,8 @@ public class RedisService {
         redisTemplate.delete(voteCntKeys);
     }
 
-    //    @Scheduled(cron = "30 0 0 * * 1") // 매주 일요일 밤 자정 + 30초 갱신
-    @Scheduled(cron = "30 0 0 * * *") // 모니터링용 initVoteCount랑 동시 실행 방지로 30초에 작동
+    @Scheduled(cron = "30 0 0 * * 1") // 매주 일요일 밤 자정 + 30초 갱신
+//    @Scheduled(cron = "30 0 0 * * *") // 모니터링용 initVoteCount랑 동시 실행 방지로 30초에 작동
     public void updateDubKing() {
         PriorityQueue<dubKingVote> priorityDubkingVotes = new PriorityQueue<>();
 
@@ -150,12 +150,12 @@ public class RedisService {
                 priorityDubkingVotes.add(new dubKingVote(userId, voteCnt));
             }
         }
-        // pQ에 있는거 top3만 넣을거야
-        for (int i = 0; i < 8; i++) {
+        // pQ에 있는거 top3만 넣을거야 아니 혹시 모르니까 8명..
+        for (int i = 0; i < 3; i++) {
             if(priorityDubkingVotes.isEmpty()) break;
             dubKingVote cur = priorityDubkingVotes.poll();
             String value = cur.userId+"::"+cur.voteCnt;
-            setOperations.add(dubKingKey,value );
+            setOperations.add(dubKingKey,value);
         }
     }
 
