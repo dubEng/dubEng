@@ -18,9 +18,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final AuthService authService;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        List<String> authList = Arrays.asList("/**/mission/*", "/**/auth/login", "/**/auth/join", "/**/mypage/*");
+        List<String> authList = Arrays.asList("/**/mission/*", "/**/auth/login", "/**/auth/join");
+        List<String> mypageList = Arrays.asList("/**/mypage/*", "/**/mypage/record/*");
         registry.addInterceptor(new JwtInterceptor(authService))
                 .addPathPatterns(authList)   //EndPoint에 적용
+                .addPathPatterns(mypageList)
                 .excludePathPatterns("/**/mypage/profile", "/**/mypage/record/list");
 
     }

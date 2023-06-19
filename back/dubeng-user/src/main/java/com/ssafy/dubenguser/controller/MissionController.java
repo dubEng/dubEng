@@ -27,7 +27,6 @@ import java.util.Objects;
 @Api("도전과제 페이지 API")
 public class MissionController {
     private final UserMissionService userMissionService;
-    private final CookieHandler cookieHandler;
 
     @ApiOperation(value="도전과제 미션 목록 조회")
     @GetMapping("/list")
