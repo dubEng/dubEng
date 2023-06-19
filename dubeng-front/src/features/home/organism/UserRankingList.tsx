@@ -3,9 +3,10 @@ import UserRankingListItem from "../molecules/UserRankingListItem";
 import useHomeRankQuery from "../../../apis/home/queries/useHomeRankQuery";
 import ErrorComponent from "../../../components/atoms/ErrorComponent";
 import DefaultImage from "../../../../public/images/default/mic_profile.png";
+import { getHomeRanking } from "@/apis/home/api/home";
 
-export default function UserRankingList() {
-  const rank = useHomeRankQuery();
+export default function UserRankingList(props : any) {
+  const rank = useHomeRankQuery(props.homeRanking);
 
   if (rank.isLoading) {
     return (
@@ -46,4 +47,13 @@ export default function UserRankingList() {
         ))}
     </section>
   );
+}
+
+export async function getStaticProps() {
+  const homeRanking = await getHomeRanking();
+  
+  return {
+    props: { homeRanking },
+    revalidate: 60,
+  };
 }

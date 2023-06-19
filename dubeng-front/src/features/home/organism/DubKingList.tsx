@@ -5,15 +5,15 @@ import ErrorComponent from "../../../components/atoms/ErrorComponent";
 
 import DefaultImage from "../../../../public/images/default/mic_profile.png";
 
-import ProfileOne from "../../../../public/images/dump/profile_01.svg";
-import ProfileTwo from "../../../../public/images/dump/profile_02.svg";
-import ProfileThree from "../../../../public/images/dump/profile_03.svg";
+// import ProfileOne from "../../../../public/images/dump/profile_01.svg";
+// import ProfileTwo from "../../../../public/images/dump/profile_02.svg";
+// import ProfileThree from "../../../../public/images/dump/profile_03.svg";
 import { DubKing } from "@/types/DubKing";
-import { getHomeRanking } from "@/apis/home/api/home";
+import { getHomeDubKing } from "@/apis/home/api/home";
 
 export default function DubKingList(props : any) {
 
-  const { data, isLoading, isError, refetch } = useHomeDubKingQuery();
+  const { data, isLoading, isError, refetch } = useHomeDubKingQuery(props.homeDubKing);
 
   if (isLoading) {
     return (
@@ -63,10 +63,10 @@ export default function DubKingList(props : any) {
 
 
 export async function getStaticProps() {
-  const homeRanking = await getHomeRanking();
+  const homeDubKing = await getHomeDubKing();
   
   return {
-    props: { homeRanking },
+    props: { homeDubKing },
     revalidate: 60,
   };
 }
