@@ -6,9 +6,10 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import ErrorComponent from "../../../components/atoms/ErrorComponent";
 import "swiper/css";
 import Link from "next/link";
+import { getHomePopularity } from "@/apis/home/api/home";
 
-export default function DubProductList() {
-  const popularity = useHomePopularityQuery();
+export default function DubProductList(props : any) {
+  const popularity = useHomePopularityQuery(props.popularity);
 
   if (popularity.isLoading) {
     return (
@@ -40,4 +41,13 @@ export default function DubProductList() {
         ))}
     </Swiper>
   );
+}
+
+export async function getStaticProps() {
+  const popularity = await getHomePopularity();
+  
+  return {
+    props: { popularity },
+    revalidate: 300,
+  };
 }

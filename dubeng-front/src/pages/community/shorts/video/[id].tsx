@@ -17,6 +17,7 @@ import useScrapPost from "@/apis/community/mutations/useScrapPost";
 import { MdOutlineTurnedInNot } from "react-icons/md";
 import { MdOutlineTurnedIn } from "react-icons/md";
 import useScrapQuery from "@/apis/community/queries/useScrapQuery";
+import DubScriptListItem from "@/components/molecules/DubScriptListItem";
 
 interface Iprops {
   id: number;
@@ -203,31 +204,25 @@ export default function ShortsVideoPage() {
               data.scriptList.map((item: any, index: number) => {
                 if (index === selectedScript) {
                   return (
-                    <div
-                      className={`script-element-${index} mb-8 mx-20 flex flex-col items-center`}
+                    <DubScriptListItem
                       key={index}
-                    >
-                      <p className="text-16 text-dubblue">{item.content}</p>
-                      {langType === LangType.ENGLISH ? (
-                        <p className="text-14 text-[#8E8D8D]">
-                          {item.translateContent}
-                        </p>
-                      ) : null}
-                    </div>
+                      index={index}
+                      content={item.content}
+                      isSelected={true}
+                      langType={langType}
+                      translateContent={item.translateContent}
+                    />
                   );
                 } else {
                   return (
-                    <div
-                      className={`script-element-${index} mb-8 mx-20 flex flex-col items-center`}
+                    <DubScriptListItem
                       key={index}
-                    >
-                      <p className="text-16 text-white">{item.content}</p>
-                      {langType === LangType.ENGLISH ? (
-                        <p className="text-14 text-[#8E8D8D]">
-                          {item.translateContent}
-                        </p>
-                      ) : null}
-                    </div>
+                      index={index}
+                      content={item.content}
+                      isSelected={false}
+                      langType={langType}
+                      translateContent={item.translateContent}
+                    />
                   );
                 }
               })}
