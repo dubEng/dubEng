@@ -9,28 +9,10 @@ import ProfileOne from "../../../../public/images/dump/profile_01.svg";
 import ProfileTwo from "../../../../public/images/dump/profile_02.svg";
 import ProfileThree from "../../../../public/images/dump/profile_03.svg";
 import { DubKing } from "@/types/DubKing";
+import { getHomeRanking } from "@/apis/home/api/home";
 
-export default function DubKingList() {
-  // const dubKingList: DubKing[] = [
-  //   {
-  //     ranking: 1,
-  //     nickname: "개발진뽕",
-  //     totalCount: 62,
-  //     dubKingImageUrl: ProfileOne,
-  //   },
-  //   {
-  //     ranking: 2,
-  //     nickname: "개발진J",
-  //     totalCount: 37,
-  //     dubKingImageUrl: ProfileTwo,
-  //   },
-  //   {
-  //     ranking: 3,
-  //     nickname: "개발진짛",
-  //     totalCount: 20,
-  //     dubKingImageUrl: ProfileThree,
-  //   },
-  // ];
+export default function DubKingList(props : any) {
+
   const { data, isLoading, isError, refetch } = useHomeDubKingQuery();
 
   if (isLoading) {
@@ -48,28 +30,6 @@ export default function DubKingList() {
   if (data.length >= 3) {
     return (
       <section className="mx-16 flex justify-around">
-        {/* {dubKingList && (
-          <>
-            <DubKingItem
-              nickname={dubKingList[1].nickname?? ""}
-              ranking={dubKingList[1].ranking}
-              dubKingImageUrl={dubKingList[1].dubKingImageUrl ?? ""}
-              totalCount={dubKingList[1].totalCount}
-            />
-            <DubKingItem
-              nickname={dubKingList[0].nickname ?? ""}
-              ranking={dubKingList[0].ranking}
-              dubKingImageUrl={dubKingList[0].dubKingImageUrl ?? ""}
-              totalCount={dubKingList[0].totalCount}
-            />
-            <DubKingItem
-              nickname={dubKingList[2].nickname ?? ""}
-              ranking={dubKingList[2].ranking}
-              dubKingImageUrl={dubKingList[2].dubKingImageUrl ?? ""}
-              totalCount={dubKingList[2].totalCount}
-            />
-          </>
-        )} */}
         {data && (
           <>
             <DubKingItem
@@ -99,4 +59,14 @@ export default function DubKingList() {
     );
   }
   return <></>;
+}
+
+
+export async function getStaticProps() {
+  const homeRanking = await getHomeRanking();
+  
+  return {
+    props: { homeRanking },
+    revalidate: 60,
+  };
 }
