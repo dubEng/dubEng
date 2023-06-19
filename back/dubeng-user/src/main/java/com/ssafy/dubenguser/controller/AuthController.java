@@ -95,52 +95,24 @@ public class AuthController {
 
         return new ResponseEntity<String>(userId, HttpStatus.OK);
     }
-    @PostMapping("/refresh")
-    public ResponseEntity<Void> refreshTokenRequest(HttpServletRequest request){
-        log.debug("refreshToken Test");
 
-        String refreshToken = cookieHandler.getRefreshToken(request);
-
-        authService.reissueATK(refreshToken);
-
-        return new ResponseEntity<Void>(HttpStatus.OK);
-    }
-
-    /**
-     * 회원가입
-     * 구현 안돼어있음.
-     */
     @PostMapping("/join")
     @ApiOperation(value = "회원가입하기")
-    public ResponseEntity<String> userAdd(@RequestHeader HttpHeaders headers, HttpServletRequest request, @RequestBody UserJoinReq req){
-        String accessToken = headers.getFirst("Authorization");
-        if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
-        }
-        log.debug("=====회원가입하기=====");
-        log.debug("ATK : {}", accessToken);
-        log.info("userAdd : {}", request.toString());
+    public ResponseEntity<String> userAdd(HttpServletRequest request, @RequestBody UserJoinReq userInfo){
+        String accessToken = (String) request.getAttribute("Authorization");
+        log.debug("userAdd : {}", request.toString());
 
-        String refreshToken = cookieHandler.getRefreshToken(request);
-
-        userService.addUser(req, accessToken, refreshToken);
+        userService.addUser(userInfo, accessToken);
 
         return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
     @PostMapping("/login")
     @ApiOperation(value = "회원정보 가져오기")
     public ResponseEntity<UserLoginRes> getLoginInfo(HttpServletRequest request, @RequestHeader HttpHeaders headers){
-        log.debug("======로그인======");
-        String accessToken = headers.getFirst("Authorization");
-        if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
-        }
-        log.debug("ATK : {}", accessToken);
-
-        String refreshToken = cookieHandler.getRefreshToken(request);
+        String accessToken = (String) request.getAttribute("Authorization");
 
         //ATK을 이용하여 회원정보 요청
-        UserLoginRes user = authService.findUser(accessToken, refreshToken);
+        UserLoginRes user = authService.findUser(accessToken);
 
         log.debug("loginUser : {}", user);
         return new ResponseEntity<UserLoginRes>(user, HttpStatus.OK);
