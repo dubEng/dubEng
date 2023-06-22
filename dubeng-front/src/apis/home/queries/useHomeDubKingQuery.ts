@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import axios from "axios";
 import * as queryKeys from "../../../constants/queryKeys";
-import { getHomeRanking } from "../api/home";
+import { getHomeDubKing } from "../api/home";
 
 // const fetcher = () =>
 //   axios
@@ -11,7 +11,7 @@ import { getHomeRanking } from "../api/home";
 //     });
 
 const useHomeDubKingQuery = (initialData: any) => {
-  return useQuery([queryKeys.Home_DUB_KING], getHomeRanking, {initialData: initialData});
+  return useQuery([queryKeys.Home_DUB_KING], getHomeDubKing, {initialData: initialData});
 };
 
 export default useHomeDubKingQuery;
