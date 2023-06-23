@@ -49,7 +49,7 @@ export default function MyDubProductList() {
     return <ErrorComponent onClick={() => {}} retry={false} />;
   }
 
-  if (myProductList.length == 0) {
+  if (myProductList && myProductList.length == 0) {
     return <EmptyComponent status={EmptyType.EMPTY_DUB_PRODUCT} />;
   } else {
     return (
