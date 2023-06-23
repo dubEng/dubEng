@@ -24,8 +24,6 @@ import videoClass
 app = FastAPI()
 
 origins = [
-    "https://k8b208.p.ssafy.io",
-    "https://k8b208.p.ssafy.io/",
     "https://dub-eng.com/",
     "https://dub-eng.com",
     "http://127.0.0.1:8000/"
@@ -52,6 +50,7 @@ BUCKET_NAME = f_conn.readline().strip()
 AWS_ACCESS_KEY_ID = f_conn.readline().strip()
 AWS_SECRET_ACCESS_KEY = f_conn.readline().strip()
 AWS_DEFAULT_REGION = 'ap-northeast-2'
+ADDRESS = f_conn.readline().strip
 
 f_conn.close()
 
@@ -214,7 +213,7 @@ def uploadToBucket(target, uploadName):
     return url
 
 def getFile(videoId,nickname):
-    request_url = f"https://k8b208.p.ssafy.io/file/dublist?videoId={videoId}&nickname={nickname}"
+    request_url = f"https://{ADDRESS}/file/dublist?videoId={videoId}&nickname={nickname}"
     response = requests.get(request_url)
 
     data = json.loads(response.content)
