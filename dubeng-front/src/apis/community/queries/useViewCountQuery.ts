@@ -14,7 +14,10 @@ const fetcher = (recordId: number) => {
 };
 
 const useViewCountQuery = (recordId: number) => {
-  return useQuery(queryKeys.VIEW_COUNT, () => fetcher(recordId), {});
+  return useQuery(queryKeys.VIEW_COUNT, () => fetcher(recordId), {
+    refetchOnWindowFocus: false,
+    // enabled: !!firstPlayed,
+  });
 };
 
 export default useViewCountQuery;
