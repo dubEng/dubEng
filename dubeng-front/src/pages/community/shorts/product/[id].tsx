@@ -6,11 +6,14 @@ import useCommunityDetailQuery from "@/apis/community/queries/useCommunityDetail
 import Image from "next/image";
 import ShortsTitle from "@/features/community/molecules/ShortsTitle";
 import DefaultImage from "../../../../../public/images/default/mic_profile.png";
-import usePlayCountUpQuery from "@/apis/community/queries/usePlayCountUpQuery";
+// import usePlayCountUpQuery from "@/apis/community/queries/usePlayCountUpQuery";
+import useViewCountQuery from "@/apis/community/queries/useViewCountQuery";
+import useLikeInfoQuery from "@/apis/community/queries/useLikeInfoQuery";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 import { LangType } from "@/enum/statusType";
 import Link from "next/link";
+import DubScriptListItem from "@/components/molecules/DubScriptListItem";
 
 export default function ShortsProductPage() {
   const router = useRouter();
@@ -44,18 +47,25 @@ export default function ShortsProductPage() {
     player.mute();
   };
 
-  const { data: playCountUp, refetch } = usePlayCountUpQuery(
-    userId,
+  // const { data: playCountUp, refetch } = usePlayCountUpQuery(
+  //   userId,
+  //   Number(router.query.id)
+  // );
+
+  const { data: playCountUp, refetch } = useViewCountQuery(
     Number(router.query.id)
   );
 
-  const playCountRef = useRef<number | null>(null);
+  const { data: likeInfo } = useLikeInfoQuery(Number(router.query.id), userId);
 
-  useEffect(() => {
-    if (playCountUp !== undefined && playCountRef.current === null) {
-      playCountRef.current = playCountUp.playCount;
-    }
-  }, [playCountUp]);
+  console.log("라이크인포", likeInfo);
+  // const playCountRef = useRef<number | null>(null);
+
+  // useEffect(() => {
+  //   if (playCountUp !== undefined && playCountRef.current === null) {
+  //     playCountRef.current = playCountUp.playCount;
+  //   }
+  // }, [playCountUp]);
 
   const [nowPlayCount, setNowPlayCount] = useState<number>();
 
@@ -118,8 +128,6 @@ export default function ShortsProductPage() {
       if (selectedScript < data.scriptList.length && time > 0) {
         // 해당 스크립트 리스트의 startTime이 undefined가 아니라면
         if (data.scriptList[selectedScript]?.startTime != undefined) {
-
-
           // 현재 재생되고 있는 영상의 시간이 현재 스크립트의 시작 시간보다 크거나 같고
           // 현재 재생되고 있는 영상의 시간이 다음 스크립트의 시작 시간보다 작거나 같다면
           // selectedScript를 증가하지 않고 넘어간다.
@@ -193,11 +201,15 @@ export default function ShortsProductPage() {
             <ShortsTitle
               userId={data.userId}
               title={data.title}
-              playCount={playCountRef.current as number}
+              // playCount={playCountRef.current as number}
+              // playCount={likeInfo?.playCount}
+              playCount={playCountUp}
               createdDate={data.createdDate}
               recordCommentCount={data.recordCommentCount}
-              recordLikeCount={playCountUp?.likeCount}
-              isLike={playCountUp?.isLike}
+              // recordLikeCount={playCountUp?.likeCount}
+              recordLikeCount={likeInfo?.likeCount}
+              // isLike={playCountUp?.isLike}
+              isLike={likeInfo?.isLike}
               isScrap={false}
             />
           </div>
@@ -206,33 +218,25 @@ export default function ShortsProductPage() {
               data.scriptList.map((item: any, index: number) => {
                 if (index === selectedScript) {
                   return (
-                    <div
-                      className={`script-element-${index} mb-8 mx-20 flex flex-col items-center`}
+                    <DubScriptListItem
                       key={index}
-                    >
-                      <p className="text-16 text-dubblue text-center">
-                        {item.content}
-                      </p>
-                      {langType === LangType.ENGLISH ? (
-                        <p className="text-14 text-[#8E8D8D]">
-                          {item.translateContent}
-                        </p>
-                      ) : null}
-                    </div>
+                      index={index}
+                      content={item.content}
+                      isSelected={true}
+                      langType={langType}
+                      translateContent={item.translateContent}
+                    />
                   );
                 } else {
                   return (
-                    <div
-                      className={`script-element-${index} mb-8 mx-20 flex flex-col items-center`}
+                    <DubScriptListItem
                       key={index}
-                    >
-                      <p className="text-16 text-white">{item.content}</p>
-                      {langType === LangType.ENGLISH ? (
-                        <p className="text-14 text-[#8E8D8D]">
-                          {item.translateContent}
-                        </p>
-                      ) : null}
-                    </div>
+                      index={index}
+                      content={item.content}
+                      isSelected={false}
+                      langType={langType}
+                      translateContent={item.translateContent}
+                    />
                   );
                 }
               })}
