@@ -10,10 +10,7 @@ import EmptyComponent from "@/components/atoms/EmptyComponent";
 import { EmptyType } from "@/enum/statusType";
 
 export default function LikeDubProductList() {
-  const { data, isLoading, refetch, error } = useLikeDubProductListQuery(
-    true,
-    "all"
-  );
+  const { data, isLoading, refetch, error } = useLikeDubProductListQuery(true, "all");
 
   if (isLoading) {
     return (
@@ -24,32 +21,30 @@ export default function LikeDubProductList() {
   }
 
   if (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 404) {
-        return <EmptyComponent status={EmptyType.EMPTY_LIKE_DUB_PRODUCT} />;
-      }
-    } else {
-      return <ErrorComponent onClick={() => refetch} retry={true} />;
-    }
+    return <ErrorComponent onClick={() => refetch} retry={true} />;
   }
 
-  return (
-    <Swiper slidesPerView={1.25}>
-      {data &&
-        data.map((item: any) => (
-          <SwiperSlide key={item.id}>
-            <Link href={`/community/shorts/product/${item.id}`}>
-              <DubProductCard
-                title={item.title}
-                thumbnail={item.thumbnail ?? ""}
-                playCount={item.playCount}
-                updatedDate={item.updatedDate}
-                nickname={item.nickname}
-                userProfileImg={item.userProfileImg}
-              />
-            </Link>
-          </SwiperSlide>
-        ))}
-    </Swiper>
-  );
+  if (data.length == 0) {
+    return <EmptyComponent status={EmptyType.EMPTY_LIKE_DUB_PRODUCT} />;
+  } else {
+    return (
+      <Swiper slidesPerView={1.25}>
+        {data &&
+          data.map((item: any) => (
+            <SwiperSlide key={item.id}>
+              <Link href={`/community/shorts/product/${item.id}`}>
+                <DubProductCard
+                  title={item.title}
+                  thumbnail={item.thumbnail ?? ""}
+                  playCount={item.playCount}
+                  updatedDate={item.updatedDate}
+                  nickname={item.nickname}
+                  userProfileImg={item.userProfileImg}
+                />
+              </Link>
+            </SwiperSlide>
+          ))}
+      </Swiper>
+    );
+  }
 }

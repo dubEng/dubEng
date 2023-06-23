@@ -8,7 +8,7 @@ import useMyDubProductListMutation from "@/apis/mypage/mutations/useMyDubProduct
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../stores/store";
-import axios from 'axios';
+import axios from "axios";
 import EmptyComponent from "@/components/atoms/EmptyComponent";
 import { EmptyType } from "@/enum/statusType";
 
@@ -46,17 +46,13 @@ export default function MyDubProductList() {
   }
 
   if (error) {
-    if (axios.isAxiosError(error)) {
-      if(error.response?.status === 404){
-        return <EmptyComponent status={EmptyType.EMPTY_DUB_PRODUCT} />
-      }
-    } else {
-      return <ErrorComponent onClick={() => {}} retry={false} />;
-    }
+    return <ErrorComponent onClick={() => {}} retry={false} />;
   }
 
-  return (
-    <>
+  if (myProductList.length == 0) {
+    return <EmptyComponent status={EmptyType.EMPTY_DUB_PRODUCT} />;
+  } else {
+    return (
       <Swiper slidesPerView={1.25}>
         {myProductList &&
           myProductList.map((item: any) => (
@@ -72,6 +68,6 @@ export default function MyDubProductList() {
             </SwiperSlide>
           ))}
       </Swiper>
-    </>
-  );
+    );
+  }
 }
