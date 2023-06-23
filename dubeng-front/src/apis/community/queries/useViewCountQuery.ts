@@ -7,8 +7,9 @@ const fetcher = (recordId: number) => {
     .get(
       process.env.NEXT_PUBLIC_BASE_URL + `/dub/community/viewCount/${recordId}`
     )
-    .then((res) => {
-      console.log("view count res", res);
+    .then(({ data }) => {
+      // console.log("view count res", res);
+      return data;
     });
 };
 

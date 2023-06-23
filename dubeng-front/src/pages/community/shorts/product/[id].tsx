@@ -58,7 +58,8 @@ export default function ShortsProductPage() {
 
   const { data: likeInfo } = useLikeInfoQuery(Number(router.query.id), userId);
 
-  const playCountRef = useRef<number | null>(null);
+  console.log("라이크인포", likeInfo);
+  // const playCountRef = useRef<number | null>(null);
 
   // useEffect(() => {
   //   if (playCountUp !== undefined && playCountRef.current === null) {
@@ -200,13 +201,15 @@ export default function ShortsProductPage() {
             <ShortsTitle
               userId={data.userId}
               title={data.title}
-              playCount={playCountRef.current as number}
+              // playCount={playCountRef.current as number}
+              // playCount={likeInfo?.playCount}
+              playCount={playCountUp}
               createdDate={data.createdDate}
               recordCommentCount={data.recordCommentCount}
               // recordLikeCount={playCountUp?.likeCount}
-              // recordLikeCount={likeInfo?.likeCnt}
+              recordLikeCount={likeInfo?.likeCount}
               // isLike={playCountUp?.isLike}
-              // isLike={likeInfo?.like}
+              isLike={likeInfo?.isLike}
               isScrap={false}
             />
           </div>

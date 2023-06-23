@@ -28,8 +28,8 @@ const useLikePost = () => {
   const queryClient = useQueryClient();
   return useMutation(fetcher, {
     onSuccess: (data) => {
-      return queryClient.invalidateQueries(queryKeys.PLAY_COUNT);
       console.log("좋아요가 정상적으로 반영되었습니다.");
+      return queryClient.invalidateQueries(queryKeys.LIKE_INFO);
     },
     onError: (error) => {
       console.log("좋아요에 실패하였습니다.");

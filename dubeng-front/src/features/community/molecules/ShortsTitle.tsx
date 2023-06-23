@@ -37,7 +37,7 @@ export default function ShortsTitle({
   isScrap,
 }: Iprops) {
   timeago.register("ko", koLocale);
-  console.log("ttttt");
+  console.log("ttttt", isLike, recordLikeCount, playCount);
 
   const userIdData = useSelector((state: RootState) => state.user.userId);
   // const [isTaskButtonOpen, setIsTaskButtonOpen] = useState(false);
