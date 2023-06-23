@@ -13,6 +13,8 @@ const fetcher = async (payload: MyDubProductList) => {
     }
   );
 
+  console.log('useMyDubProductListMutation', data);
+
   return data;
 };
 
