@@ -50,7 +50,7 @@ BUCKET_NAME = f_conn.readline().strip()
 AWS_ACCESS_KEY_ID = f_conn.readline().strip()
 AWS_SECRET_ACCESS_KEY = f_conn.readline().strip()
 AWS_DEFAULT_REGION = 'ap-northeast-2'
-ADDRESS = f_conn.readline().strip
+ADDRESS = f_conn.readline().strip()
 
 f_conn.close()
 
