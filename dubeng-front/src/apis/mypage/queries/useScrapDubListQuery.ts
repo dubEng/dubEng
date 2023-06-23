@@ -16,7 +16,7 @@ const fetcher = async (isLimit: boolean, accessToken: string, langType: string) 
       },
     }
   );
-  console.log('useScrapDubVideoListQuery', useScrapDubVideoListQuery);
+  console.log('useScrapDubVideoListQuery', data);
 
   return data;
 };
