@@ -30,7 +30,9 @@ export const IS_SCRAP = "/contents/scrap";
 // product shorts
 export const COMMUNITY_DETAIL = "/community/detail";
 export const PLAY_COUNT = "/community/playCount";
+export const VIEW_COUNT = "/community/viewCount";
 export const COMMENT_LIST = "/community/comment";
+export const LIKE_INFO = "/community/likeInfo";
 
 // mypage
 export const PROFILE = "/mypage/profile";

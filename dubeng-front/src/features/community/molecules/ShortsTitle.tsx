@@ -37,6 +37,7 @@ export default function ShortsTitle({
   isScrap,
 }: Iprops) {
   timeago.register("ko", koLocale);
+  console.log("ttttt", isLike, recordLikeCount, playCount);
 
   const userIdData = useSelector((state: RootState) => state.user.userId);
   // const [isTaskButtonOpen, setIsTaskButtonOpen] = useState(false);
@@ -56,6 +57,8 @@ export default function ShortsTitle({
   }
 
   const handleLikeButton = async () => {
+    console.log("recordId", recordId);
+    console.log("userIdData", userIdData);
     mutate({ recordId: recordId, userId: userIdData });
   };
 

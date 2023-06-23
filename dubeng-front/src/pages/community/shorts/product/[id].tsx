@@ -6,7 +6,9 @@ import useCommunityDetailQuery from "@/apis/community/queries/useCommunityDetail
 import Image from "next/image";
 import ShortsTitle from "@/features/community/molecules/ShortsTitle";
 import DefaultImage from "../../../../../public/images/default/mic_profile.png";
-import usePlayCountUpQuery from "@/apis/community/queries/usePlayCountUpQuery";
+// import usePlayCountUpQuery from "@/apis/community/queries/usePlayCountUpQuery";
+import useViewCountQuery from "@/apis/community/queries/useViewCountQuery";
+import useLikeInfoQuery from "@/apis/community/queries/useLikeInfoQuery";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 import { LangType } from "@/enum/statusType";
@@ -16,7 +18,9 @@ import DubScriptListItem from "@/components/molecules/DubScriptListItem";
 export default function ShortsProductPage() {
   const router = useRouter();
 
-  const langType = useSelector((state: RootState) => state.languageTab.langType);
+  const langType = useSelector(
+    (state: RootState) => state.languageTab.langType
+  );
 
   const userId = useSelector((state: RootState) => state.user.userId);
 
@@ -43,15 +47,25 @@ export default function ShortsProductPage() {
     player.mute();
   };
 
-  const { data: playCountUp, refetch } = usePlayCountUpQuery(userId, Number(router.query.id));
+  // const { data: playCountUp, refetch } = usePlayCountUpQuery(
+  //   userId,
+  //   Number(router.query.id)
+  // );
 
-  const playCountRef = useRef<number | null>(null);
+  const { data: playCountUp, refetch } = useViewCountQuery(
+    Number(router.query.id)
+  );
 
-  useEffect(() => {
-    if (playCountUp !== undefined && playCountRef.current === null) {
-      playCountRef.current = playCountUp.playCount;
-    }
-  }, [playCountUp]);
+  const { data: likeInfo } = useLikeInfoQuery(Number(router.query.id), userId);
+
+  console.log("라이크인포", likeInfo);
+  // const playCountRef = useRef<number | null>(null);
+
+  // useEffect(() => {
+  //   if (playCountUp !== undefined && playCountRef.current === null) {
+  //     playCountRef.current = playCountUp.playCount;
+  //   }
+  // }, [playCountUp]);
 
   const [nowPlayCount, setNowPlayCount] = useState<number>();
 
@@ -84,8 +98,12 @@ export default function ShortsProductPage() {
   };
 
   useEffect(() => {
-    if (document.querySelector<HTMLElement>(`.script-element-${selectedScript}`)) {
-      const element = document.querySelector<HTMLElement>(`.script-element-${selectedScript}`);
+    if (
+      document.querySelector<HTMLElement>(`.script-element-${selectedScript}`)
+    ) {
+      const element = document.querySelector<HTMLElement>(
+        `.script-element-${selectedScript}`
+      );
       element?.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, [selectedScript]);
@@ -100,8 +118,10 @@ export default function ShortsProductPage() {
         setSelectedScript(0);
       }
 
-      const currentTimeSecond = data.scriptList[selectedScript]?.startTime / 1000;
-      const nextTimeSecond = data.scriptList[selectedScript + 1]?.startTime / 1000;
+      const currentTimeSecond =
+        data.scriptList[selectedScript]?.startTime / 1000;
+      const nextTimeSecond =
+        data.scriptList[selectedScript + 1]?.startTime / 1000;
 
       /* 실시간 하이라이팅 */
       // 선택된 스크립트의 idx값이 전체 스크립트의 길이보다 작고 time이 0 보다 크면 실행
@@ -172,16 +192,24 @@ export default function ShortsProductPage() {
               setSelectedScript(0);
             }}
           />
-          <audio ref={audioRef} style={{ display: "none" }} src={data.recordPath} />
+          <audio
+            ref={audioRef}
+            style={{ display: "none" }}
+            src={data.recordPath}
+          />
           <div className="mt-16">
             <ShortsTitle
               userId={data.userId}
               title={data.title}
-              playCount={playCountRef.current as number}
+              // playCount={playCountRef.current as number}
+              // playCount={likeInfo?.playCount}
+              playCount={playCountUp}
               createdDate={data.createdDate}
               recordCommentCount={data.recordCommentCount}
-              recordLikeCount={playCountUp?.likeCount}
-              isLike={playCountUp?.isLike}
+              // recordLikeCount={playCountUp?.likeCount}
+              recordLikeCount={likeInfo?.likeCount}
+              // isLike={playCountUp?.isLike}
+              isLike={likeInfo?.isLike}
               isScrap={false}
             />
           </div>
