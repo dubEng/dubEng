@@ -30,6 +30,9 @@ export default function ShortsProductPage() {
 
   const [selectedScript, setSelectedScript] = useState<number>(0);
 
+  // const [notYetPlayed, setNotYetPlayed] = useState(true);
+  const [oncePlayed, setOncePlayed] = useState(false);
+
   const audioRef = useRef<HTMLAudioElement>(null);
 
   function transferYoutube(videoPath: string) {
@@ -54,6 +57,7 @@ export default function ShortsProductPage() {
 
   const { data: playCountUp, refetch } = useViewCountQuery(
     Number(router.query.id)
+    // !notYetPlayed
   );
 
   const { data: likeInfo } = useLikeInfoQuery(Number(router.query.id), userId);
@@ -83,19 +87,29 @@ export default function ShortsProductPage() {
     if (event.data === 1) {
       if (audioRef.current) {
         audioRef.current.play();
+        // 재생 중일 때
+        console.log("영상 재생");
+        // refetch();
       }
-
-      // 재생 중일 때
-      // console.log("영상 재생");
-      refetch();
+      if (oncePlayed) {
+        console.log("한번 재생 종료되고 나서 다시 재생한 것");
+        refetch();
+        setOncePlayed(false);
+      }
     } else if (event.data === 2) {
       if (audioRef.current) {
         audioRef.current.pause();
       }
       //일시 정지 시
       // console.log("일시 정지");
+    } else if (event.data == 0) {
+      setOncePlayed(true);
     }
   };
+
+  // useEffect(() => {
+  //   setNotYetPlayed(false);
+  // }, []);
 
   useEffect(() => {
     if (
