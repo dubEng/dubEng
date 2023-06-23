@@ -5,7 +5,7 @@ import * as queryKeys from "@/constants/queryKeys";
 const fetcher = (recordId: number, userId: string) => {
   return axios
     .get(
-      process.env.NEXT_PUBLIC_BASE_URL + `/dub/community/playCount/${recordId}`,
+      process.env.NEXT_PUBLIC_BASE_URL + `/dub/community/likeInfo/${recordId}`,
       {
         params: {
           userId: userId,

@@ -207,9 +207,9 @@ export default function ShortsProductPage() {
               createdDate={data.createdDate}
               recordCommentCount={data.recordCommentCount}
               // recordLikeCount={playCountUp?.likeCount}
-              recordLikeCount={likeInfo?.likeCount}
+              recordLikeCount={likeInfo?.likeCnt}
               // isLike={playCountUp?.isLike}
-              isLike={likeInfo?.isLike}
+              isLike={likeInfo?.like}
               isScrap={false}
             />
           </div>
