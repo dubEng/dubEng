@@ -8,8 +8,7 @@ pipeline {
     stages {
         stage('GIT CLONE') {
             steps{
-                git branch : 'develop-back/recommend',
-                credentialsId : 'lancelot1672' , url : 'https://lab.ssafy.com/s08-final/S08P31B208'
+                git branch : 'develop-back/recommend', url : 'https://github.com/dubEng/dubEng'
             }
         }
         stage('FASTAPI BUILD'){
