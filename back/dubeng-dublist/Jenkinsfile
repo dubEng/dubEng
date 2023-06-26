@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+
+    environment {
+        Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+        Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+    }
+
+    stages {
+        stage('GIT CLONE') {
+            steps{
+                git branch : 'develop-back/dubeng', url : 'https://github.com/dubEng/dubEng'
+            }
+        }
+        stage('SPRING BUILD'){
+            steps{
+                dir('back/dubeng-dublist'){
+                    sh '''
+                    cp /home/ubuntu/env/dublist_server/application-dev.yml ./src/main/resources/application-dev.yml
+                    chmod +x ./gradlew
+                    ./gradlew clean build -x test
+                    '''
+                }
+            }
+        }
+        stage('SPRING DEPLOY'){
+            steps{
+                dir('back/dubeng-dublist'){
+                    sh '''
+                        ls -al
+                        docker-compose down || true
+                        docker-compose up -d --build
+                    '''
+                }
+            }
+        }
+    }
+    // end
+    post {
+        success {
+            mattermostSend (color: 'good',
+            message: "빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+            endpoint: 'https://meeting.ssafy.com/hooks/${env.mmHookId}',
+            channel: 'b208-jenkins-notification'
+            )
+        }
+        failure {
+            mattermostSend (color: 'danger',
+            message: "빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+            endpoint: 'https://meeting.ssafy.com/hooks/${env.mmHookId}',
+            channel: 'b208-jenkins-notification'
+            )
+        }
+    }
+}
