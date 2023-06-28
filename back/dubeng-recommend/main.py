@@ -7,10 +7,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 from ast import literal_eval
 import pandas as pd
-import numpy as np
 import warnings
-from flask import Flask, request
-from flask_cors import CORS
 import pymysql
 import random
 import traceback
@@ -25,8 +22,6 @@ import recommendClass
 
 app = FastAPI()
 origins = [
-    "https://k8b208.p.ssafy.io",
-    "https://k8b208.p.ssafy.io/",
     "https://dub-eng.com/",
     "https://dub-eng.com",
     "http://127.0.0.1:8000/"
