@@ -27,6 +27,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import DubLoadingModal from "@/features/dubbing/organism/DubLoadingModal";
 import { LangType } from "@/enum/statusType";
+import Head from "next/head";
 
 const MySwal = withReactContent(Swal);
 
@@ -265,6 +266,13 @@ export default function DubbingPage() {
 
   return (
     <div className="h-full mb-61">
+      <Head>
+        <title>더빙으로 배우는 영어 쉐도잉 서비스 - 더빙 하기</title>
+        <meta
+          name="description"
+          content="더빙으로 배우는 영어 쉐도잉 서비스, 직접 영상을 더빙하며 영어 스피킹 실력을 키울 수 있습니다."
+        />
+      </Head>
       {data && (
         <YouTube
           videoId={transferYoutube(data.videoPath)}

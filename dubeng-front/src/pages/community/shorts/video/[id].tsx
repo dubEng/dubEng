@@ -18,6 +18,7 @@ import { MdOutlineTurnedInNot } from "react-icons/md";
 import { MdOutlineTurnedIn } from "react-icons/md";
 import useScrapQuery from "@/apis/community/queries/useScrapQuery";
 import DubScriptListItem from "@/components/molecules/DubScriptListItem";
+import Head from "next/head";
 
 interface Iprops {
   id: number;
@@ -136,6 +137,13 @@ export default function ShortsVideoPage() {
 
   return (
     <div className="w-full h-screen bg-black flex flex-col items-center justify-start">
+      <Head>
+        <title>더빙으로 배우는 영어 쉐도잉 서비스 - 더빙 콘텐츠</title>
+        <meta
+          name="description"
+          content="더빙으로 배우는 영어 쉐도잉 서비스, 원본 더빙 영상을 확인할 수 있습니다."
+        />
+      </Head>
       {data && (
         <>
           <YouTube
