@@ -4,6 +4,7 @@ import useMissionListQuery from "@/apis/mission/queries/useMissionListQuery";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 import { useEffect, useState } from "react";
+import Head from "next/head";
 
 export interface MyMissionForm {
   videoId: number;
@@ -47,6 +48,13 @@ export default function MissionPage() {
   }, [data]);
   return (
     <div className="container mx-auto h-screen bg-white mt-57 mb-61">
+      <Head>
+        <title>더빙으로 배우는 영어 쉐도잉 서비스 - 도전 과제</title>
+        <meta
+          name="description"
+          content="더빙으로 배우는 영어 쉐도잉 서비스, 도전 과제를 통해 꾸준한 영어 학습을 가능하게 합니다."
+        />
+      </Head>
       <p className="flex justify-start mx-16 text-19 font-bold mt-24 mb-16">
         {nickname}님의 부엌
       </p>

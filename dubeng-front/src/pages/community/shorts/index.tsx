@@ -12,6 +12,7 @@ import { RootState } from "@/stores/store";
 import ReactFullpage from "@fullpage/react-fullpage";
 import useCommunityShortsQuery from "@/apis/community/queries/useCommunityShortsQuery";
 import Link from "next/link";
+import Head from "next/head";
 
 type Credits = {
   enabled?: boolean;
@@ -107,6 +108,13 @@ export default function ShortsProductPage() {
 
   return (
     <>
+      <Head>
+        <title>더빙으로 배우는 영어 쉐도잉 서비스 - Shorts</title>
+        <meta
+          name="description"
+          content="더빙으로 배우는 영어 쉐도잉 서비스, Shorts를 통해 모바일에서도 빠르고 편리하게 더빙된 영상을 확인할 수 있습니다."
+        />
+      </Head>
       {contentList && (
         <ReactFullpage
           licenseKey={"OPEN-SOURCE-GPLV3-LICENSE"}
