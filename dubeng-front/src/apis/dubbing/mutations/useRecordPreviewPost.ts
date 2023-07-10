@@ -11,6 +11,11 @@ const fetcher = async (payload: RecordPreview) => {
       videoId: payload.videoId,
       userId: payload.userId,
       nickname: payload.nickname,
+    },
+    {
+      headers: {
+        "Cache-Control": "no-cache",
+      },
     }
   );
 
@@ -20,7 +25,7 @@ const fetcher = async (payload: RecordPreview) => {
 const useRecordPreviewPost = () => {
   return useMutation(fetcher, {
     onSuccess: (response) => {
-      // console.log("response", response);
+      console.log("useRecordPreviewPost", response);
     },
     onError: (error) => {
       // console.error("error", error);
