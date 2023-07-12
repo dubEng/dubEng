@@ -1,0 +1,60 @@
+pipeline{
+    agent any
+    
+    environment {
+        Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+        Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+        MM_ENDPOINT = "https://meeting.ssafy.com/hooks/" + "${MATTERMOST_HOOK_ID}"
+    }
+    stages{
+        stage('GIT CLONE'){
+            steps{
+                git branch : 'develop-front', url : 'https://github.com/dubEng/dubEng'
+            }
+        }
+        stage('SETTING ENV'){
+            steps{
+                dir('dubeng-front'){
+                    sh '''
+                        cp /home/ubuntu/env/front_server/.env .env
+                    '''
+                }
+            }
+        }
+        stage('DOCKER BUILD'){
+            steps{
+                dir('dubeng-front'){
+                    sh '''
+                        docker build -t dub/next-front -f Dockerfile-next .
+                    '''
+                }
+            }
+        }
+        stage('DEPLOY'){
+            steps{
+                sh '''
+                    docker stop next-container || true
+                    docker rm next-container || true
+                    docker run --name next-container -d -p 3000:3000 dub/next-front
+                ''' 
+            }
+        }
+    }
+    // end
+    post {
+        success {
+            mattermostSend (color: 'good',
+            message: "빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+            endpoint: "${MM_ENDPOINT}",
+            channel: 'b208-jenkins-notification'
+            )
+        }
+        failure {
+            mattermostSend (color: 'danger',
+            message: "빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+            endpoint: "${MM_ENDPOINT}",
+            channel: 'b208-jenkins-notification'
+            )
+        }
+    }
+}
