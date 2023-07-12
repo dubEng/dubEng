@@ -6,7 +6,8 @@ const fetcher = async (payload: RecordPreview) => {
   axios.defaults.headers.common["Authorization"] = payload.accessToken;
 
   const { data } = await axios.post(
-    process.env.NEXT_PUBLIC_BASE_URL + `/record/preview`,
+    process.env.NEXT_PUBLIC_BASE_URL +
+      `/record/preview?timestamp=${Date.now()}`,
     {
       videoId: payload.videoId,
       userId: payload.userId,
