@@ -171,6 +171,12 @@ export default function ShortsProductPage() {
           name="description"
           content="더빙으로 배우는 영어 쉐도잉 서비스, 다른 사람이 더빙한 영상을 확인할 수 있습니다."
         />
+        <meta
+          http-equiv="Cache-Control"
+          content="no-cache, no-store, must-revalidate"
+        />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
       </Head>
       {data && (
         <>
