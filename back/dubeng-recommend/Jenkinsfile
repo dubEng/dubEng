@@ -30,7 +30,7 @@ pipeline {
                     sh '''
                         docker stop fastApi-recommend-container || true
                         docker rm fastApi-recommend-container || true
-                        docker run --name fastApi-recommend-container -p 9004:5000 -d dub/recommend-server
+                        docker run --name fastApi-recommend-container --network dub-network -p 9004:5000 -d dub/recommend-server
                     '''
                 }
             }
