@@ -1,0 +1,65 @@
+pipeline{
+    agent any
+   
+    environment {
+        Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+        Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+    }
+    
+    stages{
+        stage('GIT CLONE'){
+            steps{
+                git branch : 'develop-back/admin', url : 'https://github.com/dubEng/dubEng'    
+            }
+        }
+        stage('SETTING ENV'){
+            steps{
+                dir('back/dubeng-admin'){
+                    sh '''
+                    cp /home/ubuntu/env/admin_server/env-vedioInfo.txt ./env-vedioInfo.txt
+                    cp /home/ubuntu/env/admin_server/env.txt ./env.txt
+                    '''
+                }
+            }
+        }
+        stage('DOCKER BUILD'){
+            steps{
+                dir('back/dubeng-admin'){
+                    sh '''
+                        docker stop conda-admin-container || true
+                        docker rm conda-admin-container || true
+                        
+                        docker rmi dub/admin-server || true
+                        
+                        docker build -t dub/admin-server .
+                    '''
+                }
+            }
+        }
+        stage('DEPLOY'){
+            steps{
+                sh '''
+                    docker run --name conda-admin-container --network dub-network -p 5000:5000 -v /home/ubuntu/admin_storage:/download/dwn -d dub/admin-server
+                '''
+                echo 'DEPLOY Success'
+            }
+        }
+    }
+    //end
+    post {
+        success {
+            mattermostSend (color: 'good', 
+            message: "빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)", 
+            endpoint: 'https://meeting.ssafy.com/hooks/ros5qqo1dtykpptm5onqor9gxe', 
+            channel: 'b208-jenkins-notification'
+            )
+        }
+        failure {
+            mattermostSend (color: 'danger', 
+            message: "빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)", 
+            endpoint: 'https://meeting.ssafy.com/hooks/ros5qqo1dtykpptm5onqor9gxe', 
+            channel: 'b208-jenkins-notification'
+            )
+        }
+    } 
+}
