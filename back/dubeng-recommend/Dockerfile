@@ -10,4 +10,4 @@ COPY . /app
 
 WORKDIR /app
 
-CMD ["gunicorn", "app:app", "-b", "0.0.0.0:5000", "--timeout", "300"]
+CMD uvicorn --host=0.0.0.0 --port 5000 main:app
