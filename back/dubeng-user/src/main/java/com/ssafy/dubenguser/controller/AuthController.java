@@ -1,12 +1,9 @@
 package com.ssafy.dubenguser.controller;
 
-import com.ssafy.dubenguser.config.CookieHandler;
-import com.ssafy.dubenguser.dto.Token;
 import com.ssafy.dubenguser.dto.UserJoinReq;
 import com.ssafy.dubenguser.dto.UserLoginRes;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
 import com.ssafy.dubenguser.service.AuthService;
-import com.ssafy.dubenguser.service.AuthServiceImpl;
 import com.ssafy.dubenguser.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -68,7 +65,7 @@ public class AuthController {
 
         //회원 가입 여부 체크
         String redirectUri = "/signup";
-        if(userService.checkEnrolledMember((String) result.get("userId"))){
+        if(authService.checkEnrolledMember((String) result.get("userId"))){
             redirectUri = "/login/success";
             response.sendRedirect(SEND_REDIRECT_URL + redirectUri);
             return;
@@ -84,15 +81,15 @@ public class AuthController {
         response.sendRedirect(SEND_REDIRECT_URL + redirectUri);
     }
 
-    @PostMapping("/parse")
-    public ResponseEntity<String> accessTokenParse(@RequestBody Token requestDTO){
-        log.debug("accessToken : {}", requestDTO.getAccessToken());
-
-        //service - parseToken
-        String userId = authService.parseToken(requestDTO.getAccessToken());
-
-        return new ResponseEntity<String>(userId, HttpStatus.OK);
-    }
+//    @PostMapping("/parse")
+//    public ResponseEntity<String> accessTokenParse(@RequestBody Token requestDTO){
+//        log.debug("accessToken : {}", requestDTO.getAccessToken());
+//
+//        //service - parseToken
+//        String userId = authService.parseToken(requestDTO.getAccessToken());
+//
+//        return new ResponseEntity<String>(userId, HttpStatus.OK);
+//    }
 
     @PostMapping("/join")
     @ApiOperation(value = "회원가입하기")
@@ -100,7 +97,7 @@ public class AuthController {
         String accessToken = (String) request.getAttribute("Authorization");
         log.debug("userAdd : {}", request.toString());
 
-        userService.addUser(userInfo, accessToken);
+        authService.addUser(userInfo, accessToken);
 
         return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
@@ -120,7 +117,7 @@ public class AuthController {
     public ResponseEntity<Boolean> duplicateNicknameCheck(@PathVariable String nickname){
         log.debug("nickname : {}", nickname);
 
-        boolean check = userService.checkExistNickname(nickname);
+        boolean check = authService.checkExistNickname(nickname);
 
         return new ResponseEntity<Boolean>(check, HttpStatus.OK);
     }
