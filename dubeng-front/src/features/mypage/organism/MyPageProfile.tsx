@@ -47,7 +47,7 @@ export default function MyPageProfile({
         <div className="bg-dubgray w-1 h-32"></div>
         <div>
           <p className="text-14 text-dubblack font-semibold">{recordCount}</p>
-          <p className="text-12 text-dubblack">총 더빙 작품 수</p>
+          <p className="text-12 text-dubblack">더빙 횟수</p>
         </div>
       </div>
     </div>
