@@ -29,6 +29,7 @@ import DubProductListItem from "@/components/molecules/DubProductListItem";
 import { DubVideoSearch } from "@/types/DubVideoSearch";
 import EmptyComponent from "@/components/atoms/EmptyComponent";
 import Head from "next/head";
+import Navigation from "@/features/community/organism/Navigation";
 
 interface IDubVideoResult {
   content: DubVideoSearch[];
@@ -53,6 +54,7 @@ export default function CommunityPage() {
   /** 현재 페이지에서 관리하는 state **/
   const [searchValue, setSearchValue] = useState("");
   const [keyword, setKeyword] = useState("");
+  const [page, setPage] = useState(0);
 
   // 선택한 카테고리 태그
   const [selectedCategory, setSelectedCategory] = useState<number[]>([]);
@@ -74,7 +76,7 @@ export default function CommunityPage() {
 
   // 2. 콘텐츠 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
   const { data: videoData, isLoading: searchDubVideoLoading } =
-    useSearchDubVideoQuery(selectedCategory, languageIndex, 100, keyword);
+    useSearchDubVideoQuery(selectedCategory, languageIndex, 10, page, keyword);
 
   useEffect(() => {
     if (videoData) {
@@ -128,7 +130,10 @@ export default function CommunityPage() {
     <div className="static h-full px-16 bg-white mt-57 mb-61">
       <Head>
         <title>더빙으로 배우는 영어 쉐도잉 서비스 - 더빙 목록</title>
-        <meta name="description" content="더빙으로 배우는 영어 쉐도잉 서비스, 추천 더빙 영상을 통해 나에게 알맞은 영상을 더빙해보세요" />
+        <meta
+          name="description"
+          content="더빙으로 배우는 영어 쉐도잉 서비스, 추천 더빙 영상을 통해 나에게 알맞은 영상을 더빙해보세요"
+        />
       </Head>
       <div className="flex sticky top-0">
         <DubTypeTap dubType={tabIndex} langType={languageIndex} />
@@ -324,6 +329,7 @@ export default function CommunityPage() {
             )
           )}
       </div>
+      <Navigation page={page} totalPages={videoData?.totalPages} />
       <div className="h-80"></div>
     </div>
   );
