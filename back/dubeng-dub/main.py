@@ -20,6 +20,8 @@ from urllib.request import urlopen
 #커스텀 객체 클래스 import
 import videoClass
 
+import uuid
+
 
 app = FastAPI()
 
@@ -275,7 +277,7 @@ def maekPreviewAudio(item: videoClass.previewReq):
 
 
     #s3 버킷에 업로드하기
-    keyStr = userId + str(videoId) + ".wav"
+    keyStr = str(uuid.uuid1()) + ".wav"
     resultUrl = uploadToBucket(finalAudio, keyStr)
 
     return resultUrl
