@@ -28,6 +28,7 @@ import DubVideoList from "@/features/community/organism/DubVideoList";
 import DubProductListItem from "@/components/molecules/DubProductListItem";
 import { DubVideoSearch } from "@/types/DubVideoSearch";
 import EmptyComponent from "@/components/atoms/EmptyComponent";
+import Head from "next/head";
 import Navigation from "@/features/community/organism/Navigation";
 
 interface IDubVideoResult {
@@ -127,6 +128,13 @@ export default function CommunityPage() {
 
   return (
     <div className="static h-full px-16 bg-white mt-57 mb-61">
+      <Head>
+        <title>더빙으로 배우는 영어 쉐도잉 서비스 - 더빙 목록</title>
+        <meta
+          name="description"
+          content="더빙으로 배우는 영어 쉐도잉 서비스, 추천 더빙 영상을 통해 나에게 알맞은 영상을 더빙해보세요"
+        />
+      </Head>
       <div className="flex sticky top-0">
         <DubTypeTap dubType={tabIndex} langType={languageIndex} />
       </div>

@@ -20,9 +20,9 @@ import { useRouter } from "next/navigation";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import Head from "next/head";
 
 export default function MyPage() {
-
   const [description, setDescription] = useState<string>("");
   const [profileImage, setProfileImage] = useState<string>("");
   const [totalRecTime, setTotalRecTime] = useState<number>(0);
@@ -30,11 +30,11 @@ export default function MyPage() {
   const [categoryList, setCategoryList] = useState<any>(null);
 
   const { mutateAsync } = useProfileMutation();
-  const {userId, nickname} = useSelector((state: RootState) => state.user);
+  const { userId, nickname } = useSelector((state: RootState) => state.user);
   const router = useRouter();
-  
+
   const MySwal = withReactContent(Swal);
-  
+
   useEffect(() => {
     if (userId) {
       async function getProfile() {
@@ -57,27 +57,34 @@ export default function MyPage() {
   //로그아웃
   function handleLogOutButton() {
     MySwal.fire({
-      title: '로그아웃 하시겠습니까?',
-      icon: 'warning',
-      
+      title: "로그아웃 하시겠습니까?",
+      icon: "warning",
+
       showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
-      confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
-      cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
-      confirmButtonText: '확인', // confirm 버튼 텍스트 지정
-      cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+      confirmButtonColor: "#3085d6", // confrim 버튼 색깔 지정
+      cancelButtonColor: "#d33", // cancel 버튼 색깔 지정
+      confirmButtonText: "확인", // confirm 버튼 텍스트 지정
+      cancelButtonText: "취소", // cancel 버튼 텍스트 지정
       reverseButtons: true, // 버튼 순서 거꾸로
-      
-   }).then(result => {
+    }).then((result) => {
       // 만약 Promise리턴을 받으면,
-      if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
-        MySwal.fire({icon: "success", text: "로그아웃 되었습니다."});
-        router.push('/login/logout');
+      if (result.isConfirmed) {
+        // 만약 모달창에서 confirm 버튼을 눌렀다면
+        MySwal.fire({ icon: "success", text: "로그아웃 되었습니다." });
+        router.push("/login/logout");
       }
-   });
+    });
   }
 
   return (
     <div className="static h-full px-16 bg-white mt-57 mb-61">
+      <Head>
+        <title>더빙으로 배우는 영어 쉐도잉 서비스 - 마이페이지</title>
+        <meta
+          name="description"
+          content="더빙으로 배우는 영어 쉐도잉 서비스, 마이페이지에서 내가 더빙한 영상, 좋아요 한 영상, 출석 일수를 확인할 수 있습니다."
+        />
+      </Head>
       <MyPageProfile
         nickname={nickname}
         description={description}
@@ -159,7 +166,10 @@ export default function MyPage() {
         </Link>
       </div>
       <ScrapDubVideoList />
-      <div className="flex items-center justify-between" onClick={handleLogOutButton}>
+      <div
+        className="flex items-center justify-between"
+        onClick={handleLogOutButton}
+      >
         <button className="flex justify-start text-19 font-bold mt-24 mb-16">
           로그아웃
         </button>
@@ -167,7 +177,7 @@ export default function MyPage() {
           <MdArrowForwardIos width={16} height={16} className="text-dubgray" />
         </button>
       </div>
-      
+
       <div className="h-80"></div>
     </div>
   );
