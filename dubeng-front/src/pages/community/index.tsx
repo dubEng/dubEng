@@ -88,10 +88,21 @@ export default function CommunityPage() {
 
   // 3. 작품 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
   const { data: searchDubProductList, isLoading: searchDubProductLoading } =
-    useSearchDubProductQuery(selectedCategory, languageIndex, 100, keyword);
+    useSearchDubProductQuery(
+      selectedCategory,
+      languageIndex,
+      10,
+      page,
+      keyword
+    );
 
   // 4. 카테고리 리스트 가져오기
   const { data, isLoading } = useCategoryListQuery();
+
+  // 탭 바꿀 때마다 초기화 해줄 것
+  useEffect(() => {
+    setPage(0);
+  }, [tabIndex]);
 
   // if (isLoading) {
   //   return <></>;
@@ -331,7 +342,9 @@ export default function CommunityPage() {
             )
           )}
       </div>
-      {videoData && videoData.content.length > 0 ? (
+      {tabIndex === DubType.DUB_VIDEO &&
+      videoData &&
+      videoData.content.length > 0 ? (
         <Navigation
           page={page}
           totalPages={videoData?.totalPages}
@@ -340,7 +353,17 @@ export default function CommunityPage() {
       ) : (
         <></>
       )}
-
+      {tabIndex === DubType.DUB_PRODUCT &&
+      searchDubProductList &&
+      searchDubProductList.content.length > 0 ? (
+        <Navigation
+          page={page}
+          totalPages={searchDubProductList?.totalPages}
+          setPage={setPage}
+        />
+      ) : (
+        <></>
+      )}
       <div className="h-80"></div>
     </div>
   );

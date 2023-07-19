@@ -7,8 +7,8 @@ import qs from "qs";
 const fetcher = (
   contentsSearch: number[],
   langType: string,
-  pageParam: number,
   size: number,
+  page: number,
   title: string
 ) => {
   const queryArray = qs.stringify(
@@ -23,7 +23,7 @@ const fetcher = (
       {
         params: {
           // queryArray,
-          page: pageParam,
+          page: page,
           size: size,
           title: title,
         },
@@ -38,12 +38,12 @@ const useSearchDubProductQuery = (
   contentsSearch: number[],
   langType: string,
   size: number,
+  page: number,
   title: string
 ) => {
   return useQuery(
-    [queryKeys.SEARCH_DUB_PRODUCT, contentsSearch, langType, size, title],
-    ({ pageParam = 0 }) =>
-      fetcher(contentsSearch, langType, pageParam, size, title)
+    [queryKeys.SEARCH_DUB_PRODUCT, contentsSearch, langType, size, page, title],
+    () => fetcher(contentsSearch, langType, size, page, title)
   );
 };
 
