@@ -78,6 +78,8 @@ export default function CommunityPage() {
   const { data: videoData, isLoading: searchDubVideoLoading } =
     useSearchDubVideoQuery(selectedCategory, languageIndex, 10, page, keyword);
 
+  console.log(videoData);
+
   useEffect(() => {
     if (videoData) {
       setSearchDubVideoList(videoData);
@@ -329,11 +331,16 @@ export default function CommunityPage() {
             )
           )}
       </div>
-      <Navigation
-        page={page}
-        totalPages={videoData?.totalPages}
-        setPage={setPage}
-      />
+      {videoData && videoData.content.length > 0 ? (
+        <Navigation
+          page={page}
+          totalPages={videoData?.totalPages}
+          setPage={setPage}
+        />
+      ) : (
+        <></>
+      )}
+
       <div className="h-80"></div>
     </div>
   );
