@@ -329,7 +329,11 @@ export default function CommunityPage() {
             )
           )}
       </div>
-      <Navigation page={page} totalPages={videoData?.totalPages} />
+      <Navigation
+        page={page}
+        totalPages={videoData?.totalPages}
+        setPage={setPage}
+      />
       <div className="h-80"></div>
     </div>
   );
