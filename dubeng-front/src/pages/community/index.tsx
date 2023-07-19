@@ -8,7 +8,7 @@ import { RootState } from "@/stores/store";
 import { DubType, EmptyType, LangType } from "@/enum/statusType";
 import DubSituation from "@/features/community/molecules/DubSituation";
 import SearchInputBox from "@/features/community/atoms/SearchInputBox";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useRecommendDubVideoListQuery from "@/apis/community/queries/useRecommendDubVideoListQuery";
 import DubVideoListItem from "@/components/molecules/DubVideoListItem";
 import useCategoryListQuery from "@/apis/community/queries/useCategoryListQuery";
@@ -139,6 +139,9 @@ export default function CommunityPage() {
     setSelectedCategory([]);
   }, [tabIndex]);
 
+  // 페이지네이션 페이지 넘버 클릭할 때 이동시킬 위치인 ref
+  const searchInputRef = useRef<HTMLDivElement>(null);
+
   return (
     <div className="static h-full px-16 bg-white mt-57 mb-61">
       <Head>
@@ -196,25 +199,29 @@ export default function CommunityPage() {
 
       <div className="mt-24"></div>
       {tabIndex === DubType.DUB_VIDEO ? (
-        <SearchInputBox
-          type="text"
-          name="searchInputBox"
-          value={searchValue}
-          placeholder="더빙할 콘텐츠를 검색해보세요."
-          onChange={handleSearchInputChange}
-          onKeyDown={handleSearchInputKeyDown}
-          onClick={handleSearchInputClear}
-        />
+        <div ref={searchInputRef}>
+          <SearchInputBox
+            type="text"
+            name="searchInputBox"
+            value={searchValue}
+            placeholder="더빙할 콘텐츠를 검색해보세요."
+            onChange={handleSearchInputChange}
+            onKeyDown={handleSearchInputKeyDown}
+            onClick={handleSearchInputClear}
+          />
+        </div>
       ) : (
-        <SearchInputBox
-          type="text"
-          name="searchInputBox"
-          value={searchValue}
-          placeholder="더빙 작품을 검색해보세요."
-          onChange={handleSearchInputChange}
-          onKeyDown={handleSearchInputKeyDown}
-          onClick={handleSearchInputClear}
-        />
+        <div ref={searchInputRef}>
+          <SearchInputBox
+            type="text"
+            name="searchInputBox"
+            value={searchValue}
+            placeholder="더빙 작품을 검색해보세요."
+            onChange={handleSearchInputChange}
+            onKeyDown={handleSearchInputKeyDown}
+            onClick={handleSearchInputClear}
+          />
+        </div>
       )}
 
       <div className="flex mt-16">
@@ -349,6 +356,7 @@ export default function CommunityPage() {
           page={page}
           totalPages={videoData?.totalPages}
           setPage={setPage}
+          inputRef={searchInputRef}
         />
       ) : (
         <></>
@@ -360,6 +368,7 @@ export default function CommunityPage() {
           page={page}
           totalPages={searchDubProductList?.totalPages}
           setPage={setPage}
+          inputRef={searchInputRef}
         />
       ) : (
         <></>
