@@ -99,16 +99,24 @@ export default function CommunityPage() {
   // 4. 카테고리 리스트 가져오기
   const { data, isLoading } = useCategoryListQuery();
 
-  // 탭 바꿀 때마다 초기화 해줄 것
+  // 페이지 넘버 초기화하는 경우 -> 탭, 검색키워드, 선택 카테고리
   useEffect(() => {
     setPage(0);
   }, [tabIndex]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [keyword]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [selectedCategory]);
 
   // if (isLoading) {
   //   return <></>;
   // }
 
-  // 함수
+  /* 함수 */
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
