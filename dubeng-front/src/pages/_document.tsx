@@ -5,7 +5,7 @@ export default function Document() {
     <Html lang="ko">
       <Head>
         <meta charSet={"utf-8"}/>
-        <link rel="manifest" href="/icons/manifest.json" />
+        <link rel="manifest" href="/manifest.json" />
         <meta name='theme-color' content='#FF6D60' />
         <link
           rel="apple-touch-icon"
