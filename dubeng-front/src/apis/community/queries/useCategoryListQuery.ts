@@ -17,7 +17,7 @@ const division = (arr: any[], cnt: number) => {
 
 const fetcher = () =>
   axios
-    .get(process.env.NEXT_PUBLIC_BASE_URL + `/admin/category`)
+    .get(process.env.NEXT_PUBLIC_BASE_URL + `/dub/community/category`)
     .then(({ data }) => {
       const dividedCategoryList = division(data, 8);
 
