@@ -57,12 +57,6 @@
         "sizes": "64x64",
         "type": "image/icon",
         "purpose": "any"
-      },
-      {
-        "src": "./favicon.ico",
-        "sizes": "64x64",
-        "type": "image/icon",
-        "purpose": "any maskable"
       }
     ]
   }
