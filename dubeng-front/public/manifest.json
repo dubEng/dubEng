@@ -47,9 +47,16 @@
         "type": "image/png"
       },
       {
-        "src": "./icons/favicon-512x512.png",
+        "src": "./icons/512.png",
         "sizes": "512x512",
-        "type": "image/png"
+        "type": "image/png",
+        "purpose": "maskable"
+      },
+      {
+        "src": "./favicon.ico",
+        "sizes": "64x64",
+        "type": "image/icon",
+        "purpose": "any"
       },
       {
         "src": "./favicon.ico",
