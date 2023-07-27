@@ -44,6 +44,7 @@
     "react-calendar": "^4.2.1",
     "react-cookies": "^0.1.1",
     "react-dom": "18.2.0",
+    "react-full-page": "^0.1.12",
     "react-icons": "^4.8.0",
     "react-lottie-player": "^1.5.4",
     "react-modal": "^3.16.1",
