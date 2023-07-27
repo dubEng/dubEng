@@ -115,7 +115,7 @@ export default function ShortsPage() {
       </Head>
       {contentList && (
         <FullPage
-          controls
+          // controls
           controlProps
           scrollMode={"full-page"}
           afterChange={afterChange}
