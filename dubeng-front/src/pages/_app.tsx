@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
-import 'react-calendar/dist/Calendar.css'; // css import
-import "@/styles/Calender.css"
+import "react-calendar/dist/Calendar.css"; // css import
+import "@/styles/Calender.css";
 import localFont from "next/font/local";
 import type { AppProps } from "next/app";
 import { useState } from "react";
@@ -67,37 +67,21 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <title>덥잉, 더빙으로 배우는 영어 쉐도잉 서비스</title>
         <link rel="shortcut icon" href="/favicon.ico" />
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/favicon/apple-touch-icon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon/favicon-16x16.png"
-        />
-        <link rel="manifest" href="/favicon/site.webmanifest" />
-        <link
-          rel="mask-icon"
-          href="/favicon/safari-pinned-tab.svg"
-          color="#5bbad5"
-        />
-        <meta name="msapplication-TileColor" content="#da532c" />
-        <meta name="theme-color" content="#ffffff" />
-      
-        <meta property="og:url" content="https://dub-eng.com"/>
+        <meta property="og:url" content="https://dub-eng.com" />
         <meta property="og:title" content="DubEng" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:image" content="/images/logo/dub-eng-open-graph.png"/>
-        <meta property="og:description" content="더빙으로 배우는 영어 쉐도잉 서비스"/>
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content="/images/logo/dub-eng-open-graph.png"
+        />
+        <meta
+          property="og:description"
+          content="더빙으로 배우는 영어 쉐도잉 서비스, 따라 읽기만 하던 영어는 이제 그만, 덥잉을 통해 좋아하는 영상을 보며 쉽고 재미있게 영어를 공부해 보세요!"
+        />
+        <meta
+          name="keywords"
+          content="영어 스피킹, 영어 더빙, 미드 영어, 영드 영어, 애니 영어 english speaking, english study, easy english, funny english"
+        />
       </Head>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>

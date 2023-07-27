@@ -1,8 +1,10 @@
 import useCommunityShortsQuery from "@/apis/community/queries/useCommunityShortsQuery";
 import Link from "next/link";
+
 import { useEffect, useRef, useState } from "react";
 import { FullPage, Slide } from "react-full-page";
 import Image from "next/image";
+import Head from "next/head";
 
 import DefaultImage from "../../../../public/images/default/mic_profile.png";
 import YouTube, { YouTubePlayer, YouTubeProps } from "react-youtube";
@@ -104,6 +106,13 @@ export default function ShortsPage() {
 
   return (
     <>
+      <Head>
+        <title>더빙으로 배우는 영어 쉐도잉 서비스 - Shorts</title>
+        <meta
+          name="description"
+          content="더빙으로 배우는 영어 쉐도잉 서비스, Shorts를 통해 모바일에서도 빠르고 편리하게 더빙된 영상을 확인할 수 있습니다."
+        />
+      </Head>
       {contentList && (
         <FullPage
           controls

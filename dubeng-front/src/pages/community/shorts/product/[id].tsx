@@ -14,6 +14,7 @@ import { RootState } from "@/stores/store";
 import { LangType } from "@/enum/statusType";
 import Link from "next/link";
 import DubScriptListItem from "@/components/molecules/DubScriptListItem";
+import Head from "next/head";
 
 export default function ShortsProductPage() {
   const router = useRouter();
@@ -164,6 +165,19 @@ export default function ShortsProductPage() {
 
   return (
     <div className="w-full h-screen bg-black flex flex-col items-center justify-start">
+      <Head>
+        <title>더빙으로 배우는 영어 쉐도잉 서비스 - 더빙 작품</title>
+        <meta
+          name="description"
+          content="더빙으로 배우는 영어 쉐도잉 서비스, 다른 사람이 더빙한 영상을 확인할 수 있습니다."
+        />
+        <meta
+          http-equiv="Cache-Control"
+          content="no-cache, no-store, must-revalidate"
+        />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+      </Head>
       {data && (
         <>
           <Link href={`/mypage/${data.userId}`}>
