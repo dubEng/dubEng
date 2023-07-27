@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY ./package.json /app
 
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # 어떤 파일이 이미지에 들어가야 하는지 
 # 첫 번째 .은 이 프로젝트의 모든 폴더 및 파일들 (Dockerfile을 제외한)
