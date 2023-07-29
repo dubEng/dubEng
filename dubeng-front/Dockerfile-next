@@ -11,6 +11,7 @@ RUN npm install --legacy-peer-deps
 # 두 번째 .은 파일을 저장할 컨테이너 내부 경로 (ex /app)
 COPY ./ /app
 
+COPY ./index.d.ts /app/node_modules/react-full-page/lib
 EXPOSE 3000
 
 RUN npm run build
