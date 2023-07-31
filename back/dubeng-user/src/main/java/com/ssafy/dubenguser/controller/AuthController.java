@@ -31,6 +31,9 @@ public class AuthController {
     private final UserService userService;
     private final AuthService authService;
     private static final String SUCCESS = "success";
+    private static final String FAIL = "fail";
+    private String accessToken;
+    private String unAuthorizedException = "토큰 전달 방식에 오류";
 
     @Value("${auth.redirectUrl}")
     private String SEND_REDIRECT_URL;
@@ -40,7 +43,6 @@ public class AuthController {
 
     @GetMapping("/kakao/callback")
     public void authCodeDetails(@RequestParam String code, HttpServletResponse response, RedirectAttributes attributes) throws IOException {
-        log.debug("auth code : {}", code);
 
         //code로 access-token 요청
         HashMap<String, Object> result = authService.findAccessToken(code);
@@ -81,15 +83,15 @@ public class AuthController {
         response.sendRedirect(SEND_REDIRECT_URL + redirectUri);
     }
 
-//    @PostMapping("/parse")
-//    public ResponseEntity<String> accessTokenParse(@RequestBody Token requestDTO){
-//        log.debug("accessToken : {}", requestDTO.getAccessToken());
-//
-//        //service - parseToken
-//        String userId = authService.parseToken(requestDTO.getAccessToken());
-//
-//        return new ResponseEntity<String>(userId, HttpStatus.OK);
-//    }
+    @PostMapping("/parse")
+    public ResponseEntity<String> accessTokenParse(@RequestBody Token requestDTO){
+        log.debug("accessToken : {}", requestDTO.getAccessToken());
+
+        //service - parseToken
+        String userId = authService.parseToken(requestDTO.getAccessToken());
+
+        return new ResponseEntity<String>(userId, HttpStatus.OK);
+    }
 
     @PostMapping("/join")
     @ApiOperation(value = "회원가입하기")
@@ -109,7 +111,6 @@ public class AuthController {
         //ATK을 이용하여 회원정보 요청
         UserLoginRes user = authService.findUser(accessToken);
 
-        log.debug("loginUser : {}", user);
         return new ResponseEntity<UserLoginRes>(user, HttpStatus.OK);
     }
     @GetMapping("/check/{nickname}")
@@ -123,11 +124,10 @@ public class AuthController {
     }
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader HttpHeaders headers){
-        String accessToken = headers.getFirst("Authorization");
+        accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
-            throw new UnAuthorizedException("토큰 전달 방식에 오류");
+            throw new UnAuthorizedException(unAuthorizedException);
         }
-        log.debug("ATK : {}", accessToken);
         authService.kakaoLogout(accessToken);
 
         return new ResponseEntity<Void>(HttpStatus.OK);

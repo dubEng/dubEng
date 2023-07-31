@@ -24,4 +24,6 @@ public class Script {
     private Long duration;
     private String content;
     private String translateContent;
+    private String pitch;
+    private Boolean isDub;
 }

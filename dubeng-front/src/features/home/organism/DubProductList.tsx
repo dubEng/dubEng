@@ -1,57 +1,53 @@
 import DubVideoThumbnail from "../../../components/atoms/DubVideoThumbnail";
 
-import { DubProduct } from "@/types/DubProduct";
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import useHomePopularityQuery from "../../../apis/home/queries/useHomePopularityQuery";
+import ScaleLoader from "react-spinners/ScaleLoader";
+import ErrorComponent from "../../../components/atoms/ErrorComponent";
+import "swiper/css";
+import Link from "next/link";
+import { getHomePopularity } from "@/apis/home/api/home";
 
-const responsive = {
-  desktop: {
-    breakpoint: { max: 3000, min: 816 },
-    items: 3,
-    partialVisibilityGutter: 40, // this is needed to tell the amount of px that should be visible.
-  },
-  tablet: {
-    breakpoint: { max: 816, min: 576 },
-    items: 2,
-    partialVisibilityGutter: 30, // this is needed to tell the amount of px that should be visible.
-  },
-  mobile: {
-    breakpoint: { max: 576, min: 0 },
-    items: 1,
-    partialVisibilityGutter: 70, // this is needed to tell the amount of px that should be visible.
-  },
-};
+export default function DubProductList(props : any) {
+  const popularity = useHomePopularityQuery(props.popularity);
 
-export default function DubProductList() {
-  const dubProductList: DubProduct[] = [
-    {
-      title: "New Year, New Bears | We Bare Bears",
-      url: "",
-    },
-    {
-      title: "겨울 왕국",
-      url: "",
-    },
-    {
-      title: "라이언킹",
-      url: "",
-    },
-    {
-      title: "워킹데드",
-      url: "",
-    },
-    {
-      title: "해리포터",
-      url: "",
-    },
-  ];
+  if (popularity.isLoading) {
+    return (
+      <div className="flex justify-center items-center my-16">
+        <ScaleLoader color="#FF6D60" />
+      </div>
+    );
+  }
+
+  if (popularity.isError) {
+    return <ErrorComponent onClick={() => popularity.refetch} retry={true} />;
+  }
 
   return (
-    <Carousel responsive={responsive} partialVisible>
-      {dubProductList &&
-        dubProductList.map((item) => (
-          <DubVideoThumbnail title={item.title} url={item.url} />
+    <Swiper slidesPerView={1.25}>
+      {popularity.data &&
+        popularity.data.map((item: any, index: number) => (
+          <SwiperSlide key={item.recordId}>
+            <Link href={`/community/shorts/product/${item.recordId}`}>
+              <DubVideoThumbnail
+                title={item.title}
+                thumbnail={item.thumbnail ?? ""}
+                id={item.recordId}
+                nickname={item.nickname}
+                userProfileImg={item.userProfileImg}
+              />
+            </Link>
+          </SwiperSlide>
         ))}
-    </Carousel>
+    </Swiper>
   );
+}
+
+export async function getStaticProps() {
+  const popularity = await getHomePopularity();
+  
+  return {
+    props: { popularity },
+    revalidate: 300,
+  };
 }

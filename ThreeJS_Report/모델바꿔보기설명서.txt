@@ -1,0 +1,149 @@
+기존 경로의 모델경로 ~.glb에서 모델 이름들만 바꿔서 베이스 모델링 파일을 바꿀 수 있다
+또한 ray트레이싱이 적용된 코드(파일 오리지날)와
+하단의 첨부 코드는 
+
+
+---
+import React, { Suspense, useRef,useEffect } from 'react';
+import { useLoader, useThree, extend } from 'react-three-fiber';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, Stats } from '@react-three/drei';
+import * as THREE from 'three';
+import { BloomPass } from 'three/examples/jsm/postprocessing/BloomPass.js';
+import { CopyShader } from 'three/examples/jsm/shaders/CopyShader';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js';
+import { SSRPass } from 'three/examples/jsm/postprocessing/SSRPass.js';
+import { Raytracer } from "@react-three/lgl";
+
+
+
+extend({ EffectComposer, RenderPass, UnrealBloomPass , ShaderPass, SSAOPass, SSRPass });
+
+function Model({ url }) {
+  const gltf = useLoader(GLTFLoader, url);
+  
+
+   // const hiddenMembers = ['cfm', 'pancake', 'chairs'];
+
+   gltf.scene.traverse(child => {
+     child.visible = true;
+
+     if (child.material != null) {
+      child.material.userData.SSR = true;
+    }
+
+
+    //  if (child.name.includes('cfm')) {
+    //    child.visible = false;
+        
+    //    console.log(child.name + "@");
+    //   } // 오브젝트 동적 제거 코드 
+  });
+  
+
+  return <primitive object={gltf.scene} />;
+}
+function Effects() {
+  const composer = useRef();
+  const { scene, gl, size, camera } = useThree();
+
+
+  
+  useEffect(() => {
+    const renderScene = new RenderPass(scene, camera);
+    const bloomPass = new BloomPass(
+      1, // strength
+      25, // kernel size
+      4, // sigma ?
+      2560 // resolution
+    );
+    const copyShader = new ShaderPass(CopyShader);
+    copyShader.renderToScreen = true;
+    const composerRef = composer.current;
+    const ssaoPass = new SSAOPass(scene, camera, size.width, size.height);
+    ssaoPass.kernelRadius = 8;
+    ssaoPass.minDistance = 0.001;
+    ssaoPass.maxDistance = 0.2;
+    composerRef.addPass(ssaoPass);
+
+   const ssrPass = new SSRPass({
+  scene: scene,
+  camera: camera,
+  width: size.width,
+  height: size.height,
+  clearColor: scene.background,
+  selectivity: 1,
+  encoding: THREE.sRGBEncoding
+});
+    ssrPass.renderToScreen = true;
+    composerRef.addPass(renderScene);
+    composerRef.addPass(ssrPass);
+    composerRef.addPass(bloomPass);
+    composerRef.addPass(copyShader);
+
+    bloomPass.threshold = 1;
+    bloomPass.strength = 2;
+    bloomPass.radius = 0.1;
+
+    const pixelRatio = gl.getPixelRatio();
+    const newWidth = Math.floor(size.width / pixelRatio);
+    const newHeight = Math.floor(size.height / pixelRatio);
+
+    composerRef.setSize(newWidth, newHeight);
+  }, [scene, camera, gl, size]);
+
+  return <effectComposer ref={composer} args={[gl]} />;
+}
+
+
+
+
+
+
+function App() {
+  return (
+    <Canvas
+      camera={{ position: [10, 10, 5] }}
+      antialias="true"
+ 
+      pixelratio={window.devicePixelRatio}
+      style={{ width: 370, height: 660, background: 'black' }
+      }
+      shadowmap={{
+        type: THREE.PCFShadowMap, // 그림자 맵 타입 설정
+        resolution: 2048, // 그림자 맵 해상도 설정
+        // 그 외 다른 속성 설정 가능
+      }}
+
+
+    >
+      <Suspense fallback={null}>
+        <Model url="http://localhost:5500/src/kit2.glb" />
+      </Suspense>
+      <OrbitControls />
+      <Effects />
+      <ambientLight intensity={0.1} color={'#FFA07A'} /> 
+<pointLight position={[0, 10, 5]} intensity={0.6} color={'#FFFACD'} />  
+<spotLight position={[1, 30, 5]} angle={0.3}  intensity={0.2} castShadow decay={2} distance={50} penumbra={1} />
+ <directionalLight position={[1, 30, 5]} intensity={0.1} color='#FFFACD'/>    
+<ambientLight intensity={0.1} color={'pink'} />  
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+      
+      <Stats />
+
+
+    </Canvas>
+
+  );
+}
+
+export default App;
+---
+이는 그냥 three 로 로딩만 한 코드이다
+레이트레이싱을 적용한 코드는 빛의 효과 계산때문에 노이즈가 발생하기 때문에 사용자에게 불편?을 줄 수 있다는 의견이 있었고
+첨부코드는 너무 단순한 것 같다. 

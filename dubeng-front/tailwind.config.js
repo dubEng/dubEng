@@ -46,5 +46,5 @@ module.exports = {
       zIndex: num(300),
     },
   },
-  plugins: [],
+  plugins: [require("tailwind-scrollbar-hide"), require("tailwind-scrollbar")],
 };

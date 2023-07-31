@@ -35,6 +35,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 .innerJoin(category).on(userCategory.category.id.eq(category.id))
                 .where(user.id.eq(userId))
                 .fetch();
+      
+        if(categories.isEmpty())
+            throw new NotFoundException("선택한 카테고리가 없습니다!");
 
         return categories;
     }
@@ -45,6 +48,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 .selectFrom(userCalendar)
                 .where(userCalendar.user.id.eq(userId).and(userCalendar.calDate.between(start, end)))
                 .fetch();
+
+        if(userCalendars.isEmpty())
+            throw new NotFoundException("출석일이 없습니다!");
 
         return userCalendars;
     }
@@ -84,6 +90,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                     .fetch();
         }
 
+        if(recordList.isEmpty())
+            throw new NotFoundException("아직 더빙한 내역이 없습니다!");
+
         return recordList;
 
     }
@@ -118,6 +127,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                     .fetch();
         }
 
+        if(result.isEmpty())
+            throw new NotFoundException("좋아요를 누른 더빙 작품이 없습니다!");
+
         return result;
     }
 
@@ -148,6 +160,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                     .orderBy(video.updatedDate.desc())
                     .fetch();
         }
+
+        if(result.isEmpty())
+            throw new NotFoundException("북마크한 비디오가 없습니다!");
 
         return result;
     }
