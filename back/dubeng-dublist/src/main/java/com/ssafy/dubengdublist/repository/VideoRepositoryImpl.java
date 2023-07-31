@@ -69,9 +69,15 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Video> countQuery = queryFactory
-                .select(video)
-                .from(video);
+        JPAQuery<ContentsSearchRes> countQuery = queryFactory
+                .selectDistinct(new QContentsSearchRes(video.id, video.title, video.thumbnail, video.runtime))
+                .from(video)
+                .where(builder)
+                .join(videoCategory)
+                .on(videoCategory.video.id.eq(video.id))
+                .orderBy(video.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
@@ -93,7 +99,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         }
 
         List<CommunitySearchRes> content = queryFactory
-                .selectDistinct(new QCommunitySearchRes(video.id, video.title,video.thumbnail,video.runtime, user.nickname, user.profileImage, QRecord.record.playCount, QRecord.record.createdDate, QRecord.record.id))
+                .select(new QCommunitySearchRes(video.id, video.title,video.thumbnail,video.runtime, user.nickname, user.profileImage, QRecord.record.playCount, QRecord.record.createdDate, QRecord.record.id))
                 .from(video)
                 .where(builder)
                 .leftJoin(videoCategory)
@@ -107,10 +113,21 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Record> countQuery = queryFactory
-                .select(QRecord.record)
-                .from(QRecord.record);
+        JPAQuery<CommunitySearchRes> countQuery = queryFactory
+                .select(new QCommunitySearchRes(video.id, video.title,video.thumbnail,video.runtime, user.nickname, user.profileImage, QRecord.record.playCount, QRecord.record.createdDate, QRecord.record.id))
+                .from(video)
+                .where(builder)
+                .leftJoin(videoCategory)
+                .on(videoCategory.video.id.eq(video.id))
+                .join(QRecord.record)
+                .on(video.id.eq(QRecord.record.video.id))
+                .join(user)
+                .on(user.id.eq(QRecord.record.user.id))
+                .orderBy(QRecord.record.createdDate.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
 
+        System.out.println(countQuery.fetchCount());
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
@@ -172,9 +189,20 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
             communityDetailScriptResList.add(cd);
         }
 
-        JPAQuery<Record> countQuery = queryFactory
-                .select(QRecord.record)
-                .from(QRecord.record);
+        JPAQuery<CommunityDetailRes> countQuery = queryFactory
+                .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.id, user.nickname, QRecord.record.id, video.startTime, video.endTime, QRecord.record.recordPath, user.profileImage))
+                .from(video)
+                .where(QRecord.record.isPublic.eq(true))
+                .join(QRecord.record)
+                .on(video.id.eq(QRecord.record.video.id))
+                .leftJoin(user)
+                .on(QRecord.record.user.id.eq(user.id))
+                .leftJoin(recordComment)
+                .on(recordComment.record.id.eq(QRecord.record.id))
+                .groupBy(QRecord.record.id)
+                .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
 
         return PageableExecutionUtils.getPage(communityDetailScriptResList, pageable, countQuery::fetchCount);
     }
@@ -232,9 +260,14 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Video> countQuery = queryFactory
-                .select(video)
-                .from(video);
+        JPAQuery<CommunityCommentRes> countQuery = queryFactory
+                .select(new QCommunityCommentRes(user.id, user.nickname, recordComment.content, recordComment.updatedDate))
+                .from(recordComment)
+                .leftJoin(user)
+                .on(recordComment.user.id.eq(user.id))
+                .where(recordComment.record.id.eq(recordId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
