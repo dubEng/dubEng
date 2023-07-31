@@ -27,103 +27,15 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AuthServiceImpl authService;
-
-    private final UserCategoryRepository userCategoryRepository;
-    private final CategoryRepository categoryRepository;
-    private final MissionRepository missionRepository;
-    private final UserMissionRepository userMissionRepository;
     private final RedisTemplate<String, Object> redisTemplate;
-
-    /**
-     *
-     */
-    @Override
-    public void addUser(UserJoinReq request, String accessToken, String refreshToken){
-        if(checkExistNickname(request.getNickname()))
-            throw new DuplicateException("이미 등록된 닉네임입니다.");
-
-        //토큰 유효성 검사
-        try{
-            authService.parseToken(accessToken);
-        }catch(Exception e){
-            accessToken = authService.reissueATK(refreshToken);
-        }
-
-        //parseToken
-        String userId = authService.parseToken(accessToken);
-
-        User newUser = User.builder()
-                .id(userId)
-                .nickname(request.getNickname())
-                .description(request.getIntroduce())
-                .landName(request.getKitchenName())
-                .gender(request.getGender())
-                .profileImage(request.getProfileImgUrl())
-                // default 설정
-                .isPublic(true)
-                .isActive(true)
-                .isVoted(true)
-                .totalRecTime(0L)
-                .recordCount(0L)
-                .build();
-
-        User savedUser = userRepository.save(newUser);
-
-        for(Long category: request.getCategories()) {
-            Optional<Category> nc = categoryRepository.findById(category);
-
-            if(!nc.isPresent())
-                throw new NotFoundException("존재하지 않는 카테고리입니다!");
-
-            UserCategory uc = UserCategory.builder()
-                    .category(nc.get())
-                    .user(savedUser)
-                    .build();
-
-            userCategoryRepository.save(uc);
-        }
-
-        List<Mission> missionList = missionRepository.findAll();
-
-        for(Mission m: missionList) {
-            userMissionRepository.save(UserMission.builder().user(savedUser).mission(m).build());
-        }
-    }
-
-    /**
-     *  DB로 부터 이미 등록된 회원인지 확인
-     *  false : 등록된 회원이 없다.
-     *  true : 등록된 회원이 있다.
-     */
-    public boolean checkEnrolledMember(String id){
-
-        Optional<User> member = userRepository.findById(id);
-
-        // Null = 회원이 없다는 뜻.
-        if(!member.isPresent()) return false;
-
-        log.debug("회원 있어유~");
-        return true;
-    }
-
-    public boolean checkExistNickname(String nickname) {
-        Optional<User> user = userRepository.findByNickname(nickname);
-
-        if (user.isPresent()){  // 이미 닉네임 존재
-            return true;
-        }
-
-        return false;
-    }
-
     @Transactional
     public UserProfileRes findProfile(String userId) {
-        Optional<User> findUser = userRepository.findById(userId);
+        Optional<User> foundUser = userRepository.findById(userId);
 
-        if(!findUser.isPresent()) 
+        if(!foundUser.isPresent()) 
             throw new NotFoundException("존재하지 않는 유저입니다!");
 
-        User user = findUser.get();
+        User user = foundUser.get();
 
         List<Category> categories = userRepository.findCategoriesByUserId(user.getId());
 
@@ -148,13 +60,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public UserCalendarRes findCalendar(String accessToken, String refreshToken) {
-        //토큰 유효성 검사
-        try{
-            authService.parseToken(accessToken);
-        }catch(Exception e){
-            accessToken = authService.reissueATK(refreshToken);
-        }
+    public UserCalendarRes findCalendar(String accessToken) {
         //Token parsing
         String userId = authService.parseToken(accessToken);
         if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");
@@ -192,14 +98,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public List<RecordLikeRes> findRecordLike(String accessToken, String refreshToken, Boolean isLimit, String langType) {
-        //토큰 유효성 검사
-        try{
-            authService.parseToken(accessToken);
-        }catch(Exception e){
-            accessToken = authService.reissueATK(refreshToken);
-        }
-
+    public List<RecordLikeRes> findRecordLike(String accessToken, Boolean isLimit, String langType) {
         //Token Parsing
         String userId = authService.parseToken(accessToken);
         if(userId == null) throw new UnAuthorizedException("유저 아이디가 없습니다!");
@@ -221,14 +120,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public List<VideoBookmarkRes> findVideoBookmark(String accessToken, String refreshToken, Boolean isLimit, String langType) {
-        //토큰 유효성 검사
-        try{
-            authService.parseToken(accessToken);
-        }catch(Exception e){
-            accessToken = authService.reissueATK(refreshToken);
-        }
-
+    public List<VideoBookmarkRes> findVideoBookmark(String accessToken, Boolean isLimit, String langType) {
         //Token Parsing
         String userId = authService.parseToken(accessToken);
         if(userId == null) throw new UnAuthorizedException("유저 아이디가 없습니다!");

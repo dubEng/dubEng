@@ -1,12 +1,9 @@
 package com.ssafy.dubenguser.controller;
 
-import com.ssafy.dubenguser.config.CookieHandler;
-import com.ssafy.dubenguser.dto.Token;
 import com.ssafy.dubenguser.dto.UserJoinReq;
 import com.ssafy.dubenguser.dto.UserLoginRes;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
 import com.ssafy.dubenguser.service.AuthService;
-import com.ssafy.dubenguser.service.AuthServiceImpl;
 import com.ssafy.dubenguser.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,7 +30,6 @@ import java.util.HashMap;
 public class AuthController {
     private final UserService userService;
     private final AuthService authService;
-    private final CookieHandler cookieHandler;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
     private String accessToken;
@@ -71,7 +67,7 @@ public class AuthController {
 
         //회원 가입 여부 체크
         String redirectUri = "/signup";
-        if(userService.checkEnrolledMember((String) result.get("userId"))){
+        if(authService.checkEnrolledMember((String) result.get("userId"))){
             redirectUri = "/login/success";
             response.sendRedirect(SEND_REDIRECT_URL + redirectUri);
             return;
@@ -89,59 +85,40 @@ public class AuthController {
 
     @PostMapping("/parse")
     public ResponseEntity<String> accessTokenParse(@RequestBody Token requestDTO){
+        log.debug("accessToken : {}", requestDTO.getAccessToken());
+
         //service - parseToken
         String userId = authService.parseToken(requestDTO.getAccessToken());
 
         return new ResponseEntity<String>(userId, HttpStatus.OK);
     }
-    @PostMapping("/refresh")
-    public ResponseEntity<Void> refreshTokenRequest(HttpServletRequest request){
 
-        String refreshToken = cookieHandler.getRefreshToken(request);
-
-        authService.reissueATK(refreshToken);
-
-        return new ResponseEntity<Void>(HttpStatus.OK);
-    }
-
-    /**
-     * 회원가입
-     * 구현 안돼어있음.
-     */
     @PostMapping("/join")
     @ApiOperation(value = "회원가입하기")
-    public ResponseEntity<String> userAdd(@RequestHeader HttpHeaders headers, HttpServletRequest request, @RequestBody UserJoinReq req){
-        accessToken = headers.getFirst("Authorization");
-        if(accessToken == null){
-            throw new UnAuthorizedException(unAuthorizedException);
-        }
+    public ResponseEntity<String> userAdd(HttpServletRequest request, @RequestBody UserJoinReq userInfo){
+        String accessToken = (String) request.getAttribute("Authorization");
+        log.debug("userAdd : {}", request.toString());
 
-        String refreshToken = cookieHandler.getRefreshToken(request);
-
-        userService.addUser(req, accessToken, refreshToken);
+        authService.addUser(userInfo, accessToken);
 
         return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
     @PostMapping("/login")
     @ApiOperation(value = "회원정보 가져오기")
-    public ResponseEntity<UserLoginRes> getLoginInfo(HttpServletRequest request, @RequestHeader HttpHeaders headers){
-
-        accessToken = headers.getFirst("Authorization");
-        if(accessToken == null){
-            throw new UnAuthorizedException(unAuthorizedException);
-        }
-
-        String refreshToken = cookieHandler.getRefreshToken(request);
+    public ResponseEntity<UserLoginRes> getLoginInfo(HttpServletRequest request){
+        String accessToken = (String) request.getAttribute("Authorization");
 
         //ATK을 이용하여 회원정보 요청
-        UserLoginRes user = authService.findUser(accessToken, refreshToken);
+        UserLoginRes user = authService.findUser(accessToken);
 
         return new ResponseEntity<UserLoginRes>(user, HttpStatus.OK);
     }
     @GetMapping("/check/{nickname}")
     @ApiOperation(value = "닉네임 중복체크")
     public ResponseEntity<Boolean> duplicateNicknameCheck(@PathVariable String nickname){
-        boolean check = userService.checkExistNickname(nickname);
+        log.debug("nickname : {}", nickname);
+
+        boolean check = authService.checkExistNickname(nickname);
 
         return new ResponseEntity<Boolean>(check, HttpStatus.OK);
     }

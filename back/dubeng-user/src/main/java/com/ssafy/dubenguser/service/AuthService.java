@@ -1,22 +1,20 @@
 package com.ssafy.dubenguser.service;
 
-import com.ssafy.dubenguser.dto.Token;
-import com.ssafy.dubenguser.dto.UserLoginReq;
+import com.ssafy.dubenguser.dto.UserJoinReq;
 import com.ssafy.dubenguser.dto.UserLoginRes;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 public interface AuthService {
     HashMap<String, Object> findAccessToken(String code);
     String getKakaoImageUrl(String accessToken);
-    UserLoginRes findUser(String accessToken, String refreshToken);
     String parseToken(String accessToken);
-
-    Set<String> getAttendanceByMonth(String accessToken, String refreshToken, int month);
-
+    Set<String> getAttendanceByMonth(String accessToken, int month);
     void kakaoLogout(String accessToken);
-
     String reissueATK(String refreshToken);
+    UserLoginRes findUser(String accessToken);
+    public void addUser(UserJoinReq requestDTO, String accessToken);
+    public boolean checkEnrolledMember(String id);
+    public boolean checkExistNickname(String nickname);
 }

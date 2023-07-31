@@ -2,15 +2,12 @@ package com.ssafy.dubenguser.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.dubenguser.dto.Token;
-import com.ssafy.dubenguser.dto.UserCalendarRes;
-import com.ssafy.dubenguser.dto.UserLoginReq;
-import com.ssafy.dubenguser.dto.UserLoginRes;
-import com.ssafy.dubenguser.entity.User;
-import com.ssafy.dubenguser.entity.UserCalendar;
+import com.ssafy.dubenguser.dto.*;
+import com.ssafy.dubenguser.entity.*;
+import com.ssafy.dubenguser.exception.DuplicateException;
+import com.ssafy.dubenguser.exception.NotFoundException;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
-import com.ssafy.dubenguser.repository.UserCalenderRepository;
-import com.ssafy.dubenguser.repository.UserRepository;
+import com.ssafy.dubenguser.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,8 +33,10 @@ public class AuthServiceImpl implements AuthService{
 
     private final UserRepository userRepository;
     private final UserCalenderRepository userCalenderRepository;
-    private String baseUrl = "https://kauth.kakao.com";
-
+    private final UserCategoryRepository userCategoryRepository;
+    private final CategoryRepository categoryRepository;
+    private final MissionRepository missionRepository;
+    private final UserMissionRepository userMissionRepository;
 
     public HashMap<String, Object> findAccessToken(String code){
 
@@ -147,52 +146,8 @@ public class AuthServiceImpl implements AuthService{
 
         return accessToken;
     }
-
     @Override
-    public UserLoginRes findUser(String accessToken, String refreshToken){
-        //토큰파싱
-        try{
-            parseToken(accessToken);
-        }catch(Exception e){
-            accessToken = reissueATK(refreshToken);
-        }
-        String userId = parseToken(accessToken);
-
-        log.debug("userId : {}", userId);
-        // 회원 정보 가져오기
-        Optional<User> findUser = userRepository.findById(userId);
-        if(!findUser.isPresent()) throw new UnAuthorizedException();
-
-        User loginUser = findUser.get();
-
-        // 출석하기
-        LocalDateTime currentDateTime = LocalDateTime.now();
-
-        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MM");
-        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        int month = Integer.parseInt(currentDateTime.format(formatter1));
-        String nowDate = currentDateTime.format(formatter2);
-
-        saveAttendance(userId, nowDate, month);
-
-        UserLoginRes userLoginRes = UserLoginRes.builder()
-                .userId(userId)
-                .accessToken(accessToken)
-                .nickname(loginUser.getNickname())
-                .imageUrl(loginUser.getProfileImage())
-                .kitchenName(loginUser.getLandName())
-                .build();
-
-        return userLoginRes;
-    }
-    public Set<String> getAttendanceByMonth(String accessToken,String refreshToken, int month){
-        //토큰파싱
-        try{
-            parseToken(accessToken);
-        }catch(Exception e){
-            accessToken = reissueATK(refreshToken);
-        }
+    public Set<String> getAttendanceByMonth(String accessToken, int month){
         String userId = parseToken(accessToken);
 
         List<UserCalendar> list = userCalenderRepository.findByUserIdAndMonth(userId, month);
@@ -239,6 +194,7 @@ public class AuthServiceImpl implements AuthService{
      * accessToken을 받아
      * kakao Auth 서버에 parse 요청
      */
+    @Override
     public String parseToken(String accessToken){
             WebClient webClient = WebClient.builder()
                     .baseUrl("https://kapi.kakao.com")
@@ -282,5 +238,109 @@ public class AuthServiceImpl implements AuthService{
 
         log.debug("parse result : {}", result.toString());
         return result;
+    }
+    @Override
+    public UserLoginRes findUser(String accessToken){
+        String userId = parseToken(accessToken);
+
+        log.debug("userId : {}", userId);
+
+        // 회원 정보 가져오기
+        Optional<User> findUser = userRepository.findById(userId);
+        if(!findUser.isPresent()) throw new UnAuthorizedException();
+
+        User loginUser = findUser.get();
+
+        // 출석하기
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MM");
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        int month = Integer.parseInt(currentDateTime.format(formatter1));
+        String nowDate = currentDateTime.format(formatter2);
+
+        saveAttendance(userId, nowDate, month);
+
+        UserLoginRes userLoginRes = UserLoginRes.builder()
+                .userId(userId)
+                .accessToken(accessToken)
+                .nickname(loginUser.getNickname())
+                .imageUrl(loginUser.getProfileImage())
+                .kitchenName(loginUser.getLandName())
+                .build();
+
+        return userLoginRes;
+    }
+    @Override
+    public void addUser(UserJoinReq request, String accessToken){
+        if(checkExistNickname(request.getNickname()))
+            throw new DuplicateException("이미 등록된 닉네임입니다.");
+
+        //parseToken
+        String userId = parseToken(accessToken);
+
+        User newUser = User.builder()
+                .id(userId)
+                .nickname(request.getNickname())
+                .description(request.getIntroduce())
+                .landName(request.getKitchenName())
+                .gender(request.getGender())
+                .profileImage(request.getProfileImgUrl())
+                // default 설정
+                .isPublic(true)
+                .isActive(true)
+                .isVoted(true)
+                .totalRecTime(0L)
+                .recordCount(0L)
+                .build();
+
+        User savedUser = userRepository.save(newUser);
+
+        for(Long category: request.getCategories()) {
+            Optional<Category> nc = categoryRepository.findById(category);
+
+            if(!nc.isPresent())
+                throw new NotFoundException("존재하지 않는 카테고리입니다!");
+
+            UserCategory uc = UserCategory.builder()
+                    .category(nc.get())
+                    .user(savedUser)
+                    .build();
+
+            userCategoryRepository.save(uc);
+        }
+
+        List<Mission> missionList = missionRepository.findAll();
+
+        for(Mission m: missionList) {
+            userMissionRepository.save(UserMission.builder().user(savedUser).mission(m).build());
+        }
+    }
+
+    /**
+     *  DB로 부터 이미 등록된 회원인지 확인
+     *  false : 등록된 회원이 없다.
+     *  true : 등록된 회원이 있다.
+     */
+    public boolean checkEnrolledMember(String id){
+
+        Optional<User> member = userRepository.findById(id);
+
+        // Null = 회원이 없다는 뜻.
+        if(!member.isPresent()) return false;
+
+        log.debug("회원 있어유~");
+        return true;
+    }
+
+    public boolean checkExistNickname(String nickname) {
+        Optional<User> user = userRepository.findByNickname(nickname);
+
+        if (user.isPresent()){  // 이미 닉네임 존재
+            return true;
+        }
+
+        return false;
     }
 }

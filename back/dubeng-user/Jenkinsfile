@@ -1,0 +1,67 @@
+pipeline {
+    agent any
+    environment {
+        Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+        Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+    }
+
+    stages {
+        stage('GIT CLONE'){
+            steps{
+                git branch : 'develop-back/user', url : 'https://github.com/dubEng/dubEng'
+            }
+        }
+        stage('SPRING BUILD'){
+            steps{
+                dir('back/dubeng-user'){
+                    sh '''
+                    cp /home/ubuntu/env/user_server/application-dev.yml ./src/main/resources/application-dev.yml
+                    chmod +x ./gradlew
+                    ./gradlew clean build -x test
+                    '''
+                }
+            }
+        }
+        stage('DEPLOY'){
+            steps{
+                dir('back/dubeng-user'){
+                    sh '''
+                        ls -al
+                        docker-compose down || true
+                        docker-compose up -d --build
+                    '''
+                }
+                dir('back/dubeng-dub'){
+                    sh '''
+                        cp /home/ubuntu/env/dub_server/env.txt env.txt
+                        docker stop fastApi-dub-container || true
+                        docker rm fastApi-dub-container || true
+
+                        docker rmi dub/dub-server || true
+
+                        docker build -t dub/dub-server .
+
+                        docker run --name fastApi-dub-container --network dub-network -v /home/ubuntu/file_volume:/Home -p 9003:5000 -d dub/dub-server
+                    '''
+                }
+            }
+        }
+    }
+    // end
+    post {
+        success {
+            mattermostSend (color: 'good',
+            message: "빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+            endpoint: 'https://meeting.ssafy.com/hooks/ros5qqo1dtykpptm5onqor9gxe',
+            channel: 'b208-jenkins-notification'
+            )
+        }
+        failure {
+            mattermostSend (color: 'danger',
+            message: "빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+            endpoint: 'https://meeting.ssafy.com/hooks/ros5qqo1dtykpptm5onqor9gxe',
+            channel: 'b208-jenkins-notification'
+            )
+        }
+    }
+}

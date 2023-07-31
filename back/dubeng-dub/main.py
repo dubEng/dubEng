@@ -20,12 +20,12 @@ from urllib.request import urlopen
 #커스텀 객체 클래스 import
 import videoClass
 
+import uuid
+
 
 app = FastAPI()
 
 origins = [
-    "https://k8b208.p.ssafy.io",
-    "https://k8b208.p.ssafy.io/",
     "https://dub-eng.com/",
     "https://dub-eng.com",
     "http://127.0.0.1:8000/"
@@ -52,6 +52,7 @@ BUCKET_NAME = f_conn.readline().strip()
 AWS_ACCESS_KEY_ID = f_conn.readline().strip()
 AWS_SECRET_ACCESS_KEY = f_conn.readline().strip()
 AWS_DEFAULT_REGION = 'ap-northeast-2'
+ADDRESS = f_conn.readline().strip()
 
 f_conn.close()
 
@@ -214,7 +215,7 @@ def uploadToBucket(target, uploadName):
     return url
 
 def getFile(videoId,nickname):
-    request_url = f"https://k8b208.p.ssafy.io/file/dublist?videoId={videoId}&nickname={nickname}"
+    request_url = f"https://{ADDRESS}/file/dublist?videoId={videoId}&nickname={nickname}"
     response = requests.get(request_url)
 
     data = json.loads(response.content)
@@ -276,7 +277,7 @@ def maekPreviewAudio(item: videoClass.previewReq):
 
 
     #s3 버킷에 업로드하기
-    keyStr = userId + str(videoId) + ".wav"
+    keyStr = str(uuid.uuid1()) + ".wav"
     resultUrl = uploadToBucket(finalAudio, keyStr)
 
     return resultUrl
@@ -300,7 +301,9 @@ async def save(item: videoClass.saveReq):
     #record 테이블에 해당 콘텐츠를 녹음한 기록이 있는지 검사
     sql = "SELECT id from record where video_id = %s and user_id = %s "
     cursor.execute(sql, [videoId, userId])
-    result = cursor.fetchone()  
+    result = cursor.fetchone()
+
+    logging.info(f"Is Exist?: {result[0]}")
 
     if result:
         # 이미 녹음한 기록이 있을 경우 
@@ -308,9 +311,9 @@ async def save(item: videoClass.saveReq):
         cursor.execute(update_sql, [url, date, result[0]])
     else:
         #record 테이블에 녹음 데이터 넣기
-        sql = "INSERT INTO record (video_id, user_id, is_public, is_active, play_count, record_path, like_count, vote_count, created_date, updated_date) VALUES (%s, %s, 1, 1, 0, %s, 0, 0, %s, %s)"
+        insert_sql = "INSERT INTO record (video_id, user_id, is_public, is_active, play_count, record_path, like_count, vote_count, created_date, updated_date) VALUES (%s, %s, 1, 1, 0, %s, 0, 0, %s, %s)"
         values = (videoId, userId, url, date, date)
-        cursor.execute(sql, values)
+        cursor.execute(insert_sql, values)
 
     # 변경사항을 커밋
     connection.commit()

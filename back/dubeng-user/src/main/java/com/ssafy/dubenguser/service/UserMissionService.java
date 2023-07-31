@@ -8,8 +8,8 @@ import java.util.Objects;
 
 public interface UserMissionService {
 
-    public List<UserMissionRes> findUserMissions(String accessToken, String refreshToken);
-    public List<String> findAssets(String accessToken, String refreshToken);
+    public List<UserMissionRes> findUserMissions(String accessToken);
+    public List<String> findAssets(String accessToken);
     //미션 완료 여부 확인
-    public HashMap<String, Object> findMissionComplete(String accessToken, String refreshToken, Long videoId);
+    public HashMap<String, Object> findMissionComplete(String accessToken, Long videoId);
 }
