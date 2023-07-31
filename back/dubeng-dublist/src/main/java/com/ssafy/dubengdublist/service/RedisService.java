@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -126,17 +127,16 @@ public class RedisService {
     }
 
     @Scheduled(cron = "30 0 0 * * 1") // 매주 일요일 밤 자정 + 30초 갱신
-//    @Scheduled(cron = "30 0 0 * * *") // 모니터링용 initVoteCount랑 동시 실행 방지로 30초에 작동
     public void updateDubKing() {
-        PriorityQueue<dubKingVote> priorityDubkingVotes = new PriorityQueue<>();
-
         Set<String> redisKeys = redisTemplate.keys("dubKing_userId*");
 
-        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
-        String dubKingKey = "dubKingTop3";
-        redisTemplate.delete(dubKingKey);  // 이전에 들어 있던 거 일단 지움.
+        ZSetOperations<String, Object> setOperations = redisTemplate.opsForZSet();
+        String dubKingKey = "dubkingTop3";
 
         Iterator<String> it = redisKeys.iterator();
+        if(it.hasNext()) redisTemplate.delete(dubKingKey);  // 이전에 들어 있던 거 일단 지움.
+        else return;
+
         while (it.hasNext()) {
             String data = it.next();
             String userId = data.split("::")[1];
@@ -145,16 +145,9 @@ public class RedisService {
             if (!ouser.isPresent()) {
                 redisTemplate.delete(data); // 해당 user 없으면 add 로직 건너뛰기
             } else {
-                priorityDubkingVotes.add(new dubKingVote(userId, voteCnt));
+                setOperations.add(dubKingKey, userId, voteCnt);
                 redisTemplate.delete(data);
             }
-        }
-        // pQ에 있는거 top3만 넣을거야 아니 혹시 모르니까 8명..
-        for (int i = 0; i < 3; i++) {
-            if(priorityDubkingVotes.isEmpty()) break;
-            dubKingVote cur = priorityDubkingVotes.poll();
-            String value = cur.userId+"::"+cur.voteCnt;
-            setOperations.add(dubKingKey,value);
         }
     }
 
