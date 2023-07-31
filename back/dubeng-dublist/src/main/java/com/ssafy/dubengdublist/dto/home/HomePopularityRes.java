@@ -15,9 +15,10 @@ public class HomePopularityRes {
     private String userId;
     private String nickname;
     private Long recordId;
+    private String userProfileImg;
 
     @QueryProjection
-    public HomePopularityRes(Long id, String title, String thumbnail, String videoPath, String userId, String nickname, Long recordId) {
+    public HomePopularityRes(Long id, String title, String thumbnail, String videoPath, String userId, String nickname, Long recordId, String userProfileImg) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
@@ -25,6 +26,7 @@ public class HomePopularityRes {
         this.userId = userId;
         this.nickname = nickname;
         this.recordId = recordId;
+        this.userProfileImg = userProfileImg;
     }
 
 }

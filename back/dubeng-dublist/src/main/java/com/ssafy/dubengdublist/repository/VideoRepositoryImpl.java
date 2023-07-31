@@ -294,7 +294,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
     // 홈 화면에 필요한 데이터 query문    
     public List<HomePopularityRes> findAllHomePopularity(){
         List<HomePopularityRes> homePopularities = queryFactory
-                .select(new QHomePopularityRes(video.id, video.title, video.thumbnail,video.videoPath, QRecord.record.user.id, user.nickname, QRecord.record.id))
+                .select(new QHomePopularityRes(video.id, video.title, video.thumbnail,video.videoPath, QRecord.record.user.id, user.nickname, QRecord.record.id, QRecord.record.user.profileImage))
                 .from(video)
                 .join(QRecord.record)
                 .on(QRecord.record.video.id.eq(video.id))

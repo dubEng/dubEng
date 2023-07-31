@@ -42,12 +42,12 @@ public class CommunityServiceImpl implements CommunityService{
             throw new NotFoundException(MESSAGEUser);
         }
         Map<String, Object> result = new HashMap<>();
-        // 하루 3번 투표 여부 확인
+
         String key = "vote_userId::"+userId;
         ValueOperations valueOperations = redisTemplate.opsForValue();
         Object ovalue = valueOperations.get(key);
         Long cnt;
-        if(ovalue==null) cnt = 0L;
+        if(ovalue==null) cnt = 1L;
         else cnt = Long.parseLong((String) ovalue);
         if(cnt>=3L){
             result.put("message", "하루 3번 투표가 끝났습니다.");
@@ -128,7 +128,7 @@ public class CommunityServiceImpl implements CommunityService{
             throw new NotFoundException(MESSAGEUser);
         }
         User user = ouser.get();
-        
+
         Optional<Record> orecord = recordRepository.findById(recordId);
         if(!orecord.isPresent()){
             throw new NotFoundException(MESSAGEUser);
@@ -204,19 +204,37 @@ public class CommunityServiceImpl implements CommunityService{
 
         return result;
     }
-    public Integer addPlayCntToRedis(Long recordId){
-        String key = "recordPlayCnt::"+recordId;
+    public Long addPlayCntToRedis(Long recordId){
+        String playCntKey = "recordPlayCnt::"+recordId;
         ValueOperations valueOperations = redisTemplate.opsForValue();
 
-        if(valueOperations.get(key)==null){
+        if(valueOperations.get(playCntKey)==null){
             Long newCnt = recordRepository.findPlayCount(recordId)+1;
-            valueOperations.set(key,Long.toString(newCnt), Duration.ofHours(2));
+            valueOperations.set(playCntKey,Long.toString(newCnt), Duration.ofHours(2));
         }
         else{
-            valueOperations.increment(key);
+            valueOperations.increment(playCntKey);
         }
-        log.info("add play count to redis : {} ", valueOperations.get(key));
-        return 200;
+        String o = (String) valueOperations.get(playCntKey);
+        Long playCount = 0L;
+        if(o!=null){
+            playCount = Long.parseLong(o);
+        }
+        return playCount;
+    }
+
+    public CommunityLikeRes findLikeInfo(Long recordId, String userId){
+        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        String likeUserKey = "like_userId::"+userId;
+        String likeCntKey = "recordLikeCnt::"+recordId;
+        boolean isLike = setOperations.isMember(likeUserKey, Long.toString(recordId)); // 1: 있음, 0: 없음
+        String o2 = (String) valueOperations.get(likeCntKey);
+        Long likeCount = 0L;
+        if(o2!=null){
+            likeCount = Long.parseLong(o2);
+        }
+        return new CommunityLikeRes(likeCount, isLike);
     }
 
     public Map<String, Object> findPlayCounts(Long recordId, String userId){

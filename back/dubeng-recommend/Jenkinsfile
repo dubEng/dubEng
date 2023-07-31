@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+    environment {
+        Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+        Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+        MM_ENDPOINT = "https://meeting.ssafy.com/hooks/" + "${MATTERMOST_HOOK_ID}"
+    }
+    stages {
+        stage('GIT CLONE') {
+            steps{
+                git branch : 'develop-back/recommend', url : 'https://github.com/dubEng/dubEng'
+            }
+        }
+        stage('FASTAPI BUILD'){
+            steps{
+                dir('back/dubeng-recommend'){
+                    sh '''
+                        cp /home/ubuntu/env/recommend_server/env.txt ./env.txt
+                        
+                        docker rmi dub/recommend-server || true
+                        docker build -t dub/recommend-server .
+                    '''
+                }
+            }
+            
+        }
+        stage('FASTAPI DEPLOY'){
+            steps{
+                dir('back/dubeng-recommend'){
+                    sh '''
+                        docker stop fastApi-recommend-container || true
+                        docker rm fastApi-recommend-container || true
+                        docker run --name fastApi-recommend-container --network dub-network -p 9004:5000 -d dub/recommend-server
+                    '''
+                }
+            }
+            
+        }
+    }
+    post {
+        success {
+            mattermostSend (color: 'good',
+            message: "빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+            endpoint: "${MM_ENDPOINT}",
+            channel: 'b208-jenkins-notification'
+            )
+        }
+        
+        failure {
+        mattermostSend (color: 'danger',
+        message: "빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+        endpoint: "${MM_ENDPOINT}",
+        channel: 'b208-jenkins-notification'
+        )
+        }
+    }
+}
