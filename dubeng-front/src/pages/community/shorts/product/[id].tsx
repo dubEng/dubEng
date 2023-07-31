@@ -14,6 +14,7 @@ import { RootState } from "@/stores/store";
 import { LangType } from "@/enum/statusType";
 import Link from "next/link";
 import DubScriptListItem from "@/components/molecules/DubScriptListItem";
+import Head from "next/head";
 
 export default function ShortsProductPage() {
   const router = useRouter();
@@ -29,6 +30,9 @@ export default function ShortsProductPage() {
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
 
   const [selectedScript, setSelectedScript] = useState<number>(0);
+
+  // const [notYetPlayed, setNotYetPlayed] = useState(true);
+  const [oncePlayed, setOncePlayed] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -54,6 +58,7 @@ export default function ShortsProductPage() {
 
   const { data: playCountUp, refetch } = useViewCountQuery(
     Number(router.query.id)
+    // !notYetPlayed
   );
 
   const { data: likeInfo } = useLikeInfoQuery(Number(router.query.id), userId);
@@ -83,19 +88,29 @@ export default function ShortsProductPage() {
     if (event.data === 1) {
       if (audioRef.current) {
         audioRef.current.play();
+        // 재생 중일 때
+        console.log("영상 재생");
+        // refetch();
       }
-
-      // 재생 중일 때
-      // console.log("영상 재생");
-      refetch();
+      if (oncePlayed) {
+        console.log("한번 재생 종료되고 나서 다시 재생한 것");
+        refetch();
+        setOncePlayed(false);
+      }
     } else if (event.data === 2) {
       if (audioRef.current) {
         audioRef.current.pause();
       }
       //일시 정지 시
       // console.log("일시 정지");
+    } else if (event.data == 0) {
+      setOncePlayed(true);
     }
   };
+
+  // useEffect(() => {
+  //   setNotYetPlayed(false);
+  // }, []);
 
   useEffect(() => {
     if (
@@ -150,6 +165,19 @@ export default function ShortsProductPage() {
 
   return (
     <div className="w-full h-screen bg-black flex flex-col items-center justify-start">
+      <Head>
+        <title>더빙으로 배우는 영어 쉐도잉 서비스 - 더빙 작품</title>
+        <meta
+          name="description"
+          content="더빙으로 배우는 영어 쉐도잉 서비스, 다른 사람이 더빙한 영상을 확인할 수 있습니다."
+        />
+        <meta
+          http-equiv="Cache-Control"
+          content="no-cache, no-store, must-revalidate"
+        />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+      </Head>
       {data && (
         <>
           <Link href={`/mypage/${data.userId}`}>
@@ -207,9 +235,9 @@ export default function ShortsProductPage() {
               createdDate={data.createdDate}
               recordCommentCount={data.recordCommentCount}
               // recordLikeCount={playCountUp?.likeCount}
-              recordLikeCount={likeInfo?.likeCount}
+              recordLikeCount={likeInfo?.likeCnt}
               // isLike={playCountUp?.isLike}
-              isLike={likeInfo?.isLike}
+              isLike={likeInfo?.like}
               isScrap={false}
             />
           </div>

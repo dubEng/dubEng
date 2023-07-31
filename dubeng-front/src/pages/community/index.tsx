@@ -8,7 +8,7 @@ import { RootState } from "@/stores/store";
 import { DubType, EmptyType, LangType } from "@/enum/statusType";
 import DubSituation from "@/features/community/molecules/DubSituation";
 import SearchInputBox from "@/features/community/atoms/SearchInputBox";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useRecommendDubVideoListQuery from "@/apis/community/queries/useRecommendDubVideoListQuery";
 import DubVideoListItem from "@/components/molecules/DubVideoListItem";
 import useCategoryListQuery from "@/apis/community/queries/useCategoryListQuery";
@@ -28,6 +28,8 @@ import DubVideoList from "@/features/community/organism/DubVideoList";
 import DubProductListItem from "@/components/molecules/DubProductListItem";
 import { DubVideoSearch } from "@/types/DubVideoSearch";
 import EmptyComponent from "@/components/atoms/EmptyComponent";
+import Head from "next/head";
+import Navigation from "@/features/community/organism/Navigation";
 
 interface IDubVideoResult {
   content: DubVideoSearch[];
@@ -52,6 +54,7 @@ export default function CommunityPage() {
   /** 현재 페이지에서 관리하는 state **/
   const [searchValue, setSearchValue] = useState("");
   const [keyword, setKeyword] = useState("");
+  const [page, setPage] = useState(0);
 
   // 선택한 카테고리 태그
   const [selectedCategory, setSelectedCategory] = useState<number[]>([]);
@@ -73,7 +76,9 @@ export default function CommunityPage() {
 
   // 2. 콘텐츠 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
   const { data: videoData, isLoading: searchDubVideoLoading } =
-    useSearchDubVideoQuery(selectedCategory, languageIndex, 100, keyword);
+    useSearchDubVideoQuery(selectedCategory, languageIndex, 10, page, keyword);
+
+  console.log(videoData);
 
   useEffect(() => {
     if (videoData) {
@@ -83,16 +88,35 @@ export default function CommunityPage() {
 
   // 3. 작품 검색 결과 가져오기 (일단 처음에 랜딩할 때 보여주는 것도 일종의 검색을 한 것)
   const { data: searchDubProductList, isLoading: searchDubProductLoading } =
-    useSearchDubProductQuery(selectedCategory, languageIndex, 100, keyword);
+    useSearchDubProductQuery(
+      selectedCategory,
+      languageIndex,
+      10,
+      page,
+      keyword
+    );
 
   // 4. 카테고리 리스트 가져오기
   const { data, isLoading } = useCategoryListQuery();
+
+  // 페이지 넘버 초기화하는 경우 -> 탭, 검색키워드, 선택 카테고리
+  useEffect(() => {
+    setPage(0);
+  }, [tabIndex]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [keyword]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [selectedCategory]);
 
   // if (isLoading) {
   //   return <></>;
   // }
 
-  // 함수
+  /* 함수 */
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -123,8 +147,18 @@ export default function CommunityPage() {
     setSelectedCategory([]);
   }, [tabIndex]);
 
+  // 페이지네이션 페이지 넘버 클릭할 때 이동시킬 위치인 ref
+  const searchInputRef = useRef<HTMLDivElement>(null);
+
   return (
     <div className="static h-full px-16 bg-white mt-57 mb-61">
+      <Head>
+        <title>더빙으로 배우는 영어 쉐도잉 서비스 - 더빙 목록</title>
+        <meta
+          name="description"
+          content="더빙으로 배우는 영어 쉐도잉 서비스, 추천 더빙 영상을 통해 나에게 알맞은 영상을 더빙해보세요"
+        />
+      </Head>
       <div className="flex sticky top-0">
         <DubTypeTap dubType={tabIndex} langType={languageIndex} />
       </div>
@@ -173,25 +207,29 @@ export default function CommunityPage() {
 
       <div className="mt-24"></div>
       {tabIndex === DubType.DUB_VIDEO ? (
-        <SearchInputBox
-          type="text"
-          name="searchInputBox"
-          value={searchValue}
-          placeholder="더빙할 콘텐츠를 검색해보세요."
-          onChange={handleSearchInputChange}
-          onKeyDown={handleSearchInputKeyDown}
-          onClick={handleSearchInputClear}
-        />
+        <div ref={searchInputRef}>
+          <SearchInputBox
+            type="text"
+            name="searchInputBox"
+            value={searchValue}
+            placeholder="더빙할 콘텐츠를 검색해보세요."
+            onChange={handleSearchInputChange}
+            onKeyDown={handleSearchInputKeyDown}
+            onClick={handleSearchInputClear}
+          />
+        </div>
       ) : (
-        <SearchInputBox
-          type="text"
-          name="searchInputBox"
-          value={searchValue}
-          placeholder="더빙 작품을 검색해보세요."
-          onChange={handleSearchInputChange}
-          onKeyDown={handleSearchInputKeyDown}
-          onClick={handleSearchInputClear}
-        />
+        <div ref={searchInputRef}>
+          <SearchInputBox
+            type="text"
+            name="searchInputBox"
+            value={searchValue}
+            placeholder="더빙 작품을 검색해보세요."
+            onChange={handleSearchInputChange}
+            onKeyDown={handleSearchInputKeyDown}
+            onClick={handleSearchInputClear}
+          />
+        </div>
       )}
 
       <div className="flex mt-16">
@@ -319,6 +357,30 @@ export default function CommunityPage() {
             )
           )}
       </div>
+      {tabIndex === DubType.DUB_VIDEO &&
+      videoData &&
+      videoData.content.length > 0 ? (
+        <Navigation
+          page={page}
+          totalPages={videoData?.totalPages}
+          setPage={setPage}
+          inputRef={searchInputRef}
+        />
+      ) : (
+        <></>
+      )}
+      {tabIndex === DubType.DUB_PRODUCT &&
+      searchDubProductList &&
+      searchDubProductList.content.length > 0 ? (
+        <Navigation
+          page={page}
+          totalPages={searchDubProductList?.totalPages}
+          setPage={setPage}
+          inputRef={searchInputRef}
+        />
+      ) : (
+        <></>
+      )}
       <div className="h-80"></div>
     </div>
   );

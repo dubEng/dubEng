@@ -20,7 +20,7 @@ const fetcher = async (payload: RecordPreview) => {
 const useRecordPreviewPost = () => {
   return useMutation(fetcher, {
     onSuccess: (response) => {
-      // console.log("response", response);
+      console.log("useRecordPreviewPost", response);
     },
     onError: (error) => {
       // console.error("error", error);
