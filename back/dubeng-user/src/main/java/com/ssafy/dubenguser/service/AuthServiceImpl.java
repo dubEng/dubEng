@@ -31,6 +31,9 @@ public class AuthServiceImpl implements AuthService{
     @Value("${kakao.redirectUri}")
     private String REDIRECT_URI;
 
+    @Value("${kakao.baseUrl}")
+    private String BASE_URL;
+
     private final UserRepository userRepository;
     private final UserCalenderRepository userCalenderRepository;
     private final UserCategoryRepository userCategoryRepository;
@@ -42,7 +45,7 @@ public class AuthServiceImpl implements AuthService{
 
         // 인가 코드를 통해 access-token 요청
         WebClient webClient = WebClient.builder()
-                .baseUrl(baseUrl)
+                .baseUrl(BASE_URL)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .build();
         log.debug("KAKAO_CLIENT_ID : {}", KAKAO_CLIENT_ID);
@@ -120,7 +123,7 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public String reissueATK(String refreshToken) {
         WebClient webClient = WebClient.builder()
-                .baseUrl(baseUrl)
+                .baseUrl(BASE_URL)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .build();
         log.debug("KAKAO_CLIENT_ID : {}", KAKAO_CLIENT_ID);

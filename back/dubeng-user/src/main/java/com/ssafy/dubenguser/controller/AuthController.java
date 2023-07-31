@@ -2,6 +2,7 @@ package com.ssafy.dubenguser.controller;
 
 import com.ssafy.dubenguser.dto.UserJoinReq;
 import com.ssafy.dubenguser.dto.UserLoginRes;
+import com.ssafy.dubenguser.dto.UserTokenReq;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
 import com.ssafy.dubenguser.service.AuthService;
 import com.ssafy.dubenguser.service.UserService;
@@ -84,7 +85,7 @@ public class AuthController {
     }
 
     @PostMapping("/parse")
-    public ResponseEntity<String> accessTokenParse(@RequestBody Token requestDTO){
+    public ResponseEntity<String> accessTokenParse(@RequestBody UserTokenReq requestDTO){
         log.debug("accessToken : {}", requestDTO.getAccessToken());
 
         //service - parseToken
