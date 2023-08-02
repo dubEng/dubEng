@@ -11,8 +11,17 @@ import axios from "axios";
 import EmptyComponent from "@/components/atoms/EmptyComponent";
 import { EmptyType } from "@/enum/statusType";
 
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { useRouter } from "next/router";
+
 export default function ScrapDubVideoList() {
-  const { data, isLoading, error, refetch } = useScrapDubVideoListQuery(true, "all");
+  const { data, isLoading, error, refetch } = useScrapDubVideoListQuery(
+    true,
+    "all"
+  );
+  const MySwal = withReactContent(Swal);
+  const router = useRouter();
 
   if (isLoading) {
     return (
@@ -23,6 +32,12 @@ export default function ScrapDubVideoList() {
   }
 
   if (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        MySwal.fire("로그인이 만료되어 로그인 페이지로 이동합니다.");
+        router.push("/login");
+      }
+    }
     return <ErrorComponent onClick={() => refetch} retry={true} />;
   }
 
@@ -35,7 +50,11 @@ export default function ScrapDubVideoList() {
           data.map((item: any) => (
             <SwiperSlide key={item.id}>
               <Link href={`/community/shorts/video/${item.id}`}>
-                <DubVideoThumbnail id={item.id} title={item.title} thumbnail={item.thumbnail} />
+                <DubVideoThumbnail
+                  id={item.id}
+                  title={item.title}
+                  thumbnail={item.thumbnail}
+                />
               </Link>
             </SwiperSlide>
           ))}
