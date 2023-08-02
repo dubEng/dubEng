@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -319,6 +320,19 @@ public class AuthServiceImpl implements AuthService{
         for(Mission m: missionList) {
             userMissionRepository.save(UserMission.builder().user(savedUser).mission(m).build());
         }
+    }
+
+    @Override
+    @Transactional
+    public void quitUser(String accessToken) {
+        String userId = parseToken(accessToken);
+        Optional<User> findUser = userRepository.findById(userId);
+        if(!findUser.isPresent()) throw new UnAuthorizedException("존재하지 않는 유저입니다!");
+
+        User loginUser = findUser.get();
+
+        //탈퇴 처리하기
+        loginUser.updateUserQuit();
     }
 
     /**

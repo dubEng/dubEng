@@ -3,6 +3,7 @@ package com.ssafy.dubenguser.service;
 import com.ssafy.dubenguser.dto.MissionCompleteRes;
 import com.ssafy.dubenguser.dto.UserMissionRes;
 import com.ssafy.dubenguser.entity.*;
+import com.ssafy.dubenguser.exception.InvalidInputException;
 import com.ssafy.dubenguser.exception.NotFoundException;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
 import com.ssafy.dubenguser.repository.MissionRepository;
@@ -29,6 +30,7 @@ public class UserMissionServiceImpl implements UserMissionService{
     private final MissionRepository missionRepository;
     private String unAuthorizedException = "토큰 파싱과정에서 오류";
     private String noUser = "존재하지 않는 유저입니다!";
+    private String quitUser = "탈퇴한 회원입니다!";
 
     @Override
     public List<UserMissionRes> findUserMissions(String accessToken) {
@@ -39,6 +41,10 @@ public class UserMissionServiceImpl implements UserMissionService{
 
         if(!user.isPresent()) {
             throw new NotFoundException(noUser);
+        }
+
+        if(!user.get().getIsActive()) {
+            throw new InvalidInputException(quitUser);
         }
 
         List<UserMissionRes> result = userMissionRepository.findUserMissionsByUser(user.get());
@@ -55,6 +61,11 @@ public class UserMissionServiceImpl implements UserMissionService{
         if(!user.isPresent()) {
             throw new NotFoundException(noUser);
         }
+
+        if(!user.get().getIsActive()) {
+            throw new InvalidInputException(quitUser);
+        }
+
         List<String> result = userMissionRepository.findAssetsByUser(user.get());
         return result;
     }
@@ -71,6 +82,11 @@ public class UserMissionServiceImpl implements UserMissionService{
         if(!user.isPresent()) {
             throw new NotFoundException(noUser);
         }
+
+        if(!user.get().getIsActive()) {
+            throw new InvalidInputException(quitUser);
+        }
+
         Optional<Video> video = videoRepository.findById(videoId);
 
         if(!video.isPresent()) {
