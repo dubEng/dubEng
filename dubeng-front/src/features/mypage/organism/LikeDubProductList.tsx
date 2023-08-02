@@ -10,7 +10,10 @@ import EmptyComponent from "@/components/atoms/EmptyComponent";
 import { EmptyType } from "@/enum/statusType";
 
 export default function LikeDubProductList() {
-  const { data, isLoading, refetch, error } = useLikeDubProductListQuery(true, "all");
+  const { data, isLoading, refetch, error } = useLikeDubProductListQuery(
+    true,
+    "all"
+  );
 
   if (isLoading) {
     return (
