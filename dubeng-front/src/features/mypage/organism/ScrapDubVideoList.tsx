@@ -23,6 +23,7 @@ export default function ScrapDubVideoList() {
   }
 
   if (error) {
+    console.log('ScrapDubVideoList', error);
     return <ErrorComponent onClick={() => refetch} retry={true} />;
   }
 
