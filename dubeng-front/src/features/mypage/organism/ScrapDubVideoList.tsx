@@ -33,7 +33,7 @@ export default function ScrapDubVideoList() {
 
   if (error) {
     if (axios.isAxiosError(error)) {
-      if (error.response?.status === 401) {
+      if (error.response?.status === 404) {
         MySwal.fire("로그인이 만료되어 로그인 페이지로 이동합니다.");
         router.push("/login");
       }
