@@ -2,6 +2,7 @@ package com.ssafy.dubenguser.controller;
 
 import com.ssafy.dubenguser.dto.UserJoinReq;
 import com.ssafy.dubenguser.dto.UserLoginRes;
+import com.ssafy.dubenguser.dto.UserQuitReq;
 import com.ssafy.dubenguser.dto.UserTokenReq;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
 import com.ssafy.dubenguser.service.AuthService;
@@ -132,5 +133,12 @@ public class AuthController {
         authService.kakaoLogout(accessToken);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @PostMapping("/quit")
+    public ResponseEntity<String> quit(@RequestBody UserQuitReq request) {
+        authService.quitUser(request.getAccessToken());
+
+        return new ResponseEntity<String>("회원 탈퇴가 정상적으로 처리되었습니다!", HttpStatus.OK);
     }
 }

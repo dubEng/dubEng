@@ -42,4 +42,6 @@ public class User extends Time{
         this.totalRecTime = totalRecTime;
         this.gender = gender;
     }
+
+    public void updateUserQuit() { this.isActive = false; }
 }
