@@ -101,7 +101,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         List<CommunitySearchRes> content = queryFactory
                 .select(new QCommunitySearchRes(video.id, video.title,video.thumbnail,video.runtime, user.nickname, user.profileImage, QRecord.record.playCount, QRecord.record.createdDate, QRecord.record.id))
                 .from(video)
-                .where(builder)
+                .where(builder, QRecord.record.isPublic.eq(true), user.isActive.eq(true))
                 .leftJoin(videoCategory)
                 .on(videoCategory.video.id.eq(video.id))
                 .join(QRecord.record)
@@ -116,7 +116,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         JPAQuery<CommunitySearchRes> countQuery = queryFactory
                 .select(new QCommunitySearchRes(video.id, video.title,video.thumbnail,video.runtime, user.nickname, user.profileImage, QRecord.record.playCount, QRecord.record.createdDate, QRecord.record.id))
                 .from(video)
-                .where(builder)
+                .where(builder, QRecord.record.isPublic.eq(true), user.isActive.eq(true))
                 .leftJoin(videoCategory)
                 .on(videoCategory.video.id.eq(video.id))
                 .join(QRecord.record)
@@ -127,7 +127,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
 
-        System.out.println(countQuery.fetchCount());
+
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
@@ -150,7 +150,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         CommunityDetailRes content = queryFactory
                 .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.id, user.nickname, QRecord.record.id, video.startTime, video.endTime, QRecord.record.recordPath, user.profileImage))
                 .from(video)
-                .where(QRecord.record.id.eq(recordId))
+                .where(QRecord.record.id.eq(recordId), user.isActive.eq(true))
                 .join(QRecord.record)
                 .on(video.id.eq(QRecord.record.video.id))
                 .leftJoin(user)
@@ -169,7 +169,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         List<CommunityDetailRes> content = queryFactory
                 .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.id, user.nickname, QRecord.record.id, video.startTime, video.endTime, QRecord.record.recordPath, user.profileImage))
                 .from(video)
-                .where(QRecord.record.isPublic.eq(true))
+                .where(QRecord.record.isPublic.eq(true), user.isActive.eq(true))
                 .join(QRecord.record)
                 .on(video.id.eq(QRecord.record.video.id))
                 .leftJoin(user)
@@ -192,7 +192,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         JPAQuery<CommunityDetailRes> countQuery = queryFactory
                 .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.id, user.nickname, QRecord.record.id, video.startTime, video.endTime, QRecord.record.recordPath, user.profileImage))
                 .from(video)
-                .where(QRecord.record.isPublic.eq(true))
+                .where(QRecord.record.isPublic.eq(true), user.isActive.eq(true))
                 .join(QRecord.record)
                 .on(video.id.eq(QRecord.record.video.id))
                 .leftJoin(user)
@@ -225,7 +225,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .from(video)
                 .join(QRecord.record)
                 .on(QRecord.record.video.id.eq(video.id))
-                .where(video.langType.eq(langType), QRecord.record.isPublic.eq(true), QRecord.record.user.id.ne(userId))
+                .where(video.langType.eq(langType), QRecord.record.isPublic.eq(true), QRecord.record.user.id.ne(userId), user.isActive.eq(true))
                 .groupBy(video.id)
                 .having(video.id.count().goe(2))
                 .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
@@ -236,7 +236,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .from(QRecord.record)
                 .join(user)
                 .on(QRecord.record.user.id.eq(user.id))
-                .where(QRecord.record.video.id.eq(content.getId()), QRecord.record.isPublic.eq(true), user.id.ne(userId))
+                .where(QRecord.record.video.id.eq(content.getId()), QRecord.record.isPublic.eq(true), user.id.ne(userId), user.isActive.eq(true))
                 .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
                 .limit(2)
                 .fetch();
@@ -255,7 +255,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .from(recordComment)
                 .leftJoin(user)
                 .on(recordComment.user.id.eq(user.id))
-                .where(recordComment.record.id.eq(recordId))
+                .where(recordComment.record.id.eq(recordId), user.isActive.eq(true))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -265,7 +265,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .from(recordComment)
                 .leftJoin(user)
                 .on(recordComment.user.id.eq(user.id))
-                .where(recordComment.record.id.eq(recordId))
+                .where(recordComment.record.id.eq(recordId), user.isActive.eq(true))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
 
@@ -277,7 +277,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         RecordLike recordLike= queryFactory
                 .select(QRecordLike.recordLike)
                 .from(QRecordLike.recordLike)
-                .where(QRecordLike.recordLike.record.id.eq(recordId), QRecordLike.recordLike.user.id.eq(userId))
+                .where(QRecordLike.recordLike.record.id.eq(recordId), QRecordLike.recordLike.user.id.eq(userId), user.isActive.eq(true))
                 .fetchFirst();
 
         return recordLike;
@@ -288,7 +288,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         VideoBookmark videoBookmark= queryFactory
                 .select(QVideoBookmark.videoBookmark)
                 .from(QVideoBookmark.videoBookmark)
-                .where(QVideoBookmark.videoBookmark.video.id.eq(videoId), QVideoBookmark.videoBookmark.user.id.eq(userId))
+                .where(QVideoBookmark.videoBookmark.video.id.eq(videoId), QVideoBookmark.videoBookmark.user.id.eq(userId), user.isActive.eq(true))
                 .fetchFirst();
 
         return videoBookmark;
@@ -334,7 +334,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .leftJoin(user)
                 .on(QRecord.record.user.id.eq(user.id))
                 .orderBy(QRecord.record.playCount.desc())
-                .where(QRecord.record.isPublic.eq(true))
+                .where(QRecord.record.isPublic.eq(true), user.isActive.eq(true))
                 .limit(10)
                 .fetch();
         return  homePopularities;
@@ -347,7 +347,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .join(user)
                 .on(dubKing.user.id.eq(user.id))
                 .orderBy(dubKing.totalVote.desc())
-                .where(user.isPublic.eq(true))
+                .where(user.isPublic.eq(true), user.isActive.eq(true))
                 .limit(3)
                 .fetch();
         return homeDubKingRes;
@@ -358,7 +358,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .select(new QHomeRankRes(user.id, user.nickname, user.description, user.profileImage, user.totalRecTime, user.recordCount))
                 .from(user)
                 .orderBy(user.totalRecTime.desc(), user.recordCount.desc())
-                .where(user.isPublic.eq(true))
+                .where(user.isPublic.eq(true), user.isActive.eq(true))
                 .limit(5)
                 .fetch();
 

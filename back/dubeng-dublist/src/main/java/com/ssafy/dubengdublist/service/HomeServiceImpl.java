@@ -38,7 +38,7 @@ public class HomeServiceImpl implements HomeService {
         Iterator<String> it = redisKeys.iterator();
         Long i = 0L;
         ZSetOperations<String, Object> ZSetOperations = redisTemplate.opsForZSet();
-        Set<ZSetOperations.TypedTuple<Object>> typedTuples = ZSetOperations.reverseRangeWithScores("dubkingTop3", 0, 4);
+        Set<ZSetOperations.TypedTuple<Object>> typedTuples = ZSetOperations.reverseRangeWithScores("dubkingTop3", 0, 6);
         for (ZSetOperations.TypedTuple<Object> t : typedTuples) {
             String userId = (String)t.getValue();
             Optional<User> ouser = userRepository.findById(userId);
@@ -46,6 +46,8 @@ public class HomeServiceImpl implements HomeService {
                 continue; // redis에는 있었는데 DB에는 없는 경우
             }
             User user = ouser.get();
+            if(!user.getIsActive())
+                continue;
             Long voteCnt = t.getScore().longValue();
             result.add(new HomeDubKingRes(i++, userId, user.getNickname(), user.getProfileImage(), voteCnt));
         }
