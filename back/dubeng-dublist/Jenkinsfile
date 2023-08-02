@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('GIT CLONE') {
             steps{
-                git branch : 'develop-back/dubeng', url : 'https://github.com/dubEng/dubEng'
+                git branch : 'develop-back/dublist', url : 'https://github.com/dubEng/dubEng'
             }
         }
         stage('SPRING BUILD'){
