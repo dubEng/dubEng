@@ -41,6 +41,10 @@ public class UserServiceImpl implements UserService {
 
         User user = foundUser.get();
 
+        //탈퇴한 회원일 경우 접근 제한
+        if(!user.getIsActive())
+            throw new UnAuthorizedException("이미 탈퇴한 회원입니다!");
+
         List<Category> categories = userRepository.findCategoriesByUserId(user.getId());
 
         List<UserCategoryRes> categoryList = new ArrayList<>();
