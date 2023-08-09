@@ -287,6 +287,10 @@ public class AuthServiceImpl implements AuthService{
         //parseToken
         String userId = parseToken(accessToken);
 
+        //탈퇴한 회원일 경우 접근 제한
+        if(checkEnrolledMember(userId))
+            throw new DuplicateException("이미 가입한 회원입니다.");
+
         User newUser = User.builder()
                 .id(userId)
                 .nickname(request.getNickname())
