@@ -254,6 +254,10 @@ public class AuthServiceImpl implements AuthService{
 
         User loginUser = findUser.get();
 
+        //탈퇴한 회원일 경우 접근 제한
+        if(!loginUser.getIsActive())
+            throw new UnAuthorizedException("이미 탈퇴한 회원입니다!");
+
         // 출석하기
         LocalDateTime currentDateTime = LocalDateTime.now();
 
