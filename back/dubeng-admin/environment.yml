@@ -2,6 +2,5 @@ name: admin-environment
 channels:
 - defaults
 dependencies:
-- python=3.8
-- flask
+- python=3.9
 - gunicorn
