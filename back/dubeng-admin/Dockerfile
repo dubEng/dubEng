@@ -1,7 +1,5 @@
 FROM continuumio/miniconda:latest
 
-WORKDIR /test
-
 COPY . .
 
 RUN chmod +x boot.sh
