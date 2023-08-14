@@ -22,7 +22,7 @@ export default function MissionListItem({
           ]}
         >
           <div className="w-80 h-80 rounded-lg">
-            <img
+            <Image
               src={`/assets/${assetUrl}.PNG`}
               alt={"objectImage"}
               width={80}
@@ -52,7 +52,7 @@ export default function MissionListItem({
               ]}
             >
               <div className="w-80 h-80 rounded-lg">
-                <img
+                <Image
                   src={`/assets/${assetUrl}.PNG`}
                   alt={"objectImage"}
                   width={80}
