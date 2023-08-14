@@ -16,4 +16,4 @@ RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
-ENTRYPOINT ["./boot.sh"]
+CMD uvicorn --host=0.0.0.0 --port 5000 main:app
