@@ -2,6 +2,7 @@ package com.ssafy.dubenguser.service;
 
 import com.ssafy.dubenguser.dto.UserJoinReq;
 import com.ssafy.dubenguser.dto.UserLoginRes;
+import com.ssafy.dubenguser.dto.UserProfileReq;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -17,4 +18,5 @@ public interface AuthService {
     public void addUser(UserJoinReq requestDTO, String accessToken);
     public boolean checkEnrolledMember(String id);
     public boolean checkExistNickname(String nickname);
+    public void quitUser(String id);
 }
