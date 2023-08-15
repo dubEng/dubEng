@@ -47,6 +47,7 @@ public class UserController {
     @PostMapping("/record/list")
     public ResponseEntity<List<UserRecordRes>> userRecordList(@RequestBody UserRecordReq request) {
         List<UserRecordRes> recordList = userService.findRecord(request);
+
         return new ResponseEntity<>(recordList, HttpStatus.OK);
     }
 
