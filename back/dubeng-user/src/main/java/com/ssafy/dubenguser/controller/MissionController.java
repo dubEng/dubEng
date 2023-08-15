@@ -1,16 +1,13 @@
 package com.ssafy.dubenguser.controller;
 
-import com.ssafy.dubenguser.config.CookieHandler;
+
 import com.ssafy.dubenguser.dto.UserMissionRes;
-import com.ssafy.dubenguser.entity.User;
-import com.ssafy.dubenguser.exception.UnAuthorizedException;
+import com.ssafy.dubenguser.entity.UserMission;
 import com.ssafy.dubenguser.service.UserMissionService;
-import com.ssafy.dubenguser.service.UserMissionServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -28,7 +24,7 @@ import java.util.Objects;
 public class MissionController {
     private final UserMissionService userMissionService;
 
-    @ApiOperation(value="도전과제 미션 목록 조회")
+    @ApiOperation(value="해결한 도전과제 미션 목록 조회")
     @GetMapping("/list")
     public ResponseEntity<List<UserMissionRes>> userMissionList(HttpServletRequest request){
         String accessToken = (String) request.getAttribute("Authorization");

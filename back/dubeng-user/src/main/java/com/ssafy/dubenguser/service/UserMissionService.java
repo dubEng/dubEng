@@ -1,10 +1,10 @@
 package com.ssafy.dubenguser.service;
 
 import com.ssafy.dubenguser.dto.UserMissionRes;
+import com.ssafy.dubenguser.entity.UserMission;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public interface UserMissionService {
 
