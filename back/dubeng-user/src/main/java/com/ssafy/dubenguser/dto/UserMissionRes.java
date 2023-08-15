@@ -1,17 +1,19 @@
 package com.ssafy.dubenguser.dto;
 
-import com.ssafy.dubenguser.entity.Video;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
+@Getter
 public class UserMissionRes {
-    private String title; // 미션 이름
-    private String assets; // 에셋 내용
-    private String color; // 미션 고유 컬러
-    private Long videoId;
-    private boolean isComplete;
+    String title; // 미션 이름
+    String assets; // 에셋 내용
+    String color; // 미션 고유 컬러
+    Long videoId;
+
+    @JsonProperty(value = "isComplete") @Setter
+    boolean isComplete;
+
 }
