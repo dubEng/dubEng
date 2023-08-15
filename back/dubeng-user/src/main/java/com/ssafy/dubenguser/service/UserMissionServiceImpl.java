@@ -50,10 +50,9 @@ public class UserMissionServiceImpl implements UserMissionService{
 
         List<UserMissionRes> result = new ArrayList<>();
         for(Mission mission : missionList) {
-            System.out.println(mission.getId());
             UserMissionRes userMissionRes = new UserMissionRes(mission.getTitle(), mission.getAssets(), mission.getColor(), mission.getId(), true);
 
-            if(!list.contains(mission.getId())) userMissionRes.setActive(false);
+            if(!list.contains(mission.getId())) userMissionRes.setComplete(false);
             result.add(userMissionRes);
         }
         return result;

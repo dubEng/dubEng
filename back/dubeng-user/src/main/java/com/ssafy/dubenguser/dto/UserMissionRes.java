@@ -13,5 +13,5 @@ public class UserMissionRes {
     private String assets; // 에셋 내용
     private String color; // 미션 고유 컬러
     private Long videoId;
-    private boolean isActive;
+    private boolean isComplete;
 }
