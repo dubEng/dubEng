@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "mission")
-public class Mission extends Time{
+public class Mission{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,9 +18,4 @@ public class Mission extends Time{
     private String title;
     private String assets;
     private String color;
-
-    @OneToOne(cascade = CascadeType.MERGE, targetEntity = Video.class, fetch = FetchType.LAZY)
-    @JoinColumn(name="video_id")
-    private Video video;
-
 }

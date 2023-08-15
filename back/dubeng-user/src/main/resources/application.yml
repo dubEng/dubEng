@@ -29,6 +29,7 @@ logging:
     root: info
     com:
       ssafy: debug
+    org.hibernate.sql: debug
 
 
 
