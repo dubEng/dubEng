@@ -2,7 +2,6 @@ package com.ssafy.dubenguser.service;
 
 import com.ssafy.dubenguser.dto.*;
 import com.ssafy.dubenguser.entity.*;
-import com.ssafy.dubenguser.exception.DuplicateException;
 import com.ssafy.dubenguser.exception.InvalidInputException;
 import com.ssafy.dubenguser.exception.NotFoundException;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;

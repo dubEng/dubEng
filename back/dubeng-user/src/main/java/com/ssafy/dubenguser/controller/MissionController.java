@@ -2,7 +2,6 @@ package com.ssafy.dubenguser.controller;
 
 
 import com.ssafy.dubenguser.dto.UserMissionRes;
-import com.ssafy.dubenguser.entity.UserMission;
 import com.ssafy.dubenguser.service.UserMissionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
