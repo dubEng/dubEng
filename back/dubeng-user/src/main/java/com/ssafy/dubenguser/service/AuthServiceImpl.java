@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -254,6 +255,10 @@ public class AuthServiceImpl implements AuthService{
 
         User loginUser = findUser.get();
 
+        //탈퇴한 회원일 경우 접근 제한
+        if(!loginUser.getIsActive())
+            throw new UnAuthorizedException("이미 탈퇴한 회원입니다!");
+
         // 출석하기
         LocalDateTime currentDateTime = LocalDateTime.now();
 
@@ -282,6 +287,10 @@ public class AuthServiceImpl implements AuthService{
 
         //parseToken
         String userId = parseToken(accessToken);
+
+        //탈퇴한 회원일 경우 접근 제한
+        if(checkEnrolledMember(userId))
+            throw new DuplicateException("이미 가입한 회원입니다.");
 
         User newUser = User.builder()
                 .id(userId)
@@ -319,6 +328,19 @@ public class AuthServiceImpl implements AuthService{
         for(Mission m: missionList) {
             userMissionRepository.save(UserMission.builder().user(savedUser).mission(m).build());
         }
+    }
+
+    @Override
+    @Transactional
+    public void quitUser(String accessToken) {
+        String userId = parseToken(accessToken);
+        Optional<User> findUser = userRepository.findById(userId);
+        if(!findUser.isPresent()) throw new UnAuthorizedException("존재하지 않는 유저입니다!");
+
+        User loginUser = findUser.get();
+
+        //탈퇴 처리하기
+        loginUser.updateUserQuit();
     }
 
     /**
