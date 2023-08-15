@@ -30,7 +30,6 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 @Api("회원 API")
 public class AuthController {
-    private final UserService userService;
     private final AuthService authService;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
