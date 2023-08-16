@@ -37,6 +37,7 @@ public class CommunityServiceImpl implements CommunityService{
 
 
     public Map<String, Object> findDubKing(String langType, String userId) {
+
         Optional<User> ouser = userRepository.findById(userId);
         if(!ouser.isPresent()) {
             throw new NotFoundException(MESSAGEUser);
