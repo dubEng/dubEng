@@ -153,6 +153,7 @@ export default function CommunityPage() {
   const [totalPageArray, setTotalPageArray] = useState([]);
   const [currentPageArray, setCurrentPageArray] = useState<number[]>([]);
   const [totalPages, setTotalPages] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   // 페이지 자르는 함수
   const sliceArrayByLimit = (totalPage: number, limit: number) => {
@@ -169,10 +170,9 @@ export default function CommunityPage() {
   };
 
   useEffect(() => {
-    console.log("page", page);
-    console.log("Math.floor(page / 5)", Math.floor(page / 5));
-    setCurrentPageArray(totalPageArray[Math.floor(page / 5)]);
-  }, [page]);
+    setCurrentIndex(Math.floor(page / 5));
+    setCurrentPageArray(totalPageArray[currentIndex]);
+  }, [totalPageArray]);
 
   useEffect(() => {
     setTotalPages(searchDubProductList?.totalPages);
@@ -185,7 +185,6 @@ export default function CommunityPage() {
     );
     console.log("totalPages 바뀔 때마다 useEffect", slicedPageArray);
     setTotalPageArray(slicedPageArray);
-    setCurrentPageArray(slicedPageArray[0]);
   }, [totalPages]);
 
   return (
