@@ -29,7 +29,7 @@ import DubProductListItem from "@/components/molecules/DubProductListItem";
 import { DubVideoSearch } from "@/types/DubVideoSearch";
 import EmptyComponent from "@/components/atoms/EmptyComponent";
 import Head from "next/head";
-import Navigation from "@/features/community/organism/Navigation";
+import Pagination from "@/features/community/organism/Pagination";
 
 interface IDubVideoResult {
   content: DubVideoSearch[];
@@ -149,6 +149,44 @@ export default function CommunityPage() {
 
   // 페이지네이션 페이지 넘버 클릭할 때 이동시킬 위치인 ref
   const searchInputRef = useRef<HTMLDivElement>(null);
+
+  const [totalPageArray, setTotalPageArray] = useState([]);
+  const [currentPageArray, setCurrentPageArray] = useState<number[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
+
+  // 페이지 자르는 함수
+  const sliceArrayByLimit = (totalPage: number, limit: number) => {
+    const totalPageArray = Array.from({ length: totalPage }, (v, i) => i + 1);
+    let result: number | any | never[] = [];
+
+    while (totalPageArray.length > 0) {
+      let tempArray;
+      tempArray = totalPageArray.splice(0, limit);
+      result = [...result, tempArray];
+    }
+
+    return result;
+  };
+
+  useEffect(() => {
+    console.log("page", page);
+    console.log("Math.floor(page / 5)", Math.floor(page / 5));
+    setCurrentPageArray(totalPageArray[Math.floor(page / 5)]);
+  }, [page]);
+
+  useEffect(() => {
+    setTotalPages(searchDubProductList?.totalPages);
+  }, [searchDubProductList]);
+
+  useEffect(() => {
+    const slicedPageArray = sliceArrayByLimit(
+      searchDubProductList?.totalPages,
+      5
+    );
+    console.log("totalPages 바뀔 때마다 useEffect", slicedPageArray);
+    setTotalPageArray(slicedPageArray);
+    setCurrentPageArray(slicedPageArray[0]);
+  }, [totalPages]);
 
   return (
     <div className="static h-full px-16 bg-white mt-57 mb-61">
@@ -360,9 +398,10 @@ export default function CommunityPage() {
       {tabIndex === DubType.DUB_VIDEO &&
       videoData &&
       videoData.content.length > 0 ? (
-        <Navigation
+        <Pagination
           page={page}
           totalPages={videoData?.totalPages}
+          currentPageArray={currentPageArray}
           setPage={setPage}
           inputRef={searchInputRef}
         />
@@ -372,9 +411,10 @@ export default function CommunityPage() {
       {tabIndex === DubType.DUB_PRODUCT &&
       searchDubProductList &&
       searchDubProductList.content.length > 0 ? (
-        <Navigation
+        <Pagination
           page={page}
-          totalPages={searchDubProductList?.totalPages}
+          totalPages={totalPages}
+          currentPageArray={currentPageArray}
           setPage={setPage}
           inputRef={searchInputRef}
         />
