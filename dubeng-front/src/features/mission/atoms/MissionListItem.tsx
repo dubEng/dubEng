@@ -41,7 +41,7 @@ export default function MissionListItem({
   } else {
     return (
       <div>
-        {/* <Link href={`/dubbing/${videoId}`}> */}
+        <Link href={`/dubbing/${videoId}`}>
           <div className="w-150 h-201 relative rounded-tl-lg bg-white rounded-lg mx-12 mb-8">
             <div
               className={getBoxStyle(color)}
@@ -74,7 +74,7 @@ export default function MissionListItem({
               </p>
             </div>
           </div>
-        {/* </Link> */}
+        </Link>
       </div>
     );
   }
