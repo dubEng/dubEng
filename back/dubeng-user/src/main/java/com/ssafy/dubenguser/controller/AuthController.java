@@ -1,12 +1,9 @@
 package com.ssafy.dubenguser.controller;
 
-import com.ssafy.dubenguser.dto.UserJoinReq;
-import com.ssafy.dubenguser.dto.UserLoginRes;
-import com.ssafy.dubenguser.dto.UserQuitReq;
-import com.ssafy.dubenguser.dto.UserTokenReq;
+import com.ssafy.dubenguser.dto.*;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
 import com.ssafy.dubenguser.service.AuthService;
-import com.ssafy.dubenguser.service.UserService;
+import com.ssafy.dubenguser.service.GoogleAuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +13,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +27,7 @@ import java.util.HashMap;
 @Api("회원 API")
 public class AuthController {
     private final AuthService authService;
+    private final GoogleAuthService googleAuthService;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
     private String accessToken;
@@ -43,7 +40,7 @@ public class AuthController {
     private String BASE_URL;
 
     @GetMapping("/kakao/callback")
-    public void authCodeDetails(@RequestParam String code, HttpServletResponse response, RedirectAttributes attributes) throws IOException {
+    public void authCodeDetails(@RequestParam String code, HttpServletResponse response) throws IOException {
 
         //code로 access-token 요청
         HashMap<String, Object> result = authService.findAccessToken(code);
@@ -139,5 +136,47 @@ public class AuthController {
         authService.quitUser(request.getAccessToken());
 
         return new ResponseEntity<String>("회원 탈퇴가 정상적으로 처리되었습니다!", HttpStatus.OK);
+    }
+
+    /**
+     * Google Login
+     */
+    @GetMapping("/google/callback")
+    public void googleLogin(String code, HttpServletResponse response) throws IOException {
+        log.debug("Google Auth Code : {}", code);
+        GoogleOAuthToken googleOAuthToken = googleAuthService.findAccessToken(code);
+
+        Cookie atkCookie = new Cookie("accessToken", googleOAuthToken.getAccess_token());
+        atkCookie.setMaxAge(3600);
+        atkCookie.setDomain(BASE_URL);
+        atkCookie.setPath("/");
+
+        response.addCookie(atkCookie);
+
+        Cookie rtkCookie = new Cookie("refreshToken", googleOAuthToken.getRefresh_token());
+        rtkCookie.setMaxAge(60 * 60 * 24 * 7 * 2);
+        rtkCookie.setDomain(BASE_URL);
+        rtkCookie.setPath("/");
+        rtkCookie.setSecure(true);
+        rtkCookie.setHttpOnly(true);
+
+        response.addCookie(rtkCookie);
+
+        //회원 가입 여부 체크
+        String redirectUri = "/signup";
+
+        if(googleAuthService.isExistUser(accessToken)){
+            redirectUri = "/login/success";
+            response.sendRedirect(SEND_REDIRECT_URL + redirectUri);
+            return;
+        }
+        response.sendRedirect(SEND_REDIRECT_URL + redirectUri);
+    }
+    @PostMapping("/google/token")
+    public ResponseEntity<?> googleToken(HttpServletRequest request){
+        String accessToken = request.getHeader("Authorization");
+
+        String response = googleAuthService.parseGoogleToken(accessToken);
+        return new ResponseEntity<String>(response, HttpStatus.OK);
     }
 }
