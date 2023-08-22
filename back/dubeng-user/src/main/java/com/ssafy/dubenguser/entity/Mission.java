@@ -18,4 +18,5 @@ public class Mission{
     private String title;
     private String assets;
     private String color;
+    private Long videoId;
 }
