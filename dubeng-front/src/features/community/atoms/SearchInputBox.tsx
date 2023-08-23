@@ -21,13 +21,6 @@ export default function SearchInputBox({
   placeholder,
   onClick,
 }: Iprops) {
-  // const [searchValue, setSearchValue] = useState(value);
-
-  // const handleSearchInputClear = () => {
-  //   console.log("검색어 지우기");
-  //   setSearchValue("");
-  // };
-
   if (value) {
     return (
       <div className="flex relative items-center w-358 h-43">
