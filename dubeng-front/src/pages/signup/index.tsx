@@ -21,8 +21,8 @@ export default function SignUpPage(){
   const [nextBtnStatus, setNextBtnStatus] = useState<boolean>(false);
   const [checknicknameMsg, setchecknicknameMsg] = useState<CheckMessageStatus>(CheckMessageStatus.INIT);
   const [checkintroduceMsg, setcheckintroduceMsg] = useState<CheckMessageStatus>(CheckMessageStatus.INIT);
-  const [isKakaoUrl, setIsKakaoUrl] = useState<boolean>(false); // 카카오 이미지를 사용하는지?
-  const [kakaoUrl, setKakaoUrl] = useState<string | null>(null); //카카오 이미지 Url
+  const [isImageUrl, setIsImageUrl] = useState<boolean>(false); // 소셜 로그인 이미지를 사용하는지?
+  const [imageUrl, setImageUrl] = useState<string | null>(null); //소셜 이미지 Url
   const [profileImage, setProfileImage] = useState<string>('/images/login/default_profile.png'); // 기본 이미지
   const { refetch } = userGetNicknameCheck(nickname);
   
@@ -34,9 +34,9 @@ export default function SignUpPage(){
   
   useEffect(()=>{
     // null 처리 해야함
-    const kakaoImageUrl = cookie.load("imageUrl");
-    if(kakaoImageUrl){
-      setKakaoUrl(kakaoImageUrl);
+    const imageUrl = cookie.load("imageUrl");
+    if(imageUrl){
+      setImageUrl(imageUrl);
     }
     
   },[]);
@@ -120,12 +120,12 @@ export default function SignUpPage(){
     
   }
   const imageChangeHandler = () =>{
-    setIsKakaoUrl(!isKakaoUrl);
+    setIsImageUrl(!isImageUrl);
     // 이미지 change 이벤트
-    if(isKakaoUrl && kakaoUrl){
+    if(isImageUrl && imageUrl){
       //카카오 이미지를 사용하고 카카오 이미지가 있다면
       // setProfileImage(kakaoUrl);
-      setProfileImage(kakaoUrl);
+      setProfileImage(imageUrl);
     }else{
       setProfileImage('/images/login/default_profile.png');
     }
@@ -149,12 +149,12 @@ export default function SignUpPage(){
         <div className="my-40 grid">
           <p className="font-bold mb-6">프로필 이미지 선택</p>
           <div className="mt-20 mx-auto flex" >
-            { !isKakaoUrl && <Image className="rounded-full bg-none" src={"/images/login/default_profile.png"} alt="defaultImg" width={120} height={120}></Image>}
-            { isKakaoUrl && kakaoUrl && <Image className="rounded-full mb-10" src={kakaoUrl} alt="dubLogoImg" width={90} height={90}></Image>}
+            { !isImageUrl && <Image className="rounded-full bg-none" src={"/images/login/default_profile.png"} alt="defaultImg" width={120} height={120}></Image>}
+            { isImageUrl && imageUrl && <Image className="rounded-full mb-10" src={imageUrl} alt="dubLogoImg" width={90} height={90}></Image>}
           </div>
           <div className="flex mx-auto" onClick={imageChangeHandler}>  
-            { !isKakaoUrl && <span className="flex font-bold text-dubgray text-center items-center">카카오 이미지 사용하기</span>}
-            { isKakaoUrl && <span className="flex font-bold text-dubgray text-center items-center">기본 이미지 사용하기</span>}
+            { !isImageUrl && <span className="flex font-bold text-dubgray text-center items-center">계정 이미지 사용하기</span>}
+            { isImageUrl && <span className="flex font-bold text-dubgray text-center items-center">기본 이미지 사용하기</span>}
             <button className="rounded-full bg-white text-dubgray"><MdChangeCircle size={25}/></button>
           </div>
 
