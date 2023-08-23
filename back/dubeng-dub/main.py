@@ -303,7 +303,7 @@ async def save(item: videoClass.saveReq):
     cursor.execute(sql, [videoId, userId])
     result = cursor.fetchone()
 
-    logging.info(f"Is Exist?: {result[0]}")
+    # logging.info(f"Is Exist?: {result[0]}")
 
     if result:
         # 이미 녹음한 기록이 있을 경우 
