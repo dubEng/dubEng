@@ -367,4 +367,10 @@ public class AuthServiceImpl implements AuthService{
 
         return false;
     }
+
+    @Override
+    public List<Category> getCategoryList() {
+        List<Category> findList = categoryRepository.findAll();
+        return findList;
+    }
 }

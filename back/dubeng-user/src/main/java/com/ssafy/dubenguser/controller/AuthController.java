@@ -1,6 +1,7 @@
 package com.ssafy.dubenguser.controller;
 
 import com.ssafy.dubenguser.dto.*;
+import com.ssafy.dubenguser.entity.Category;
 import com.ssafy.dubenguser.exception.UnAuthorizedException;
 import com.ssafy.dubenguser.service.AuthService;
 import com.ssafy.dubenguser.service.GoogleAuthService;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -30,7 +32,6 @@ public class AuthController {
     private final GoogleAuthService googleAuthService;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
-    private String accessToken;
     private String unAuthorizedException = "토큰 전달 방식에 오류";
 
     @Value("${auth.redirectUrl}")
@@ -72,11 +73,11 @@ public class AuthController {
         }
 
         //토큰 쿠키 방식 적재
-        Cookie cookie2 = new Cookie("imageUrl", imageUrl);
-        cookie2.setMaxAge(3600);
-        cookie2.setDomain(BASE_URL);
-        cookie2.setPath("/");
-        response.addCookie(cookie2);
+        Cookie imageUrlCookie = new Cookie("imageUrl", imageUrl);
+        imageUrlCookie.setMaxAge(3600);
+        imageUrlCookie.setDomain(BASE_URL);
+        imageUrlCookie.setPath("/");
+        response.addCookie(imageUrlCookie);
 
         response.sendRedirect(SEND_REDIRECT_URL + redirectUri);
     }
@@ -122,7 +123,7 @@ public class AuthController {
     }
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader HttpHeaders headers){
-        accessToken = headers.getFirst("Authorization");
+        String accessToken = headers.getFirst("Authorization");
         if(accessToken == null){
             throw new UnAuthorizedException(unAuthorizedException);
         }
@@ -165,11 +166,19 @@ public class AuthController {
         //회원 가입 여부 체크
         String redirectUri = "/signup";
 
-        if(googleAuthService.isExistUser(accessToken)){
+        if(googleAuthService.isExistUser(googleOAuthToken.getAccess_token())){
             redirectUri = "/login/success";
             response.sendRedirect(SEND_REDIRECT_URL + redirectUri);
             return;
         }
+        // 없으면 회원가입
+        // 구글 이미지 Cookie 적재
+        Cookie imageUrlCookie = new Cookie("imageUrl", googleAuthService.getGoogleImageUrl(googleOAuthToken.getAccess_token()));
+        imageUrlCookie.setMaxAge(3600);
+        imageUrlCookie.setDomain(BASE_URL);
+        imageUrlCookie.setPath("/");
+        response.addCookie(imageUrlCookie);
+
         response.sendRedirect(SEND_REDIRECT_URL + redirectUri);
     }
     @PostMapping("/google/token")
@@ -178,5 +187,14 @@ public class AuthController {
 
         String response = googleAuthService.parseGoogleToken(accessToken);
         return new ResponseEntity<String>(response, HttpStatus.OK);
+    }
+    /**
+     * 관심사 목록 가져오는 컨트롤러 작성
+     */
+    @GetMapping("/interest")
+    public ResponseEntity<List<Category>> getInterestList(){
+        List<Category> categoryList = authService.getCategoryList();
+
+        return new ResponseEntity<List<Category>>(categoryList, HttpStatus.OK);
     }
 }

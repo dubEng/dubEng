@@ -7,4 +7,6 @@ public interface GoogleAuthService {
     GoogleOAuthToken findAccessToken(String code);
     String parseGoogleToken(String accessToken);
     boolean isExistUser(String accessToken);
+
+    String getGoogleImageUrl(String accessToken);
 }

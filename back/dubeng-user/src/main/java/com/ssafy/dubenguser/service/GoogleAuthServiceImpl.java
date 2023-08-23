@@ -96,6 +96,31 @@ public class GoogleAuthServiceImpl implements GoogleAuthService{
 
     @Override
     public boolean isExistUser(String accessToken) {
+        GoogleOAuthUserInfo googleOAuthUserInfo = parseGoogleJson(accessToken);
+
+        Optional<User> findUser = userRepository.findById(googleOAuthUserInfo.getId());
+
+        if(findUser.isPresent()) return true;
+        return false;
+    }
+
+
+
+    @Override
+    public String getGoogleImageUrl(String accessToken) {
+        GoogleOAuthUserInfo googleOAuthUserInfo = parseGoogleJson(accessToken);
+
+        if(googleOAuthUserInfo.getPicture() == null){
+
+        }
+
+        return googleOAuthUserInfo.getPicture();
+    }
+
+    /**
+     *  Response 데이터 JSON -> Object 파싱
+     */
+    private GoogleOAuthUserInfo parseGoogleJson(String accessToken) {
         String response = parseGoogleToken(accessToken);
 
         // parse JSON - Null 처리 해야함.
@@ -107,10 +132,6 @@ public class GoogleAuthServiceImpl implements GoogleAuthService{
             log.error("Google Login Response Parse Error");
             throw new RuntimeException(e);
         }
-
-        Optional<User> findUser = userRepository.findById(googleOAuthUserInfo.getId());
-
-        if(findUser.isPresent()) return true;
-        return false;
+        return googleOAuthUserInfo;
     }
 }
