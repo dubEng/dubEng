@@ -45,6 +45,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             userId = authService.parseToken(accessToken);
         }
         request.setAttribute("userId", userId);
+        request.setAttribute("accessToken", headerValue);
         log.debug("[Interceptor] userId Value : {}", userId);
         return true;
     }

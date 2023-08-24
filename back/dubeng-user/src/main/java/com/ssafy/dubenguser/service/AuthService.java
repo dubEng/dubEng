@@ -17,7 +17,7 @@ public interface AuthService {
     Set<String> getAttendanceByMonth(String accessToken, int month);
     void kakaoLogout(String accessToken);
     String reissueATK(String refreshToken);
-    UserLoginRes findUser(String accessToken);
+    UserLoginRes findUser(String userId, String accessToken);
     public void addUser(UserJoinReq requestDTO, String userId);
     public boolean checkEnrolledMember(String id);
     public boolean checkExistNickname(String nickname);

@@ -243,7 +243,7 @@ public class AuthServiceImpl implements AuthService{
         return result;
     }
     @Override
-    public UserLoginRes findUser(String userId){
+    public UserLoginRes findUser(String userId, String accessToken){
         log.debug("findUser :: userId : {}", userId);
 
         // 회원 정보 가져오기
@@ -269,6 +269,7 @@ public class AuthServiceImpl implements AuthService{
 
         UserLoginRes userLoginRes = UserLoginRes.builder()
                 .userId(userId)
+                .accessToken(accessToken)
                 .nickname(loginUser.getNickname())
                 .imageUrl(loginUser.getProfileImage())
                 .kitchenName(loginUser.getLandName())
