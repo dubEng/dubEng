@@ -104,9 +104,9 @@ public class AuthController {
     @ApiOperation(value = "회원정보 가져오기")
     public ResponseEntity<UserLoginRes> getLoginInfo(HttpServletRequest request){
         String userId = (String) request.getAttribute("userId");
-
+        String accessToken = (String) request.getAttribute("accessToken");
         //ATK을 이용하여 회원정보 요청
-        UserLoginRes user = authService.findUser(userId);
+        UserLoginRes user = authService.findUser(userId, accessToken);
 
         return new ResponseEntity<UserLoginRes>(user, HttpStatus.OK);
     }
