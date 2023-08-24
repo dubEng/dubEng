@@ -28,12 +28,11 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
         // Kakao, Google 인지
         log.debug("[Interceptor] header Value : {}", headerValue);
-        String[] arr = headerValue.split(" ");
-        String accessToken = arr[1];
+        String accessToken = headerValue.substring(1, headerValue.length());
 
         String userId = "";
         try{
-            if(arr[0].equals("kakao"))
+            if(headerValue.charAt(0) == 'k')
                 userId = authService.parseToken(accessToken);
             else
                 userId = googleAuthService.getGoogleUserId(accessToken);
