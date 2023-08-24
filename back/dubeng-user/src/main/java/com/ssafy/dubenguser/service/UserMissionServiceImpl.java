@@ -57,7 +57,7 @@ public class UserMissionServiceImpl implements UserMissionService{
                     .assets(mission.getAssets())
                     .color(mission.getColor())
                     .isComplete(true)
-                    .videoId(mission.getId()).build();
+                    .videoId(mission.getVideoId()).build();
 
             if(!list.contains(mission.getId())) missionRes.setComplete(false);
             result.add(missionRes);
