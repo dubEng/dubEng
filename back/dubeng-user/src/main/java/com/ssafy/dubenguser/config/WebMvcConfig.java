@@ -30,7 +30,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns(mypageList)
                 .addPathPatterns(authList)
                 .excludePathPatterns("/**/mypage/profile", "/**/mypage/record/list")
-                .excludePathPatterns("/**/auth/kakao", "/**/auth/check","/**/auth/google");
+                .excludePathPatterns("/**/auth/kakao", "/**/auth/check","/**/auth/google","/**/auth/interest");
     }
 
     @Override
