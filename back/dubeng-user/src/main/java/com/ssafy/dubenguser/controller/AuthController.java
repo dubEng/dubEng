@@ -132,11 +132,9 @@ public class AuthController {
 
     @PostMapping("/quit")
     public ResponseEntity<String> quit(HttpServletRequest request) {
-        String method = (String) request.getAttribute("method");
         String userId = (String) request.getAttribute("userId");
 
-        if(method.equals("kakao"))
-            authService.quitUser(userId);
+        authService.quitUser(userId);
 
         return new ResponseEntity<String>("회원 탈퇴가 정상적으로 처리되었습니다!", HttpStatus.OK);
     }

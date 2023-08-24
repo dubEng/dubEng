@@ -315,12 +315,6 @@ public class AuthServiceImpl implements AuthService{
 
             userCategoryRepository.save(uc);
         }
-
-        List<Mission> missionList = missionRepository.findAll();
-
-        for(Mission m: missionList) {
-            userMissionRepository.save(UserMission.builder().user(savedUser).mission(m).build());
-        }
     }
 
     @Override
