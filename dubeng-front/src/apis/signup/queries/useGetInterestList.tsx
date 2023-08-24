@@ -5,8 +5,10 @@ import { Interest } from "@/pages/signup/interest";
 
 const fetcher = () =>
   axios
-    .get(process.env.NEXT_PUBLIC_BASE_URL + `/admin/category`)
+    .get(process.env.NEXT_PUBLIC_BASE_URL + `/user/auth/interest`)
     .then(({ data }) => {
+      console.log(data);
+      
       const response = data as Interest[];
       
       return response;

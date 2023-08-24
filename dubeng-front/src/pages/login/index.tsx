@@ -11,7 +11,7 @@ declare global {
 }
 
 export default function LogInPage() {
-  const loginHandler = () => {
+  const kakaoLoginHandler = () => {
     const jsKey = process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY;
     const redirectUri = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
 
@@ -23,7 +23,19 @@ export default function LogInPage() {
       });
     }
   };
+  const googleLoginHandler = () => {
+    const leftPosition = window.screen.width / 2 - 300; // 새 창의 가로 위치
+    const topPosition = window.screen.height / 2 - 400; // 새 창의 세로 위치
+  
+    const googleUrl = `https://accounts.google.com/o/oauth2/v2/auth?`
+    + `client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`
+    + `&redirect_uri=${process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI}`
+    + `&response_type=code`
+    + `&access_type=offline`
+    + `&scope=email profile`;
 
+    window.open(googleUrl, '_parent', `width=600,height=800,left=${leftPosition},top=${topPosition}`);
+  }
   return (
     <div className="container mx-auto h-screen">
       <Script
@@ -43,8 +55,17 @@ export default function LogInPage() {
           </Link>
           {/* <p className="text-dubgray text-xs text-center my-5">더빙으로 즐거움이 더블</p> */}
         </div>
-        <div className="flex flex-row justify-center">
-          <button onClick={loginHandler}>
+        <div className="flex flex-col justify-center">
+          <button onClick={kakaoLoginHandler}>
+            <Image
+              className="mx-auto"
+              src={LoginBtnImage}
+              alt="kakaoLoginBtn"
+              width={350}
+            ></Image>
+          </button>
+          <p></p>
+          <button onClick={googleLoginHandler}>
             <Image
               className="mx-auto"
               src={LoginBtnImage}

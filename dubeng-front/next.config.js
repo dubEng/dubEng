@@ -11,7 +11,7 @@ const withPWA = require('next-pwa')({
 const nextConfig = withTwin({
   reactStrictMode: false,
   images: {
-    domains: ["i.ytimg.com", "k.kakaocdn.net", "dubingdubing.s3.ap-northeast-2.amazonaws.com"]
+    domains: ["i.ytimg.com", "k.kakaocdn.net", "dubingdubing.s3.ap-northeast-2.amazonaws.com", "lh3.googleusercontent.com"]
   },
 });
 
