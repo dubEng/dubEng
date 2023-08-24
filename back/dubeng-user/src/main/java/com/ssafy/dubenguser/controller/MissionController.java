@@ -26,27 +26,27 @@ public class MissionController {
     @ApiOperation(value="해결한 도전과제 미션 목록 조회")
     @GetMapping("/list")
     public ResponseEntity<List<UserMissionRes>> userMissionList(HttpServletRequest request){
-        String accessToken = (String) request.getAttribute("Authorization");
+        String userId = (String) request.getAttribute("userId");
 
-        List<UserMissionRes> result = userMissionService.findUserMissions(accessToken);
+        List<UserMissionRes> result = userMissionService.findUserMissions(userId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @ApiOperation(value="해결한 도전과제의 asset list 조회")
     @GetMapping("/asset")
     public ResponseEntity<List<String>>  userAssetList(HttpServletRequest request){
-        String accessToken = (String) request.getAttribute("Authorization");
+        String userId = (String) request.getAttribute("userId");
 
-        List<String> result = userMissionService.findAssets(accessToken);
+        List<String> result = userMissionService.findAssets(userId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @ApiOperation(value="도전과제 완료 여부 확인")
     @GetMapping("/complete")
     public ResponseEntity<HashMap<String, Object>>  userAssetList(HttpServletRequest request, @RequestParam Long videoId){
-        String accessToken = (String) request.getAttribute("Authorization");
+        String userId = (String) request.getAttribute("userId");
 
-        HashMap<String, Object> result = userMissionService.findMissionComplete(accessToken, videoId);
+        HashMap<String, Object> result = userMissionService.findMissionComplete(userId, videoId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

@@ -18,7 +18,7 @@ public interface AuthService {
     void kakaoLogout(String accessToken);
     String reissueATK(String refreshToken);
     UserLoginRes findUser(String accessToken);
-    public void addUser(UserJoinReq requestDTO, String accessToken);
+    public void addUser(UserJoinReq requestDTO, String userId);
     public boolean checkEnrolledMember(String id);
     public boolean checkExistNickname(String nickname);
     public void quitUser(String id);

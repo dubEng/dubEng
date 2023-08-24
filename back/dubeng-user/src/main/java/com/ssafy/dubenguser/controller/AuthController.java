@@ -2,7 +2,6 @@ package com.ssafy.dubenguser.controller;
 
 import com.ssafy.dubenguser.dto.*;
 import com.ssafy.dubenguser.entity.Category;
-import com.ssafy.dubenguser.exception.UnAuthorizedException;
 import com.ssafy.dubenguser.service.AuthService;
 import com.ssafy.dubenguser.service.GoogleAuthService;
 import io.swagger.annotations.Api;
@@ -10,7 +9,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +44,7 @@ public class AuthController {
         //code로 access-token 요청
         HashMap<String, Object> result = authService.findAccessToken(code);
 
-        String imageUrl = authService.getKakaoImageUrl((String) result.get("access_token"));
+        String imageUrl = authService.getKakaoImageUrl("kakao " + (String) result.get("access_token"));
 
         Cookie cookie = new Cookie("accessToken", (String) result.get("access_token"));
         cookie.setMaxAge(3600);
@@ -95,20 +93,20 @@ public class AuthController {
     @PostMapping("/join")
     @ApiOperation(value = "회원가입하기")
     public ResponseEntity<String> userAdd(HttpServletRequest request, @RequestBody UserJoinReq userInfo){
-        String accessToken = (String) request.getAttribute("Authorization");
+        String userId = (String) request.getAttribute("userId");
         log.debug("userAdd : {}", request.toString());
 
-        authService.addUser(userInfo, accessToken);
+        authService.addUser(userInfo, userId);
 
         return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
     @PostMapping("/login")
     @ApiOperation(value = "회원정보 가져오기")
     public ResponseEntity<UserLoginRes> getLoginInfo(HttpServletRequest request){
-        String accessToken = (String) request.getAttribute("Authorization");
+        String userId = (String) request.getAttribute("userId");
 
         //ATK을 이용하여 회원정보 요청
-        UserLoginRes user = authService.findUser(accessToken);
+        UserLoginRes user = authService.findUser(userId);
 
         return new ResponseEntity<UserLoginRes>(user, HttpStatus.OK);
     }
@@ -122,19 +120,23 @@ public class AuthController {
         return new ResponseEntity<Boolean>(check, HttpStatus.OK);
     }
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestHeader HttpHeaders headers){
-        String accessToken = headers.getFirst("Authorization");
-        if(accessToken == null){
-            throw new UnAuthorizedException(unAuthorizedException);
-        }
-        authService.kakaoLogout(accessToken);
+    public ResponseEntity<Void> logout(HttpServletRequest request){
+        String method = (String) request.getAttribute("method");
+        String userId = (String) request.getAttribute("userId");
+
+        if(method.equals("kakao"))
+            authService.kakaoLogout(userId);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     @PostMapping("/quit")
-    public ResponseEntity<String> quit(@RequestBody UserQuitReq request) {
-        authService.quitUser(request.getAccessToken());
+    public ResponseEntity<String> quit(HttpServletRequest request) {
+        String method = (String) request.getAttribute("method");
+        String userId = (String) request.getAttribute("userId");
+
+        if(method.equals("kakao"))
+            authService.quitUser(userId);
 
         return new ResponseEntity<String>("회원 탈퇴가 정상적으로 처리되었습니다!", HttpStatus.OK);
     }

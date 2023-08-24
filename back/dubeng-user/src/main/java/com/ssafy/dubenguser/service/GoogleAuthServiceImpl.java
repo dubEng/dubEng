@@ -117,6 +117,12 @@ public class GoogleAuthServiceImpl implements GoogleAuthService{
         return googleOAuthUserInfo.getPicture();
     }
 
+    @Override
+    public String getGoogleUserId(String accessToken) {
+        GoogleOAuthUserInfo googleOAuthUserInfo = parseGoogleJson(accessToken);
+        return googleOAuthUserInfo.getId();
+    }
+
     /**
      *  Response 데이터 JSON -> Object 파싱
      */

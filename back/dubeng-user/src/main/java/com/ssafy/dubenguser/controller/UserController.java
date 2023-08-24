@@ -37,9 +37,9 @@ public class UserController {
     @ApiOperation(value = "캘린더 날짜 보여주기")
     @GetMapping("/calendar")
     public ResponseEntity<UserCalendarRes> userCalenderDetails(HttpServletRequest request) {
-        String accessToken = (String) request.getAttribute("Authorization");
+        String userId = (String) request.getAttribute("userId");
 
-        UserCalendarRes result = userService.findCalendar(accessToken);
+        UserCalendarRes result = userService.findCalendar(userId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -54,26 +54,26 @@ public class UserController {
     @ApiOperation(value = "좋아요 누른 더빙 목록 보여주기")
     @GetMapping("/record/likes")
     public ResponseEntity<List<RecordLikeRes>> userRecordList(HttpServletRequest request,@RequestParam Boolean isLimit, @RequestParam String langType) {
-        String accessToken = (String) request.getAttribute("Authorization");
+        String userId = (String) request.getAttribute("userId");
 
-        List<RecordLikeRes> recordList = userService.findRecordLike(accessToken, isLimit, langType);
+        List<RecordLikeRes> recordList = userService.findRecordLike(userId, isLimit, langType);
         return new ResponseEntity<>(recordList, HttpStatus.OK);
     }
 
     @ApiOperation(value = "북마크 비디오 보여주기")
     @GetMapping("/bookmark")
     public ResponseEntity<List<VideoBookmarkRes>> userBookmarkList(HttpServletRequest request, @RequestParam Boolean isLimit, @RequestParam String langType) {
-        String accessToken = (String) request.getAttribute("Authorization");
+        String userId = (String) request.getAttribute("userId");
 
-        List<VideoBookmarkRes> bookmarkList = userService.findVideoBookmark(accessToken, isLimit, langType);
+        List<VideoBookmarkRes> bookmarkList = userService.findVideoBookmark(userId, isLimit, langType);
         return new ResponseEntity<>(bookmarkList, HttpStatus.OK);
     }
     @GetMapping("/attendance")
     @ApiOperation(value = "출석 정보 확인하기")
     public ResponseEntity<?> getAttendance(HttpServletRequest request, @RequestParam int month){
-        String accessToken = (String) request.getAttribute("Authorization");
+        String userId = (String) request.getAttribute("userId");
 
-        Set<String> dateList = authService.getAttendanceByMonth(accessToken, month);
+        Set<String> dateList = authService.getAttendanceByMonth(userId, month);
 
         return new ResponseEntity<Set<String>>(dateList, HttpStatus.OK);
     }
