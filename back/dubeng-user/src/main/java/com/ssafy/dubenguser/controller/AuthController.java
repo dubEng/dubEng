@@ -44,9 +44,9 @@ public class AuthController {
         //code로 access-token 요청
         HashMap<String, Object> result = authService.findAccessToken(code);
 
-        String imageUrl = authService.getKakaoImageUrl("kakao " + (String) result.get("access_token"));
+        String imageUrl = authService.getKakaoImageUrl((String) result.get("access_token"));
 
-        Cookie cookie = new Cookie("accessToken", (String) result.get("access_token"));
+        Cookie cookie = new Cookie("accessToken", "kakao " + (String) result.get("access_token"));
         cookie.setMaxAge(3600);
         cookie.setDomain(BASE_URL);
         cookie.setPath("/");
@@ -149,7 +149,7 @@ public class AuthController {
         log.debug("Google Auth Code : {}", code);
         GoogleOAuthToken googleOAuthToken = googleAuthService.findAccessToken(code);
 
-        Cookie atkCookie = new Cookie("accessToken", googleOAuthToken.getAccess_token());
+        Cookie atkCookie = new Cookie("accessToken", "google " + googleOAuthToken.getAccess_token());
         atkCookie.setMaxAge(3600);
         atkCookie.setDomain(BASE_URL);
         atkCookie.setPath("/");
