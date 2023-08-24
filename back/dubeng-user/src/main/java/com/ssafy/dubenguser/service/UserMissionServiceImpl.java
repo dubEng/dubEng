@@ -54,7 +54,7 @@ public class UserMissionServiceImpl implements UserMissionService{
                     .isComplete(true)
                     .videoId(mission.getVideoId()).build();
 
-            if(!list.contains(mission.getId())) missionRes.setComplete(false);
+            if(list.isEmpty() || !list.contains(mission.getId())) missionRes.setComplete(false);
             result.add(missionRes);
         }
         return result;

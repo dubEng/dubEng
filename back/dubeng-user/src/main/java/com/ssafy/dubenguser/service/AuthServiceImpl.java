@@ -150,9 +150,7 @@ public class AuthServiceImpl implements AuthService{
         return accessToken;
     }
     @Override
-    public Set<String> getAttendanceByMonth(String accessToken, int month){
-        String userId = parseToken(accessToken);
-
+    public Set<String> getAttendanceByMonth(String userId, int month){
         List<UserCalendar> list = userCalenderRepository.findByUserIdAndMonth(userId, month);
 
         Set<String> dateList = new HashSet<>();
