@@ -21,13 +21,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserMissionServiceImpl implements UserMissionService{
-    private final AuthService authService;
     private final UserRepository userRepository;
     private final UserMissionRepository userMissionRepository;
     private final VideoMissionRepository videoMissionRepository;
     private final VideoRepository videoRepository;
     private final MissionRepository missionRepository;
-    private String unAuthorizedException = "토큰 파싱과정에서 오류";
     private String noUser = "존재하지 않는 유저입니다!";
     private String quitUser = "탈퇴한 회원입니다!";
 
@@ -35,10 +33,7 @@ public class UserMissionServiceImpl implements UserMissionService{
      *  클리어한 도전과제 리스트 뽑기
      */
     @Override
-    public List<UserMissionRes> findUserMissions(String accessToken) {
-        String userId = authService.parseToken(accessToken);
-        if(userId == null) throw new UnAuthorizedException(unAuthorizedException);
-
+    public List<UserMissionRes> findUserMissions(String userId) {
         Optional<User> user = userRepository.findById(userId);
 
         if(!user.isPresent()) {
@@ -66,9 +61,7 @@ public class UserMissionServiceImpl implements UserMissionService{
     }
 
     @Override
-    public List<String> findAssets(String accessToken) {
-        String userId = authService.parseToken(accessToken);
-        if(userId == null) throw new UnAuthorizedException(unAuthorizedException);
+    public List<String> findAssets(String userId) {
 
         Optional<User> user = userRepository.findById(userId);
 
@@ -86,10 +79,7 @@ public class UserMissionServiceImpl implements UserMissionService{
 
     @Override
     @Transactional
-    public HashMap<String, Object> findMissionComplete(String accessToken, Long videoId) {
-        //Token parsing
-        String userId = authService.parseToken(accessToken);
-        if(userId == null) throw new UnAuthorizedException(unAuthorizedException);
+    public HashMap<String, Object> findMissionComplete(String userId, Long videoId) {
 
         Optional<User> user = userRepository.findById(userId);
 

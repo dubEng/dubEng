@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final AuthServiceImpl authService;
     private final RedisTemplate<String, Object> redisTemplate;
     private String quitUser = "탈퇴한 회원입니다!";
     @Transactional
@@ -67,11 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public UserCalendarRes findCalendar(String accessToken) {
-        //Token parsing
-        String userId = authService.parseToken(accessToken);
-        if(userId == null) throw new UnAuthorizedException("토큰 파싱과정에서 오류");
-
+    public UserCalendarRes findCalendar(String userId) {
         Optional<User> foundUser = userRepository.findById(userId);
 
         if(!foundUser.isPresent())
@@ -120,11 +115,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public List<RecordLikeRes> findRecordLike(String accessToken, Boolean isLimit, String langType) {
-        //Token Parsing
-        String userId = authService.parseToken(accessToken);
-        if(userId == null) throw new InvalidInputException("유저 아이디가 없습니다!");
-
+    public List<RecordLikeRes> findRecordLike(String userId, Boolean isLimit, String langType) {
         Optional<User> foundUser = userRepository.findById(userId);
 
         if(!foundUser.isPresent())
@@ -150,11 +141,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public List<VideoBookmarkRes> findVideoBookmark(String accessToken, Boolean isLimit, String langType) {
-        //Token Parsing
-        String userId = authService.parseToken(accessToken);
-        if(userId == null) throw new InvalidInputException("유저 아이디가 없습니다!");
-
+    public List<VideoBookmarkRes> findVideoBookmark(String userId, Boolean isLimit, String langType) {
         Optional<User> foundUser = userRepository.findById(userId);
 
         if(!foundUser.isPresent())

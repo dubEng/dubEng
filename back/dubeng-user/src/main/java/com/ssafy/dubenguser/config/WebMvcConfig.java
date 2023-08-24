@@ -2,6 +2,7 @@ package com.ssafy.dubenguser.config;
 
 import com.ssafy.dubenguser.interceptor.JwtInterceptor;
 import com.ssafy.dubenguser.service.AuthService;
+import com.ssafy.dubenguser.service.GoogleAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -16,21 +17,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
     private final AuthService authService;
+    private final GoogleAuthService googleAuthService;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        List<String> authList = Arrays.asList("/**/mission/*", "/**/auth/login", "/**/auth/join");
+
+        List<String> missionList = Arrays.asList("/**/mission/*");
         List<String> mypageList = Arrays.asList("/**/mypage/*", "/**/mypage/record/*");
-        registry.addInterceptor(new JwtInterceptor(authService))
-                .addPathPatterns(authList)   //EndPoint에 적용
+        registry.addInterceptor(new JwtInterceptor(authService, googleAuthService))
+                .addPathPatterns(missionList)   //EndPoint에 적용
                 .addPathPatterns(mypageList)
-                .excludePathPatterns("/**/mypage/profile", "/**/mypage/record/list");
+                .excludePathPatterns("/**/mypage/profile", "/**/mypage/record/list")
+                .excludePathPatterns("/**/auth/kakao", "/**/auth/check","/**/auth/google");
+
 
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").
-                allowedOrigins("*")
+        registry.addMapping("/**")
+                .allowedOrigins("*")
                 .allowedMethods("*");
     }
 

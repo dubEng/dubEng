@@ -243,10 +243,8 @@ public class AuthServiceImpl implements AuthService{
         return result;
     }
     @Override
-    public UserLoginRes findUser(String accessToken){
-        String userId = parseToken(accessToken);
-
-        log.debug("userId : {}", userId);
+    public UserLoginRes findUser(String userId){
+        log.debug("findUser :: userId : {}", userId);
 
         // 회원 정보 가져오기
         Optional<User> findUser = userRepository.findById(userId);
@@ -271,7 +269,6 @@ public class AuthServiceImpl implements AuthService{
 
         UserLoginRes userLoginRes = UserLoginRes.builder()
                 .userId(userId)
-                .accessToken(accessToken)
                 .nickname(loginUser.getNickname())
                 .imageUrl(loginUser.getProfileImage())
                 .kitchenName(loginUser.getLandName())
@@ -280,12 +277,9 @@ public class AuthServiceImpl implements AuthService{
         return userLoginRes;
     }
     @Override
-    public void addUser(UserJoinReq request, String accessToken){
+    public void addUser(UserJoinReq request, String userId){
         if(checkExistNickname(request.getNickname()))
             throw new DuplicateException("이미 등록된 닉네임입니다.");
-
-        //parseToken
-        String userId = parseToken(accessToken);
 
         //탈퇴한 회원일 경우 접근 제한
         if(checkEnrolledMember(userId))
@@ -331,8 +325,7 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     @Transactional
-    public void quitUser(String accessToken) {
-        String userId = parseToken(accessToken);
+    public void quitUser(String userId) {
         Optional<User> findUser = userRepository.findById(userId);
         if(!findUser.isPresent()) throw new UnAuthorizedException("존재하지 않는 유저입니다!");
 
@@ -366,5 +359,11 @@ public class AuthServiceImpl implements AuthService{
         }
 
         return false;
+    }
+
+    @Override
+    public List<Category> getCategoryList() {
+        List<Category> findList = categoryRepository.findAll();
+        return findList;
     }
 }
