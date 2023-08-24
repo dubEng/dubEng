@@ -22,14 +22,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 
         List<String> missionList = Arrays.asList("/**/mission/*");
+        List<String> authList = Arrays.asList("/**/auth/*");
         List<String> mypageList = Arrays.asList("/**/mypage/*", "/**/mypage/record/*");
+
         registry.addInterceptor(new JwtInterceptor(authService, googleAuthService))
                 .addPathPatterns(missionList)   //EndPoint에 적용
                 .addPathPatterns(mypageList)
+                .addPathPatterns(authList)
                 .excludePathPatterns("/**/mypage/profile", "/**/mypage/record/list")
                 .excludePathPatterns("/**/auth/kakao", "/**/auth/check","/**/auth/google");
-
-
     }
 
     @Override

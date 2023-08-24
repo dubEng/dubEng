@@ -278,6 +278,7 @@ public class AuthServiceImpl implements AuthService{
     }
     @Override
     public void addUser(UserJoinReq request, String userId){
+        log.debug("addUser : userId : {}", userId);
         if(checkExistNickname(request.getNickname()))
             throw new DuplicateException("이미 등록된 닉네임입니다.");
 
