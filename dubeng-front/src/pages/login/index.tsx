@@ -1,6 +1,7 @@
 import Image from "next/image";
 import DubLogoImage from "../../../public/images/login/LoginImage.svg";
-import LoginBtnImage from "../../../public/images/login/KakaoLoginButton.svg";
+import KakaoLoginBtnImage from "../../../public/images/login/KakaoLoginButton.svg";
+import GoogleLoginBtnImage from "../../../public/images/login/GoogleLoginButton.svg";
 import Script from "next/script";
 import Link from "next/link";
 
@@ -37,7 +38,7 @@ export default function LogInPage() {
     window.open(googleUrl, '_parent', `width=600,height=800,left=${leftPosition},top=${topPosition}`);
   }
   return (
-    <div className="container mx-auto h-screen">
+    <div className="container mx-auto h-screen ">
       <Script
         src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js"
         defer
@@ -55,21 +56,20 @@ export default function LogInPage() {
           </Link>
           {/* <p className="text-dubgray text-xs text-center my-5">더빙으로 즐거움이 더블</p> */}
         </div>
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col justify-center gap-16">
           <button onClick={kakaoLoginHandler}>
             <Image
               className="mx-auto"
-              src={LoginBtnImage}
+              src={KakaoLoginBtnImage}
               alt="kakaoLoginBtn"
               width={350}
             ></Image>
           </button>
-          <p></p>
           <button onClick={googleLoginHandler}>
             <Image
               className="mx-auto"
-              src={LoginBtnImage}
-              alt="kakaoLoginBtn"
+              src={GoogleLoginBtnImage}
+              alt="GoogleLoginBtnImage"
               width={350}
             ></Image>
           </button>
