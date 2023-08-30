@@ -119,13 +119,6 @@ export default function CommunityPage() {
     setSearchValue("");
   }
 
-  // if (searchDubVideoLoading) {
-  //   return <>로딩 중</>;
-  // }
-
-  // if (searchDubProductLoading) {
-  //   return <>작품 로딩 중</>;
-  // }
   useEffect(() => {
     setSearchValue("");
     setKeyword("");
@@ -134,63 +127,6 @@ export default function CommunityPage() {
 
   // 페이지네이션 페이지 넘버 클릭할 때 이동시킬 위치인 ref
   const searchInputRef = useRef<HTMLDivElement>(null);
-
-  // 페이지네이션으로 props로 넘겨줄 state
-  const [totalPageArray, setTotalPageArray] = useState([]);
-  const [currentPageArray, setCurrentPageArray] = useState<number[]>([]);
-  const [totalPages, setTotalPages] = useState(0);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  // 페이지 자르는 함수
-  // const sliceArrayByLimit = (totalPage: number, limit: number) => {
-  //   const totalPageArray = Array.from({ length: totalPage }, (v, i) => i + 1);
-  //   let result: number | any | never[] = [];
-
-  //   while (totalPageArray.length > 0) {
-  //     let tempArray;
-  //     tempArray = totalPageArray.splice(0, limit);
-  //     result = [...result, tempArray];
-  //   }
-
-  //   return result;
-  // };
-
-  // 페이지네이션 컴포넌트에 props로 넘겨줄 값들 만드는 useEffect
-  // useEffect(() => {
-  //   setCurrentIndex(Math.floor(page / 5));
-  //   setCurrentPageArray(totalPageArray[currentIndex]);
-  // }, [totalPageArray]);
-
-  // // useEffect(() => {
-  // //   setTotalPages(searchDubProductList?.totalPages);
-  // // }, [searchDubProductList]);
-
-  // // useEffect(() => {
-  // //   setTotalPages(videoData?.totalPages);
-  // // }, [videoData]);
-
-  // useEffect(() => {
-  //   if (tabIndex === DubType.DUB_VIDEO) {
-  //     setTotalPages(videoData?.totalPages);
-  //   } else {
-  //     setTotalPages(searchDubProductList?.totalPages);
-  //   }
-  // }, [tabIndex]);
-
-  // useEffect(() => {
-  //   const slicedPageArray = sliceArrayByLimit(totalPages, 5);
-  //   console.log("totalPages 바뀔 때마다 useEffect", slicedPageArray);
-  //   setTotalPageArray(slicedPageArray);
-  // }, [totalPages]);
-
-  // useEffect(() => {
-  //   setPage(0);
-  //   if (tabIndex === DubType.DUB_VIDEO) {
-  //     setTotalPages(videoData?.totalPages);
-  //   } else {
-  //     setTotalPages(searchDubProductList?.totalPages);
-  //   }
-  // }, [languageIndex]);
 
   useEffect(() => {
     setPage(0);
@@ -218,7 +154,7 @@ export default function CommunityPage() {
               {userId ? (
                 <DubVideoList />
               ) : (
-                <EmptyComponent status={EmptyType.NO_RECOMMEND} />
+                <EmptyComponent status={EmptyType.NO_RECOMMEND_ANONY} />
               )}
             </div>
           ) : null}
@@ -240,7 +176,11 @@ export default function CommunityPage() {
           <p className="flex justify-start text-19 font-bold mt-24 mb-16">
             오늘의 더빙왕은?
           </p>
-          <Vote userId={userId} languageIndex={languageIndex} />
+          {userId ? (
+            <Vote userId={userId} languageIndex={languageIndex} />
+          ) : (
+            <EmptyComponent status={EmptyType.NO_VOTE_ANONY} />
+          )}
         </div>
       ) : (
         <div>
