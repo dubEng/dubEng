@@ -207,7 +207,7 @@ export default function ShortsVideoPage() {
               <DubButton type={"shorts"} onClick={handleDubButton} />
             </div>
           </div>
-          <div className="h-200 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-391 mt-15">
+          <div className="h-200 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-390 mt-15">
             {data.scriptList &&
               data.scriptList.map((item: any, index: number) => {
                 if (index === selectedScript) {

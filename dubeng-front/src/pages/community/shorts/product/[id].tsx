@@ -241,7 +241,7 @@ export default function ShortsProductPage() {
               isScrap={false}
             />
           </div>
-          <div className="h-200 pt-32 scrollbar-hide overflow-y-scroll bg-black container mx-auto mb-16 w-391 mt-15">
+          <div className="h-200 pt-32 scrollbar-hide overflow-y-scroll bg-black container mx-auto mb-16 w-390 mt-15">
             {data.scriptList &&
               data.scriptList.map((item: any, index: number) => {
                 if (index === selectedScript) {
