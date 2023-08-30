@@ -92,7 +92,7 @@ export default function myDubbingProductPage() {
         myPageLangIndex={myPageLangIndex}
         handleMyPageLangIndex={handleMyPageLangIndex}
       />
-      {myProductList &&
+      {myProductList && myProductList.length > 0 ? (
         myProductList.map((item: any) => (
           <Link href={`/community/shorts/product/${item.id}`}>
             <DubProductListItem
@@ -107,7 +107,12 @@ export default function myDubbingProductPage() {
               nickname={item.nickname}
             />
           </Link>
-        ))}
+        ))
+      ) : (
+        <div className="mt-80">
+          <EmptyComponent status={EmptyType.EMPTY_DUB_PRODUCT} />
+        </div>
+      )}
       <div className="h-60"></div>
     </div>
   );

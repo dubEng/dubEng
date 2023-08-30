@@ -53,7 +53,7 @@ export default function LikeDubbingListPage() {
         myPageLangIndex={myPageLangIndex}
         handleMyPageLangIndex={handleMyPageLangIndex}
       />
-      {data &&
+      {data && data.length > 0 ? (
         data.map((item: any) => (
           <Link href={`/community/shorts/product/${item.id}`}>
             <DubProductListItem
@@ -68,7 +68,12 @@ export default function LikeDubbingListPage() {
               nickname={item.nickname}
             />
           </Link>
-        ))}
+        ))
+      ) : (
+        <div className="mt-80">
+          <EmptyComponent status={EmptyType.EMPTY_LIKE_DUB_PRODUCT} />
+        </div>
+      )}
       <div className="h-60"></div>
     </div>
   );
