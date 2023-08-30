@@ -53,7 +53,7 @@ export default function SaveContentsListPage() {
         myPageLangIndex={myPageLangIndex}
         handleMyPageLangIndex={handleMyPageLangIndex}
       />
-      {data &&
+      {data && data.length > 0 ? (
         data.map((item: any) => (
           <Link href={`/community/shorts/video/${item.id}`}>
             <DubVideoListItem
@@ -63,7 +63,12 @@ export default function SaveContentsListPage() {
               thumbnail={item.thumbnail}
             />
           </Link>
-        ))}
+        ))
+      ) : (
+        <div className="mt-80">
+          <EmptyComponent status={EmptyType.EMPTY_SCRAP_DUB_VIDEO} />
+        </div>
+      )}
       <div className="h-60"></div>
     </div>
   );
