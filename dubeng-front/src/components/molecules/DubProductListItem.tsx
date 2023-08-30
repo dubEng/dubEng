@@ -51,7 +51,7 @@ export default function DubProductListItem({
             className="rounded-4 w-161 h-90.56"
           ></Image>
         </div>
-        <div className="flex flex-col ml-16 justify-between">
+        <div className="flex flex-col ml-16 justify-start">
           <p className="leading-18 break-words text-14 font-semibold text-dubblack line-clamp-2 ">
             {title}
           </p>
@@ -67,33 +67,31 @@ export default function DubProductListItem({
               </p>
             )
           ) : null}
-
-          <div className="flex items-center">
-            <div className="flex justify-end">
-              {profileImage ? (
-                <Image
-                  src={profileImage}
-                  alt={"profile"}
-                  width={16}
-                  height={16}
-                  className="rounded-full"
-                />
-              ) : (
-                <Image
-                  src={profile_01}
-                  alt={"profile"}
-                  width={24}
-                  height={24}
-                  className="rounded-full"
-                />
-              )}
-            </div>
-            {nickname ? (
+          {nickname ? (
+            <div className="flex items-center">
+              <div className="flex justify-end">
+                {profileImage ? (
+                  <Image
+                    src={profileImage}
+                    alt={"profile"}
+                    width={16}
+                    height={16}
+                    className="rounded-full"
+                  />
+                ) : (
+                  <Image
+                    src={profile_01}
+                    alt={"profile"}
+                    width={24}
+                    height={24}
+                    className="rounded-full"
+                  />
+                )}
+              </div>
               <p className="pl-4 text-dubgray text-12">{nickname}</p>
-            ) : null}
-          </div>
-
-          <p className="flex text-dubgray text-12 space-x-4">
+            </div>
+          ) : null}
+          <p className="flex text-dubgray text-12 space-x-4 mt-4">
             <p>조회수 {playCount}회</p>
             <p className="text-8">▪</p>
             {createdDate ? (
