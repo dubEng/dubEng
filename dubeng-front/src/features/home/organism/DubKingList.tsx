@@ -5,11 +5,8 @@ import ErrorComponent from "../../../components/atoms/ErrorComponent";
 
 import DefaultImage from "../../../../public/images/default/mic_profile.png";
 
-// import ProfileOne from "../../../../public/images/dump/profile_01.svg";
-// import ProfileTwo from "../../../../public/images/dump/profile_02.svg";
-// import ProfileThree from "../../../../public/images/dump/profile_03.svg";
-import { DubKing } from "@/types/DubKing";
 import { getHomeDubKing } from "@/apis/home/api/home";
+
 
 export default function DubKingList(props : any) {
 
