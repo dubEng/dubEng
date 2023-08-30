@@ -55,7 +55,7 @@ export default function EmptyComponent({ status }: Iprops) {
         </p>
       </div>
     );
-  } else if (status === EmptyType.NO_RECOMMEND) {
+  } else if (status === EmptyType.NO_RECOMMEND_ANONY) {
     return (
       <div className="flex flex-col justify-center items-center">
         <Image src={EmptyImage} alt="EmptyImage" />
@@ -74,6 +74,18 @@ export default function EmptyComponent({ status }: Iprops) {
         <p className="mt-10 text-14 font-semibold text-dubgray">
           한국어 콘텐츠는 투표를 제공하지 않습니다
         </p>
+      </div>
+    );
+  } else if (status === EmptyType.NO_VOTE_ANONY) {
+    return (
+      <div className="flex flex-col justify-center items-center">
+        <Image src={EmptyImage} alt="EmptyImage" />
+        <p className="mt-10 text-14 font-semibold text-dubgray">
+          로그인하여 더빙왕을 투표해보세요!
+        </p>
+        <Link href={"/login"}>
+          <DirectLoginButton children={"지금 바로 로그인하기"} />
+        </Link>
       </div>
     );
   }
