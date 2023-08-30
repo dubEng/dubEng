@@ -141,7 +141,7 @@ export default function Header() {
     } else if (pathName === "/manager") {
       return <></>;
     } else if (pathName.includes("shorts")) {
-      return <div className="min-w-390 h-57 bg-black"></div>;
+      return <></>;
     } else if (pathName?.includes("dubbing")) {
       return <></>;
     } else if (pathName === "/login") {

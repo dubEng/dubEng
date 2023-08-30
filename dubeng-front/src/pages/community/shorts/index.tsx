@@ -124,7 +124,7 @@ export default function ShortsPage() {
           {contentList.map((content: any, index: number) => {
             return (
               <Slide key={content.recordId}>
-                <div className="w-full h-screen bg-black flex flex-col items-center justify-start">
+                <div className="w-full h-screen bg-black flex flex-col items-center justify-center">
                   <>
                     <Link href={`/mypage/${content.userId}`}>
                       <div className="flex flex-row mt-16 mb-16 items-center w-390 px-16">
@@ -179,27 +179,6 @@ export default function ShortsPage() {
                         recordCommentCount={content.recordCommentCount}
                         isScrap={false}
                       />
-                    </div>
-                    <div className="relative">
-                      <div className="h-200 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-391 mt-15">
-                        {content.scriptList &&
-                          content.scriptList.map((item: any, index: number) => {
-                            return (
-                              <div
-                                className={`script-element-${index} mb-8 mx-20 flex flex-col items-center`}
-                                key={index}
-                              >
-                                <p className="text-16 text-white">
-                                  {item.content}
-                                </p>
-                                <p className="text-14 text-[#8E8D8D]">
-                                  {item.translateContent}
-                                </p>
-                              </div>
-                            );
-                          })}
-                      </div>
-                      <div className="opacity-100 absolute top-0 left-0 w-391 h-200"></div>
                     </div>
                   </>
                 </div>
