@@ -50,13 +50,13 @@ export default function DubProductCard({
             {nickname} |
           </p>
         ) : null}
-        <p className="text-14 text-dubgray">조회수 {playCount}회</p>
+        <p className="text-14 text-dubgray text-ellipsis overflow-hidden whitespace-nowrap max-w-50">조회수 {playCount}회</p>
         <p className="text-10 text-dubgray"> ▪ </p>
         {updatedDate ? (
           <TimeAgo
             datetime={updatedDate}
             locale="ko"
-            className="text-14 text-dubgray"
+            className="text-14 text-dubgray text-ellipsis overflow-hidden whitespace-nowrap max-w-50"
           />
         ) : null}
       </div>
