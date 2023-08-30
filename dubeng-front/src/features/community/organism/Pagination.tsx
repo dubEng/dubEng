@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 interface Iprops {
   page: number;
   totalPages: number;
-  currentPageArray: number[];
+  // currentPageArray: number[];
   setPage: Function;
   inputRef: any;
 }
@@ -14,10 +14,11 @@ interface Iprops {
 export default function Pagination({
   page,
   totalPages,
-  currentPageArray,
+  // currentPageArray,
   setPage,
   inputRef,
 }: Iprops) {
+  // 페이지 이동 관련 함수
   const handleClickPage = (page_num: number) => {
     console.log(page_num);
     setPage(page_num - 1);
@@ -59,36 +60,41 @@ export default function Pagination({
     }
   };
 
-  // // 페이지 자르는 함수
-  // const sliceArrayByLimit = (totalPage: number, limit: number) => {
-  //   const totalPageArray = Array.from({ length: totalPage }, (v, i) => i + 1);
-  //   let result: number | any | never[] = [];
+  const [currentPageArray, setCurrentPageArray] = useState([]);
+  const [totalPageArray, setTotalPageArray] = useState([]);
 
-  //   while (totalPageArray.length > 0) {
-  //     let tempArray;
-  //     tempArray = totalPageArray.splice(0, limit);
-  //     result = [...result, tempArray];
-  //   }
+  console.log("현재 totalPages", totalPages);
+  // console.log("Pagiantion 안", currentPageArray);
 
-  //   return result;
-  // };
+  // 페이지 자르는 함수
+  const sliceArrayByLimit = (totalPage: number, limit: number) => {
+    const totalPageArray = Array.from({ length: totalPage }, (v, i) => i + 1);
+    let result: number | any | never[] = [];
+
+    while (totalPageArray.length > 0) {
+      let tempArray;
+      tempArray = totalPageArray.splice(0, limit);
+      result = [...result, tempArray];
+    }
+
+    return result;
+  };
 
   // 페이지네이션 Array 넘어가게 해주는 로직
-  // useEffect(() => {
-  //   console.log("page", page);
-  //   console.log("Math.floor(page / 5)", Math.floor(page / 5));
-  //   setCurrentPageArray(totalPageArray[Math.floor(page / 5)]);
-  // }, [page]);
+  useEffect(() => {
+    console.log("page", page);
+    console.log("Math.floor(page / 5)", Math.floor(page / 5));
+    setCurrentPageArray(totalPageArray[Math.floor(page / 5)]);
+  }, [page]);
 
   // 처음 페이지 렌더링될 때 or 토탈 페이지 개수 바뀔 때 페이지네이션 처리
-  // useEffect(() => {
-  //   const slicedPageArray = sliceArrayByLimit(totalPages, 5);
-  //   console.log("totalPages 바뀔 때마다 useEffect", slicedPageArray);
-  //   setTotalPageArray(slicedPageArray);
-  //   setCurrentPageArray(slicedPageArray[0]);
-  // }, [totalPages]);
+  useEffect(() => {
+    const slicedPageArray = sliceArrayByLimit(totalPages, 5);
+    console.log("totalPages 바뀔 때마다 useEffect", slicedPageArray);
+    setTotalPageArray(slicedPageArray);
+    setCurrentPageArray(slicedPageArray[Math.floor(page / 5)]);
+  }, [totalPages]);
 
-  console.log("Pagiantion 안", currentPageArray);
   return (
     <div className="flex justify-center items-center space-x-20">
       <MdArrowBackIosNew
@@ -110,7 +116,7 @@ export default function Pagination({
             );
           })
         ) : (
-          <>로딩 중....</>
+          <>로딩 중...</>
         )}
       </div>
       <MdArrowForwardIos

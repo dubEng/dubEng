@@ -1,7 +1,3 @@
-import CommentListItem from "@/features/community/molecules/CommentListItem";
-import ProfileOne from "@/public/images/dump/profile_01.svg";
-import Dummy from "../../../public/images/dump/webarebears_image.png";
-import Header from "@/components/atoms/Header";
 import DubTypeTap from "@/features/community/atoms/DubTypeTap";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
@@ -9,17 +5,12 @@ import { DubType, EmptyType, LangType } from "@/enum/statusType";
 import DubSituation from "@/features/community/molecules/DubSituation";
 import SearchInputBox from "@/features/community/atoms/SearchInputBox";
 import { useEffect, useRef, useState } from "react";
-import useRecommendDubVideoListQuery from "@/apis/community/queries/useRecommendDubVideoListQuery";
 import DubVideoListItem from "@/components/molecules/DubVideoListItem";
 import useCategoryListQuery from "@/apis/community/queries/useCategoryListQuery";
-import DubProductList from "@/features/home/organism/DubProductList";
-import LanguageSelectTap from "@/features/community/atoms/LanguageSelectTap";
 import CategoryButton from "@/features/community/atoms/CategoryButton";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-// import "swiper/css/free-mode"
-// import { FreeMode } from "swiper";
 
 import Vote from "@/features/community/organism/Vote";
 import useSearchDubVideoQuery from "@/apis/community/queries/useSearchDubVideoQuery";
@@ -78,8 +69,6 @@ export default function CommunityPage() {
   const { data: videoData, isLoading: searchDubVideoLoading } =
     useSearchDubVideoQuery(selectedCategory, languageIndex, 10, page, keyword);
 
-  console.log(videoData);
-
   useEffect(() => {
     if (videoData) {
       setSearchDubVideoList(videoData);
@@ -111,10 +100,6 @@ export default function CommunityPage() {
   useEffect(() => {
     setPage(0);
   }, [selectedCategory]);
-
-  // if (isLoading) {
-  //   return <></>;
-  // }
 
   /* 함수 */
   const handleSearchInputChange = (
@@ -150,42 +135,66 @@ export default function CommunityPage() {
   // 페이지네이션 페이지 넘버 클릭할 때 이동시킬 위치인 ref
   const searchInputRef = useRef<HTMLDivElement>(null);
 
+  // 페이지네이션으로 props로 넘겨줄 state
   const [totalPageArray, setTotalPageArray] = useState([]);
   const [currentPageArray, setCurrentPageArray] = useState<number[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // 페이지 자르는 함수
-  const sliceArrayByLimit = (totalPage: number, limit: number) => {
-    const totalPageArray = Array.from({ length: totalPage }, (v, i) => i + 1);
-    let result: number | any | never[] = [];
+  // const sliceArrayByLimit = (totalPage: number, limit: number) => {
+  //   const totalPageArray = Array.from({ length: totalPage }, (v, i) => i + 1);
+  //   let result: number | any | never[] = [];
 
-    while (totalPageArray.length > 0) {
-      let tempArray;
-      tempArray = totalPageArray.splice(0, limit);
-      result = [...result, tempArray];
-    }
+  //   while (totalPageArray.length > 0) {
+  //     let tempArray;
+  //     tempArray = totalPageArray.splice(0, limit);
+  //     result = [...result, tempArray];
+  //   }
 
-    return result;
-  };
+  //   return result;
+  // };
+
+  // 페이지네이션 컴포넌트에 props로 넘겨줄 값들 만드는 useEffect
+  // useEffect(() => {
+  //   setCurrentIndex(Math.floor(page / 5));
+  //   setCurrentPageArray(totalPageArray[currentIndex]);
+  // }, [totalPageArray]);
+
+  // // useEffect(() => {
+  // //   setTotalPages(searchDubProductList?.totalPages);
+  // // }, [searchDubProductList]);
+
+  // // useEffect(() => {
+  // //   setTotalPages(videoData?.totalPages);
+  // // }, [videoData]);
+
+  // useEffect(() => {
+  //   if (tabIndex === DubType.DUB_VIDEO) {
+  //     setTotalPages(videoData?.totalPages);
+  //   } else {
+  //     setTotalPages(searchDubProductList?.totalPages);
+  //   }
+  // }, [tabIndex]);
+
+  // useEffect(() => {
+  //   const slicedPageArray = sliceArrayByLimit(totalPages, 5);
+  //   console.log("totalPages 바뀔 때마다 useEffect", slicedPageArray);
+  //   setTotalPageArray(slicedPageArray);
+  // }, [totalPages]);
+
+  // useEffect(() => {
+  //   setPage(0);
+  //   if (tabIndex === DubType.DUB_VIDEO) {
+  //     setTotalPages(videoData?.totalPages);
+  //   } else {
+  //     setTotalPages(searchDubProductList?.totalPages);
+  //   }
+  // }, [languageIndex]);
 
   useEffect(() => {
-    setCurrentIndex(Math.floor(page / 5));
-    setCurrentPageArray(totalPageArray[currentIndex]);
-  }, [totalPageArray]);
-
-  useEffect(() => {
-    setTotalPages(searchDubProductList?.totalPages);
-  }, [searchDubProductList]);
-
-  useEffect(() => {
-    const slicedPageArray = sliceArrayByLimit(
-      searchDubProductList?.totalPages,
-      5
-    );
-    console.log("totalPages 바뀔 때마다 useEffect", slicedPageArray);
-    setTotalPageArray(slicedPageArray);
-  }, [totalPages]);
+    setPage(0);
+  }, [tabIndex, languageIndex]);
 
   return (
     <div className="static h-full px-16 bg-white mt-57 mb-61">
@@ -399,8 +408,8 @@ export default function CommunityPage() {
       videoData.content.length > 0 ? (
         <Pagination
           page={page}
-          totalPages={videoData?.totalPages}
-          currentPageArray={currentPageArray}
+          totalPages={videoData.totalPages}
+          // currentPageArray={currentPageArray}
           setPage={setPage}
           inputRef={searchInputRef}
         />
@@ -412,8 +421,8 @@ export default function CommunityPage() {
       searchDubProductList.content.length > 0 ? (
         <Pagination
           page={page}
-          totalPages={totalPages}
-          currentPageArray={currentPageArray}
+          totalPages={searchDubProductList.totalPages}
+          // currentPageArray={currentPageArray}
           setPage={setPage}
           inputRef={searchInputRef}
         />
