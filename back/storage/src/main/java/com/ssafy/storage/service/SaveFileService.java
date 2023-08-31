@@ -29,9 +29,9 @@ public class SaveFileService {
         log.debug("os type : {}", os);
 
         if(os.contains("win")){
-            fullPath = "c:/Home/";
+            fullPath = "c:/home/ubuntu/file_volume/";
         }else if(os.contains("linux")){
-            fullPath = "/Home/";
+            fullPath = "/home/ubuntu/file_volume/";
         }
         // 폴더 없을 경우 생성
         RecodeInfo recodeInfo = requestDTO.getRecodeInfo();

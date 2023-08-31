@@ -1,14 +1,14 @@
 version: '3'
 services:
   spring:
-    container_name: 'spring-filesave-container'
+    container_name: 'spring-storage-container'
     build:
       context: .    # Build Context Directory
       dockerfile: ./Dockerfile      # Dockerfile
     ports:
       - "9001:9001"
     volumes:    # Connect Local Volume
-      - /home/ubuntu/file_volume:/Home
+      - /home/ubuntu/file_volume:/home/ubuntu/file_volume
     networks:
       - dub-network
 networks:
