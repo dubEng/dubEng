@@ -38,7 +38,7 @@ pipeline{
         stage('DEPLOY'){
             steps{
                 sh '''
-                    docker run --name fastApi-dub-container --network dub-network -p 9003:5000 -v /home/ubuntu/admin_storage:/download/dwn -d dub/dubsave-server
+                    docker run --name fastApi-dub-container --network dub-network -p 9003:5000 -v /home/ubuntu/file_volume:/home/ubuntu/file_volume -d dub/dubsave-server
                 '''
                 echo 'DEPLOY Success'
             }
