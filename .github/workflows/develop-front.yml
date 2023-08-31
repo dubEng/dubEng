@@ -26,7 +26,7 @@ jobs: # job들을 정의하는 곳
 
       # docker build & push to production
       - name: Docker build & push to prod
-        if: contains(github.ref, 'main')
+        if: contains(github.ref, 'develop-front')
         run: |
           cd ./dubeng-front
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -48,5 +48,5 @@ jobs: # job들을 정의하는 곳
             sudo docker rm next-container || true
             
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/dubeng-front
-            sudo docker run -d -p 9000:9000 --name next-container ${{ secrets.DOCKER_USERNAME }}/dubeng-front 
+            sudo docker run -d -p 3000:3000 --name next-container ${{ secrets.DOCKER_USERNAME }}/dubeng-front 
             sudo docker image prune -f
