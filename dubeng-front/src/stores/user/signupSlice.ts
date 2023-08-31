@@ -32,15 +32,9 @@ export const signupSlice = createSlice({
       state.introduce = action.payload.introduce;
       state.gender = action.payload.gender;
     },
-    saveInterest: (state, action) =>{
-      state.interest = action.payload;
-    },
-    saveKitchenName: (state, action) =>{
-        state.kitchenName = action.payload.kitchenName;
-    }
   },
 });
 
-export const { saveSignupInfo, saveInterest, saveKitchenName } = signupSlice.actions;
+export const { saveSignupInfo } = signupSlice.actions;
 
 export default signupSlice.reducer;
