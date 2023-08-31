@@ -1,6 +1,6 @@
 import { useMutation } from "react-query";
 import axios from "axios";
-import { SignupInfo } from "@/pages/signup/kitchen";
+import { SignupInfo } from "@/pages/signup/interest";
 
 const config = {
   headers: { "Content-Type": "application/json" },
@@ -8,7 +8,6 @@ const config = {
 
 const fetcher = async (signupInfo: SignupInfo) => {
   const accessToken = signupInfo.accessToken;
-  // console.log(accessToken);
 
   axios.defaults.headers.common['Authorization'] = accessToken;
   const { data } = await axios
@@ -24,7 +23,7 @@ const useSignupPost = () => {
       window.alert("회원가입이 정상적으로 되었습니다!");
     },
     onError: (error) => {
-      window.alert("회원가입 오류~");
+      
     },
   });
 };
