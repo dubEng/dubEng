@@ -65,6 +65,7 @@ export default function interestPage(){
             }
             
         }catch(error){
+            window.alert("회원가입 과정에서 오류가 발생했습니다.");
             route.push('/login');
         }
     }

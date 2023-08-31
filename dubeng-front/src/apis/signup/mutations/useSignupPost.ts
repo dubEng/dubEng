@@ -23,7 +23,7 @@ const useSignupPost = () => {
       window.alert("회원가입이 정상적으로 되었습니다!");
     },
     onError: (error) => {
-      window.alert("회원가입 과정에서 오류가 발생했습니다.");
+      
     },
   });
 };
