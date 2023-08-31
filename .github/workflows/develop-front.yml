@@ -1,0 +1,52 @@
+name: CI/CD using github
+
+# event trigger
+on:
+  push:
+    branches: ["develop-front"]
+
+permissions:
+  contents: read
+
+jobs: # job들을 정의하는 곳
+  ci: # job의 id
+    runs-on: ubuntu-latest # 이 job을 수행하는 OS ex. windows-latest , macos-12
+    steps: # job에서 수행하는 step들을 정의하는 곳
+      # Repository로부터 CI 수행 서버로 코드를 내려받는 Action
+      - uses: actions/checkout@v3
+      
+      # 환경변수 파일 생성
+      - name: make .env
+        if: contains(github.ref, 'develop-front')
+        run: |
+          cd ./dubeng-front
+          touch .env
+          echo "${{ secrets.env }}" > ./.env
+        shell: bash
+
+      # docker build & push to production
+      - name: Docker build & push to prod
+        if: contains(github.ref, 'main')
+        run: |
+          cd ./dubeng-front
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/dubeng-front .
+          docker push ${{ secrets.DOCKER_USERNAME }}/dubeng-front
+          
+      # deploy to production
+      - name: Deploy to prod
+        uses: appleboy/ssh-action@master
+        id: deploy-prod
+        if: contains(github.ref, 'develop-front')
+        with:
+          host: ${{ secrets.HOST_PROD }} # EC2 퍼블릭 IPv4 DNS
+          username: ubuntu
+          key: ${{ secrets.PRIVATE_KEY }}
+          envs: GITHUB_SHA
+          script: |
+            sudo docker stop next-container || true
+            sudo docker rm next-container || true
+            
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/dubeng-front
+            sudo docker run -d -p 9000:9000 --name next-container ${{ secrets.DOCKER_USERNAME }}/dubeng-front 
+            sudo docker image prune -f
