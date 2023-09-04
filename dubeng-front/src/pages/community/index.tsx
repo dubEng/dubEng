@@ -111,10 +111,14 @@ export default function CommunityPage() {
   const handleSearchInputKeyDown = (
     event: React.KeyboardEvent<HTMLElement>
   ) => {
-    if (event.code === "Enter") {
+
+    const enterKey = 13;
+    
+    if (event.keyCode === enterKey) {
       setKeyword(searchValue);
     }
   };
+
   function handleSearchInputClear() {
     setSearchValue("");
   }
