@@ -99,7 +99,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         }
 
         List<CommunitySearchRes> content = queryFactory
-                .select(new QCommunitySearchRes(video.id, video.title,video.thumbnail,video.runtime, user.nickname, user.profileImage, QRecord.record.playCount, QRecord.record.createdDate, QRecord.record.id))
+                .select(new QCommunitySearchRes(video.id, video.title,video.thumbnail,video.runtime, user.nickname, user.profileImage, QRecord.record.playCount, QRecord.record.updatedDate, QRecord.record.id))
                 .from(video)
                 .where(builder, QRecord.record.isPublic.eq(true), user.isActive.eq(true))
                 .leftJoin(videoCategory)
@@ -108,7 +108,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
                 .on(video.id.eq(QRecord.record.video.id))
                 .leftJoin(user)
                 .on(user.id.eq(QRecord.record.user.id))
-                .orderBy(QRecord.record.createdDate.desc())
+                .orderBy(QRecord.record.updatedDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .groupBy(QRecord.record.id)
