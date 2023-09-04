@@ -22,7 +22,7 @@ export const Default: Story = {
       profileImage={profileImg}
       nickname={"언도"}
       playCount={10}
-      createdDate={"11분"}
+      updatedDate={"11분"}
       id={0}
     />
   ),
