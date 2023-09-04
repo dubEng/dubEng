@@ -54,13 +54,16 @@ public class SaveFileService {
 
         String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
 
-        int newRecordNum = recordInfo.getRecordNum();
-        if(newRecordNum >= 10) {
-            newRecordNum += 87;
+        //파일 이름 생성
+        char newRecordNum='a';
+        String newFileName = "";
+        if(recordInfo.getRecordNum() >= 10) {
+            newRecordNum = (char) (87 + recordInfo.getRecordNum());
+            newFileName = recordInfo.getVideoId() + "_" + recordInfo.getNickname() + "_" + newRecordNum + "." + fileExtension;
+        } else {
+            newFileName = recordInfo.getVideoId() + "_" + recordInfo.getNickname() + "_" + recordInfo.getRecordNum() + "." + fileExtension;
         }
-
-        String newFileName = recordInfo.getVideoId() + "_" + recordInfo.getNickname() + "_" + newRecordNum + "." + fileExtension;
-
+        
         fullPath += "/" + newFileName;
         log.debug("file full path : {}", fullPath);
 
