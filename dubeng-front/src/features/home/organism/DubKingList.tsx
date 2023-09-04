@@ -54,7 +54,10 @@ export default function DubKingList(props : any) {
         )}
       </section>
     );
+  } else if(data.length < 3){
+    return <p className="flex justify-center items-center my-24 text-16 text-dubblack">현재 투표가 진행 중입니다</p>
   }
+
   return <></>;
 }
 
