@@ -54,9 +54,9 @@ public class SaveFileService {
 
         String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
 
-        char newRecordNum='a';
-        if(recordInfo.getRecordNum() >= 10) {
-            newRecordNum = (char) (87 + recordInfo.getRecordNum());
+        int newRecordNum = recordInfo.getRecordNum();
+        if(newRecordNum >= 10) {
+            newRecordNum += 87;
         }
 
         String newFileName = recordInfo.getVideoId() + "_" + recordInfo.getNickname() + "_" + newRecordNum + "." + fileExtension;
