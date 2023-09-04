@@ -4,8 +4,11 @@ import * as queryKeys from "@/constants/queryKeys";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 
-const fetcher = async (isLimit: boolean, accessToken: string, langType: string) => {
-  console.log('accessToken:', accessToken);
+const fetcher = async (
+  isLimit: boolean,
+  accessToken: string,
+  langType: string
+) => {
   axios.defaults.headers.common["Authorization"] = accessToken;
 
   const { data } = await axios.get(
@@ -13,12 +16,12 @@ const fetcher = async (isLimit: boolean, accessToken: string, langType: string) 
     {
       params: {
         isLimit,
-        langType
+        langType,
       },
     }
   );
 
-  console.log('useLikeDubProductListQuery', data);
+  console.log("useLikeDubProductListQuery", data);
 
   return data;
 };
@@ -26,8 +29,9 @@ const fetcher = async (isLimit: boolean, accessToken: string, langType: string) 
 const useLikeDubProductListQuery = (isLimit: boolean, langType: string) => {
   const { accessToken } = useSelector((state: RootState) => state.user);
 
-  return useQuery([queryKeys.LIKE_DUB_PRODUCT_LIST, isLimit, accessToken], () =>
-    fetcher(isLimit, accessToken, langType)
+  return useQuery(
+    [queryKeys.LIKE_DUB_PRODUCT_LIST, isLimit, langType, accessToken],
+    () => fetcher(isLimit, accessToken, langType)
   );
 };
 
