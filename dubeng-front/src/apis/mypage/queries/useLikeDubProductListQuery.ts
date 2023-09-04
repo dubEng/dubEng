@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 
 const fetcher = async (isLimit: boolean, accessToken: string, langType: string) => {
+  console.log('accessToken:', accessToken);
   axios.defaults.headers.common["Authorization"] = accessToken;
 
   const { data } = await axios.get(
