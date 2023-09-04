@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 interface Iprops {
   page: number;
   totalPages: number;
-  // currentPageArray: number[];
   setPage: Function;
   inputRef: any;
 }
@@ -14,7 +13,6 @@ interface Iprops {
 export default function Pagination({
   page,
   totalPages,
-  // currentPageArray,
   setPage,
   inputRef,
 }: Iprops) {

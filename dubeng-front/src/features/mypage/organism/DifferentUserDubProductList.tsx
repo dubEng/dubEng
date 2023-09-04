@@ -50,10 +50,6 @@ export default function DifferentUserProductList({ userId }: Iprops) {
 
   if (error) {
     if (axios.isAxiosError(error)) {
-      if (error.response?.status === 404) {
-        return <EmptyComponent status={EmptyType.EMPTY_DUB_PRODUCT} />;
-      }
-    } else {
       return <ErrorComponent onClick={() => {}} retry={false} />;
     }
   }

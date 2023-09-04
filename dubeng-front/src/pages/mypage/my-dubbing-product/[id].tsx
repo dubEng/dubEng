@@ -73,14 +73,6 @@ export default function DifferentUserProductPage() {
 
   if (error) {
     if (axios.isAxiosError(error)) {
-      if (error.response?.status === 404) {
-        return (
-          <div className="mt-80">
-            <EmptyComponent status={EmptyType.EMPTY_DUB_PRODUCT} />
-          </div>
-        );
-      }
-    } else {
       return (
         <div className="mt-80">
           <ErrorComponent onClick={() => {}} retry={false} />;
@@ -95,7 +87,7 @@ export default function DifferentUserProductPage() {
         myPageLangIndex={differentUserPageLangIndex}
         handleMyPageLangIndex={handleMyPageLangIndex}
       />
-      {differentUserProductList &&
+      {differentUserProductList && differentUserProductList.length > 0 ? (
         differentUserProductList.map((item: any) => (
           <Link href={`/community/shorts/product/${item.id}`}>
             <DubProductListItem
@@ -110,7 +102,12 @@ export default function DifferentUserProductPage() {
               nickname={item.nickname}
             />
           </Link>
-        ))}
+        ))
+      ) : (
+        <div className="mt-80">
+          <EmptyComponent status={EmptyType.EMPTY_LIKE_DUB_PRODUCT} />
+        </div>
+      )}
       <div className="h-80"></div>
     </div>
   );
