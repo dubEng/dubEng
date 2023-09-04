@@ -1,7 +1,7 @@
 package com.ssafy.storage.service;
 
 import com.ssafy.storage.dto.SaveFileRequestDTO;
-import com.ssafy.storage.dto.RecodeInfo;
+import com.ssafy.storage.dto.RecordInfo;
 import com.ssafy.storage.exception.FileListNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +34,9 @@ public class SaveFileService {
             fullPath = "/home/ubuntu/file_volume/";
         }
         // 폴더 없을 경우 생성
-        RecodeInfo recodeInfo = requestDTO.getRecodeInfo();
+        RecordInfo recordInfo = requestDTO.getRecordInfo();
 
-        String key = getKey(recodeInfo.getVideoId(), recodeInfo.getNickname());
+        String key = getKey(recordInfo.getVideoId(), recordInfo.getNickname());
         fullPath += key;
 
         File folder = new File(fullPath);
@@ -54,7 +54,12 @@ public class SaveFileService {
 
         String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
 
-        String newFileName = recodeInfo.getVideoId() + "_" + recodeInfo.getNickname() + "_" + recodeInfo.getRecodeNum() + "." + fileExtension;
+        char newRecordNum='a';
+        if(recordInfo.getRecordNum() >= 10) {
+            newRecordNum = (char) (87 + recordInfo.getRecordNum());
+        }
+
+        String newFileName = recordInfo.getVideoId() + "_" + recordInfo.getNickname() + "_" + newRecordNum + "." + fileExtension;
 
         fullPath += "/" + newFileName;
         log.debug("file full path : {}", fullPath);
