@@ -24,6 +24,7 @@ const customStyles = {
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
+    padding: "14px",
     width: "375px",
     height: "390px",
     transform: "translate(-50%, -50%)",
@@ -191,7 +192,7 @@ export default function DubCompleteModal({
           <div className="flex flex-row justify-between mb-8 items-center">
             <p className="text-16 font-semibold">미리 보기</p>
             <button onClick={closeModal}>
-              <MdClose className="my-8 mr-8" size={24} />
+              <MdClose className="my-8" size={24} />
             </button>
           </div>
           <div className="flex flex-col justify-center items-center">
@@ -233,24 +234,6 @@ export default function DubCompleteModal({
                 disable={false}
               />
             </div>
-            {/* <div className="flex flex-col items-center text-16 mt-8 text-dubblack">
-              <p className="mb-8 font-semibold">공개여부</p>
-              <div className="flex flex-row justify-center mb-16">
-              {options.map((option) => (
-                <div className="mx-4" key={option.value}>
-                <label key={option.value} className="mr-4">
-                {option.label}
-                </label>
-                <input
-                type="radio"
-                value={option.value}
-                checked={selectedOption === option.value}
-                onChange={() => handleOptionChange(option.value)}
-                />
-                </div>
-                ))}
-                </div>
-              </div> */}
             <CommonButton children={"완료하기"} onClick={handleComplete} />
             <audio ref={audioRef} style={{ display: "none" }} src={audioUrl} />
           </div>

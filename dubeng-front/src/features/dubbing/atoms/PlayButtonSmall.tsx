@@ -1,6 +1,6 @@
 import Image from "next/image";
 import PlayIcon from "../../../../public/icons/dubbing-icon/play.svg";
-import StopIcon from "../../../../public/icons/dubbing-icon/stop.svg";
+import StopIcon from "../../../../public/icons/dubbing-icon/tempStop.svg";
 
 interface Iprops {
   isPlaying: boolean;
