@@ -26,8 +26,9 @@ const fetcher = async (
 const useScrapDubVideoListQuery = (isLimit: boolean, langType: string) => {
   const { accessToken } = useSelector((state: RootState) => state.user);
 
-  return useQuery([queryKeys.SCRAP_DUB_VIDEO_LIST, isLimit, accessToken], () =>
-    fetcher(isLimit, accessToken, langType)
+  return useQuery(
+    [queryKeys.SCRAP_DUB_VIDEO_LIST, isLimit, langType, accessToken],
+    () => fetcher(isLimit, accessToken, langType)
   );
 };
 

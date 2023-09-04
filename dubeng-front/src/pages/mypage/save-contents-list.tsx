@@ -31,14 +31,6 @@ export default function SaveContentsListPage() {
 
   if (error) {
     if (axios.isAxiosError(error)) {
-      if (error.response?.status === 404) {
-        return (
-          <div className="mt-80">
-            <EmptyComponent status={EmptyType.EMPTY_SCRAP_DUB_VIDEO} />
-          </div>
-        );
-      }
-    } else {
       return (
         <div className="mt-80">
           <ErrorComponent onClick={() => refetch} retry={true} />;
