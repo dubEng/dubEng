@@ -62,7 +62,7 @@ export default function LikeDubbingListPage() {
               playCount={item.playCount}
               recordId={item.id}
               key={item.id}
-              createdDate={item.updatedDate}
+              updatedDate={item.updatedDate}
               runtime={item.runtime}
               profileImage={item.profileImage}
               nickname={item.nickname}
