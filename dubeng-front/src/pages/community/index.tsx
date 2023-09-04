@@ -330,7 +330,7 @@ export default function CommunityPage() {
               profileImage: string;
               nickname: string;
               playCount: number;
-              createdDate: string;
+              updatedDate: string;
             }) => (
               <DubProductListItem
                 key={dubProduct.recordId}
@@ -342,7 +342,7 @@ export default function CommunityPage() {
                 profileImage={dubProduct.profileImage}
                 nickname={dubProduct.nickname}
                 playCount={dubProduct.playCount}
-                createdDate={dubProduct.createdDate}
+                updatedDate={dubProduct.updatedDate}
               />
             )
           )}

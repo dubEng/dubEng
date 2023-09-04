@@ -15,7 +15,7 @@ interface Iprops {
   profileImage?: string;
   nickname?: string;
   playCount: number;
-  createdDate?: string;
+  updatedDate?: string;
 }
 
 export default function DubProductListItem({
@@ -27,7 +27,7 @@ export default function DubProductListItem({
   profileImage,
   nickname,
   playCount,
-  createdDate,
+  updatedDate,
 }: Iprops) {
   timeago.register("ko", koLocale);
 
@@ -94,8 +94,8 @@ export default function DubProductListItem({
           <p className="flex text-dubgray text-12 space-x-4 mt-4">
             <p>조회수 {playCount}회</p>
             <p className="text-8">▪</p>
-            {createdDate ? (
-              <TimeAgo datetime={createdDate} locale="ko" />
+            {updatedDate ? (
+              <TimeAgo datetime={updatedDate} locale="ko" />
             ) : null}
           </p>
         </div>
