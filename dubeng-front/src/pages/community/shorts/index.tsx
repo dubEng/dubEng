@@ -63,6 +63,7 @@ export default function ShortsPage() {
   // };
 
   const onPlay: YouTubeProps["onPlay"] = (event) => {
+    console.log("onPlay 함수 실행");
     setYoutubePlayer(event.target);
     // event.target.seekTo(contentList[currentPage].startTime);
   };
@@ -87,6 +88,9 @@ export default function ShortsPage() {
 
   const afterChange = (event: any) => {
     setAudioPath(contentList[event.to].recordPath);
+    if (youtubePlayer) {
+      youtubePlayer.seekTo(contentList[event.to].startTime);
+    }
     // console.log("플레이어", youtubePlayer);
     setCurrentPage(event.to);
   };
@@ -99,7 +103,7 @@ export default function ShortsPage() {
         contentList[event.from].startTime
       );
       youtubePlayer.pauseVideo();
-      youtubePlayer.seekTo(contentList[event.from].startTime);
+      // youtubePlayer.seekTo(contentList[event.to].startTime);
       console.log("어디서 왔느냐", youtubePlayer.videoTitle);
     }
   };
