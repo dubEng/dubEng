@@ -197,9 +197,9 @@ export default function DubBox({
   async function saveRecordingFile(audioBlob: Blob) {
     const formData = new FormData();
 
-    formData.append("recodeInfo.nickname", nickname);
-    formData.append("recodeInfo.recodeNum", scriptIndex.toString());
-    formData.append("recodeInfo.videoId", videoId);
+    formData.append("recordInfo.nickname", nickname);
+    formData.append("recordInfo.recordNum", scriptIndex.toString());
+    formData.append("recordInfo.videoId", videoId);
 
     const file = new File([audioBlob], "myRecordingFile.wav", {
       type: "audio/wav",

@@ -31,7 +31,7 @@
     "axios": "^1.3.6",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.1",
-    "framer-motion": "^10.12.5",
+    "framer-motion": "^10.16.4",
     "lgl-tracer": "^1.0.10",
     "moment": "^2.29.4",
     "next": "13.3.1",

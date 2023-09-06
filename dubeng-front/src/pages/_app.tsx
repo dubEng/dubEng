@@ -15,6 +15,8 @@ import { persistStore } from "redux-persist";
 import Scripts from "@/components/Scripts";
 import Head from "next/head";
 import DubMissionCompleteModal from "@/features/dubbing/organism/DubMissionCompleteModal";
+import { useRouter } from "next/router";
+import { AnimatePresence } from "framer-motion";
 
 const pretendard = localFont({
   src: [
@@ -60,6 +62,8 @@ const pretendard = localFont({
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
+  const router = useRouter()
+  const pageKey = router.asPath
 
   return (
     <main className={pretendard.className}>
@@ -89,7 +93,9 @@ export default function App({ Component, pageProps }: AppProps) {
             <Header />
             <NavigationBar />
             <DubMissionCompleteModal />
-            <Component {...pageProps} />
+            <AnimatePresence initial={false}>
+              <Component key={pageKey} {...pageProps} />
+            </AnimatePresence>
           </PersistGate>
         </Provider>
       </QueryClientProvider>
