@@ -124,7 +124,7 @@ export default function NavigationBar() {
     } else if (pathName === "/shorts") {
       const firstContent = await refetch();
       if (firstContent) {
-        route.push(`/shorts/${firstContent.data[0].recordId}`);
+        route.push(`/shorts/${firstContent.data[0].recordId}?direction=DOWN`);
       }
     } else {
       route.push(pathName);
