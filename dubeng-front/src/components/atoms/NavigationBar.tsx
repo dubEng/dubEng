@@ -14,6 +14,8 @@ import { useRouter } from "next/navigation";
 
 import { useSelector } from "react-redux";
 import { RootState } from "../../stores/store";
+import { useEffect, useState } from "react";
+import useCommunityShortsQuery from "@/apis/community/queries/useCommunityShortsQuery";
 
 const MySwal = withReactContent(Swal);
 
@@ -25,7 +27,7 @@ const menu = [
     clickedIcon: <MdHomeFilled size={24} color="#ff6d60" />,
   },
   {
-    href: "/community/shorts",
+    href: "/shorts",
     label: "Shorts",
     icon: <MdPlayCircleOutline size={24} color="#767676" />,
     clickedIcon: <MdPlayCircleOutline size={24} color="#ff6d60" />,
@@ -53,6 +55,17 @@ export default function NavigationBar() {
   const route = useRouter();
 
   const userId = useSelector((state: RootState) => state.user.userId);
+
+  const { data: contentList, refetch } = useCommunityShortsQuery();
+
+  // const [firstRecordId, setFirstRecordId] = useState();
+
+  // useEffect(() => {
+  //   if (contentList) {
+  //     console.log("contentList 테스트", contentList);
+  //     setFirstRecordId(contentList[0].recordId);
+  //   }
+  // }, [contentList]);
 
   // 관리자 페이지에서는 NavBar안보여줌
 
@@ -107,6 +120,11 @@ export default function NavigationBar() {
         route.push("/login");
       } else {
         route.push(pathName);
+      }
+    } else if (pathName === "/shorts") {
+      const firstContent = await refetch();
+      if (firstContent) {
+        route.push(`/shorts/${firstContent.data[0].recordId}`);
       }
     } else {
       route.push(pathName);

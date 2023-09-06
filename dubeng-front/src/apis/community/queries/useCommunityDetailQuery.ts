@@ -10,8 +10,12 @@ const fetcher = (recordId: string) =>
     });
 
 const useCommunityDetailQuery = (recordId: string) => {
-  return useQuery([queryKeys.COMMUNITY_DETAIL, recordId], () =>
-    fetcher(recordId)
+  return useQuery(
+    [queryKeys.COMMUNITY_DETAIL, recordId],
+    () => fetcher(recordId),
+    {
+      enabled: !!recordId,
+    }
   );
 };
 

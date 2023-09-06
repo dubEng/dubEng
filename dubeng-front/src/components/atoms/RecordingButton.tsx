@@ -9,14 +9,9 @@ interface Iprops {
 }
 
 export default function RecordingButton({ page }: Iprops) {
-  if (page === "/community/shorts") {
+  if (page.includes("shorts")) {
     return <Image src={shortsRecordingIcon} alt="shortsRecordingIcon" />;
   } else {
-    return (
-      <Image
-        src={defaultRecordingIcon}
-        alt="defaultRecordingIcon"
-      />
-    );
+    return <Image src={defaultRecordingIcon} alt="defaultRecordingIcon" />;
   }
 }

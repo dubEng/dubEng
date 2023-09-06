@@ -7,7 +7,7 @@ const fetcher = () =>
     .get(process.env.NEXT_PUBLIC_BASE_URL + `/dub/community/shorts`, {
       params: {
         page: 0,
-        size: 5,
+        size: 2,
       },
     })
     .then(({ data }) => {
@@ -16,7 +16,7 @@ const fetcher = () =>
 
 const useCommunityShortsQuery = () => {
   return useQuery([queryKeys.Shorts], fetcher, {
-    enabled: false
+    enabled: false,
   });
 };
 
