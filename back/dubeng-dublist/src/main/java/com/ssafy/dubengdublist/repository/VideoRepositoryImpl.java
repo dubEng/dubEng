@@ -169,7 +169,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
     public Page<CommunityDetailScriptRes> findByAllShortsCommunity(Pageable pageable){
 
         List<CommunityDetailRes> content = queryFactory
-                .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.id, user.nickname, QRecord.record.id, video.startTime, video.endTime, QRecord.record.recordPath, user.profileImage))
+                .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, QRecord.record.updatedDate, QRecord.record.likeCount, recordComment.id.count(), user.id, user.nickname, QRecord.record.id, video.startTime, video.endTime, QRecord.record.recordPath, user.profileImage))
                 .from(video)
                 .where(QRecord.record.isPublic.eq(true), user.isActive.eq(true))
                 .join(QRecord.record)
@@ -192,7 +192,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom{
         }
 
         JPAQuery<CommunityDetailRes> countQuery = queryFactory
-                .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, video.createdDate, QRecord.record.likeCount, recordComment.id.count(), user.id, user.nickname, QRecord.record.id, video.startTime, video.endTime, QRecord.record.recordPath, user.profileImage))
+                .select(new QCommunityDetailRes(video.id, video.title, video.thumbnail, video.videoPath, QRecord.record.updatedDate, QRecord.record.likeCount, recordComment.id.count(), user.id, user.nickname, QRecord.record.id, video.startTime, video.endTime, QRecord.record.recordPath, user.profileImage))
                 .from(video)
                 .where(QRecord.record.isPublic.eq(true), user.isActive.eq(true))
                 .join(QRecord.record)
