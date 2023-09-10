@@ -12,7 +12,10 @@ import { Direct } from "@/enum/statusType";
 type IndexPageProps = {};
 type IndexPageRef = React.ForwardedRef<HTMLDivElement>;
 
-export default function TestPage(props: IndexPageProps, ref: IndexPageRef) {
+export default function ShortsDetailPage(
+  props: IndexPageProps,
+  ref: IndexPageRef
+) {
   const router = useRouter();
   const recordId = router.query.id as string;
 
@@ -24,26 +27,6 @@ export default function TestPage(props: IndexPageProps, ref: IndexPageRef) {
   const { data: nextContent, refetch } = useCommunityShortsQuery();
 
   const index = parseInt(router.query.index as string);
-
-  // useEffect(() => {
-  //   console.log("useEffect 실행!!!");
-
-  //   if (direction) {
-  //     console.log("direction 바뀜!!!!");
-  //     const handlePopstate = (e: any) => {
-  //       if (e.state !== null) {
-  //         console.log("direction UP~~~");
-  //         setDirection("UP");
-  //       }
-  //     };
-
-  //     window.addEventListener("popstate", handlePopstate);
-
-  //     return () => {
-  //       window.removeEventListener("popstate", handlePopstate);
-  //     };
-  //   }
-  // }, [direction]);
 
   useEffect(() => {
     if (dir === Direct.DOWN && index === recordIdList.length) {
