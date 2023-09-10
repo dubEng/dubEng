@@ -4,9 +4,9 @@ export default function Document() {
   return (
     <Html lang="ko">
       <Head>
-        <meta charSet={"utf-8"}/>
+        <meta charSet={"utf-8"} />
         <link rel="manifest" href="/manifest.json" />
-        <meta name='theme-color' content='#FF6D60' />
+        <meta name="theme-color" content="#FF6D60" />
         <link
           rel="apple-touch-icon"
           sizes="57x57"
@@ -94,10 +94,7 @@ export default function Document() {
           content="mstile-310x310.png"
         />
       </Head>
-      <body
-        id="root"
-        className="h-screen container mx-auto bg-white bg-opacity-20 w-390"
-      >
+      <body id="root" className="h-screen container bg-white w-screen">
         <Main />
         <NextScript />
       </body>

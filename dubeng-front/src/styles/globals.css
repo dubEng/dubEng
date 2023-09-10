@@ -3,5 +3,6 @@
 @tailwind utilities;
 
 body {
-    margin: auto !important;
-  }
+  width: 100%;
+  position: relative;
+}

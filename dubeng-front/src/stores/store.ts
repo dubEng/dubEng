@@ -6,8 +6,9 @@ import scriptsPostSlice from "./manager/scriptsPostSlice";
 import communityTabSlice from "./community/communityTabSlice";
 import languageTabSlice from "./community/languageTabSlice";
 import signupSlice from "./user/signupSlice";
-import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
+import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import missionModalSlice from "./mission/missionModalSlice";
+import shortsSlice from "./community/shortsSlice";
 
 const createNoopStorage = () => {
   return {
@@ -24,11 +25,12 @@ const createNoopStorage = () => {
 };
 
 const storage =
-  typeof window === 'undefined'
+  typeof window === "undefined"
     ? createNoopStorage()
-    : createWebStorage('local');
+    : createWebStorage("local");
 
 const reducers = combineReducers({
+  shorts: shortsSlice,
   user: userReducer,
   scriptsPostInfo: scriptsPostSlice,
   communityTab: communityTabSlice,

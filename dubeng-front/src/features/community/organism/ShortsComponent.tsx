@@ -34,14 +34,6 @@ export default function ShortsComponent({
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  useEffect(() => {
-    console.log("title", title);
-
-    return () => {
-      console.log("clean up", title);
-    };
-  }, []);
-
   const onPlay: YouTubeProps["onPlay"] = (event) => {
     setYoutubePlayer(event.target);
   };
@@ -71,10 +63,10 @@ export default function ShortsComponent({
   }
 
   return (
-    <div className="w-full h-screen bg-black flex flex-col items-center justify-center">
+    <div className="w-screen h-screen rounded-16 bg-black flex flex-col items-center justify-center">
       <>
         <Link href={`/mypage/${userId}`}>
-          <div className="flex flex-row mt-16 mb-16 items-center w-390 px-16">
+          <div className="flex flex-row mt-16 mb-16 items-center w-screen px-16">
             <Image
               src={profileImage ?? DefaultImage}
               alt="profileImage"
@@ -89,7 +81,7 @@ export default function ShortsComponent({
           videoId={processVideoPath(videoPath)}
           opts={{
             height: "221",
-            width: "390",
+            width: "360",
             playerVars: {
               start: startTime,
               end: endTime,

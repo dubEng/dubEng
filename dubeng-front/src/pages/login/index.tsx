@@ -27,24 +27,29 @@ export default function LogInPage() {
   const googleLoginHandler = () => {
     const leftPosition = window.screen.width / 2 - 300; // 새 창의 가로 위치
     const topPosition = window.screen.height / 2 - 400; // 새 창의 세로 위치
-  
-    const googleUrl = `https://accounts.google.com/o/oauth2/v2/auth?`
-    + `client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`
-    + `&redirect_uri=${process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI}`
-    + `&response_type=code`
-    + `&access_type=offline`
-    + `&scope=email profile`;
 
-    window.open(googleUrl, '_parent', `width=600,height=800,left=${leftPosition},top=${topPosition}`);
-  }
+    const googleUrl =
+      `https://accounts.google.com/o/oauth2/v2/auth?` +
+      `client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}` +
+      `&redirect_uri=${process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI}` +
+      `&response_type=code` +
+      `&access_type=offline` +
+      `&scope=email profile`;
+
+    window.open(
+      googleUrl,
+      "_parent",
+      `width=600,height=800,left=${leftPosition},top=${topPosition}`
+    );
+  };
   return (
-    <div className="container mx-auto h-screen ">
+    <div className="container mx-auto h-screen bg-white">
       <Script
         src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js"
         defer
       ></Script>
-      <div className="mt-180">
-        <div className="mb-16">
+      <div className="pt-180">
+        <div className="pb-16">
           <Link href={"/"}>
             <Image
               className="mx-auto"
