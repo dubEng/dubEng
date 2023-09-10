@@ -94,7 +94,7 @@ export default function Document() {
           content="mstile-310x310.png"
         />
       </Head>
-      <body id="root" className="h-screen container bg-white w-screen">
+      <body id="root" className="h-screen w-screen container bg-white w-screen">
         <Main />
         <NextScript />
       </body>

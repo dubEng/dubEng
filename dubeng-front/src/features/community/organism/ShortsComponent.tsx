@@ -34,14 +34,6 @@ export default function ShortsComponent({
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  useEffect(() => {
-    console.log("title", title);
-
-    return () => {
-      console.log("clean up", title);
-    };
-  }, []);
-
   const onPlay: YouTubeProps["onPlay"] = (event) => {
     setYoutubePlayer(event.target);
   };
@@ -89,7 +81,7 @@ export default function ShortsComponent({
           videoId={processVideoPath(videoPath)}
           opts={{
             height: "221",
-            width: "100%",
+            width: "360",
             playerVars: {
               start: startTime,
               end: endTime,
