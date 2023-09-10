@@ -12,10 +12,11 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useRouter } from "next/navigation";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../stores/store";
 import { useEffect, useState } from "react";
 import useCommunityShortsQuery from "@/apis/community/queries/useCommunityShortsQuery";
+import { setRecordIdListClear } from "@/stores/community/shortsSlice";
 
 const MySwal = withReactContent(Swal);
 
@@ -55,6 +56,7 @@ export default function NavigationBar() {
   const route = useRouter();
 
   const userId = useSelector((state: RootState) => state.user.userId);
+  const dispatch = useDispatch();
 
   const { data: contentList, refetch } = useCommunityShortsQuery();
 
@@ -124,7 +126,8 @@ export default function NavigationBar() {
     } else if (pathName === "/shorts") {
       const firstContent = await refetch();
       if (firstContent) {
-        route.push(`/shorts/${firstContent.data[0].recordId}?direction=DOWN`);
+        dispatch(setRecordIdListClear());
+        route.push(`/shorts/${firstContent.data[0].recordId}?index=0`);
       }
     } else {
       route.push(pathName);
@@ -134,9 +137,9 @@ export default function NavigationBar() {
   function getNavigationBarStyle(pathName: string): string {
     if (pathName?.includes("shorts")) {
       // border-t-1 border-[#DEE2E6]
-      return "h-61 pt-8 pb-8 fixed min-w-390 bottom-0 z-50 bg-dubblack ";
+      return "h-61 pt-8 pb-8 fixed w-screen bottom-0 z-50 bg-dubblack ";
     } else {
-      return "h-61 pt-8 pb-8 fixed  min-w-390 bottom-0 z-50 bg-white border-t-1 border-[#DEE2E6]";
+      return "h-61 pt-8 pb-8 fixed w-screen bottom-0 z-50 bg-white border-t-1 border-[#DEE2E6]";
     }
   }
 }

@@ -48,3 +48,8 @@ export enum LangType {
   ENGLISH = "english",
   KOREAN = "korean",
 }
+
+export enum Direct {
+  UP = "UP",
+  DOWN = "DOWN",
+}
