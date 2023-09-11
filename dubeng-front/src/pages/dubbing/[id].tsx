@@ -284,7 +284,7 @@ export default function DubbingPage() {
           videoId={transferYoutube(data.videoPath)}
           opts={{
             height: "218",
-            width: "360",
+            width: "325",
             playerVars: {
               start: data.startTime,
               end: data.endTime,
@@ -307,7 +307,7 @@ export default function DubbingPage() {
         />
       )}
       <PlayBar width={progressBarWidth} />
-      <div className="w-360 my-8 py-8 bg-dubgraylight flex justify-center items-center">
+      <div className="w-screen my-8 py-8 bg-dubgraylight flex justify-center items-center">
         <Swiper
           navigation={true}
           modules={[Navigation]}
@@ -343,7 +343,7 @@ export default function DubbingPage() {
             ))}
         </Swiper>
       </div>
-      <div className="h-156 overflow-y-scroll bg-white mb-16 w-391 scrollbar-thin scrollbar-thumb-dubgraymedium scrollbar-track-dubgraylight">
+      <div className="h-156 overflow-y-scroll bg-white mb-16 w-screen scrollbar-thin scrollbar-thumb-dubgraymedium scrollbar-track-dubgraylight">
         <p className="flex justify-start mx-16 text-16 font-bold mt-16 mb-8">
           전체 스크립트
         </p>
@@ -390,7 +390,7 @@ export default function DubbingPage() {
             // }
           })}
       </div>
-      <div className="flex justify-center w-360">
+      <div className="flex justify-center w-full">
         <CommonButton children="저장하기" onClick={handleSaveButton} />
       </div>
       {opendLoadingModal && <DubLoadingModal />}

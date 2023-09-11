@@ -201,7 +201,7 @@ export default function DubCompleteModal({
                 videoId={transferYoutube(videoPath)}
                 opts={{
                   height: "196",
-                  width: "350",
+                  width: "325",
                   playerVars: {
                     start: startTime,
                     end: endTime,
