@@ -181,7 +181,7 @@ export default function ShortsProductPage() {
       {data && (
         <>
           <Link href={`/mypage/${data.userId}`}>
-            <div className="flex flex-row mt-16 mb-16 items-center w-390 px-16">
+            <div className="flex flex-row mt-16 mb-16 items-center w-360 px-16">
               <Image
                 src={data.profileImage ?? DefaultImage}
                 alt="profileImage"
@@ -196,7 +196,7 @@ export default function ShortsProductPage() {
             videoId={transferYoutube(data.videoPath)}
             opts={{
               height: "221",
-              width: "390",
+              width: "360",
               playerVars: {
                 start: data.startTime,
                 end: data.endTime,
@@ -241,7 +241,7 @@ export default function ShortsProductPage() {
               isScrap={false}
             />
           </div>
-          <div className="h-200 pt-32 scrollbar-hide overflow-y-scroll bg-black container mx-auto mb-16 w-390 mt-15">
+          <div className="h-200 pt-32 scrollbar-hide overflow-y-scroll bg-black container mx-auto mb-16 w-360 mt-15">
             {data.scriptList &&
               data.scriptList.map((item: any, index: number) => {
                 if (index === selectedScript) {

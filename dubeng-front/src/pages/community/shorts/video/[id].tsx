@@ -150,7 +150,7 @@ export default function ShortsVideoPage() {
             videoId={transferYoutube(data.videoPath)}
             opts={{
               height: "221",
-              width: "390",
+              width: "360",
               playerVars: {
                 start: data.startTime,
                 end: data.endTime,
@@ -167,7 +167,7 @@ export default function ShortsVideoPage() {
               setSelectedScript(0);
             }}
           />
-          <div className="flex flex-row justify-between mt-16 mb-16 items-center w-390 px-16">
+          <div className="flex flex-row justify-between mt-16 mb-16 items-center w-360 px-16">
             <div className="flex space-x-4">
               <p className="text-16 max-w-[85%] text-white line-clamp-1">
                 {data.title}
@@ -207,7 +207,7 @@ export default function ShortsVideoPage() {
               <DubButton type={"shorts"} onClick={handleDubButton} />
             </div>
           </div>
-          <div className="h-200 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-390 mt-15">
+          <div className="h-200 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-360 mt-15">
             {data.scriptList &&
               data.scriptList.map((item: any, index: number) => {
                 if (index === selectedScript) {

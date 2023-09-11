@@ -284,7 +284,7 @@ export default function DubbingPage() {
           videoId={transferYoutube(data.videoPath)}
           opts={{
             height: "218",
-            width: "390",
+            width: "360",
             playerVars: {
               start: data.startTime,
               end: data.endTime,
@@ -307,7 +307,7 @@ export default function DubbingPage() {
         />
       )}
       <PlayBar width={progressBarWidth} />
-      <div className="w-390 my-8 py-8 bg-dubgraylight flex justify-center items-center">
+      <div className="w-360 my-8 py-8 bg-dubgraylight flex justify-center items-center">
         <Swiper
           navigation={true}
           modules={[Navigation]}
@@ -390,7 +390,7 @@ export default function DubbingPage() {
             // }
           })}
       </div>
-      <div className="flex justify-center w-390">
+      <div className="flex justify-center w-360">
         <CommonButton children="저장하기" onClick={handleSaveButton} />
       </div>
       {opendLoadingModal && <DubLoadingModal />}
