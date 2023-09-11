@@ -21,13 +21,13 @@ export default function DubVideoThumbnail({
     <div className="relative object-cover">
       <Image
         src={thumbnail}
-        className="rounded-18 w-272 h-152"
+        className="rounded-18 w-242 h-142"
         alt={title}
         width={272}
         height={152}
       />
-      <div className="bg-gradient-to-t from-black opacity-80 absolute top-0 left-0 w-272 h-152 rounded-18"></div>
-      <div className="w-272 line-clamp-1 flex space-x-8 items-center absolute bottom-16 left-16 right-16 text-white font-semibold text-12">
+      <div className="bg-gradient-to-t from-black opacity-80 absolute top-0 left-0 w-242 h-142 rounded-18"></div>
+      <div className="w-242 line-clamp-1 flex space-x-8 items-center absolute bottom-16 left-16 right-16 text-white font-semibold text-12">
         {userProfileImg && (
           <div className="flex">
             <Image
