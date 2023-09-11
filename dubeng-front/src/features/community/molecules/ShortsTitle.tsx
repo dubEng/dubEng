@@ -64,8 +64,8 @@ export default function ShortsTitle({
 
   if (isLike === undefined) {
     return (
-      <div className="bg-black w-358">
-        <div className="flex items-center justify-between">
+      <div className="bg-black w-screen">
+        <div className="flex items-center justify-between px-4">
           <p className="text-16 text-dubgraylight line-clamp-1">{title}</p>
           <div className="flex text-14 text-dubgraylight space-x-8"></div>
         </div>
@@ -76,8 +76,8 @@ export default function ShortsTitle({
     );
   } else {
     return (
-      <div className="bg-black w-358">
-        <div className="flex items-center justify-between">
+      <div className="bg-black w-screen">
+        <div className="flex items-center justify-between px-4">
           <p className="text-16 text-dubgraylight line-clamp-1 max-w-[80%]">
             {title}
           </p>
@@ -94,7 +94,7 @@ export default function ShortsTitle({
             <p>{recordLikeCount}</p>
           </div>
         </div>
-        <div className="flex mt-4 text-14 text-dubgray space-x-4">
+        <div className="flex mt-4 text-14 text-dubgray space-x-4 px-4">
           {playCount && (
             <>
               <p>조회수 {playCount}회</p>
