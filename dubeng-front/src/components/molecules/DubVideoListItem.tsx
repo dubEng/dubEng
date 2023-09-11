@@ -50,7 +50,7 @@ export default function DubVideoListItem({
   }
 
   return (
-    <div className="grid grid-cols-2 p-16 w-358 bg-white rounded-8 border-1 border-dubgraymedium">
+    <div className="grid grid-cols-2 p-16 w-338 bg-white rounded-8 border-1 border-dubgraymedium">
       <Link href={`/community/shorts/video/${id}`}>
         <Image
           src={thumbnail}
@@ -74,7 +74,8 @@ export default function DubVideoListItem({
               </p>
             ) : (
               <p className="text-dubgray text-12">
-                영상 길이 : {secondsToMinutes(runtime)[0]}분 {secondsToMinutes(runtime)[1]}초
+                영상 길이 : {secondsToMinutes(runtime)[0]}분{" "}
+                {secondsToMinutes(runtime)[1]}초
               </p>
             )
           ) : null}
