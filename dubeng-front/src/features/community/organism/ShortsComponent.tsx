@@ -81,7 +81,7 @@ export default function ShortsComponent({
           videoId={processVideoPath(videoPath)}
           opts={{
             height: "221",
-            width: "360",
+            width: "325",
             playerVars: {
               start: startTime,
               end: endTime,
