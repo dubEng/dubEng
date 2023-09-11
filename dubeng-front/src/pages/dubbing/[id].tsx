@@ -171,6 +171,13 @@ export default function DubbingPage() {
     const player = event.target;
     setYoutubePlayer(player);
     player.pauseVideo();
+
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    console.log('screenWidth', screenWidth);
+    console.log('screenHeight', screenHeight);
+
+    player.setSize(screenWidth, 221);
   };
 
   const onPlay: YouTubeProps["onPlay"] = (event) => {
@@ -265,7 +272,7 @@ export default function DubbingPage() {
   }
 
   return (
-    <div className="h-full mb-61">
+    <div className="h-full mb-61 w-full">
       <Head>
         <title>더빙으로 배우는 영어 쉐도잉 서비스 - 더빙 하기</title>
         <meta
@@ -307,7 +314,7 @@ export default function DubbingPage() {
         />
       )}
       <PlayBar width={progressBarWidth} />
-      <div className="w-screen my-8 py-8 bg-dubgraylight flex justify-center items-center">
+      <div className="w-full my-8 py-8 bg-dubgraylight flex justify-center items-center">
         <Swiper
           navigation={true}
           modules={[Navigation]}
@@ -319,6 +326,7 @@ export default function DubbingPage() {
           {scriptList.data &&
             scriptList.data.map((item: any, index: number) => (
               <SwiperSlide key={item.id}>
+                <div className="px-16">
                 <DubBox
                   videoId={router.query.id as string}
                   id={item.id}
@@ -339,11 +347,12 @@ export default function DubbingPage() {
                     updateDubbingCompleteCheckList
                   }
                 />
+                </div>
               </SwiperSlide>
             ))}
         </Swiper>
       </div>
-      <div className="h-156 overflow-y-scroll bg-white mb-16 w-screen scrollbar-thin scrollbar-thumb-dubgraymedium scrollbar-track-dubgraylight">
+      <div className="h-156 overflow-y-scroll bg-white mb-16 w-full scrollbar-thin scrollbar-thumb-dubgraymedium scrollbar-track-dubgraylight">
         <p className="flex justify-start mx-16 text-16 font-bold mt-16 mb-8">
           전체 스크립트
         </p>

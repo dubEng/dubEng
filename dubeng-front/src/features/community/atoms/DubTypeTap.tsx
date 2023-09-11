@@ -34,7 +34,7 @@ export default function DubTypeTap({ dubType, langType }: Iprops) {
 
   if (dubType === DubType.DUB_VIDEO) {
     return (
-      <div>
+      <div className="w-full">
         <div className="flex ml-4 justify-between">
           <div className="flex">
             <button className="text-16 text-dubblack font-semibold">
@@ -55,13 +55,13 @@ export default function DubTypeTap({ dubType, langType }: Iprops) {
             {isLanguageButtonOpen && <LanguageSelectBox langType={langType} />}
           </div>
         </div>
-        <div className="mt-8 z-0 w-screen h-2 bg-dubgraylight"></div>
+        <div className="mt-8 z-0 w-full h-2 bg-dubgraylight"></div>
         <div className="relative -top-2 w-84 h-2 bg-dubblack"></div>
       </div>
     );
   } else if (dubType === DubType.DUB_PRODUCT) {
     return (
-      <div>
+      <div className="w-full">
         <div className="flex ml-4 justify-between">
           <div className="flex">
             <button
@@ -82,7 +82,7 @@ export default function DubTypeTap({ dubType, langType }: Iprops) {
             {isLanguageButtonOpen && <LanguageSelectBox langType={langType} />}
           </div>
         </div>
-        <div className="mt-8 z-0 w-screen h-2 bg-dubgraylight"></div>
+        <div className="mt-8 z-0 w-full h-2 bg-dubgraylight"></div>
         <div className="ml-88 relative -top-2 w-70 h-2 bg-dubblack"></div>
       </div>
     );

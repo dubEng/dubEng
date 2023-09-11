@@ -64,7 +64,7 @@ export default function ShortsTitle({
 
   if (isLike === undefined) {
     return (
-      <div className="bg-black w-screen">
+      <div className="bg-black w-full">
         <div className="flex items-center justify-between px-4">
           <p className="text-16 text-dubgraylight line-clamp-1">{title}</p>
           <div className="flex text-14 text-dubgraylight space-x-8"></div>
@@ -76,7 +76,7 @@ export default function ShortsTitle({
     );
   } else {
     return (
-      <div className="bg-black w-screen">
+      <div className="bg-black w-full">
         <div className="flex items-center justify-between px-4">
           <p className="text-16 text-dubgraylight line-clamp-1 max-w-[80%]">
             {title}

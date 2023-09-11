@@ -34,8 +34,23 @@ export default function ShortsComponent({
   const [youtubePlayer, setYoutubePlayer] = useState<YouTubePlayer>();
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  const onPlayerReady: YouTubeProps["onReady"] = (event) => {
+    const player = event.target;
+    setYoutubePlayer(player);
+    player.mute();
+
+    // player 크기 조정 예: 화면 크기에 맞게 조정
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    console.log('screenWidth', screenWidth);
+    console.log('screenHeight', screenHeight);
+
+    player.setSize(screenWidth - 8, 174);
+  };
+
   const onPlay: YouTubeProps["onPlay"] = (event) => {
-    setYoutubePlayer(event.target);
+    // const player = event.target;
+    // setYoutubePlayer(player);
   };
 
   const onStateChange: YouTubeProps["onStateChange"] = (event) => {
@@ -63,7 +78,7 @@ export default function ShortsComponent({
   }
 
   return (
-    <div className="w-screen h-screen rounded-16 bg-black flex flex-col items-center justify-center">
+    <div className="w-screen h-[calc(100%-61px)] rounded-16 bg-black flex flex-col items-center justify-center">
       <>
         <Link href={`/mypage/${userId}`}>
           <div className="flex flex-row mt-16 mb-16 items-center w-screen px-16">
@@ -90,16 +105,17 @@ export default function ShortsComponent({
               controls: 0,
             },
           }}
-          // onReady={onPlayerReady}
+          onReady={onPlayerReady}
           onPlay={onPlay}
           onStateChange={onStateChange}
           onEnd={(e) => {
-            // youtubePlayer.pauseVideo();
-            // youtubePlayer.seekTo(startTime);
-            // if (audioRef.current) {
-            //   audioRef.current.pause();
-            //   audioRef.current.currentTime = 0;
-            // }
+            youtubePlayer.pauseVideo();
+            youtubePlayer.seekTo(startTime);
+
+            if (audioRef.current) {
+              audioRef.current.pause();
+              audioRef.current.currentTime = 0;
+            }
           }}
         />
         <audio
@@ -108,7 +124,7 @@ export default function ShortsComponent({
           style={{ display: "none" }}
           src={audioPath}
         />
-        <div className="mt-16">
+        <div className="mt-16 w-screen px-8">
           <ShortsTitle
             userId={userId}
             title={title}

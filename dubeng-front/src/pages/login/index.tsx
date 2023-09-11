@@ -48,7 +48,7 @@ export default function LogInPage() {
         src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js"
         defer
       ></Script>
-      <div className="pt-180">
+      <div className="pt-140">
         <div className="pb-16">
           <Link href={"/"}>
             <Image
@@ -64,7 +64,7 @@ export default function LogInPage() {
         <div className="flex flex-col justify-center gap-16">
           <button onClick={kakaoLoginHandler}>
             <Image
-              className="mx-auto"
+              className="mx-auto w-11/12"
               src={KakaoLoginBtnImage}
               alt="kakaoLoginBtn"
               width={350}
@@ -72,7 +72,7 @@ export default function LogInPage() {
           </button>
           <button onClick={googleLoginHandler}>
             <Image
-              className="mx-auto"
+              className="mx-auto w-11/12"
               src={GoogleLoginBtnImage}
               alt="GoogleLoginBtnImage"
               width={350}

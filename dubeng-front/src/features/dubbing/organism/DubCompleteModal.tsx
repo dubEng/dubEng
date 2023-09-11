@@ -25,8 +25,8 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     padding: "14px",
-    width: "375px",
-    height: "390px",
+    width: "355px",
+    height: "370px",
     transform: "translate(-50%, -50%)",
   },
 };

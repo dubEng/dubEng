@@ -68,6 +68,14 @@ export default function ShortsVideoPage() {
     const player = event.target;
     setYoutubePlayer(player);
     player.pauseVideo();
+
+    // player 크기 조정 예: 화면 크기에 맞게 조정
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    console.log('screenWidth', screenWidth);
+    console.log('screenHeight', screenHeight);
+
+    player.setSize(screenWidth-8, 221);
   };
 
   // 선택된 스크롤이 바뀌면 오토 스크롤
@@ -150,7 +158,7 @@ export default function ShortsVideoPage() {
             videoId={transferYoutube(data.videoPath)}
             opts={{
               height: "221",
-              width: "340",
+              width: "325",
               playerVars: {
                 start: data.startTime,
                 end: data.endTime,
@@ -167,7 +175,7 @@ export default function ShortsVideoPage() {
               setSelectedScript(0);
             }}
           />
-          <div className="flex flex-row justify-between mt-16 mb-16 items-center w-340 px-16">
+          <div className="flex flex-row justify-between mt-16 mb-16 items-center w-full px-16">
             <div className="flex space-x-4">
               <p className="text-16 max-w-[85%] text-white line-clamp-1">
                 {data.title}
@@ -207,7 +215,7 @@ export default function ShortsVideoPage() {
               <DubButton type={"shorts"} onClick={handleDubButton} />
             </div>
           </div>
-          <div className="h-200 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-340 mt-15">
+          <div className="h-200 pt-32 overflow-y-scroll scrollbar-hide bg-black container mx-auto mb-16 w-full mt-15">
             {data.scriptList &&
               data.scriptList.map((item: any, index: number) => {
                 if (index === selectedScript) {

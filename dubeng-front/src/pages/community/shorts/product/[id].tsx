@@ -49,6 +49,14 @@ export default function ShortsProductPage() {
     setYoutubePlayer(player);
     player.pauseVideo();
     player.mute();
+
+    // player 크기 조정 예: 화면 크기에 맞게 조정
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    console.log('screenWidth', screenWidth);
+    console.log('screenHeight', screenHeight);
+
+    player.setSize(screenWidth - 8, 221);
   };
 
   // const { data: playCountUp, refetch } = usePlayCountUpQuery(
@@ -225,7 +233,7 @@ export default function ShortsProductPage() {
             style={{ display: "none" }}
             src={data.recordPath}
           />
-          <div className="mt-16">
+          <div className="mt-16 w-screen px-8">
             <ShortsTitle
               userId={data.userId}
               title={data.title}
@@ -241,7 +249,7 @@ export default function ShortsProductPage() {
               isScrap={false}
             />
           </div>
-          <div className="h-200 pt-32 scrollbar-hide overflow-y-scroll bg-black container mx-auto mb-16 w-screen mt-15">
+          <div className="h-200 pt-32 scrollbar-hide overflow-y-scroll bg-black container mx-auto mb-16 w-full mt-15">
             {data.scriptList &&
               data.scriptList.map((item: any, index: number) => {
                 if (index === selectedScript) {

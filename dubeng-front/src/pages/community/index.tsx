@@ -113,7 +113,7 @@ export default function CommunityPage() {
   ) => {
 
     const enterKey = 13;
-    
+
     if (event.keyCode === enterKey) {
       setKeyword(searchValue);
     }
@@ -332,24 +332,24 @@ export default function CommunityPage() {
               playCount: number;
               updatedDate: string;
             }) => (
-              <DubProductListItem
-                key={dubProduct.recordId}
-                id={dubProduct.id}
-                recordId={dubProduct.recordId}
-                title={dubProduct.title}
-                thumbnail={dubProduct.thumbnail}
-                runtime={dubProduct.runtime}
-                profileImage={dubProduct.profileImage}
-                nickname={dubProduct.nickname}
-                playCount={dubProduct.playCount}
-                updatedDate={dubProduct.updatedDate}
-              />
+                <DubProductListItem
+                  key={dubProduct.recordId}
+                  id={dubProduct.id}
+                  recordId={dubProduct.recordId}
+                  title={dubProduct.title}
+                  thumbnail={dubProduct.thumbnail}
+                  runtime={dubProduct.runtime}
+                  profileImage={dubProduct.profileImage}
+                  nickname={dubProduct.nickname}
+                  playCount={dubProduct.playCount}
+                  updatedDate={dubProduct.updatedDate}
+                />
             )
           )}
       </div>
       {tabIndex === DubType.DUB_VIDEO &&
-      videoData &&
-      videoData.content.length > 0 ? (
+        videoData &&
+        videoData.content.length > 0 ? (
         <Pagination
           page={page}
           totalPages={videoData.totalPages}
@@ -361,8 +361,8 @@ export default function CommunityPage() {
         <></>
       )}
       {tabIndex === DubType.DUB_PRODUCT &&
-      searchDubProductList &&
-      searchDubProductList.content.length > 0 ? (
+        searchDubProductList &&
+        searchDubProductList.content.length > 0 ? (
         <Pagination
           page={page}
           totalPages={searchDubProductList.totalPages}

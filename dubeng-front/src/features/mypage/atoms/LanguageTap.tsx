@@ -31,7 +31,7 @@ export default function LanguageTap({
             </p>
           </div>
         </div>
-        <div className="mt-8 z-0 w-358 h-2 bg-dubgraylight"></div>
+        <div className="mt-8 z-0 w-full h-2 bg-dubgraylight"></div>
         <div className="relative -top-2 w-65 h-2 bg-dubblack"></div>
       </div>
     );
@@ -49,7 +49,7 @@ export default function LanguageTap({
             <p className="ml-16 text-16 text-dubblack font-semibold">한국어</p>
           </div>
         </div>
-        <div className="mt-8 z-0 w-358 h-2 bg-dubgraylight"></div>
+        <div className="mt-8 z-0 w-full h-2 bg-dubgraylight"></div>
         <div className="ml-69 relative -top-2 w-52 h-2 bg-dubblack"></div>
       </div>
     );

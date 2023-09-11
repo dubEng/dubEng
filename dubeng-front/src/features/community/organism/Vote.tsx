@@ -71,7 +71,7 @@ export default function Vote({ languageIndex, userId }: Iprops) {
 
   const opts: YouTubeProps["opts"] = {
     height: "174",
-    width: "326",
+    width: "280",
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
       start: voteData?.result?.startTime,
@@ -212,6 +212,14 @@ export default function Vote({ languageIndex, userId }: Iprops) {
     const player = event.target;
     setYoutubePlayer(player);
     player.mute();
+
+    // player 크기 조정 예: 화면 크기에 맞게 조정
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    console.log('screenWidth', screenWidth);
+    console.log('screenHeight', screenHeight);
+
+    player.setSize(screenWidth - 64, 174);
   };
 
   const onPlay: YouTubeProps["onPlay"] = (event) => {
@@ -234,7 +242,7 @@ export default function Vote({ languageIndex, userId }: Iprops) {
   return (
     <>
       {voteData && voteData?.result ? (
-        <div className="flex flex-col items-center justify-center p-16 bg-[#FFFAFA] rounded-8 border-1 border-[#FFD8D8]">
+        <div className="flex flex-col relative items-center justify-center p-16 bg-[#FFFAFA] rounded-8 border-1 border-[#FFD8D8]">
           <audio
             ref={audioRef1}
             // controls
@@ -246,7 +254,7 @@ export default function Vote({ languageIndex, userId }: Iprops) {
             src={voteData.result.user2.recordPath}
           ></audio>
           {videoId && (
-            <div className="relative">
+            <div className="relative w-4/5 flex flex-col items-center justify-center">
               <YouTube
                 videoId={videoId}
                 opts={opts}
@@ -263,11 +271,11 @@ export default function Vote({ languageIndex, userId }: Iprops) {
                 onStateChange={onStateChange}
                 className="relative"
               />
-              <div className="opacity-100 absolute top-0 left-0 w-320 h-174"></div>
+              <div className="opacity-100 absolute top-0 left-0 w-full h-174"></div>
             </div>
           )}
-          <div className="mt-16 flex justify-between">
-            <div className="space-y-16">
+          <div className="mt-16 flex justify-between w-full">
+            <div className="space-y-16 w-5/12">
               <VoteCard
                 username={voteData.result.user1.nickname}
                 description={voteData.result.user1.description}
@@ -281,7 +289,7 @@ export default function Vote({ languageIndex, userId }: Iprops) {
               />
             </div>
             <p className="text-16 font-semibold text-dubgray mt-55 mx-13">vs</p>
-            <div className="space-y-16">
+            <div className="space-y-16 w-5/12">
               <VoteCard
                 username={voteData.result.user2.nickname}
                 description={voteData.result.user2.description}

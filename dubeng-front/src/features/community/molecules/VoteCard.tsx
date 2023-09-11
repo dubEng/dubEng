@@ -19,7 +19,7 @@ export default function VoteCard({
 }: Iprops) {
   if (isPlaying) {
     return (
-      <div className="relative py-12 flex flex-col  items-center rounded-8 w-140 h-140 bg-white border-1 border-dubgraydeep">
+      <div className="relative py-12 flex flex-col  items-center rounded-8 w-full h-140 bg-white border-1 border-dubgraydeep">
         <Image
           src={userImage}
           alt="userImage"
@@ -44,7 +44,7 @@ export default function VoteCard({
     );
   } else {
     return (
-      <div className="relative py-12 flex flex-col items-center rounded-8 w-140 h-140 bg-white border-1 border-dubgraydeep">
+      <div className="relative py-12 flex flex-col items-center rounded-8 w-full h-140 bg-white border-1 border-dubgraydeep">
         <Image
           src={userImage}
           alt="userImage"
