@@ -29,7 +29,7 @@ const DubMissionCompleteModal = () => {
   return isOpen ? (
     <div>
       <Background onClick={handleCloseButton} />
-      <div className="fixed left-[50%] top-[50%] z-50 h-380 w-350 translate-x-[-50%] translate-y-[-50%] rounded-30 border-1 border-dubgraylight bg-white text-center">
+      <div className="fixed left-[50%] top-[50%] z-50 h-380 w-screen mx-4 translate-x-[-50%] translate-y-[-50%] rounded-30 border-1 border-dubgraylight bg-white text-center">
         <div className="flex flex-row justify-end mt-8 mr-8 h-16">
           <button onClick={handleCloseButton}>
             <MdClose className="my-8 mr-8" size={24} />

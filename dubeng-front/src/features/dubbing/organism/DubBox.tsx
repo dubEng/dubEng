@@ -402,7 +402,7 @@ export default function DubBox({
   };
 
   return (
-    <div className="w-359 bg-white rounded-20 container mx-auto p-16">
+    <div className="w-screen mx-4 bg-white rounded-20 container p-16">
       <div className="flex justify-between">
         <p className="text-12 text-dubblack font-normal h-25">
           {scriptIndex}/{scriptLength}

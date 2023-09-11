@@ -24,13 +24,13 @@ export default function DubProductCard({
   timeago.register("ko", koLocale);
 
   return (
-    <div className="pl-16 pr-16 pt-16 pb-10 w-272 h-211 flex flex-col rounded-16 bg-dubgraylight border-1 border-dubgraymedium">
+    <div className="pl-16 pr-16 pt-16 pb-10 w-252 h-211 flex flex-col rounded-16 bg-dubgraylight border-1 border-dubgraymedium">
       <Image
         src={thumbnail}
         alt="thumbnail"
-        width={240}
+        width={220}
         height={152}
-        className="rounded-8 bg-dubgray w-239 h-134"
+        className="rounded-8 bg-dubgray w-220 h-134"
       />
       <p className="mt-8 text-16 text-dubblack font-semibold line-clamp-1">
         {title}

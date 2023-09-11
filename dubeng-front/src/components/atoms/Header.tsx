@@ -20,7 +20,7 @@ export default function Header() {
       return <div className={getHeaderBarStyle()}>더빙목록</div>;
     } else if (pathName === "/mypage") {
       return (
-        <div className="fixed min-w-360 top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-between px-16 items-center bg-white">
+        <div className="fixed w-screen top-0 z-50 h-57 rounded-2 text-16 font-semibold flex justify-between px-16 items-center bg-white">
           My
           {/* <button>
             <AiOutlineEdit size={19} />
@@ -167,6 +167,6 @@ export default function Header() {
   }
 
   function getHeaderBarStyle(): string {
-    return "fixed min-w-360 top-0 z-50 h-57 p-16 rounded-2 text-16 font-semibold bg-white";
+    return "fixed w-screen top-0 z-50 h-57 p-16 rounded-2 text-16 font-semibold bg-white";
   }
 }
