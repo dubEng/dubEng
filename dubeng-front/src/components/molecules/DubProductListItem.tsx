@@ -41,7 +41,7 @@ export default function DubProductListItem({
 
   return (
     <Link href={`/community/shorts/product/${recordId}`}>
-      <div className="grid grid-cols-2 p-16 w-338 mb-16 bg-white rounded-8 border-1 border-dubgraymedium">
+      <div className="grid grid-cols-2 p-16 w-screen mb-16 bg-white rounded-8 border-1 border-dubgraymedium">
         <div className="relative object-cover rounded-4">
           <Image
             src={thumbnail}

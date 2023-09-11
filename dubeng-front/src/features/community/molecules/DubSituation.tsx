@@ -121,7 +121,7 @@ export default function DubSituation() {
   }
 
   return (
-    <div className="w-348 grid gap-8 grid-cols-2">
+    <div className="w-full grid gap-8 grid-cols-2">
       {/* <button
         id={SituationType.PLACE_1}
         onClick={() => handleSituationCard(SituationType.PLACE_1)}

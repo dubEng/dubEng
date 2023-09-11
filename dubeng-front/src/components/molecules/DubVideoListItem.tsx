@@ -50,7 +50,7 @@ export default function DubVideoListItem({
   }
 
   return (
-    <div className="grid grid-cols-2 p-16 w-338 bg-white rounded-8 border-1 border-dubgraymedium">
+    <div className="grid grid-cols-2 p-16 w-screen bg-white rounded-8 border-1 border-dubgraymedium">
       <Link href={`/community/shorts/video/${id}`}>
         <Image
           src={thumbnail}

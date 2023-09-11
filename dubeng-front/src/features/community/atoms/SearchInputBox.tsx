@@ -23,7 +23,7 @@ export default function SearchInputBox({
 }: Iprops) {
   if (value) {
     return (
-      <div className="flex relative items-center w-full h-43">
+      <div className="flex relative items-center w-full h-43 mx-10">
         <input
           className="text-16 rounded-5 font-normal placeholder-dubgray text-dubblack outline-none h-43 w-full border border-[#E9ECEF] pl-35 py-12"
           type={type}
