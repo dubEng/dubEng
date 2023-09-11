@@ -55,7 +55,7 @@ export default function DubTypeTap({ dubType, langType }: Iprops) {
             {isLanguageButtonOpen && <LanguageSelectBox langType={langType} />}
           </div>
         </div>
-        <div className="mt-8 z-0 w-358 h-2 bg-dubgraylight"></div>
+        <div className="mt-8 z-0 w-348 h-2 bg-dubgraylight"></div>
         <div className="relative -top-2 w-84 h-2 bg-dubblack"></div>
       </div>
     );
@@ -82,7 +82,7 @@ export default function DubTypeTap({ dubType, langType }: Iprops) {
             {isLanguageButtonOpen && <LanguageSelectBox langType={langType} />}
           </div>
         </div>
-        <div className="mt-8 z-0 w-358 h-2 bg-dubgraylight"></div>
+        <div className="mt-8 z-0 w-348 h-2 bg-dubgraylight"></div>
         <div className="ml-88 relative -top-2 w-70 h-2 bg-dubblack"></div>
       </div>
     );

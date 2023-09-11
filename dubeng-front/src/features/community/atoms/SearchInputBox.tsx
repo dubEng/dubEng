@@ -23,9 +23,9 @@ export default function SearchInputBox({
 }: Iprops) {
   if (value) {
     return (
-      <div className="flex relative items-center w-358 h-43">
+      <div className="flex relative items-center w-full h-43">
         <input
-          className="text-16 rounded-5 font-normal placeholder-dubgray text-dubblack outline-none h-43 w-358 border border-[#E9ECEF] pl-35 py-12"
+          className="text-16 rounded-5 font-normal placeholder-dubgray text-dubblack outline-none h-43 w-full border border-[#E9ECEF] pl-35 py-12"
           type={type}
           name={name}
           onChange={onChange}
@@ -47,7 +47,7 @@ export default function SearchInputBox({
     return (
       <div className="flex relative items-center">
         <input
-          className="flex justify-center text-16 rounded-5 font-normal placeholder-dubgray text-dubblack outline-none h-43 w-358 border border-[#E9ECEF] pl-35 py-12"
+          className="flex justify-center text-16 rounded-5 font-normal placeholder-dubgray text-dubblack outline-none h-43 w-full border border-[#E9ECEF] pl-35 py-12"
           type={type}
           name={name}
           onChange={onChange}

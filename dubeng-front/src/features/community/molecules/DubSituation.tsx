@@ -60,7 +60,6 @@ export default function DubSituation() {
     situationTitle
   );
 
-
   // function getSituationVideo() {
   //   console.log("getSituationVideo로 들어옴");
   //   const situationVideoList = useSearchDubVideoQuery(
@@ -122,7 +121,7 @@ export default function DubSituation() {
   }
 
   return (
-    <div className="w-358 grid gap-8 grid-cols-2">
+    <div className="w-348 grid gap-8 grid-cols-2">
       {/* <button
         id={SituationType.PLACE_1}
         onClick={() => handleSituationCard(SituationType.PLACE_1)}
