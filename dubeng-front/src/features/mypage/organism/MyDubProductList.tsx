@@ -53,7 +53,7 @@ export default function MyDubProductList() {
     return <EmptyComponent status={EmptyType.EMPTY_DUB_PRODUCT} />;
   } else {
     return (
-      <Swiper slidesPerView={1.25}>
+      <Swiper slidesPerView={1.1}>
         {myProductList &&
           myProductList.map((item: any) => (
             <SwiperSlide key={item.id}>
