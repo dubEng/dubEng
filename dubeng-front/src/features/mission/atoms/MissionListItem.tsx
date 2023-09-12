@@ -12,7 +12,7 @@ export default function MissionListItem({
 }: MissionItem) {
   if (isComplete) {
     return (
-      <div className="w-full h-201 relative rounded-tl-lg bg-white rounded-lg mx-12 mb-8">
+      <div className="w-120 h-201 relative rounded-tl-lg bg-white rounded-lg mx-12 mb-8">
         <div
           className={getBoxStyle(color)}
           css={[
@@ -31,7 +31,7 @@ export default function MissionListItem({
             />
           </div>
         </div>
-        <div className="w-full h-51 flex justify-center items-center rounded-b-lg bg-white border-1 border-dubgraymedium">
+        <div className="w-120 h-51 flex justify-center items-center rounded-b-lg bg-white border-1 border-dubgraymedium">
           <p className="text-14 font-bold text-dubblack text-center break-keep">
             {title}
           </p>
@@ -42,7 +42,7 @@ export default function MissionListItem({
     return (
       <div>
         <Link href={`/dubbing/${videoId}`}>
-          <div className="w-full h-201 relative rounded-tl-lg bg-white rounded-lg mx-12 mb-8">
+          <div className="w-120 h-201 relative rounded-tl-lg bg-white rounded-lg mx-12 mb-8">
             <div
               className={getBoxStyle(color)}
               css={[
@@ -60,7 +60,7 @@ export default function MissionListItem({
                   className="rounded-lg w-80 h-80"
                 />
               </div>
-              <div className="bg-black opacity-50 absolute top-0 left-0 w-full h-130 rounded-t-lg"></div>
+              <div className="bg-black opacity-50 absolute top-0 left-0 w-120 h-130 rounded-t-lg"></div>
               <div className="absolute flex flex-col items-center justify-center">
                 <MdOutlineLock size={32} className=" text-dubgraylight" />
                 <p className=" text-dubgraylight text-12">
@@ -68,7 +68,7 @@ export default function MissionListItem({
                 </p>
               </div>
             </div>
-            <div className="w-full h-51 flex justify-center items-center rounded-b-lg bg-white border-1 border-dubgraymedium">
+            <div className="w-120 h-51 flex justify-center items-center rounded-b-lg bg-white border-1 border-dubgraymedium">
               <p className="text-14 font-bold text-dubblack text-center break-keep">
                 {title}
               </p>
@@ -81,6 +81,6 @@ export default function MissionListItem({
 
   //TODO: twin.macro 적용 해야함
   function getBoxStyle(color: string): string {
-    return `relative w-full h-130 rounded-tl-lg rounded-tr-lg flex justify-center items-center`;
+    return `relative w-120 h-130 rounded-tl-lg rounded-tr-lg flex justify-center items-center`;
   }
 }
