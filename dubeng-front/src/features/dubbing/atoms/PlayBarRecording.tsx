@@ -4,7 +4,7 @@ interface Iprops {
   
   export default function PlayBarRecording({ width }: Iprops) {
     return (
-      <div className="relative rounded-20 bg-dubgraymedium w-310 h-8 progress_bar">
+      <div className="relative rounded-20 bg-dubgraymedium w-full h-8 progress_bar">
         <div
           className="rounded-20 bg-dubcoral h-8 progressed"
           css={[
