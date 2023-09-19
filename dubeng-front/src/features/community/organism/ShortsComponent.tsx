@@ -44,8 +44,12 @@ export default function ShortsComponent({
     const screenHeight = window.innerHeight;
     console.log('screenWidth', screenWidth);
     console.log('screenHeight', screenHeight);
+    const maxSize = 448;
 
-    player.setSize(screenWidth - 8, 174);
+    const minWidth = (screenWidth < maxSize) ? screenWidth : maxSize;
+    const minHeight = minWidth * (9/16);
+    
+    player.setSize(minWidth - 8, minHeight);
   };
 
   const onPlay: YouTubeProps["onPlay"] = (event) => {
@@ -78,10 +82,10 @@ export default function ShortsComponent({
   }
 
   return (
-    <div className="w-screen h-[calc(100%-61px)] rounded-16 bg-black flex flex-col items-center justify-center">
+    <div className="w-full max-w-md h-[calc(100%-61px)] rounded-16 bg-black flex flex-col items-center justify-center">
       <>
         <Link href={`/mypage/${userId}`}>
-          <div className="flex flex-row mt-16 mb-16 items-center w-screen px-16">
+          <div className="flex flex-row mt-16 mb-16 items-center w-screen max-w-md  px-16">
             <Image
               src={profileImage ?? DefaultImage}
               alt="profileImage"
@@ -124,7 +128,7 @@ export default function ShortsComponent({
           style={{ display: "none" }}
           src={audioPath}
         />
-        <div className="mt-16 w-screen px-8">
+        <div className="mt-16 w-full px-8">
           <ShortsTitle
             userId={userId}
             title={title}
