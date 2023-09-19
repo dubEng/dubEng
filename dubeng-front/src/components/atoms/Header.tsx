@@ -167,6 +167,6 @@ export default function Header() {
   }
 
   function getHeaderBarStyle(): string {
-    return "fixed w-screen top-0 z-50 h-57 p-16 rounded-2 text-16 font-semibold bg-white";
+    return "fixed w-full max-w-md top-0 z-50 h-57 p-16 rounded-2 text-16 font-semibold bg-white";
   }
 }
