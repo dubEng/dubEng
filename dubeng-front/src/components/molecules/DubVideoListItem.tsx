@@ -50,15 +50,11 @@ export default function DubVideoListItem({
   }
 
   return (
-    <div className="grid grid-cols-2 p-16 w-full mb-8 bg-white rounded-8 border-1 border-dubgraymedium">
+    <div className="flex flex-row p-16 w-full mb-8 bg-white rounded-8 border-1 border-dubgraymedium">
       <Link href={`/community/shorts/video/${id}`}>
-        <Image
-          src={thumbnail}
-          alt={title}
-          width={161}
-          height={96}
-          className="rounded-4 w-161 h-96"
-        />
+        <div className="relative rounded-4 w-161 h-96">
+          <Image src={thumbnail} alt={title} fill className="rounded-4" />
+        </div>
       </Link>
       <div className="flex flex-col ml-16 justify-between">
         <div>
