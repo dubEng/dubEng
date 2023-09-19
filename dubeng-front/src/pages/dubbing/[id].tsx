@@ -173,11 +173,12 @@ export default function DubbingPage() {
     player.pauseVideo();
 
     const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-    console.log('screenWidth', screenWidth);
-    console.log('screenHeight', screenHeight);
+    const maxSize = 448;
 
-    player.setSize(screenWidth, 221);
+    const minWidth = (screenWidth < maxSize) ? screenWidth : maxSize;
+    const minHeight = minWidth * (9/16);
+    
+    player.setSize(minWidth - 8, minHeight);
   };
 
   const onPlay: YouTubeProps["onPlay"] = (event) => {

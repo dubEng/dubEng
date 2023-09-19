@@ -41,9 +41,6 @@ export default function ShortsComponent({
 
     // player 크기 조정 예: 화면 크기에 맞게 조정
     const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-    console.log('screenWidth', screenWidth);
-    console.log('screenHeight', screenHeight);
     const maxSize = 448;
 
     const minWidth = (screenWidth < maxSize) ? screenWidth : maxSize;

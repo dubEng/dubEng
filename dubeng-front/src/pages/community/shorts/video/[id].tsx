@@ -71,11 +71,12 @@ export default function ShortsVideoPage() {
 
     // player 크기 조정 예: 화면 크기에 맞게 조정
     const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-    console.log('screenWidth', screenWidth);
-    console.log('screenHeight', screenHeight);
+    const maxSize = 448;
 
-    player.setSize(screenWidth-8, 221);
+    const minWidth = (screenWidth < maxSize) ? screenWidth : maxSize;
+    const minHeight = minWidth * (9/16);
+    
+    player.setSize(minWidth - 8, minHeight);
   };
 
   // 선택된 스크롤이 바뀌면 오토 스크롤

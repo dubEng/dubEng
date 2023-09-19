@@ -52,11 +52,12 @@ export default function ShortsProductPage() {
 
     // player 크기 조정 예: 화면 크기에 맞게 조정
     const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-    console.log('screenWidth', screenWidth);
-    console.log('screenHeight', screenHeight);
+    const maxSize = 448;
 
-    player.setSize(screenWidth - 8, 221);
+    const minWidth = (screenWidth < maxSize) ? screenWidth : maxSize;
+    const minHeight = minWidth * (9/16);
+    
+    player.setSize(minWidth - 8, minHeight);
   };
 
   // const { data: playCountUp, refetch } = usePlayCountUpQuery(
@@ -189,7 +190,7 @@ export default function ShortsProductPage() {
       {data && (
         <>
           <Link href={`/mypage/${data.userId}`}>
-            <div className="flex flex-row mt-16 mb-16 items-center w-screen px-16">
+            <div className="flex flex-row mt-16 mb-16 items-center w-screen max-w-md  px-16">
               <Image
                 src={data.profileImage ?? DefaultImage}
                 alt="profileImage"
@@ -233,7 +234,7 @@ export default function ShortsProductPage() {
             style={{ display: "none" }}
             src={data.recordPath}
           />
-          <div className="mt-16 w-screen px-8">
+          <div className="mt-16 w-full px-8">
             <ShortsTitle
               userId={data.userId}
               title={data.title}
