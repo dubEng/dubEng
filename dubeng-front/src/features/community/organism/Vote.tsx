@@ -217,10 +217,10 @@ export default function Vote({ languageIndex, userId }: Iprops) {
     const screenWidth = window.innerWidth;
     const maxSize = 448;
 
-    const minWidth = (screenWidth < maxSize) ? screenWidth : maxSize;
-    const minHeight = minWidth * (9/16);
-    
-    player.setSize(minWidth - 8, minHeight);
+    const minWidth = screenWidth < maxSize ? screenWidth : maxSize;
+    const minHeight = (minWidth - 72) * (9 / 16);
+
+    player.setSize(minWidth - 72, minHeight);
   };
 
   const onPlay: YouTubeProps["onPlay"] = (event) => {
