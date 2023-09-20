@@ -8,7 +8,7 @@ import "swiper/css";
 import Link from "next/link";
 import { getHomePopularity } from "@/apis/home/api/home";
 
-export default function DubProductList(props : any) {
+export default function DubProductList(props: any) {
   const popularity = useHomePopularityQuery(props.popularity);
 
   if (popularity.isLoading) {
@@ -24,7 +24,7 @@ export default function DubProductList(props : any) {
   }
 
   return (
-    <Swiper slidesPerView={1.25}>
+    <Swiper spaceBetween={24} slidesPerView={1.5}>
       {popularity.data &&
         popularity.data.map((item: any, index: number) => (
           <SwiperSlide key={item.recordId}>
@@ -45,7 +45,7 @@ export default function DubProductList(props : any) {
 
 export async function getStaticProps() {
   const popularity = await getHomePopularity();
-  
+
   return {
     props: { popularity },
     revalidate: 300,

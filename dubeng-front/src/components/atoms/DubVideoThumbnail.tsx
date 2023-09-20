@@ -18,15 +18,9 @@ export default function DubVideoThumbnail({
   userProfileImg,
 }: Iprops) {
   return (
-    <div className="relative object-cover">
-      <Image
-        src={thumbnail}
-        className="rounded-18 w-245 h-144"
-        alt={title}
-        width={272}
-        height={152}
-      />
-      <div className="bg-gradient-to-t from-black opacity-80 absolute top-0 left-0 w-245 h-144 rounded-18"></div>
+    <div className="relative object-cover w-full aspect-video">
+      <Image src={thumbnail} className="rounded-18" alt={title} fill />
+      <div className="bg-gradient-to-t from-black opacity-80 absolute top-0 left-0 w-full aspect-video rounded-18"></div>
       <div className="w-245 line-clamp-1 flex space-x-8 items-center absolute bottom-16 left-16 right-16 text-white font-semibold text-12">
         {userProfileImg && (
           <div className="flex">
