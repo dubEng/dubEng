@@ -30,7 +30,7 @@ jobs: # job들을 정의하는 곳
         run: |
           cd ./dubeng-front
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/dubeng-front .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/dubeng-front -f Dockerfile-next .
           docker push ${{ secrets.DOCKER_USERNAME }}/dubeng-front
           
       # deploy to production
