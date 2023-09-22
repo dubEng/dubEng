@@ -24,14 +24,15 @@ export default function DubProductCard({
   timeago.register("ko", koLocale);
 
   return (
-    <div className="pl-16 pr-16 pt-16 pb-10 w-252 h-211 flex flex-col rounded-16 bg-dubgraylight border-1 border-dubgraymedium">
-      <Image
-        src={thumbnail}
-        alt="thumbnail"
-        width={220}
-        height={152}
-        className="rounded-8 bg-dubgray w-220 h-134"
-      />
+    <div className="pl-16 pr-16 pt-16 pb-10 w-full h-211 flex flex-col rounded-16 bg-dubgraylight border-1 border-dubgraymedium">
+      <div className="w-full aspect-video relative">
+        <Image
+          src={thumbnail}
+          alt="thumbnail"
+          fill
+          className="rounded-8 bg-dubgray"
+        />
+      </div>
       <p className="mt-8 text-16 text-dubblack font-semibold line-clamp-1">
         {title}
       </p>
@@ -50,7 +51,9 @@ export default function DubProductCard({
             {nickname} |
           </p>
         ) : null}
-        <p className="text-14 text-dubgray text-ellipsis overflow-hidden whitespace-nowrap max-w-50">조회수 {playCount}회</p>
+        <p className="text-14 text-dubgray text-ellipsis overflow-hidden whitespace-nowrap max-w-50">
+          조회수 {playCount}회
+        </p>
         <p className="text-10 text-dubgray"> ▪ </p>
         {updatedDate ? (
           <TimeAgo

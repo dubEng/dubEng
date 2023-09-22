@@ -31,7 +31,7 @@ export default function LikeDubProductList() {
     return <EmptyComponent status={EmptyType.EMPTY_LIKE_DUB_PRODUCT} />;
   } else {
     return (
-      <Swiper slidesPerView={1.25}>
+      <Swiper spaceBetween={24} slidesPerView={1.35}>
         {data &&
           data.map((item: any) => (
             <SwiperSlide key={item.id}>

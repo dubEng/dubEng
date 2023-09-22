@@ -50,7 +50,7 @@ export default function ScrapDubVideoList() {
     return <EmptyComponent status={EmptyType.EMPTY_SCRAP_DUB_VIDEO} />;
   } else {
     return (
-      <Swiper slidesPerView={1.25}>
+      <Swiper spaceBetween={24} slidesPerView={1.5}>
         {data &&
           data.map((item: any) => (
             <SwiperSlide key={item.id}>
