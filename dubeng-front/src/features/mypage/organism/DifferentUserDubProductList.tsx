@@ -56,7 +56,7 @@ export default function DifferentUserProductList({ userId }: Iprops) {
 
   return (
     <>
-      <Swiper slidesPerView={1.1}>
+      <Swiper spaceBetween={24} slidesPerView={1.35}>
         {differentUserProductList &&
           differentUserProductList.map((item: any) => (
             <SwiperSlide key={item.id}>
