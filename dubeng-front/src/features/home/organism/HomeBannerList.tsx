@@ -23,40 +23,37 @@ export default function HomeBannerList() {
     >
       <SwiperSlide>
         <Link href="https://forms.gle/iRVTiCJFVAc9bBeH7">
-          <button className="mt-16">
+          <div className="h-70 w-full">
             <Image
-              width={358}
-              height={65}
+              fill
               src={"/images/home/banner_review.png"}
               alt={"banner"}
-              className="rounded-6 h-auto"
+              className="rounded-8 cursor-pointer"
             />
-          </button>
+          </div>
         </Link>
       </SwiperSlide>
       <SwiperSlide>
         <Link href="https://instagram.com/dub.eng?igshid=NTc4MTIwNjQ2YQ==">
-          <button className="mt-16">
+          <div className="h-70 w-full">
             <Image
-              width={358}
-              height={65}
+              fill
               src={"/images/home/banner_instagram.png"}
               alt={"banner"}
-              className="rounded-6"
+              className="rounded-8 cursor-pointer"
             />
-          </button>
+          </div>
         </Link>
       </SwiperSlide>
       <SwiperSlide>
-        <button className="mt-16">
+        <div className="h-70 w-full">
           <Image
-            width={358}
-            height={65}
+            fill
             src={"/images/home/banner2.png"}
             alt={"banner"}
-            className="rounded-6"
+            className="rounded-8 cursor-pointer"
           />
-        </button>
+        </div>
       </SwiperSlide>
     </Swiper>
   );

@@ -3,10 +3,9 @@ import DubKingList from "@/features/home/organism/DubKingList";
 import DubProductList from "@/features/home/organism/DubProductList";
 import HomeBannerList from "@/features/home/organism/HomeBannerList";
 
-
 export default function HomePage() {
   return (
-    <div className="h-screen bg-white mt-57 mb-61">
+    <div className="h-screen bg-white mt-57 mb-61 pt-8">
       <div className="m-16">
         <HomeBannerList />
       </div>
