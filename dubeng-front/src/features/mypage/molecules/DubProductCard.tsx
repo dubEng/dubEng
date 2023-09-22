@@ -24,7 +24,7 @@ export default function DubProductCard({
   timeago.register("ko", koLocale);
 
   return (
-    <div className="pl-16 pr-16 pt-16 pb-10 w-full h-211 flex flex-col rounded-16 bg-dubgraylight border-1 border-dubgraymedium">
+    <div className="pl-16 pr-16 pt-16 pb-10 w-full h-200 flex flex-col rounded-16 bg-dubgraylight border-1 border-dubgraymedium">
       <div className="w-full aspect-video relative">
         <Image
           src={thumbnail}
