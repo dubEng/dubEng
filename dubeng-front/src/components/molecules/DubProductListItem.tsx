@@ -45,7 +45,7 @@ export default function DubProductListItem({
         <div className="relative rounded-4 min-w-161 min-h-96 max-w-161 max-h-96">
           <Image src={thumbnail} alt={title} fill className="rounded-4" />
         </div>
-        <div className="w-full flex flex-col justify-between">
+        <div className="w-full flex flex-col justify-start">
           <p className="leading-18 break-words text-14 font-semibold text-dubblack line-clamp-2 ">
             {title}
           </p>
