@@ -10,11 +10,9 @@ const withPWA = require("next-pwa")({
  */
 const nextConfig = withTwin({
   reactStrictMode: false,
-  // compiler: {
-  //   removeConsole: {
-  //     exclude: ["error", "warn"],
-  //   },
-  // },
+  compiler: {
+    removeConsole: true,
+  },
   images: {
     domains: [
       "i.ytimg.com",
