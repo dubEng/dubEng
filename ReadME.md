@@ -1,29 +1,46 @@
 
 # 🎧 **Dubeng** 🎧
 
----
 
 **영어로 연기하며 스피킹을 배우는 서비스**
 
 ![Untitled](img/logo.png)
 </br>
 
-## 😀 프로젝트 소개 😀
-
----
-
-✏ **프로젝트명**
-
-- **dubEng [덥잉]**
+## 🎯 프로젝트 소개 
 
 
 
+🏷️ **프로젝트명** : **dubEng [덥잉]**
 
-🖥 **서비스 주소**
+🏆 **SSAFY 프로젝트 경진대회 최우수상 수상**
 
-## [DubEng](https://dub-eng.com/)
+👥 **회원수 160명 달성** 
 
-## 🎥 [소개 영상 보기 : UCC 링크](https://youtu.be/w0EPj1LV1sI)
+🌍 **실 사용자 수 190명 돌파!**
+
+<img src="https://github.com/dubEng/dubEng/assets/78345851/c7af600d-4bf5-4588-bd8f-ea47ddfa5f88" width="400" height="200"/>
+
+
+
+📚 **컨설턴트님 pick! 팀 노션 구경하기** : [노션 바로가기](https://www.notion.so/DubEng-c6c68aaf2d5e4842b554c90864edaa45?pvs=4)
+
+
+<br>
+<br>
+
+
+## 🎤 서비스 이용해보기
+
+
+🖥 **서비스 주소** : [dub-eng.com](https://dub-eng.com/)
+
+🛍️ **Play Store** : [어플 다운받기(Android)](https://play.google.com/store/apps/details?id=com.dub_eng.twa&pcampaignid=web_share)
+
+🎥 **소개 영상 보기** : [UCC 링크](https://youtu.be/w0EPj1LV1sI)
+
+<br>
+<br>
 
 💖 **서비스 소개**
 
@@ -86,11 +103,13 @@
 🎠 **배포 환경**
 
 - URL : [https://dub-eng.com/](https://dub-eng.com/)
+- Play Store : [다운로드 하기](https://play.google.com/store/apps/details?id=com.dub_eng.twa&pcampaignid=web_share)
 - 포팅 메뉴얼
 
 🗓 **진행 일정**
 
 - 2023.04.10 ~ 2023.05.31 (총 6주)
+- 2023.06.01 ~ (진행중)
 
 🚩 **프로젝트 요약**
 
@@ -99,7 +118,7 @@
 | ✅ Desktop Web | ✅ JavaScript | 🔲 Vue.js |
 | ✅ Mobile Web | ✅ TypeScript | ✅ Next.js |
 | 🔲 Responsive Web | 🔲 C/C++ | 🔲 Angular |
-| 🔲 Android App | 🔲 C# | 🔲 Node.js |
+| ✅ Android App | 🔲 C# | 🔲 Node.js |
 | 🔲 iOS App | ✅ Python | ✅ Flask/FastAPI |
 | 🔲 Desktop App | ✅ Java | ✅ Spring/Springboot |
 
