@@ -1,0 +1,11 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.dub_eng.twa",
+      "sha256_cert_fingerprints":
+        ["F3:28:71:F8:7D:25:0B:00:72:0E:4C:D5:AD:69:76:F3:E3:8B:EC:AF:83:83:9B:9B:91:AD:28:86:E6:41:4D:90"]
+    }
+  }
+]
