@@ -126,7 +126,7 @@ public class RedisService {
         redisTemplate.delete(voteCntKeys);
     }
 
-    @Scheduled(cron = "30 0 0 * * 1") // 매주 일요일 밤 자정 + 30초 갱신
+    // @Scheduled(cron = "30 0 0 * * 1") // 매주 일요일 밤 자정 + 30초 갱신
     public void updateDubKing() {
         Set<String> redisKeys = redisTemplate.keys("dubKing_userId*");
 
